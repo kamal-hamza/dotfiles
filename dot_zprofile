@@ -1,0 +1,58 @@
+# Path Exports
+export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+export PATH="/Users/hkamal/Scripts/:$PATH"
+export PATH="/Users/hkamal/.cargo/bin:$PATH"
+export PATH="/opt/anaconda3/bin:$PATH"
+export PATH="/opt/homebrew/opt/tcl-tk/bin/:$PATH"
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+export PATH="/opt/homebrew/bin/:$PATH"
+export PATH="$HOME/.dotnet/tools:$PATH"
+export PATH="$DOTNET_ROOT/sdk:$PATH"
+export PATH="/opt/homebrew/bin/lua-language-server:$PATH"
+export PATH="/opt/homebrew/bin/stylua:$PATH"
+
+# Default editor
+export EDITOR="zed"
+
+# Other Exports
+export ANACONDA_PATH="/opt/anaconda3/"
+export LDFLAGS="-L$(brew --prefix tcl-tk)/lib"
+export CPPFLAGS="-I$(brew --prefix tcl-tk)/include"
+export PKG_CONFIG_PATH="$(brew --prefix tcl-tk)/lib/pkgconfig"
+export DOTNET_ROOT=/usr/local/share/dotnet
+export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
+export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git "
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
+export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
+export FZF_TMUX_OPTS=" -p90%,70% "
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/opt/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+
+# Evals
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+eval "$(zoxide init zsh)"
+
+# docker completion
+FPATH="$HOME/.docker/completions:$FPATH"
+autoload -Uz compinit
+compinit

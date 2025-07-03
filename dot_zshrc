@@ -1,0 +1,50 @@
+# Custom Prompt
+LS_COLORS="di=1;37"
+autoload -Uz vcs_info
+precmd() { vcs_info }
+zstyle ':vcs_info:git:*' formats '(%b) '
+zstyle ':vcs_info:*' enable git
+setopt PROMPT_SUBST
+# PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%n@%m %1~ ${vcs_info_msg_0_}%% '
+PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%1~ ${vcs_info_msg_0_}%% '
+
+# Aliases
+alias tree='tree -I "node_modules|bower_components"'
+alias la='ls -la'
+alias l='eza --all --icons --color=never'
+alias cls='clear'
+alias v="nvim"
+alias vi="nvim"
+alias t="tmux a"
+alias tt="tmux-new"
+alias ccp="create-project"
+alias dp="delete-project"
+alias cd="z"
+alias y="yazi"
+alias gs="git status --short"
+alias fman="compgen -c | fzf | xargs man"
+alias what='tldr'
+
+# Terminal Extensions
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+source $HOMEBREW_PREFIX/share/zsh-autopair/autopair.zsh
+source <(fzf --zsh)
+
+
+format-cpp() {
+    if [ -f ".clang-format" ]; then
+        echo "Using .clang-format found in the current directory."
+    elif [ -f "../.clang-format" ]; then
+        echo "Using .clang-format found in the parent directory."
+    else
+        echo "No .clang-format file found in the current or parent directory."
+        return 1
+    fi
+
+    find . -name "*.cpp" -o -name "*.h" | while read -r file; do
+        echo "Formatting $file..."
+        clang-format -i "$file"
+    done
+
+    echo "Formatting Complete"
+}
