@@ -1,7 +1,7 @@
 # Path Exports
 export PATH="$HOME/.pyenv/bin:$PATH"
 export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
-export PATH="/Users/hkamal/Scripts/:$PATH"
+export PATH="$HOME/.config/scripts/:$PATH"
 export PATH="/Users/hkamal/.cargo/bin:$PATH"
 export PATH="/opt/anaconda3/bin:$PATH"
 export PATH="/opt/homebrew/opt/tcl-tk/bin/:$PATH"
@@ -28,6 +28,7 @@ export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
 export FZF_TMUX_OPTS=" -p90%,70% "
+export TEXINPUTS="$HOME/.config/tex/latex//:"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
@@ -44,13 +45,6 @@ else
     fi
 fi
 unset __conda_setup
-
-# Evals
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-eval "$(/opt/homebrew/bin/brew shellenv)"
-eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
-eval "$(zoxide init zsh)"
 
 # docker completion
 FPATH="$HOME/.docker/completions:$FPATH"

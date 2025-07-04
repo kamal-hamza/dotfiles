@@ -1,0 +1,142 @@
+# Monochrome - A clean black and white theme for Yazi file manager
+# Created: April 28, 2025
+
+# Terminal colors (base)
+[manager]
+cwd = { fg = "#ffffff", bold = true }
+
+# UI elements
+[manager.border]
+fg = "#666666"
+style = "plain"
+
+[manager.selected]
+fg = "#000000"
+bg = "#ffffff"
+bold = true
+
+[manager.match]
+fg = "#ffffff"
+bg = "#222222"
+bold = true
+
+[manager.tab_active]
+fg = "#ffffff"
+bg = "#000000"
+bold = true
+
+[manager.tab_inactive]
+fg = "#999999"
+bg = "#222222"
+
+# Tab settings
+manager.tab_width = 12
+
+[manager.marker]
+fg = "#ffffff"
+bg = "#666666"
+
+# Status elements
+[status]
+separator_open = ""
+separator_close = ""
+mode_normal = { fg = "#ffffff", bg = "#000000", bold = true }
+mode_select = { fg = "#000000", bg = "#ffffff", bold = true }
+mode_unset = { fg = "#999999", bg = "#222222" }
+progress_done = { fg = "#ffffff", bg = "#000000" }
+progress_total = { fg = "#999999", bg = "#222222" }
+permissions_t = { fg = "#ffffff", bold = true }
+permissions_r = { fg = "#ffffff" }
+permissions_w = { fg = "#ffffff" }
+permissions_x = { fg = "#ffffff" }
+permissions_s = { fg = "#999999" }
+
+# Input visuals
+[input]
+border = { fg = "#ffffff" }
+title = { fg = "#ffffff", bold = true }
+value = { fg = "#ffffff" }
+selected = { fg = "#000000", bg = "#ffffff" }
+
+# Completion elements
+[input.completion]
+fg = "#999999"
+match = { fg = "#ffffff", bold = true }
+
+# Help display
+[select]
+border = { fg = "#666666" }
+active = { fg = "#ffffff", bg = "#000000", bold = true }
+inactive = { fg = "#999999" }
+
+# File specific colors
+[filetype]
+rules = [
+  # Executables
+  { mime = "executable/*", fg = "#ffffff", bold = true },
+  { mime = "application/x-executable", fg = "#ffffff", bold = true },
+  { mime = "application/x-shellscript", fg = "#ffffff", bold = true },
+  
+  # Archives
+  { mime = "application/zip", fg = "#dddddd" },
+  { mime = "application/gzip", fg = "#dddddd" },
+  { mime = "application/x-tar", fg = "#dddddd" },
+  { mime = "application/x-bzip", fg = "#dddddd" },
+  { mime = "application/x-bzip2", fg = "#dddddd" },
+  { mime = "application/x-7z-compressed", fg = "#dddddd" },
+  { mime = "application/x-rar", fg = "#dddddd" },
+  
+  # Images
+  { mime = "image/*", fg = "#bbbbbb" },
+  
+  # Videos
+  { mime = "video/*", fg = "#bbbbbb" },
+  
+  # Audio
+  { mime = "audio/*", fg = "#bbbbbb" },
+  
+  # Text and documents
+  { mime = "text/*", fg = "#ffffff" },
+  { mime = "application/pdf", fg = "#ffffff" },
+  { mime = "application/msword", fg = "#ffffff" },
+  { mime = "application/vnd.ms-excel", fg = "#ffffff" },
+  
+  # Development files
+  { name = "*.md", fg = "#ffffff" },
+  { name = "*.json", fg = "#ffffff" },
+  { name = "*.toml", fg = "#ffffff" },
+  { name = "*.yaml", fg = "#ffffff" },
+  { name = "*.yml", fg = "#ffffff" },
+  { name = "*.rs", fg = "#ffffff" },
+  { name = "*.go", fg = "#ffffff" },
+  { name = "*.py", fg = "#ffffff" },
+  { name = "*.js", fg = "#ffffff" },
+  { name = "*.ts", fg = "#ffffff" },
+  { name = "*.html", fg = "#ffffff" },
+  { name = "*.css", fg = "#ffffff" },
+  
+  # Hidden files
+  { name = ".*", fg = "#666666" },
+  
+  # Configuration files
+  { name = "*.conf", fg = "#dddddd" },
+  { name = "*.config", fg = "#dddddd" },
+]
+
+# Preview settings
+[preview]
+tab_width = 4
+max_width = 500
+max_height = 500
+
+# Preview file formats
+[preview.tab]
+active = { fg = "#ffffff", bg = "#000000", bold = true }
+inactive = { fg = "#999999", bg = "#222222" }
+preview = { fg = "#ffffff", bg = "#111111", italic = true }
+
+# Hovered item
+[select.hovered]
+fg = "#000000"
+bg = "#ffffff"
+bold = true

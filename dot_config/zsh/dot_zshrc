@@ -8,6 +8,14 @@ setopt PROMPT_SUBST
 # PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%n@%m %1~ ${vcs_info_msg_0_}%% '
 PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%1~ ${vcs_info_msg_0_}%% '
 
+# Evals
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+eval "$(/opt/homebrew/bin/brew shellenv)"
+eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+eval "$(zoxide init zsh)"
+
+
 # Aliases
 alias tree='tree -I "node_modules|bower_components"'
 alias la='ls -la'
@@ -16,14 +24,16 @@ alias cls='clear'
 alias v="nvim"
 alias vi="nvim"
 alias t="tmux a"
-alias tt="tmux-new"
-alias ccp="create-project"
-alias dp="delete-project"
 alias cd="z"
 alias y="yazi"
 alias gs="git status --short"
 alias fman="compgen -c | fzf | xargs man"
 alias what='tldr'
+
+# Script Alias
+alias tt="tmux-new"
+alias ccp="create-project"
+alias dp="delete-project"
 
 # Terminal Extensions
 source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh

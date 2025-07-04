@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+# Prompt for project name
+read -rp "Project Name: " PROJECT_NAME
+if [[ -z "$PROJECT_NAME" ]]; then
+  echo "Error: Project name cannot be empty."
+  exit 1
+fi
+
+# Select a parent folder from ~/Code using fzf
+TARGET_DIR=$(find ~/Code -type d -mindepth 1 -maxdepth 1 | fzf --prompt="Select parent folder: ")
+if [[ -z "$TARGET_DIR" ]]; then
+  echo "No directory selected."
+  exit 1
+fi
+
+# Create the project folder
+PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
+if [[ -d "$PROJECT_PATH" ]]; then
+  echo "Directory '$PROJECT_PATH' already exists."
+else
+  mkdir -p "$PROJECT_PATH"
+  echo "Created project folder at: $PROJECT_PATH"
+fi
+
+# Open the project in a new tmux session
+if tmux has-session -t "$PROJECT_NAME" 2>/dev/null; then
+  echo "Tmux session '$PROJECT_NAME' already exists. Attaching..."
+else
+  tmux new-session -s "$PROJECT_NAME" -c "$PROJECT_PATH" -d
+  echo "Created new tmux session '$PROJECT_NAME'."
+fi
+
+tmux attach-session -t "$PROJECT_NAME"

@@ -1,0 +1,133 @@
+[
+    // code completions keybinds
+    {
+        "context": "Editor && (showing_code_actions || showing_completions)",
+        "bindings": {
+            "shift-tab": "editor::ContextMenuPrevious",
+            "tab": "editor::ContextMenuNext"
+        }
+    },
+    {
+        "context": "(VimControl && !menu) || (EmptyPane || SharedScreen)",
+        "bindings": {
+            "space f f": "file_finder::Toggle",
+            "space f p": "projects::OpenRecent",
+            "space e e": "workspace::ToggleRightDock",
+            "space g g": "git_panel::ToggleFocus",
+            "space p p": "projects::OpenRecent",
+            "space f g": "workspace::NewSearch",
+            "space g a": "git::Add",
+            "space g A": "git::StageAll",
+            "space g u": "git::UnstageAll",
+            "space g c": "git::Commit",
+            "space a a": "git::ToggleStaged",
+            "space g d": "git::Diff",
+            "space g P": "git::Pull",
+            "space g p": "git::ForcePush",
+            "space g b": "git::Branch",
+            "space g i": "git::Init",
+            "g o": "debugger::StepOut",
+            "g b": "debugger::StepBack",
+            "g i": "debugger::StepInto",
+            "g n": "debugger::StepOver",
+            "space d d": "debug_panel::ToggleFocus"
+            // "space d d": "workspace::ToggleBottomDock"
+        }
+    },
+    // git panel
+    {
+        "context": "GitPanel && ChangesList",
+        "bindings": {
+            "space g g": "git_panel::Close",
+            "space g a": "git::StageFile",
+            "space g A": "git::StageAll",
+            "space g u": "git::UnstageAll"
+        }
+    },
+    // debug panel
+    {
+        "context": "DebugPanel",
+        "bindings": {
+            "space d d": "debug_panel::ToggleFocus"
+        }
+    },
+    {
+        "context": "(vim_mode == normal && !menu) || (GitPanel && ChangesList)",
+        "bindings": {
+            "space g b": "git::Branch"
+        }
+    },
+    {
+        "context": "vim_mode == normal && !menu",
+        "bindings": {
+            "shift-y": ["workspace::SendKeystrokes", "y $"],
+            "shift-k": "editor::Hover",
+            "space c c": "editor::ToggleCodeActions",
+            "space t d": "diagnostics::Deploy",
+            "space f b": "tab_switcher::Toggle",
+            "space d b": ["pane::CloseActiveItem", { "close_pinned": false }],
+            "space s": "outline::Toggle",
+            "space S": "project_symbols::Toggle",
+            "space r r": "editor::SelectAllMatches",
+            "g d": "editor::GoToDefinition",
+            "g D": "editor::GoToDefinitionSplit",
+            "g t": "editor::GoToTypeDefinition",
+            "g T": "editor::GoToTypeDefinitionSplit",
+            "?": "command_palette::Toggle",
+            ":": "command_palette::Toggle",
+            "space d t": "editor::ToggleBreakpoint",
+            "space d s": "debugger::Start",
+            "space d c": "debugger::Continue",
+            "space d S": "debugger::Stop",
+            "space /": "vim::Search",
+            "space i": "assistant::InlineAssist",
+            "/": null,
+            "#": null,
+            ".": null
+        }
+    },
+    {
+        // Vim: File Tree ("ProjectPanel") actions
+        "context": "ProjectPanel && not_editing",
+        "bindings": {
+            "space e e": "workspace::ToggleRightDock",
+            "h": "project_panel::CollapseSelectedEntry",
+            "l": "project_panel::ExpandSelectedEntry",
+            "j": "menu::SelectNext",
+            "k": "menu::SelectPrevious",
+            "o": "menu::Confirm",
+            "r": "project_panel::Rename",
+            "z c": "project_panel::CollapseSelectedEntry",
+            "z o": "project_panel::ExpandSelectedEntry",
+            "shift-o": "project_panel::RevealInFileManager",
+            "x": "project_panel::Cut",
+            "c": "project_panel::Copy",
+            "p": "project_panel::Paste",
+            "d": "project_panel::Delete",
+            "a": "project_panel::NewFile",
+            "shift-a": "project_panel::NewDirectory",
+            "shift-y": "workspace::CopyRelativePath",
+            "g y": "workspace::CopyPath",
+            "f a": "editor::SelectAllMatches",
+            "space g h d": "editor::ToggleSelectedDiffHunks",
+            "space g h r": "git::Restore",
+            // "space m p": "markdown::OpenPreviewToTheSide"
+            "space m p": "markdown::OpenPreviewToTheSide"
+        }
+    },
+    {
+        "context": "vim_mode == visual && !menu",
+        "bindings": {
+            "shift-k": "editor::MoveLineDown",
+            "shift-j": "editor::MoveLineUp"
+        }
+    },
+    {
+        "bindings": {
+            "ctrl-h": "workspace::ActivatePaneLeft",
+            "ctrl-l": "workspace::ActivatePaneRight",
+            "ctrl-j": "workspace::ActivatePaneDown",
+            "ctrl-k": "workspace::ActivatePaneUp"
+        }
+    }
+]
