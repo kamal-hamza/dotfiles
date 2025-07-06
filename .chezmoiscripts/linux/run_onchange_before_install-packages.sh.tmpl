@@ -1,69 +1,84 @@
-{{ if eq .osid "linux-debian" "linux-raspbian" "linux-ubuntu" -}}
+{{ if eq .osid "linux-arch" -}}
+#!/binbin/sh
 
-{{ $packages := list
-     "bat"
-     "build-essential"
-     "curl"
-     "fd-find"
-     "fzf"
-     "git"
-     "git-lfs"
-     "jq"
-     "libfuse2"
-     "openssh-server"
-     "ripgrep"
-     "shellcheck"
-     "units"
-     "zsh" -}}
-{{ $snaps := list -}}
-{{ $classicSnaps := list -}}
+# Update system and install base-devel for AUR packages
+sudo pacman -Syu --noconfirm base-devel
 
-{{ if eq .osid "linux-ubuntu" -}}
-{{   $packages = mustAppend $packages "btop" -}}
-{{ end -}}
+# Check for and install yay (AUR helper) if not present
+if ! command -v yay &> /dev/null; then
+    echo "yay not found, installing..."
+    git clone https://aur.archlinux.org/yay.git
+    (cd yay && makepkg -si --noconfirm)
+    rm -rf yay
+fi
 
-{{ if not .headless -}}
-{{   $packages = mustAppend $packages "xclip" -}}
-{{   $classicSnaps = mustAppend $classicSnaps "code" -}}
-{{ end -}}
+# Packages from official repositories
+pacman_packages=(
+    "bat"
+    "btop"
+    "curl"
+    "eza"
+    "fd"
+    "ffmpeg"
+    "fzf"
+    "git"
+    "git-lfs"
+    "go"
+    "jq"
+    "ripgrep"
+    "tmux"
+    "xz"
+    "clang"
+    "cmake"
+    "lazygit"
+    "lua-language-server"
+    "make"
+    "neovim"
+    "php"
+    "python-poetry"
+    "pyenv"
+    "rustup"
+    "tldr"
+    "zoxide"
+    "yt-dlp"
+    "kitty"
+    "vlc"
+    "gimp"
+    "obs-studio"
+    "wezterm"
+    "docker"
+    "noto-fonts" # A good default font collection
+)
 
-{{ if .personal -}}
-{{   $packages = mustAppend $packages "musl-tools" -}}
-{{   $classicSnaps = concat $classicSnaps (list "goreleaser" "snapcraft") -}}
-{{ end -}}
+# Packages from the Arch User Repository (AUR)
+aur_packages=(
+    "golangci-lint-bin"
+    "nvm"
+    "visual-studio-code-bin"
+    "spotify"
+    "zed-editor"
+    "chatgpt-desktop-bin" # There are several options, this is one
+    "google-chrome"
+    "ollama"
+    "skim"
+    "excalidraw-desktop"
+    "whatsapp-for-linux"
+)
 
-{{ if eq .osid "linux-ubuntu" -}}
-{{   $packages = concat $packages (list "gdal-bin" "libgeos-dev" "libproj-dev" "postgis" "postgresql") -}}
-{{ end -}}
+# Install official packages
+sudo pacman -S --needed --noconfirm "${pacman_packages[@]}"
 
-{{ if and (eq .osid "linux-ubuntu") (not .headless) -}}
-{{   $packages = concat $packages (list "qgis") -}}
-{{ end -}}
+# Install AUR packages
+yay -S --needed --noconfirm "${aur_packages[@]}"
 
-{{ if eq .hostname "legion" -}}
-{{   $packages = concat $packages (list "clang" "clang-format" "libstdc++-12-dev" "ninja-build" "pgformatter" "python3-dev" "python3-pip" "python3-venv") -}}
-{{   $snaps = mustAppend $snaps "dbeaver-ce" -}}
-{{ end -}}
-
-{{ $sudo := "sudo " -}}
-{{ if eq .chezmoi.username "root" -}}
-{{   $sudo = "" -}}
-{{ end -}}
-
-#!/bin/bash
-
-set -eufo pipefail
-
-{{ $sudo }}apt-get update
-{{ $sudo }}apt-get install -y {{ $packages | join " " }}
-
-{{ if lookPath "snap" }}
-{{   range $snaps }}
-( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install {{ . }}
-{{   end }}
-{{   range $classicSnaps }}
-( snap info {{ . }} | grep -q ^installed: ) || {{ $sudo }}snap install --classic {{ . }}
-{{   end }}
-{{ end }}
+# Notes on specific packages:
+# - logi-options+: There is no official Linux version. Solaar is a popular alternative.
+#   You can install it with: sudo pacman -S solaar
+# - mactex: This is specific to macOS. A good LaTeX distribution for Linux is TeX Live.
+#   You can install it with: sudo pacman -S texlive-most
+# - vmware-fusion: This is for macOS. The Linux equivalent is VMware Workstation.
+#   You can install it from the AUR: yay -S vmware-workstation
+# - rapidapi: This is available as a VS Code extension.
+# - openjdk: You can choose a specific version, for example: sudo pacman -S jdk-openjdk
 
 {{ end -}}

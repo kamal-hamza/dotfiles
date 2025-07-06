@@ -4,7 +4,7 @@
 if [[ $# -eq 1 ]]; then
 	selected=$1
 else
-	selected=$(find ~/Code ~/.config/ ~/Scripts/ -mindepth 1 -maxdepth 2 -type d | fzf)
+	selected=$(find ~/Code ~/.config/ ~/Scripts/ ~/.local/share -mindepth 1 -maxdepth 2 -type d | fzf)
 fi
 
 # Check to see if anything was selected

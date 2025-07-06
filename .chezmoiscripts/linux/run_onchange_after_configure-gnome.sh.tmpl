@@ -1,4 +1,4 @@
-{{ if (and (not .ephemeral) (not .headless)) -}}
+{{ if (and (eq .osid "linux-arch") (not .headless)) -}}
 #!/bin/bash
 
 set -eufo pipefail
@@ -7,30 +7,18 @@ fc-cache
 
 gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
 
+# Customize favorite apps (adjust as needed)
 gsettings set org.gnome.shell favorite-apps "[ \
-{{ if lookPath "firefox" -}}
-	'firefox.desktop', \
-{{ end -}}
-{{ if lookPath "code" -}}
-	'code_code.desktop', \
-{{ end -}}
-{{ if lookPath "qgis" -}}
-	'org.qgis.qgis.desktop', \
-{{ end -}}
-{{ if lookPath "google-earth-pro" -}}
-	'google-earth-pro.desktop',
-{{ end -}}
-{{ if lookPath "virtualbox" -}}
-	'virtualbox.desktop', \
-{{ end -}}
-	'com.mitchellh.ghostty.desktop', \
-	'org.gnome.Nautilus.desktop' \
+    'org.gnome.Nautilus.desktop', \
+    'kitty.desktop', \
+    'code.desktop', \
+    'spotify.desktop', \
+    'google-chrome.desktop' \
 ]"
 
 gsettings set org.gnome.shell.extensions.ding show-home false
 gsettings set org.gnome.shell.extensions.ding show-trash false
 gsettings set org.gnome.shell.extensions.ding show-volumes false
 
-# https://bugs.launchpad.net/ubuntu/+source/gnome-shell/+bug/1878953
 gsettings set org.gnome.mutter.keybindings switch-monitor "[]"
 {{ end -}}
