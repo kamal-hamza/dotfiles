@@ -155,6 +155,13 @@
             "windows": "yazi"
         },
         {
+            "name": "zsh",
+            "comment": "zsh shell terminal",
+            "linux": "zsh",
+            "macos": null,
+            "windows": null
+        },
+        {
             "name": "zsh-autosuggestions",
             "comment": "zsh-autosuggestions for providing suggestions for commands in the terminal",
             "linux": null,
