@@ -70,14 +70,27 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # --- Read JSON and Install Packages ---
+
+# Get the directory where the script itself is located
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+PACKAGES_FILE="${SCRIPT_DIR}/packages.json"
+
+# Check if the packages file exists
+if [ ! -f "$PACKAGES_FILE" ]; then
+    echo "Error: packages.json not found in the script's directory: $SCRIPT_DIR"
+    exit 1
+fi
+
 echo ""
 echo "--- Installing CLI Tools on $os_key ---"
-cli_packages=($(jq -r ".cli[].${os_key}" packages.json | grep -v "null"))
+# Use the full path to the packages file
+cli_packages=($(jq -r ".cli[].${os_key}" "$PACKAGES_FILE" | grep -v "null"))
 install_packages "$package_manager" "${cli_packages[@]}"
 
 echo ""
 echo "--- Installing GUI Apps on $os_key ---"
-app_packages=($(jq -r ".apps[].${os_key}" packages.json | grep -v "null"))
+# Use the full path to the packages file
+app_packages=($(jq -r ".apps[].${os_key}" "$PACKAGES_FILE" | grep -v "null"))
 
 if [[ "$os_key" == "macos" ]]; then
   # On macOS, add the --cask flag for GUI apps
