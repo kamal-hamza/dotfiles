@@ -71,13 +71,15 @@ fi
 
 # --- Read JSON and Install Packages ---
 
-# Get the directory where the script itself is located
+# When run by chezmoi, the CHEZMOI_SOURCE_DIR variable is set.
+# As a fallback for manual execution, we use the script's own directory.
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-PACKAGES_FILE="${SCRIPT_DIR}/packages.json"
+SOURCE_DIR="${CHEZMOI_SOURCE_DIR:-$SCRIPT_DIR}"
+PACKAGES_FILE="${SOURCE_DIR}/packages.json"
 
 # Check if the packages file exists
 if [ ! -f "$PACKAGES_FILE" ]; then
-    echo "Error: packages.json not found in the script's directory: $SCRIPT_DIR"
+    echo "Error: packages.json not found at $PACKAGES_FILE"
     exit 1
 fi
 
