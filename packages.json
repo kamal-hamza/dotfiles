@@ -1,0 +1,307 @@
+{
+    "cli": [
+        {
+            "name": "bat",
+            "comment": "A cat(1) clone with wings.",
+            "linux": "bat",
+            "macos": "bat",
+            "windows": "bat"
+        },
+        {
+            "name": "btop",
+            "comment": "A resource monitor.",
+            "linux": "btop",
+            "macos": "btop",
+            "windows": "btop"
+        },
+        {
+            "name": "chezmoi",
+            "comment": "Dotfile manager.",
+            "linux": "chezmoi",
+            "macos": "chezmoi",
+            "windows": "chezmoi"
+        },
+        {
+            "name": "clangd",
+            "comment": "Part of the LLVM toolchain, provides language server capabilities.",
+            "linux": "clangd",
+            "macos": "llvm",
+            "windows": "llvm"
+        },
+        {
+            "name": "cmake",
+            "comment": "Cross-platform build system generator.",
+            "linux": "cmake",
+            "macos": "cmake",
+            "windows": "cmake"
+        },
+        {
+            "name": "curl",
+            "comment": "Essential tool for transferring data with URLs.",
+            "linux": "curl",
+            "macos": "curl",
+            "windows": "curl"
+        },
+        {
+            "name": "git",
+            "comment": "Version control system.",
+            "linux": "git",
+            "macos": "git",
+            "windows": "git.install"
+        },
+        {
+            "name": "go",
+            "comment": "Go programming language.",
+            "linux": "golang-go",
+            "macos": "go",
+            "windows": "go"
+        },
+        {
+            "name": "latexindent",
+            "comment": "A Perl script for formatting LaTeX files. Requires a TeX distribution.",
+            "linux": "latexindent",
+            "macos": "mactex",
+            "windows": "miktex"
+        },
+        {
+            "name": "lazygit",
+            "comment": "A simple terminal UI for git commands.",
+            "linux": "lazygit",
+            "macos": "lazygit",
+            "windows": "lazygit"
+        },
+        {
+            "name": "llvm",
+            "comment": "Compiler infrastructure.",
+            "linux": "llvm",
+            "macos": "llvm",
+            "windows": "llvm"
+        },
+        {
+            "name": "lua-language-server",
+            "comment": "Language Server for Lua.",
+            "linux": "lua-language-server",
+            "macos": "lua-language-server",
+            "windows": "lua-language-server"
+        },
+        {
+            "name": "neovim",
+            "comment": "Hyperextensible Vim-based text editor.",
+            "linux": "neovim",
+            "macos": "neovim",
+            "windows": "neovim"
+        },
+        {
+            "name": "nvm",
+            "comment": "Node Version Manager. Best installed via its official install script, not a package manager.",
+            "linux": null,
+            "macos": "nvm",
+            "windows": null
+        },
+        {
+            "name": "openjdk",
+            "comment": "Open Java Development Kit. Version might need adjustment.",
+            "linux": "openjdk-17-jdk",
+            "macos": "openjdk@17",
+            "windows": "openjdk17"
+        },
+        {
+            "name": "php",
+            "comment": "PHP programming language.",
+            "linux": "php",
+            "macos": "php",
+            "windows": "php"
+        },
+        {
+            "name": "poetry",
+            "comment": "Python dependency management.",
+            "linux": "python3-poetry",
+            "macos": "poetry",
+            "windows": "python-poetry"
+        },
+        {
+            "name": "pyenv",
+            "comment": "Python Version Manager. Best installed via its official install script.",
+            "linux": null,
+            "macos": "pyenv",
+            "windows": "pyenv-win"
+        },
+        {
+            "name": "stylua",
+            "comment": "An opinionated Lua code formatter.",
+            "linux": "stylua",
+            "macos": "stylua",
+            "windows": "stylua"
+        },
+        {
+            "name": "tldr",
+            "comment": "Collaborative cheatsheets for console commands.",
+            "linux": "tldr",
+            "macos": "tldr",
+            "windows": "tldr"
+        },
+        {
+            "name": "tmux",
+            "comment": "Terminal multiplexer. Not applicable on Windows (use WezTerm tabs/panes).",
+            "linux": "tmux",
+            "macos": "tmux",
+            "windows": null
+        },
+        {
+            "name": "yazi",
+            "comment": "A terminal file manager.",
+            "linux": "yazi",
+            "macos": "yazi",
+            "windows": "yazi"
+        },
+        {
+            "name": "zsh-autosuggestions",
+            "comment": "zsh-autosuggestions for providing suggestions for commands in the terminal",
+            "linux": null,
+            "macos": "zsh-autosuggestions",
+            "windows": null
+        },
+        {
+            "name": "zsh-autopair",
+            "comment": "zsh-autopair for auto pairng brackets and quotes in the terminal",
+            "linux": "zsh-autopair",
+            "macos": "zsh-autopair",
+            "windows": null
+        }
+    ],
+    "apps": [
+        {
+            "name": "Aerospace",
+            "comment": "Tiling window manager for macOS only.",
+            "linux": "base-devel meson wlroots",
+            "macos": "aerospace",
+            "windows": "komorebi whkd"
+        },
+        {
+            "name": "ChatGPT",
+            "comment": "Desktop wrapper for ChatGPT.",
+            "linux": null,
+            "macos": "chatgpt",
+            "windows": "chatgpt"
+        },
+        {
+            "name": "Docker",
+            "comment": "Containerization platform.",
+            "linux": "docker-ce",
+            "macos": "docker",
+            "windows": "docker-desktop"
+        },
+        {
+            "name": "Excalidraw",
+            "comment": "Virtual whiteboard desktop app.",
+            "linux": null,
+            "macos": "excalidraw",
+            "windows": "excalidraw"
+        },
+        {
+            "name": "GIMP",
+            "comment": "GNU Image Manipulation Program.",
+            "linux": "gimp",
+            "macos": "gimp",
+            "windows": "gimp"
+        },
+        {
+            "name": "GitHub Desktop",
+            "comment": "GUI for using GitHub.",
+            "linux": null,
+            "macos": "github",
+            "windows": "github-desktop"
+        },
+        {
+            "name": "Google Chrome",
+            "comment": "Web browser.",
+            "linux": "google-chrome-stable",
+            "macos": "google-chrome",
+            "windows": "googlechrome"
+        },
+        {
+            "name": "TeX Live / MacTeX / MikTeX",
+            "comment": "Comprehensive TeX document production system.",
+            "linux": "texlive-full",
+            "macos": "mactex",
+            "windows": "miktex"
+        },
+        {
+            "name": "Logi Options+",
+            "comment": "Logitech device configuration software. Manual download required.",
+            "linux": null,
+            "macos": "logi-options+",
+            "windows": null
+        },
+        {
+            "name": "WezTerm",
+            "comment": "GPU-accelerated cross-platform terminal emulator.",
+            "linux": "wezterm",
+            "macos": "wezterm",
+            "windows": "wezterm"
+        },
+        {
+            "name": "OBS Studio",
+            "comment": "Software for video recording and live streaming.",
+            "linux": "obs-studio",
+            "macos": "obs",
+            "windows": "obs-studio"
+        },
+        {
+            "name": "Ollama",
+            "comment": "Run large language models locally.",
+            "linux": null,
+            "macos": "ollama",
+            "windows": "ollama"
+        },
+        {
+            "name": "RapidAPI",
+            "comment": "Desktop client for the RapidAPI platform.",
+            "linux": null,
+            "macos": "rapidapi",
+            "windows": "rapidapi"
+        },
+        {
+            "name": "PDF Viewer",
+            "comment": "Skim (macOS), Zathura (Linux), SumatraPDF (Windows).",
+            "linux": "zathura",
+            "macos": "skim",
+            "windows": "sumatrapdf"
+        },
+        {
+            "name": "VS Code",
+            "comment": "Code editor.",
+            "linux": "code",
+            "macos": "visual-studio-code",
+            "windows": "vscode"
+        },
+        {
+            "name": "Zed",
+            "comment": "High-performance, multiplayer code editor.",
+            "linux": "zed",
+            "macos": "zed",
+            "windows": null
+        },
+        {
+            "name": "WhatsApp",
+            "comment": "Messaging app.",
+            "linux": null,
+            "macos": "whatsapp",
+            "windows": "whatsapp"
+        },
+        {
+            "name": "Discord",
+            "comment": "Voice, video, and text chat service.",
+            "linux": "discord",
+            "macos": "discord",
+            "windows": "discord"
+        },
+        {
+            "name": "Steam",
+            "comment": "Video game digital distribution service.",
+            "linux": "steam",
+            "macos": "steam",
+            "windows": "steam"
+        }
+    ]
+}
