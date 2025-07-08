@@ -1,6 +1,22 @@
 {{ if eq .chezmoi.os "linux" -}}
 #!/bin/bash
 
-# Update package database and install packages
-sudo pacman -Syu --noconfirm {{ .packages.arch.pacman | join " " }}
+# Ensure pacman-contrib is installed for `checkupdates`
+sudo pacman -S --noconfirm --needed pacman-contrib
+
+# Install yay (AUR helper) if not already installed
+if ! command -v yay &> /dev/null; then
+    echo "Installing yay..."
+    pushd /tmp
+    sudo pacman -S --noconfirm --needed git base-devel
+    git clone https://aur.archlinux.org/yay-bin.git
+    cd yay-bin
+    makepkg -si --noconfirm
+    popd
+fi
+
+# Use yay to install all packages from both official repos and AUR
+# yay acts as a wrapper around pacman and handles AUR packages seamlessly
+echo "Installing packages with yay..."
+yay -Syu --noconfirm {{ .packages.arch.pacman | join " " }}
 {{ end -}}
