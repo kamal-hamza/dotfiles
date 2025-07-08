@@ -1,0 +1,6 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+
+# Update package database and install packages
+sudo pacman -Syu --noconfirm {{ .packages.arch.pacman | join " " }}
+{{ end -}}
