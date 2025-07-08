@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# NOTE: 'set -e' is intentionally omitted to allow the script to continue
-# even if a single package installation fails.
-
 # --- Configuration ---
 # Shell colors for logging
 readonly C_RESET='\033[0m'
@@ -10,6 +7,14 @@ readonly C_RED='\033[0;31m'
 readonly C_GREEN='\033[0;32m'
 readonly C_BLUE='\033[0;34m'
 readonly C_YELLOW='\033[0;33m'
+
+# --- (FIX) Global variable declarations ---
+# These are now declared globally so all functions can share them.
+OS=""
+OS_KEY=""
+PKG_MANAGER_CMD=""
+PKG_MANAGER_APPS_CMD=""
+SUDO_CMD=""
 
 # --- Helper Functions ---
 log_info() {
@@ -29,12 +34,6 @@ log_error() {
 }
 
 # --- OS & Package Manager Detection ---
-OS=""
-OS_KEY=""
-PKG_MANAGER_CMD=""
-PKG_MANAGER_APPS_CMD=""
-SUDO_CMD=""
-
 detect_os() {
     log_info "Detecting operating system..."
     case "$(uname -s)" in
@@ -126,15 +125,11 @@ install_packages() {
     local category="$1"
     local install_cmd="$2"
 
-    # --- MODIFICATION START ---
-    # Use the $CHEZMOI_SOURCE_DIR variable to build an absolute path.
-    # This is the robust way to find files within your source directory.
     if [ -z "$CHEZMOI_SOURCE_DIR" ]; then
         log_error "FATAL: \$CHEZMOI_SOURCE_DIR is not set. This script must be run by chezmoi."
         exit 1
     fi
     local json_file="$CHEZMOI_SOURCE_DIR/packages.json"
-    # --- MODIFICATION END ---
 
 
     if [ ! -f "$json_file" ]; then
