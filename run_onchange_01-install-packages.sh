@@ -47,7 +47,7 @@ detect_os() {
                 SUDO_CMD="sudo"
             else
                 log_error "Unsupported Linux distribution. Only Arch Linux is supported by this script."
-                exit 1 # This is a fatal error, so we exit manually.
+                exit 1
             fi
             ;;
         Darwin*)
@@ -66,7 +66,7 @@ detect_os() {
             ;;
         *)
             log_error "Unsupported operating system."
-            exit 1 # This is a fatal error.
+            exit 1
             ;;
     esac
     log_success "Detected OS: ${OS}"
@@ -74,7 +74,6 @@ detect_os() {
 
 # --- Prerequisite Installation ---
 
-# Function to check for and install Homebrew on macOS
 install_homebrew() {
     if [[ "$OS" != "macOS" ]]; then
         return
@@ -90,7 +89,6 @@ install_homebrew() {
             log_error "Failed to install Homebrew. The script cannot continue."
             exit 1
         fi
-        # Add Homebrew to PATH for the current script session
         if [[ -x "/opt/homebrew/bin/brew" ]]; then
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
@@ -98,7 +96,6 @@ install_homebrew() {
     fi
 }
 
-# Function to check for and install jq
 install_jq() {
     if command -v jq &>/dev/null; then
         log_info "jq is already installed."
@@ -125,16 +122,23 @@ install_jq() {
 
 # --- Main Installation Logic ---
 
-# Reads packages.json and installs packages for the detected OS
-# $1: Category ("cli" or "apps")
-# $2: Install command (e.g., "brew install" or "winget install -e --id")
 install_packages() {
     local category="$1"
     local install_cmd="$2"
-    local json_file="packages.json" # Assumes script is run from chezmoi root
+
+    # --- MODIFICATION START ---
+    # Use the $CHEZMOI_SOURCE_DIR variable to build an absolute path.
+    # This is the robust way to find files within your source directory.
+    if [ -z "$CHEZMOI_SOURCE_DIR" ]; then
+        log_error "FATAL: \$CHEZMOI_SOURCE_DIR is not set. This script must be run by chezmoi."
+        exit 1
+    fi
+    local json_file="$CHEZMOI_SOURCE_DIR/packages.json"
+    # --- MODIFICATION END ---
+
 
     if [ ! -f "$json_file" ]; then
-        log_error "'$json_file' not found. This script must be run from the root of your chezmoi repository."
+        log_error "'$json_file' not found. Please ensure packages.json exists in your chezmoi source root."
         exit 1
     fi
 
@@ -145,14 +149,12 @@ install_packages() {
             continue
         fi
 
-        # Handle special cases that shouldn't be installed by a package manager
         if [[ "$package_name" == "nvm" || "$package_name" == "pyenv" || "$package_name" == *"-win" ]]; then
             log_warn "Skipping '$package_name'. It requires a separate installation script or manual setup."
             continue
         fi
 
         log_info "Installing ${package_name}..."
-        # This 'if/else' block now handles failures gracefully without exiting the script.
         if $SUDO_CMD $install_cmd $package_name; then
             log_success "Successfully installed ${package_name}."
         else
@@ -168,14 +170,11 @@ main() {
     install_homebrew
     install_jq
 
-    # Install CLI packages
     install_packages "cli" "$PKG_MANAGER_CMD"
-
-    # Install App (GUI) packages
     install_packages "apps" "$PKG_MANAGER_APPS_CMD"
 
     log_success "All packages processed successfully!"
 }
 
-# Run the main function
-main "$@"
+# Run the main function, logging output to a file and the console
+main "$@" 2>&1 | tee ~/chezmoi-install-log.txt
