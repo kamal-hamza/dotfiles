@@ -1,106 +1,181 @@
 #!/bin/bash
 
-# --- Helper Functions ---
-install_packages() {
-  local package_manager_command=$1
-  shift
-  local packages=("$@")
+# NOTE: 'set -e' is intentionally omitted to allow the script to continue
+# even if a single package installation fails.
 
-  if [ ${#packages[@]} -gt 0 ]; then
-    echo "Installing: ${packages[*]}"
-    eval "$package_manager_command ${packages[*]}"
-  else
-    echo "No packages to install for this category."
-  fi
+# --- Configuration ---
+# Shell colors for logging
+readonly C_RESET='\033[0m'
+readonly C_RED='\033[0;31m'
+readonly C_GREEN='\033[0;32m'
+readonly C_BLUE='\033[0;34m'
+readonly C_YELLOW='\033[0;33m'
+
+# --- Helper Functions ---
+log_info() {
+    echo -e "${C_BLUE}INFO:${C_RESET} $1"
 }
 
-# --- OS Detection ---
-os_key=""
-package_manager=""
-cask_flag="" # For Homebrew GUI apps
+log_success() {
+    echo -e "${C_GREEN}SUCCESS:${C_RESET} $1"
+}
 
-# Check for Git Bash / MSYS on Windows first
-if [[ "$(uname)" == *"MINGW64"* || "$(uname)" == *"MSYS"* ]]; then
-  os_key="windows"
-  package_manager="choco install -y"
-elif [[ "$(uname)" == "Darwin" ]]; then
-  os_key="macos"
-  package_manager="brew install"
-  cask_flag="--cask"
-elif [[ "$(uname)" == "Linux" ]]; then
-  os_key="linux"
-  if [ -f /etc/debian_version ]; then
-    package_manager="sudo apt-get install -y"
-  elif [ -f /etc/redhat-release ]; then
-    package_manager="sudo dnf install -y"
-  elif [ -f /etc/arch-release ]; then
-    package_manager="sudo pacman -S --noconfirm"
-  else
-    echo "Unsupported Linux distribution."
-    exit 1
-  fi
-else
-  echo "Unsupported Operating System: $(uname)"
-  exit 1
-fi
+log_warn() {
+    echo -e "${C_YELLOW}WARN:${C_RESET} $1"
+}
 
-# --- Prerequisite Checks (Chocolatey, jq) ---
-if [[ "$os_key" == "windows" ]]; then
-  if ! command -v choco &> /dev/null; then
-    echo "Chocolatey is not installed. Please install it first by following the instructions at https://chocolatey.org/install"
-    echo "You'll need to run a specific command in an Administrative PowerShell."
-    exit 1
-  fi
-fi
+log_error() {
+    echo -e "${C_RED}ERROR:${C_RESET} $1" >&2
+}
 
-if ! command -v jq &> /dev/null; then
-  echo "jq is not installed. Attempting to install it now..."
-  if [[ "$os_key" == "macos" ]]; then
-    brew install jq
-  elif [[ "$os_key" == "linux" ]]; then
-    ${package_manager% *} jq # Removes flags like -y for a cleaner command
-  elif [[ "$os_key" == "windows" ]]; then
-    choco install -y jq
-  fi
+# --- OS & Package Manager Detection ---
+OS=""
+OS_KEY=""
+PKG_MANAGER_CMD=""
+PKG_MANAGER_APPS_CMD=""
+SUDO_CMD=""
 
-  if ! command -v jq &> /dev/null; then
-    echo "Failed to install jq. Please install it manually and run the script again."
-    exit 1
-  fi
-fi
+detect_os() {
+    log_info "Detecting operating system..."
+    case "$(uname -s)" in
+        Linux*)
+            if [ -f /etc/arch-release ]; then
+                OS="Arch"
+                OS_KEY="linux"
+                PKG_MANAGER_CMD="pacman -S --noconfirm"
+                PKG_MANAGER_APPS_CMD="pacman -S --noconfirm"
+                SUDO_CMD="sudo"
+            else
+                log_error "Unsupported Linux distribution. Only Arch Linux is supported by this script."
+                exit 1 # This is a fatal error, so we exit manually.
+            fi
+            ;;
+        Darwin*)
+            OS="macOS"
+            OS_KEY="macos"
+            PKG_MANAGER_CMD="brew install"
+            PKG_MANAGER_APPS_CMD="brew install --cask"
+            SUDO_CMD=""
+            ;;
+        CYGWIN*|MINGW*|MSYS*)
+            OS="Windows"
+            OS_KEY="windows"
+            PKG_MANAGER_CMD="winget install -e --id"
+            PKG_MANAGER_APPS_CMD="winget install -e --id"
+            SUDO_CMD=""
+            ;;
+        *)
+            log_error "Unsupported operating system."
+            exit 1 # This is a fatal error.
+            ;;
+    esac
+    log_success "Detected OS: ${OS}"
+}
 
-# --- Read JSON and Install Packages ---
+# --- Prerequisite Installation ---
 
-# When run by chezmoi, the CHEZMOI_SOURCE_DIR variable is set.
-# As a fallback for manual execution, we use the script's own directory.
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-SOURCE_DIR="${CHEZMOI_SOURCE_DIR:-$SCRIPT_DIR}"
-PACKAGES_FILE="${SOURCE_DIR}/packages.json"
+# Function to check for and install Homebrew on macOS
+install_homebrew() {
+    if [[ "$OS" != "macOS" ]]; then
+        return
+    fi
 
-# Check if the packages file exists
-if [ ! -f "$PACKAGES_FILE" ]; then
-    echo "Error: packages.json not found at $PACKAGES_FILE"
-    exit 1
-fi
+    if command -v brew &>/dev/null; then
+        log_info "Homebrew is already installed."
+        log_info "Updating Homebrew..."
+        brew update
+    else
+        log_info "Homebrew not found. Installing Homebrew..."
+        if ! /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; then
+            log_error "Failed to install Homebrew. The script cannot continue."
+            exit 1
+        fi
+        # Add Homebrew to PATH for the current script session
+        if [[ -x "/opt/homebrew/bin/brew" ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+        log_success "Homebrew installed."
+    fi
+}
 
-echo ""
-echo "--- Installing CLI Tools on $os_key ---"
-# Use the full path to the packages file
-cli_packages=($(jq -r ".cli[].${os_key}" "$PACKAGES_FILE" | grep -v "null"))
-install_packages "$package_manager" "${cli_packages[@]}"
+# Function to check for and install jq
+install_jq() {
+    if command -v jq &>/dev/null; then
+        log_info "jq is already installed."
+        return
+    fi
 
-echo ""
-echo "--- Installing GUI Apps on $os_key ---"
-# Use the full path to the packages file
-app_packages=($(jq -r ".apps[].${os_key}" "$PACKAGES_FILE" | grep -v "null"))
+    log_info "jq not found. Installing jq..."
+    local install_cmd
+    if [[ "$OS" == "macOS" ]]; then
+        install_cmd="brew install jq"
+    elif [[ "$OS" == "Arch" ]]; then
+        install_cmd="sudo pacman -S --noconfirm jq"
+    elif [[ "$OS" == "Windows" ]]; then
+        install_cmd="winget install -e --id jqlang.jq"
+    fi
 
-if [[ "$os_key" == "macos" ]]; then
-  # On macOS, add the --cask flag for GUI apps
-  install_packages "$package_manager $cask_flag" "${app_packages[@]}"
-else
-  # Linux and Windows use the same command for CLI and GUI apps
-  install_packages "$package_manager" "${app_packages[@]}"
-fi
+    if ! $install_cmd; then
+        log_error "Failed to install jq. The script cannot continue."
+        exit 1
+    fi
+    log_success "jq installed."
+}
 
-echo ""
-echo "Installation complete."
+
+# --- Main Installation Logic ---
+
+# Reads packages.json and installs packages for the detected OS
+# $1: Category ("cli" or "apps")
+# $2: Install command (e.g., "brew install" or "winget install -e --id")
+install_packages() {
+    local category="$1"
+    local install_cmd="$2"
+    local json_file="packages.json" # Assumes script is run from chezmoi root
+
+    if [ ! -f "$json_file" ]; then
+        log_error "'$json_file' not found. This script must be run from the root of your chezmoi repository."
+        exit 1
+    fi
+
+    log_info "Processing '$category' packages from $json_file..."
+
+    jq -r --arg os_key "$OS_KEY" ".${category}[] | select(.\($os_key) != null) | .\($os_key)" "$json_file" | while IFS= read -r package_name; do
+        if [ -z "$package_name" ]; then
+            continue
+        fi
+
+        # Handle special cases that shouldn't be installed by a package manager
+        if [[ "$package_name" == "nvm" || "$package_name" == "pyenv" || "$package_name" == *"-win" ]]; then
+            log_warn "Skipping '$package_name'. It requires a separate installation script or manual setup."
+            continue
+        fi
+
+        log_info "Installing ${package_name}..."
+        # This 'if/else' block now handles failures gracefully without exiting the script.
+        if $SUDO_CMD $install_cmd $package_name; then
+            log_success "Successfully installed ${package_name}."
+        else
+            log_error "Failed to install '${package_name}'. It may be unavailable in the repository. Skipping."
+        fi
+    done
+}
+
+
+# --- Main Execution ---
+main() {
+    detect_os
+    install_homebrew
+    install_jq
+
+    # Install CLI packages
+    install_packages "cli" "$PKG_MANAGER_CMD"
+
+    # Install App (GUI) packages
+    install_packages "apps" "$PKG_MANAGER_APPS_CMD"
+
+    log_success "All packages processed successfully!"
+}
+
+# Run the main function
+main "$@"
