@@ -1,0 +1,45 @@
+[template.files]
+    ".chezmoipacks" = ".chezmoipacks.tmpl"
+
+{{ if eq .chezmoi.os "arch" -}}
+[packages]
+    [packages.pacman]
+        command = "sudo"
+        args = ["pacman", "-S", "--noconfirm", "--needed"]
+        list.command = "pacman"
+        list.args = ["-Q"]
+[packages.apps]
+    [packages.apps.pacman]
+        command = "sudo"
+        args = ["pacman", "-S", "--noconfirm", "--needed"]
+        list.command = "pacman"
+        list.args = ["-Q"]
+
+{{ else if eq .chezmoi.os "darwin" -}}
+[packages]
+    [packages.brew]
+        command = "brew"
+        args = ["install"]
+        list.command = "brew"
+        list.args = ["list", "--formula"]
+[packages.apps]
+    [packages.apps.brew-cask]
+        command = "brew"
+        args = ["install", "--cask"]
+        list.command = "brew"
+        list.args = ["list", "--cask"]
+
+{{ else if eq .chezmoi.os "windows" -}}
+[packages]
+    [packages.winget]
+        command = "winget"
+        args = ["install", "--exact", "--accept-package-agreements", "--accept-source-agreements"]
+        list.command = "winget"
+        list.args = ["list"]
+[packages.apps]
+    [packages.apps.winget]
+        command = "winget"
+        args = ["install", "--exact", "--accept-package-agreements", "--accept-source-agreements"]
+        list.command = "winget"
+        list.args = ["list"]
+{{ end -}}
