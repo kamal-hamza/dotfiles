@@ -9,35 +9,39 @@ if wezterm.config_builder then
 end
 
 -- ===================================================================
--- General Appearance (from kitty.conf)
+-- General Appearance (Merged from kitty.conf)
 -- ===================================================================
 
--- Font configuration
--- Corresponds to: font_family, bold_font, italic_font, bold_italic_font, font_size
-config.font = wezterm.font("MesloLGL Nerd Font Mono")
-config.font_size = 20.0
+-- Load the color scheme from pywal's generated JSON file.
+local colors = wezterm.color.load_from_json_file(os.getenv('HOME') .. '/.cache/wal/colors.json')
+if colors then
+    config.colors = colors
+end
+
+-- Font configuration from Kitty
+config.font = wezterm.font("Fira Code")
+config.font_size = 13
 
 -- Cursor configuration
--- Corresponds to: cursor_blink_interval, cursor_shape
 config.default_cursor_style = 'SteadyBlock'
 config.cursor_blink_rate = 0
 
--- Background opacity and blur (for macOS)
--- Corresponds to: background_opacity, background_blur
-config.window_background_opacity = 0.4
-config.macos_window_background_blur = 64
+-- Background opacity from Kitty
+config.window_background_opacity = 0.95
 
--- macOS specific options
--- Corresponds to: macos_option_as_alt
--- config.send_composed_key_when_left_alt_is_pressed = true
+-- Window padding from Kitty
+config.window_padding = {
+    left = 10,
+    right = 10,
+    top = 10,
+    bottom = 10,
+}
 
 -- Tab bar / Status bar appearance
--- Corresponds to: tmux's status-position, status-style, etc.
 config.tab_bar_at_bottom = true
 config.use_fancy_tab_bar = false -- Use a simpler tab bar style
 
 -- Pane border colors
--- Corresponds to: tmux's pane-border-lines, pane-border-style
 config.inactive_pane_hsb = {
     hue = 240.0,      -- a neutral hue
     saturation = 0.0,
@@ -45,7 +49,6 @@ config.inactive_pane_hsb = {
 }
 
 -- Enable mouse support (default in WezTerm)
--- Corresponds to: set -g mouse on
 config.mouse_bindings = {
     -- Allows right-click to spawn top command in new tab
     {
@@ -62,12 +65,10 @@ config.mouse_bindings = {
 -- ===================================================================
 
 -- Set the leader key (prefix)
--- Corresponds to: set -g prefix C-s
 config.leader = { key = 's', mods = 'CTRL', timeout_milliseconds = 1000 }
 
 config.keys = {
     -- Pane splitting
-    -- Corresponds to: bind v split-window -h, bind b split-window -v
     {
         key = 'v',
         mods = 'LEADER',
@@ -80,7 +81,6 @@ config.keys = {
     },
 
     -- Closing panes and tabs (windows)
-    -- Corresponds to: bind x kill-pane, bind & kill-window
     {
         key = 'x',
         mods = 'LEADER',
@@ -93,7 +93,6 @@ config.keys = {
     },
 
     -- Tab (window) navigation
-    -- Corresponds to: bind l next-window, bind k previous-window
     {
         key = 'l',
         mods = 'LEADER',
@@ -106,7 +105,6 @@ config.keys = {
     },
 
     -- Renaming tabs (windows)
-    -- Corresponds to: bind r command-prompt "rename-window '%%'"
     {
         key = 'r',
         mods = 'LEADER',
@@ -121,7 +119,6 @@ config.keys = {
     },
 
     -- Reload configuration
-    -- Corresponds to: bind R source-file ~/.tmux.conf
     {
         key = 'R',
         mods = 'LEADER',
@@ -129,8 +126,6 @@ config.keys = {
     },
 
     -- Smart Pane Navigation (vim-tmux-navigator)
-    -- This section replicates the C-h/j/k/l navigation between vim and wezterm panes.
-    -- WezTerm has built-in support for this kind of logic.
     {
         key = 'h',
         mods = 'CTRL',
@@ -181,7 +176,6 @@ config.keys = {
     },
 
     -- Enter copy mode
-    -- Corresponds to: bind [ copy-mode
     {
         key = '[',
         mods = 'LEADER',
@@ -193,7 +187,6 @@ config.keys = {
 -- Copy Mode (Vi Mode)
 -- ===================================================================
 
--- Corresponds to: setw -g mode-keys vi
 config.key_tables = {
     copy_mode = {
         {
@@ -221,31 +214,30 @@ config.key_tables = {
 -- Helper for vim-tmux-navigator functionality
 -- ===================================================================
 
--- This event triggers whenever the foreground process in a pane changes.
--- We check if it's a vim-like process and set a variable on the pane.
 wezterm.on('update-status', function(window, pane)
     local process_name = pane:get_foreground_process_name()
-    -- This regex is equivalent to the one in your tmux.conf
     local is_vim = process_name and (process_name:find('[n|g]?vi[m]?x?') or process_name:find('fzf'))
     pane:set_user_var('is_vim', is_vim and 'true' or 'false')
 end)
 
 -- ===================================================================
 -- Tab Bar Formatting
+-- Note: This custom formatter will override pywal colors for the tab bar.
 -- ===================================================================
 
 wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-    local background = '#080808'
+    -- Use pywal colors if available, otherwise default
+    local background = (config.colors and config.colors.tab_bar.background) or '#080808'
     local foreground = '#cccccc'
-    local is_active = tab.is_active
 
-    if is_active then
-        background = '#1f1f1f'
-        foreground = '#ffffff'
+    if tab.is_active then
+        background = (config.colors and config.colors.tab_bar.active_tab.bg_color) or '#1f1f1f'
+        foreground = (config.colors and config.colors.tab_bar.active_tab.fg_color) or '#ffffff'
     end
 
     if hover then
-        background = '#3f3f3f'
+        background = (config.colors and config.colors.tab_bar.inactive_tab_hover.bg_color) or '#3f3f3f'
+        foreground = (config.colors and config.colors.tab_bar.inactive_tab_hover.fg_color) or '#ffffff'
     end
 
     local title = string.format(" %s ", tab.tab_index .. ": " .. tab.active_pane.title)

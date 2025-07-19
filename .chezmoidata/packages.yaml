@@ -49,6 +49,8 @@ packages:
             - "visual-studio-code"
             - "wezterm"
             - "zed"
+            - "font-fira-code-nerd-font"
+            - "font-meslo-lg-nerd-font"
 
     # 🐧 Arch Linux packages
     # Note: AUR packages require an AUR helper (e.g., yay, paru)
@@ -91,6 +93,8 @@ packages:
             - "ncmpcpp"
             - "gimp"
             - "wezterm"
+            - "ttf-firacode-nerd"
+            - "ttf-meslo-nerd-font-powerlevel10k"
 
             # --- Hyprland Desktop Environment & Utilities ---
             - "hyprland"
@@ -170,3 +174,5 @@ packages:
             - "mpd"
             - "mpc"
             - "ncmpcpp"
+            - "NerdFonts.FiraCode"
+            - "NerdFonts.Meslo"
