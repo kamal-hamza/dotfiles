@@ -11,6 +11,7 @@ export PATH="$HOME/.dotnet/tools:$PATH"
 export PATH="$DOTNET_ROOT/sdk:$PATH"
 export PATH="/opt/homebrew/bin/lua-language-server:$PATH"
 export PATH="/opt/homebrew/bin/stylua:$PATH"
+export PATH="$(brew --prefix)/opt/mssql-tools18/bin:$PATH"
 
 # Default editor
 export EDITOR="zed"
@@ -29,6 +30,9 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
 export FZF_TMUX_OPTS=" -p90%,70% "
 export TEXINPUTS="$HOME/.config/tex/latex//:"
+export ODBCSYSINI=/opt/homebrew/etc
+export LDFLAGS="-L/opt/anaconda3/envs/django-db/lib"
+export CPPFLAGS="-I/opt/anaconda3/envs/django-db/include"
 export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"

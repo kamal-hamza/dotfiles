@@ -11,6 +11,7 @@ PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%1~ ${vcs_info_msg_0_}%% '
 # Evals
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
 eval "$(zoxide init zsh)"

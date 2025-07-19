@@ -30,11 +30,14 @@ packages:
             - "zsh"
             - "zsh-autopair"
             - "zsh-autosuggestions"
+            - "mpd"
+            - "mpc"
+            - "ncmpcpp"
         casks:
             - "aerospace"
             - "chatgpt"
             - "docker"
-            - "excalidraw"
+            - "excalidrawz"
             - "gimp"
             - "github"
             - "google-chrome"
@@ -47,17 +50,18 @@ packages:
             - "wezterm"
             - "zed"
 
-    # 🐧 Arch Linux packages using pacman
-    # Note: Some packages are from the AUR and require an AUR helper (e.g., yay, paru)
+    # 🐧 Arch Linux packages
+    # Note: AUR packages require an AUR helper (e.g., yay, paru)
     arch:
         pacman:
-            # Official Repositories
+            # --- General Development & CLI Tools ---
             - "bat"
             - "btop"
             - "chezmoi"
             - "clang"
             - "cmake"
             - "curl"
+            - "docker"
             - "eza"
             - "ffmpeg"
             - "fzf"
@@ -82,16 +86,44 @@ packages:
             - "zoxide"
             - "zsh"
             - "zsh-autosuggestions"
-            # AUR (Arch User Repository)
+            - "mpd"
+            - "mpc"
+            - "ncmpcpp"
+            - "gimp"
+            - "wezterm"
+
+            # --- Hyprland Desktop Environment & Utilities ---
+            - "hyprland"
+            - "waybar"
+            - "rofi"
+            - "mako"
+            - "swaylock"
+            - "swww"
+            - "polkit-kde-agent"
+            - "qt5-wayland"
+            - "qt6-wayland"
+            - "qt5ct"
+            - "qt6ct"
+            - "xdg-desktop-portal-hyprland"
+            - "firefox"
+            - "dolphin"
+            - "pywal"
+            - "wl-clipboard"
+            - "cliphist"
+            - "grim"
+            - "slurp"
+            - "jq"
+            - "pacman-contrib"
+            - "ttf-jetbrains-mono-nerd"
+
+        aur:
+            # --- AUR (Arch User Repository) ---
             - "google-chrome"
             - "visual-studio-code-bin"
-            - "gimp"
             - "github-desktop-bin"
-            - "docker"
-            - "wezterm"
             - "ollama"
             - "zsh-autopair-git"
-            - "zed-editor"
+            - "zed-editor-bin"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
 
@@ -135,3 +167,6 @@ packages:
             - "vscode"
             - "wezterm"
             - "zed-editor"
+            - "mpd"
+            - "mpc"
+            - "ncmpcpp"

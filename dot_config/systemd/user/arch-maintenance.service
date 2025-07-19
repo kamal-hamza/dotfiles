@@ -1,0 +1,6 @@
+[Unit]
+Description=Run Arch Linux maintenance script
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/scripts/arch-maintenance.sh

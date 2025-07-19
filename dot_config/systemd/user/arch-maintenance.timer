@@ -1,0 +1,9 @@
+[Unit]
+Description=Run Arch Linux maintenance script weekly
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target

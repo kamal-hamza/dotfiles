@@ -1,0 +1,101 @@
+# ncmpcpp Bindings (Vim-inspired)
+#
+# To use these bindings:
+# 1. Save this file as 'bindings' in your ncmpcpp config directory (e.g., ~/.config/ncmpcpp/)
+# 2. Ensure the line `bindings_file = "${XDG_CONFIG_HOME:-$HOME/.config}/ncmpcpp/bindings"`
+#    is present in your main `ncmpcpp/config` file.
+# 3. Restart ncmpcpp.
+
+# --- Navigation (HJKL) ---
+def_key "h" previous_column
+def_key "l" next_column
+def_key "j" scroll_down
+def_key "k" scroll_up
+
+# Page movements (Ctrl-d, Ctrl-u, Ctrl-f, Ctrl-b)
+def_key "ctrl-d" page_down
+def_key "ctrl-u" page_up
+def_key "ctrl-f" page_down # Same as Ctrl-d, common Vim muscle memory
+def_key "ctrl-b" page_up   # Same as Ctrl-u, common Vim muscle memory
+
+# Go to start/end (g, G)
+def_key "g" move_home      # Top of current list/view
+def_key "G" move_end       # End of current list/view
+
+# --- Playback Controls ---
+def_key " " toggle_pause   # Space for play/pause (common for media)
+def_key "p" toggle_pause   # Vim-like 'p' for put/paste, here mapped to play/pause
+def_key "s" stop
+def_key "n" next_song
+def_key "N" previous_song
+
+# Volume (+, -)
+def_key "+" volume_up
+def_key "-" volume_down
+def_key "=" volume_up      # Alias for +
+def_key "_", volume_down   # Alias for -
+
+# Seek (H, L - alternate context, useful in visualizer)
+def_key "L" seek_forward
+def_key "H" seek_backward
+
+# --- General Actions ---
+def_key "u" update_database # update (same as default)
+def_key "q" quit            # Quit ncmpcpp (same as default)
+def_key "q" close_window    # Close current window (e.g., help, search results)
+
+# Search (/)
+def_key "/" find
+def_key "/" find_item_forward # Find in browser/playlist (depends on context)
+
+# Repeat last search (n, N)
+def_key "n" next_found_item
+def_key "N" previous_found_item
+
+# --- Playlist / Library Management ---
+def_key "a" add_current_song_to_playlist # Add selected item to current playlist
+def_key "d" delete_selected_items     # Delete selected items from playlist/queue
+def_key "y" yank_current_song         # Yank (copy) current song
+def_key "P" paste_song                # Paste yanked song
+
+def_key "R" remove_current_song       # Remove current playing song from playlist (useful for single-song deletion)
+def_key "C" clear_playlist            # Clear current playlist
+
+# Sort (J, K for moving items in playlist editor, or changing sort order)
+def_key "J" move_sort_order_down
+def_key "K" move_sort_order_up
+def_key "m" move_selected_items_down
+def_key "M" move_selected_items_up
+
+# Tag Editor
+def_key "t" show_tag_editor # Open tag editor (often 'T' by default, changed for Vim feel)
+
+# --- Screen Switching (Number Keys) ---
+# Keeping default 1-9 for screen switching is usually good as it mimics Vim's
+# buffer/tab switching with plugin support, and is distinct from other Vim commands.
+# 1: Playlist
+# 2: Browser
+# 3: Lyrics
+# 4: Visualizer
+# 5: Media Library
+# ... and so on for other screens.
+
+# --- Additional handy Vim-inspired bindings ---
+# You can uncomment and customize these as needed.
+
+# Toggle Mute
+# def_key "M" toggle_mute
+
+# Shuffle
+# def_key "z" toggle_shuffle # Common Vim motion related to folds, can be repurposed
+
+# Repeat
+# def_key "r" toggle_repeat  # Simple 'r' for repeat
+
+# Show Help
+# def_key "?" show_help      # Standard Vim help binding
+
+# Reload config (useful for testing changes without restarting ncmpcpp)
+# def_key "ctrl-r" reload_config
+
+# --- Unbound default keys (can be assigned if desired) ---

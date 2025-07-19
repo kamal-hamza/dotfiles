@@ -1,0 +1,80 @@
+/* Import pywal colors. This must be at the top. */
+/* IMPORTANT: Replace YOUR_USERNAME with your actual username. */
+@import url("/home/YOUR_USERNAME/.cache/wal/colors-waybar.css");
+
+/* -----------------------------------------------------
+ * General Waybar Style
+ * ----------------------------------------------------- */
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", FontAwesome, sans-serif;
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    /* The background is now controlled by pywal via colors-waybar.css */
+    background: @background;
+    border-bottom: 2px solid @color4; /* Use a color from pywal */
+    color: @foreground; /* Use foreground from pywal */
+    transition-property: background-color;
+    transition-duration: 0.5s;
+}
+
+/* -----------------------------------------------------
+ * Module Styles
+ * ----------------------------------------------------- */
+#workspaces,
+#clock,
+#pulseaudio,
+#network,
+#tray {
+    padding: 0 10px;
+}
+
+/* -----------------------------------------------------
+ * Workspaces
+ * ----------------------------------------------------- */
+#workspaces button {
+    padding: 0 5px;
+    background-color: transparent;
+    color: @foreground;
+    border-bottom: 2px solid transparent;
+}
+
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 2px solid @foreground;
+}
+
+#workspaces button.focused {
+    background-color: @color1;
+    border-bottom: 2px solid @foreground;
+}
+
+#workspaces button.urgent {
+    background-color: @color9;
+}
+
+/* -----------------------------------------------------
+ * Clock
+ * ----------------------------------------------------- */
+#clock {
+    background-color: @color2;
+}
+
+/* -----------------------------------------------------
+ * Other Modules
+ * ----------------------------------------------------- */
+#pulseaudio {
+    background-color: @color3;
+}
+
+#network {
+    background-color: @color4;
+}
+
+#tray {
+    background-color: @color5;
+}
