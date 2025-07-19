@@ -1,56 +1,91 @@
-# Path Exports
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
-export PATH="$HOME/.config/scripts/:$PATH"
-export PATH="/Users/hkamal/.cargo/bin:$PATH"
-export PATH="/opt/anaconda3/bin:$PATH"
-export PATH="/opt/homebrew/opt/tcl-tk/bin/:$PATH"
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-export PATH="/opt/homebrew/bin/:$PATH"
-export PATH="$HOME/.dotnet/tools:$PATH"
-export PATH="$DOTNET_ROOT/sdk:$PATH"
-export PATH="/opt/homebrew/bin/lua-language-server:$PATH"
-export PATH="/opt/homebrew/bin/stylua:$PATH"
-export PATH="$(brew --prefix)/opt/mssql-tools18/bin:$PATH"
-
-# Default editor
+# -----------------------------------------------------------------------------
+# Generic Exports (Cross-Platform)
+# -----------------------------------------------------------------------------
 export EDITOR="zed"
+export PATH="$HOME/.pyenv/bin:$PATH"
+export PATH="$HOME/.config/scripts/:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+export PATH="$HOME/.dotnet/tools:$PATH"
 
-# Other Exports
-export ANACONDA_PATH="/opt/anaconda3/"
-export LDFLAGS="-L$(brew --prefix tcl-tk)/lib"
-export CPPFLAGS="-I$(brew --prefix tcl-tk)/include"
-export PKG_CONFIG_PATH="$(brew --prefix tcl-tk)/lib/pkgconfig"
-export DOTNET_ROOT=/usr/local/share/dotnet
-export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
+# FZF Configuration
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git "
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
 export FZF_TMUX_OPTS=" -p90%,70% "
-export TEXINPUTS="$HOME/.config/tex/latex//:"
-export ODBCSYSINI=/opt/homebrew/etc
-export LDFLAGS="-L/opt/anaconda3/envs/django-db/lib"
-export CPPFLAGS="-I/opt/anaconda3/envs/django-db/include"
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
 
-# docker completion
-FPATH="$HOME/.docker/completions:$FPATH"
+# Other Generic Exports
+export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
+export TEXINPUTS="$HOME/.config/tex/latex//:"
+export NVM_DIR="$HOME/.nvm"
+
+# -----------------------------------------------------------------------------
+# OS-Specific Configuration
+# -----------------------------------------------------------------------------
+if [[ "$(uname)" == "Darwin" ]]; then
+  # --- macOS Specific Exports ---
+  export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
+  export DOTNET_ROOT="/usr/local/share/dotnet"
+  export PATH="$DOTNET_ROOT/sdk:$PATH"
+
+  # Conda for macOS
+  if [ -x "/opt/anaconda3/bin/conda" ]; then
+    export ANACONDA_PATH="/opt/anaconda3/"
+    __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+            . "/opt/anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/opt/anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+  fi
+
+elif [[ "$(uname)" == "Linux" ]]; then
+  # --- Arch Linux Specific Exports ---
+  export DOTNET_ROOT="/usr/share/dotnet"
+  export PATH="$DOTNET_ROOT:$PATH"
+
+  # Set ODBC config path for Linux
+  export ODBCSYSINI="/etc"
+
+  # Add path for mssql-tools if it exists
+  if [ -d /opt/mssql-tools18/bin ]; then
+    export PATH="/opt/mssql-tools18/bin:$PATH"
+  fi
+
+  # NVM for Linux
+  if [ -s "/usr/share/nvm/nvm.sh" ]; then
+    . "/usr/share/nvm/nvm.sh"
+  fi
+
+  # Conda for Linux
+  if [ -x "$HOME/anaconda3/bin/conda" ]; then
+    export ANACONDA_PATH="$HOME/anaconda3/"
+    __conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+            . "$HOME/anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="$HOME/anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+  fi
+fi
+
+# Docker completion
+if [ -d "$HOME/.docker/completions" ]; then
+    FPATH="$HOME/.docker/completions:$FPATH"
+fi
+
+# Initialize completions
 autoload -Uz compinit
 compinit
