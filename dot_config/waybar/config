@@ -1,52 +1,76 @@
 {
+    // -------------------------------------------------------------------------
+    // Global configuration
+    // -------------------------------------------------------------------------
     "layer": "top",
     "position": "top",
-    "height": 35,
-    "modules-left": ["hyprland/workspaces"],
-    "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "network", "tray"],
+    "height": 42, // Increased height for better padding
 
-    "hyprland/workspaces": {
+    // -------------------------------------------------------------------------
+    // Modules
+    // -------------------------------------------------------------------------
+    "modules-left": ["custom/launcher", "wlr/workspaces"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "battery"],
+
+    // -------------------------------------------------------------------------
+    // Module Details
+    // -------------------------------------------------------------------------
+    "custom/launcher": {
+        "format": "",
+        "on-click": "rofi -show drun",
+        "tooltip": true,
+        "tooltip-format": "Application Launcher"
+    },
+
+    "wlr/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
         "format": "{icon}",
         "format-icons": {
-            "1": "",
-            "2": "﬏",
+            "1": "",
+            "2": "",
             "3": "",
-            "4": "",
+            "4": "",
             "default": ""
         },
-        "on-click": "activate"
+        "persistent_workspaces": {
+            "1": [], "2": [], "3": [], "4": []
+        }
     },
 
     "clock": {
         "format": "{:%I:%M %p}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+        "tooltip-format": "<big>{:%A, %B %d, %Y}</big><br><tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d}"
     },
 
     "pulseaudio": {
         "format": "{icon} {volume}%",
         "format-muted": " Muted",
+        "on-click": "pavucontrol",
         "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol"
+            "default": ["", ""]
+        }
     },
 
     "network": {
-        "format-wifi": "  {essid}",
-        "format-ethernet": "󰈀 Connected",
-        "format-disconnected": "Disconnected",
-        "on-click": "nm-connection-editor"
+        "format-wifi": "{icon} {essid}",
+        "format-ethernet": "󰈀 Wired",
+        "format-disconnected": "󰤮 Disconnected",
+        "tooltip-format": "{ifname} via {gwaddr} ",
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥"]
     },
 
-    "tray": {
-        "icon-size": 21,
-        "spacing": 10
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     }
 }

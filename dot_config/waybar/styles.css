@@ -1,80 +1,93 @@
-/* Import pywal colors. This must be at the top. */
-/* IMPORTANT: Replace YOUR_USERNAME with your actual username. */
-@import url("/home/hkamal/.cache/wal/colors-waybar.css");
-
-/* -----------------------------------------------------
- * General Waybar Style
- * ----------------------------------------------------- */
+/* ---- Global Styles ---- */
 * {
+    font-family: "JetBrainsMono Nerd Font", FontAwesome, sans-serif;
+    font-size: 16px;
     border: none;
     border-radius: 0;
-    font-family: "JetBrainsMono Nerd Font", FontAwesome, sans-serif;
-    font-size: 14px;
-    min-height: 0;
 }
 
-window#waybar {
-    /* The background is now controlled by pywal via colors-waybar.css */
-    background: @background;
-    border-bottom: 2px solid @color4; /* Use a color from pywal */
-    color: @foreground; /* Use foreground from pywal */
-    transition-property: background-color;
-    transition-duration: 0.5s;
+/* ---- The Bar ---- */
+#waybar {
+    /* Floating bar with margin */
+    margin: 8px 8px;
+    border-radius: 16px;
+
+    /* Semi-transparent black background */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* A slightly more visible border to define the bar's shape */
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff; /* Default text color is white */
 }
 
-/* -----------------------------------------------------
- * Module Styles
- * ----------------------------------------------------- */
+/* ---- Generic Module Styles ---- */
 #workspaces,
 #clock,
+#custom-launcher,
 #pulseaudio,
 #network,
-#tray {
-    padding: 0 10px;
+#battery {
+    /* Frosted glass effect for module "pills" */
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    margin: 4px;
+    padding: 2px 13px;
 }
 
-/* -----------------------------------------------------
- * Workspaces
- * ----------------------------------------------------- */
+/* ---- Launcher ---- */
+#custom-launcher {
+    font-size: 20px;
+    padding: 2px 12px;
+    color: #ffffff;
+    /* Slightly more opaque to stand out */
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+#custom-launcher:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+/* ---- Workspaces ---- */
+#workspaces {
+    /* Matches the launcher's opacity */
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 2px 5px;
+}
+
 #workspaces button {
-    padding: 0 5px;
-    background-color: transparent;
-    color: @foreground;
-    border-bottom: 2px solid transparent;
+    color: #e0e0e0; /* Slightly off-white for readability */
+    padding: 2px 8px;
+    border-radius: 10px;
+    background-color: transparent; /* Buttons are transparent inside the pill */
+    transition: all 0.3s ease-in-out;
 }
 
 #workspaces button:hover {
-    background: rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid @foreground;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
 }
 
 #workspaces button.focused {
-    background-color: @color1;
-    border-bottom: 2px solid @foreground;
+    /* Nearly solid white background for focused workspace */
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #000000; /* Black text for high contrast */
 }
 
-#workspaces button.urgent {
-    background-color: @color9;
-}
-
-/* -----------------------------------------------------
- * Clock
- * ----------------------------------------------------- */
+/* ---- Clock, Battery, etc. ---- */
 #clock {
-    background-color: @color2;
+    font-weight: bold;
 }
 
-/* -----------------------------------------------------
- * Other Modules
- * ----------------------------------------------------- */
-#pulseaudio {
-    background-color: @color3;
+/* Use shades of white for different battery states */
+#battery.charging,
+#battery.plugged {
+    color: #ffffff;
 }
 
-#network {
-    background-color: @color4;
+#battery.warning,
+#battery.critical {
+    color: #e0e0e0; /* Dimmer white to indicate a state change */
 }
 
-#tray {
-    background-color: @color5;
+#network.disconnected {
+    color: #888888; /* Grey out when disconnected */
 }
