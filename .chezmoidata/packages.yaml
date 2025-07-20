@@ -119,6 +119,7 @@ packages:
             - "jq"
             - "pacman-contrib"
             - "ttf-jetbrains-mono-nerd"
+            - "perl-local-lib"
 
         aur:
             # --- AUR (Arch User Repository) ---
