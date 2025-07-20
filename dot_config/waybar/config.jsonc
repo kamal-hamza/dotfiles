@@ -9,40 +9,30 @@
     // -------------------------------------------------------------------------
     // Modules
     // -------------------------------------------------------------------------
-    "modules-left": ["custom/launcher", "wlr/workspaces"],
+    "modules-left": ["hyprland/workspaces"],
     "modules-center": ["clock"],
     "modules-right": ["pulseaudio", "network", "battery"],
 
     // -------------------------------------------------------------------------
     // Module Details
     // -------------------------------------------------------------------------
-    "custom/launcher": {
-        "format": "",
-        "on-click": "rofi -show drun",
-        "tooltip": true,
-        "tooltip-format": "Application Launcher"
-    },
 
-    "wlr/workspaces": {
-        "disable-scroll": true,
-        "all-outputs": true,
+    "hyprland/workspaces": {
         "format": "{icon}",
+        "on-click": "activate",
         "format-icons": {
             "1": "",
-            "2": "",
-            "3": "",
-            "4": "",
-            "default": ""
+            "2": "",
+            "3": "",
+            "4": "",
+            "default": "",
         },
-        "persistent_workspaces": {
-            "1": [], "2": [], "3": [], "4": []
-        }
     },
 
     "clock": {
         "format": "{:%I:%M %p}",
         "tooltip-format": "<big>{:%A, %B %d, %Y}</big><br><tt><small>{calendar}</small></tt>",
-        "format-alt": "{:%Y-%m-%d}"
+        "format-alt": "{:%Y-%m-%d}",
     },
 
     "pulseaudio": {
@@ -50,8 +40,8 @@
         "format-muted": " Muted",
         "on-click": "pavucontrol",
         "format-icons": {
-            "default": ["", ""]
-        }
+            "default": ["", ""],
+        },
     },
 
     "network": {
@@ -59,18 +49,18 @@
         "format-ethernet": "󰈀 Wired",
         "format-disconnected": "󰤮 Disconnected",
         "tooltip-format": "{ifname} via {gwaddr} ",
-        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥"]
+        "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥"],
     },
 
     "battery": {
         "states": {
             "warning": 30,
-            "critical": 15
+            "critical": 15,
         },
         "format": "{icon} {capacity}%",
         "format-charging": "󰂄 {capacity}%",
         "format-plugged": "󰂄 {capacity}%",
         "format-alt": "{time} {icon}",
-        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
-    }
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+    },
 }
