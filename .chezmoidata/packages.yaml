@@ -93,6 +93,7 @@ packages:
             - "ncmpcpp"
             - "gimp"
             - "wezterm"
+            - "zed"
             - "ttf-firacode-nerd"
             - "ttf-meslo-nerd-font-powerlevel10k"
 
@@ -120,6 +121,7 @@ packages:
             - "pacman-contrib"
             - "ttf-jetbrains-mono-nerd"
             - "perl-local-lib"
+            - "swww"
 
         aur:
             # --- AUR (Arch User Repository) ---
@@ -128,7 +130,6 @@ packages:
             - "github-desktop-bin"
             - "ollama"
             - "zsh-autopair-git"
-            - "zed-editor-bin"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
 
