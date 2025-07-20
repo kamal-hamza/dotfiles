@@ -3,6 +3,10 @@ local wezterm = require 'wezterm'
 -- This will be used to store the configuration table
 local config = {}
 
+local is_windows = wezterm.target_triple:find("windows") ~= nil
+local is_macos = wezterm.target_triple:find("darwin") ~= nil
+local is_arch = wezterm.target_triple:find("linux") ~= nil
+
 -- In newer versions of WezTerm, use the config_builder which is recommended
 if wezterm.config_builder then
     config = wezterm.config_builder()
@@ -11,23 +15,45 @@ end
 -- ===================================================================
 -- General Appearance (Merged from kitty.conf)
 -- ===================================================================
-
--- Load the color scheme from pywal's generated JSON file.
-local colors = wezterm.color.load_from_json_file(os.getenv('HOME') .. '/.cache/wal/colors.json')
-if colors then
-    config.colors = colors
+--
+-- Safely load the color scheme from pywal's generated JSON file.
+local function load_wal_colors()
+    local wal_path = os.getenv('HOME') .. '/.cache/wal/colors.json'
+    local f = io.open(wal_path, "r")
+    if not f then
+        return nil
+    end
+    f:close()
+    local scheme = wezterm.colors.from_file(wal_path)
+    if scheme and scheme.colors then
+        return scheme.colors
+    end
+    return nil
 end
+
+config.colors = load_wal_colors()
 
 -- Font configuration from Kitty
 config.font = wezterm.font("Fira Code")
-config.font_size = 13
+config.font_size = 24
 
 -- Cursor configuration
 config.default_cursor_style = 'SteadyBlock'
 config.cursor_blink_rate = 0
 
 -- Background opacity from Kitty
-config.window_background_opacity = 0.95
+config.window_background_opacity = 0.4
+if is_macos then
+    config.macos_window_background_blur = 15
+end
+
+if is_arch then
+    config.kde_window_background_blur = true
+end
+
+if is_windows then
+    config.win32_system_backdrop = "Acrylic"
+end
 
 -- Window padding from Kitty
 config.window_padding = {
@@ -61,155 +87,163 @@ config.mouse_bindings = {
 }
 
 -- ===================================================================
--- Multiplexer Keybindings (from tmux.conf)
+-- Multiplexer Keybindings (Conditional for Windows vs. Other OS)
 -- ===================================================================
+
+-- First, detect the OS. This will be true on Windows and false elsewhere.
 
 -- Set the leader key (prefix)
-config.leader = { key = 's', mods = 'CTRL', timeout_milliseconds = 1000 }
 
-config.keys = {
-    -- Pane splitting
-    {
-        key = 'v',
-        mods = 'LEADER',
-        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' },
-    },
-    {
-        key = 'b',
-        mods = 'LEADER',
-        action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' },
-    },
+if is_windows then
+    config.leader = { key = 's', mods = 'CTRL', timeout_milliseconds = 1000 }
 
-    -- Closing panes and tabs (windows)
-    {
-        key = 'x',
-        mods = 'LEADER',
-        action = wezterm.action.CloseCurrentPane { confirm = false },
-    },
-    {
-        key = '&',
-        mods = 'LEADER',
-        action = wezterm.action.CloseCurrentTab { confirm = false },
-    },
-
-    -- Tab (window) navigation
-    {
-        key = 'l',
-        mods = 'LEADER',
-        action = wezterm.action.ActivateTabRelative(1),
-    },
-    {
-        key = 'k',
-        mods = 'LEADER',
-        action = wezterm.action.ActivateTabRelative(-1),
-    },
-
-    -- Renaming tabs (windows)
-    {
-        key = 'r',
-        mods = 'LEADER',
-        action = wezterm.action.PromptInputLine {
-            description = 'Enter new name for tab',
-            action = wezterm.action_callback(function(window, pane, line)
-                if line then
-                    window:active_tab():set_title(line)
-                end
-            end),
-        },
-    },
-
-    -- Reload configuration
-    {
-        key = 'R',
-        mods = 'LEADER',
-        action = wezterm.action.ReloadConfiguration,
-    },
-
-    -- Smart Pane Navigation (vim-tmux-navigator)
-    {
-        key = 'h',
-        mods = 'CTRL',
-        action = wezterm.action_callback(function(win, pane)
-            local is_vim = pane:get_user_vars().is_vim
-            if is_vim then
-                win:perform_action(wezterm.action.SendKey { key = 'h', mods = 'CTRL' }, pane)
-            else
-                win:perform_action(wezterm.action.ActivatePaneDirection 'Left', pane)
-            end
-        end),
-    },
-    {
-        key = 'j',
-        mods = 'CTRL',
-        action = wezterm.action_callback(function(win, pane)
-            local is_vim = pane:get_user_vars().is_vim
-            if is_vim then
-                win:perform_action(wezterm.action.SendKey { key = 'j', mods = 'CTRL' }, pane)
-            else
-                win:perform_action(wezterm.action.ActivatePaneDirection 'Down', pane)
-            end
-        end),
-    },
-    {
-        key = 'k',
-        mods = 'CTRL',
-        action = wezterm.action_callback(function(win, pane)
-            local is_vim = pane:get_user_vars().is_vim
-            if is_vim then
-                win:perform_action(wezterm.action.SendKey { key = 'k', mods = 'CTRL' }, pane)
-            else
-                win:perform_action(wezterm.action.ActivatePaneDirection 'Up', pane)
-            end
-        end),
-    },
-    {
-        key = 'l',
-        mods = 'CTRL',
-        action = wezterm.action_callback(function(win, pane)
-            local is_vim = pane:get_user_vars().is_vim
-            if is_vim then
-                win:perform_action(wezterm.action.SendKey { key = 'l', mods = 'CTRL' }, pane)
-            else
-                win:perform_action(wezterm.action.ActivatePaneDirection 'Right', pane)
-            end
-        end),
-    },
-
-    -- Enter copy mode
-    {
-        key = '[',
-        mods = 'LEADER',
-        action = wezterm.action.ActivateCopyMode,
-    },
-}
-
--- ===================================================================
--- Copy Mode (Vi Mode)
--- ===================================================================
-
-config.key_tables = {
-    copy_mode = {
+    config.keys = {
+        -- Pane splitting
         {
             key = 'v',
-            mods = 'NONE',
-            action = wezterm.action.CopyMode { SetSelectionMode = 'Cell' },
+            mods = 'LEADER',
+            action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }
+                or wezterm.action.DisableDefaultAssignment,
         },
         {
-            key = 'y',
-            mods = 'NONE',
-            action = wezterm.action.Multiple {
-                wezterm.action.CopyTo 'ClipboardAndPrimarySelection',
-                wezterm.action.CopyMode 'Close',
+            key = 'b',
+            mods = 'LEADER',
+            action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' }
+                or wezterm.action.DisableDefaultAssignment,
+        },
+
+        -- Closing panes and tabs (windows)
+        {
+            key = 'x',
+            mods = 'LEADER',
+            action = wezterm.action.CloseCurrentPane { confirm = false }
+                or wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = '&',
+            mods = 'LEADER',
+            action = wezterm.action.CloseCurrentTab { confirm = false }
+                or wezterm.action.DisableDefaultAssignment,
+        },
+
+        -- Tab (window) navigation
+        {
+            key = 'l',
+            mods = 'LEADER',
+            action = wezterm.action.ActivateTabRelative(1) or wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = 'k',
+            mods = 'LEADER',
+            action = wezterm.action.ActivateTabRelative(-1) or wezterm.action.DisableDefaultAssignment,
+        },
+
+        -- Renaming tabs (windows)
+        {
+            key = 'r',
+            mods = 'LEADER',
+            action = wezterm.action.PromptInputLine {
+                description = 'Enter new name for tab',
+                action = wezterm.action_callback(function(window, pane, line)
+                    if line then
+                        window:active_tab():set_title(line)
+                    end
+                end),
+            } or wezterm.action.DisableDefaultAssignment,
+        },
+
+        -- Reload configuration
+        {
+            key = 'R',
+            mods = 'LEADER',
+            action = wezterm.action.ReloadConfiguration,
+        },
+
+        -- Smart Pane Navigation (vim-tmux-navigator)
+        {
+            key = 'h',
+            mods = 'CTRL',
+            action = wezterm.action_callback(function(win, pane)
+                local is_vim = pane:get_user_vars().is_vim
+                if is_vim then
+                    win:perform_action(wezterm.action.SendKey { key = 'h', mods = 'CTRL' }, pane)
+                else
+                    win:perform_action(wezterm.action.ActivatePaneDirection 'Left', pane)
+                end
+            end) or wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = 'j',
+            mods = 'CTRL',
+            action = wezterm.action_callback(function(win, pane)
+                local is_vim = pane:get_user_vars().is_vim
+                if is_vim then
+                    win:perform_action(wezterm.action.SendKey { key = 'j', mods = 'CTRL' }, pane)
+                else
+                    win:perform_action(wezterm.action.ActivatePaneDirection 'Down', pane)
+                end
+            end) or wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = 'k',
+            mods = 'CTRL',
+            action = wezterm.action_callback(function(win, pane)
+                local is_vim = pane:get_user_vars().is_vim
+                if is_vim then
+                    win:perform_action(wezterm.action.SendKey { key = 'k', mods = 'CTRL' }, pane)
+                else
+                    win:perform_action(wezterm.action.ActivatePaneDirection 'Up', pane)
+                end
+            end) or wezterm.action.DisableDefaultAssignment,
+        },
+        {
+            key = 'l',
+            mods = 'CTRL',
+            action = wezterm.action_callback(function(win, pane)
+                local is_vim = pane:get_user_vars().is_vim
+                if is_vim then
+                    win:perform_action(wezterm.action.SendKey { key = 'l', mods = 'CTRL' }, pane)
+                else
+                    win:perform_action(wezterm.action.ActivatePaneDirection 'Right', pane)
+                end
+            end) or wezterm.action.DisableDefaultAssignment,
+        },
+
+        -- Enter copy mode
+        {
+            key = '[',
+            mods = 'LEADER',
+            action = wezterm.action.ActivateCopyMode,
+        },
+    }
+
+    -- ===================================================================
+    -- Copy Mode (Vi Mode)
+    -- ===================================================================
+
+    config.key_tables = {
+        copy_mode = {
+            {
+                key = 'v',
+                mods = 'NONE',
+                action = wezterm.action.CopyMode { SetSelectionMode = 'Cell' },
+            },
+            {
+                key = 'y',
+                mods = 'NONE',
+                action = wezterm.action.Multiple {
+                    wezterm.action.CopyTo 'ClipboardAndPrimarySelection',
+                    wezterm.action.CopyMode 'Close',
+                },
+            },
+            {
+                key = 'Escape',
+                mods = 'NONE',
+                action = wezterm.action.CopyMode 'Close',
             },
         },
-        {
-            key = 'Escape',
-            mods = 'NONE',
-            action = wezterm.action.CopyMode 'Close',
-        },
-    },
-}
-
+    }
+end
 -- ===================================================================
 -- Helper for vim-tmux-navigator functionality
 -- ===================================================================
