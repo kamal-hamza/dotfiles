@@ -1,36 +1,44 @@
-@import url("{{ .chezmoi.homeDir }}/.cache/wal/colors-waybar.css");
-
 * {
+    /* Reset all borders and radiuses */
+    border: none;
+    border-radius: 0;
+    /* Set a global font */
     font-family: 'JetBrainsMono Nerd Font', sans-serif;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: bold;
-    border-radius: 10px;
+    min-height: 0;
 }
 
+/* The entire bar */
 window#waybar {
-    background-color: transparent;
-    color: #ffffff;
-    transition-property: background-color;
-    transition-duration: 0.5s;
+    background: transparent;
+    color: @theme_fg_color; /* Use foreground color from Pywal */
 }
 
-window#waybar.hidden {
-    opacity: 0.2;
-}
-
-#workspaces,
+/* Each module that is visible on the bar */
 #clock,
-#temprature,
+#workspaces,
+#battery,
+#pulseaudio,
 #network,
 #cpu,
 #memory,
-#battery {
-    background-color: transparent;
-    padding: 0 15px;
-    margin: 0 0 5px;
-    color: #ffffff;
+#temperature,
+#custom-media {
+    background-color: rgba(0, 0, 0, 0.4); /* Dark, semi-transparent background */
+    padding: 4px 15px; /* Vertical and horizontal padding */
+    margin: 5px 0px;   /* Margin to create vertical space from bar edge */
+    border-radius: 12px; /* The rounded corners for each module */
 }
 
-#workspaces button.active {
-    background-color: #000000;
+/* Style for the active workspace button */
+#workspaces button.focused {
+    background-color: @theme_selected_bg_color; /* Use Pywal's selected color */
+    color: @theme_selected_fg_color;
+    border-radius: 10px;
+}
+
+/* Style for hover states, optional but nice */
+#workspaces button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }

@@ -1,64 +1,50 @@
 {
-    "position": "bottom", // Waybar position (top|bottom|left|right)
-    "height": 5, // Waybar height (to be removed for auto height)
+    "layer": "top",
+    "position": "bottom",
+    "height": 40,
     "margin-bottom": 18,
-    "modules-left": ["clock"],
-    "modules-center": ["hyprland/workspaces"],
-    "modules-right": ["temprature", "network", "cpu", "memory", "battery"],
+    "spacing": 5, // Spacing between module groups
 
+    // Modules that will appear on the left
+    "modules-left": ["clock"],
+
+    // Modules that will appear in the center
+    "modules-center": ["hyprland/workspaces"],
+
+    // Modules that will appear on the right
+    "modules-right": ["battery", "network"],
+
+    // Individual module configurations go here...
+    "clock": {
+        "format": " {:%I:%M:%S %p}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    },
     "hyprland/workspaces": {
-        "format": "{name}: {icon}",
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{icon}",
         "format-icons": {
-            "1": "",
-            "2": "",
-            "3": "",
-            "active": "",
+            "1": "",
+            "2": "",
+            "3": "",
+            "4": "",
+            "5": "",
+            "urgent": "",
+            "focused": "",
             "default": "",
         },
-        "persistent-workspaces": {
-            "*": 5, // 5 workspaces by default on every monitor
-            "HDMI-A-1": 3, // but only three on HDMI-A-1
-        },
     },
-
-    "clock": {
-        "format": "{:%I:%M }",
-        "format-alt": "{:%Y-%m-%d}",
-    },
-
-    "cpu": {
-        "format": "{usage}% ",
-        "tooltip": false,
-    },
-
-    "memory": {
-        "format": "{}% ",
-    },
-
-    "temperature": {
-        "critical-threshold": 80,
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""],
-    },
-
     "battery": {
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""],
         "states": {
-            "good": 95,
             "warning": 30,
             "critical": 15,
         },
-        "format": "{capacity}% ",
-        "format-charging": "{capacity}%",
-        "format-plugged": "{capacity}%",
-        "format-alt": "{time} ",
     },
-
     "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interfac
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "format-wifi": " {essid}",
+        "format-ethernet": "󰈀 {ifname}",
+        "format-disconnected": "󰖪",
     },
 }
