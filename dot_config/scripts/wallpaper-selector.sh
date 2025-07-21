@@ -1,55 +1,38 @@
 #!/bin/bash
 
-# -----------------------------------------------------
-# Rofi Wallpaper Selector & Pywal Themer
-# -----------------------------------------------------
-# Description: This script displays wallpapers from a directory using Rofi,
-# allowing the user to select one. It then generates and applies a new
-# color scheme using pywal.
-#
-# Author: Gemini
-# -----------------------------------------------------
-
-# --- Configuration ---
-# The directory where your wallpapers are stored.
+# Set the directory where your wallpapers are stored
 WALLPAPER_DIR="$HOME/.config/wallpapers"
+DEFAULT_WALLPAPER="$WALLPAPER_DIR/default.jpg"
 
-# --- Script Logic ---
-# Check if the wallpaper directory exists.
-if [ ! -d "$WALLPAPER_DIR" ]; then
-    notify-send "Wallpaper Selector" "Directory not found: $WALLPAPER_DIR"
+# Get a list of all files in the wallpaper directory
+wallpapers=("$WALLPAPER_DIR"/*)
+
+# Create a string for Rofi to display
+options=""
+for wallpaper in "${wallpapers[@]}"; do
+    options+=$(basename "$wallpaper")"\n"
+done
+
+# Show the Rofi menu and get the selected wallpaper
+selected_wallpaper=$(echo -e "$options" | rofi -dmenu -p "Select Wallpaper")
+
+# Determine the wallpaper path
+if [ -n "$selected_wallpaper" ]; then
+    # Use the selected wallpaper
+    wallpaper_path="$WALLPAPER_DIR/$selected_wallpaper"
+else
+    # Use the default wallpaper if none was selected
+    wallpaper_path="$DEFAULT_WALLPAPER"
+fi
+
+# Check if the wallpaper file exists, then set it
+if [ -f "$wallpaper_path" ]; then
+    wal -i "$wallpaper_path" -q -n -s -t
+    swww img "$wallpaper_path" --transition-type any
+    # Reload Waybar and other components as needed
+    pkill waybar
+    waybar &
+else
+    echo "Error: Wallpaper not found at $wallpaper_path"
     exit 1
 fi
-
-# Use Rofi to select a wallpaper.
-# We show the basename of the file for a cleaner look.
-# The `-i` flag makes the search case-insensitive.
-selected_wallpaper_name=$(find "$WALLPAPER_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) -exec basename {} \; | rofi -dmenu -i -p "Select Wallpaper" -theme ~/.cache/wal/colors-rofi-dark.rasi)
-
-# Exit if no wallpaper was selected (e.g., user pressed Esc).
-if [ -z "$selected_wallpaper_name" ]; then
-    exit 0
-fi
-
-# Construct the full path to the selected wallpaper.
-wallpaper="$WALLPAPER_DIR/$selected_wallpaper_name"
-
-# Run pywal to generate the color scheme.
-# -i: The input image
-# -q: Run quietly (no output)
-# -n: Skip setting the wallpaper in the terminal background
-# -s: Skip setting wallpaper with feh/nitrogen (we use swww)
-# -t: Skip setting terminal colors in active terminals
-wal -i "$wallpaper" -q -n -s -t
-
-# Set the wallpaper using swww.
-swww img "$wallpaper" --transition-type any
-
-# Reload Waybar to apply the new theme.
-# We send a SIGUSR2 signal which tells Waybar to reload its config and styles.
-killall -SIGUSR2 waybar
-
-# Reload Hyprland to apply new border colors.
-hyprctl reload
-
-notify-send "Pywal" "Theme updated from $(basename "$wallpaper")"
