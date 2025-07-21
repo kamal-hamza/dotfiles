@@ -1,38 +1,32 @@
 #!/bin/bash
 
-# Set the directory where your wallpapers are stored
+# Updated wallpaper directory
 WALLPAPER_DIR="$HOME/.config/wallpapers"
-DEFAULT_WALLPAPER="$WALLPAPER_DIR/default.jpg"
 
-# Get a list of all files in the wallpaper directory
-wallpapers=("$WALLPAPER_DIR"/*)
+menu() {
+    # This function finds all images and prepares them for the menu
+    find "${WALLPAPER_DIR}" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" -o -iname "*.gif" \)
+}
 
-# Create a string for Rofi to display
-options=""
-for wallpaper in "${wallpapers[@]}"; do
-    options+=$(basename "$wallpaper")"\n"
-done
+main() {
+    # Use Rofi instead of Wofi for the selection menu
+    selected_wallpaper=$(menu | rofi -dmenu -i -p "Select Wallpaper:")
 
-# Show the Rofi menu and get the selected wallpaper
-selected_wallpaper=$(echo -e "$options" | rofi -dmenu -p "Select Wallpaper")
+    # Exit if no wallpaper was selected
+    if [ -z "$selected_wallpaper" ]; then
+        exit 0
+    fi
 
-# Determine the wallpaper path
-if [ -n "$selected_wallpaper" ]; then
-    # Use the selected wallpaper
-    wallpaper_path="$WALLPAPER_DIR/$selected_wallpaper"
-else
-    # Use the default wallpaper if none was selected
-    wallpaper_path="$DEFAULT_WALLPAPER"
-fi
+    # Set wallpaper and generate colors
+    swww img "$selected_wallpaper" --transition-type any --transition-fps 60 --transition-duration .5
+    wal -i "$selected_wallpaper" -n --cols16
 
-# Check if the wallpaper file exists, then set it
-if [ -f "$wallpaper_path" ]; then
-    wal -i "$wallpaper_path" -q -n -s -t
-    swww img "$wallpaper_path" --transition-type any
-    # Reload Waybar and other components as needed
-    pkill waybar
-    waybar &
-else
-    echo "Error: Wallpaper not found at $wallpaper_path"
-    exit 1
-fi
+    # Apply themes to other applications
+    cat ~/.cache/wal/colors-kitty.conf > ~/.config/kitty/current-theme.conf
+    pywalfox update
+
+    # Source colors and copy the current wallpaper to a fixed location
+    source ~/.cache/wal/colors.sh && cp -r "$wallpaper" ~/wallpapers/pywallpaper.jpg
+}
+
+main
