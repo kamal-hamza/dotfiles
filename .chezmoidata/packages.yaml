@@ -128,6 +128,7 @@ packages:
             # --- AUR (Arch User Repository) ---
             - "python-pywal16"
             - "python-pywal"
+            - "ttf-jetbrains-mono-nerd"
             - "google-chrome"
             - "visual-studio-code-bin"
             - "github-desktop-bin"
