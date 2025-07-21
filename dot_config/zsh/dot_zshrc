@@ -80,7 +80,7 @@ if command -v fzf &> /dev/null; then
 fi
 
 # -----------------------------------------------------------------------------
-# Aliases
+# Global Aliases
 # -----------------------------------------------------------------------------
 alias tree='tree -I "node_modules|bower_components"'
 alias la='ls -la'
@@ -99,6 +99,18 @@ alias what='tldr'
 alias tt="tmux-new"
 alias ccp="create-project"
 alias dp="delete-project"
+
+# -----------------------------------------------------------------------------
+# OS Specific Aliases
+# -----------------------------------------------------------------------------
+
+if [[ "$(uname)" == "Darwin" ]]; then
+    # Add macos specific aliases here
+elif [[ "$(uname)" == "Linux" ]]; then
+    # add arch specific aliases here
+    alias zed="zeditor"
+fi
+
 
 # -----------------------------------------------------------------------------
 # Functions
