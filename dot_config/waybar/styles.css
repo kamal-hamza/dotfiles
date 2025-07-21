@@ -1,102 +1,169 @@
-/*
- * Base styles for all elements
- */
+@import url("../../.cache/wal/colors-waybar.css");
+
 * {
-    border: none;
-    /* Sets the corner radius for all module groups and elements */
-    border-radius: 20px;
-    /* Recommended to install "Font Awesome 6 Free" for the icons */
-    font-family:
-        Font Awesome,
-        Roboto,
-        Arial,
-        sans-serif;
-    font-size: 14px;
-    color: #ffffff; /* Default text color: white */
+    font-size: 15px;
+    font-family: "CodeNewRoman Nerd Font Propo";
 }
-
-/*
- * Main Waybar window
- */
 window#waybar {
-    background: rgba(
-        0,
-        0,
-        0,
-        0
-    ); /* Fully transparent background for a floating look */
+    all: unset;
 }
-
-/*
- * Module group styling
- * Using a dark, semi-transparent grey for a modern feel.
- */
-.modules-left,
-.modules-center,
-.modules-right {
-    background-color: rgba(30, 30, 30, 0.85); /* Dark grey with 85% opacity */
-    margin-top: 4px;
-}
-
 .modules-left {
-    margin-left: 10px;
+    padding: 7px;
+    margin: 10 0 5 10;
+    border-radius: 10px;
+    background: alpha(@background, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
 }
-
+.modules-center {
+    padding: 7px;
+    margin: 10 0 5 0;
+    border-radius: 10px;
+    background: alpha(@background, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
+}
 .modules-right {
-    margin-right: 10px;
+    padding: 7px;
+    margin: 10 10 5 0;
+    border-radius: 10px;
+    background: alpha(@background, 0.6);
+    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.6);
 }
-
-/*
- * Individual module styling
- */
-#workspaces,
-#clock,
-#pulseaudio,
-#network,
-#battery {
-    padding: 0 12px;
+tooltip {
+    background: @background;
+    color: @color7;
 }
-
-/*
- * Workspaces module
- */
+#clock:hover,
+#custom-pacman:hover,
+#custom-notification:hover,
+#bluetooth:hover,
+#network:hover,
+#battery:hover,
+#cpu:hover,
+#memory:hover,
+#temperature:hover {
+    transition: all 0.3s ease;
+    color: @color9;
+}
+#custom-notification {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#clock {
+    padding: 0px 5px;
+    color: @color7;
+    transition: all 0.3s ease;
+}
+#custom-pacman {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#workspaces {
+    padding: 0px 5px;
+}
 #workspaces button {
-    padding: 2px 8px;
-    background-color: transparent;
-    transition: all 0.3s ease; /* Smooth transition for hover effect */
+    all: unset;
+    padding: 0px 5px;
+    color: alpha(@color9, 0.4);
+    transition: all 0.2s ease;
 }
-
 #workspaces button:hover {
-    background-color: rgba(120, 120, 120, 0.4); /* Light grey on hover */
+    color: rgba(0, 0, 0, 0);
+    border: none;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.5);
+    transition: all 1s ease;
 }
-
-#workspaces button.focused {
-    background-color: #666666; /* Medium grey for the active workspace */
-    font-weight: bold;
+#workspaces button.active {
+    color: @color9;
+    border: none;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
 }
-
-/*
- * Status indicators for different modules
- */
-
-/* PulseAudio (Volume) */
-#pulseaudio.muted {
-    color: #999999; /* Dim the icon and text when muted */
+#workspaces button.empty {
+    color: rgba(0, 0, 0, 0);
+    border: none;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.2);
 }
-
-/* Battery */
-#battery.charging,
-#battery.plugged {
-    color: #ffffff;
-    font-weight: bold; /* Make text bold when charging */
+#workspaces button.empty:hover {
+    color: rgba(0, 0, 0, 0);
+    border: none;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, 0.5);
+    transition: all 1s ease;
+}
+#workspaces button.empty.active {
+    color: @color9;
+    border: none;
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5);
+}
+#bluetooth {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#network {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#battery {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#battery.charging {
+    color: #26a65b;
 }
 
 #battery.warning:not(.charging) {
-    color: #e0e0e0; /* A slightly off-white for warning */
+    color: #ffbe61;
 }
 
 #battery.critical:not(.charging) {
-    color: #ffffff;
-    background-color: #c95454; /* Add a red background for critical state */
-    border-radius: 20px; /* Ensure radius is maintained */
+    color: #f53c3c;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+#group-expand {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+}
+#custom-expand {
+    padding: 0px 5px;
+    color: alpha(@foreground, 0.2);
+    text-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+    transition: all 0.3s ease;
+}
+#custom-expand:hover {
+    color: rgba(255, 255, 255, 0.2);
+    text-shadow: 0px 0px 2px rgba(255, 255, 255, 0.5);
+}
+#custom-colorpicker {
+    padding: 0px 5px;
+}
+#cpu,
+#memory,
+#temperature {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+    color: @color7;
+}
+#custom-endpoint {
+    color: transparent;
+    text-shadow: 0px 0px 1.5px rgba(0, 0, 0, 1);
+}
+#tray {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+}
+#tray menu * {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
+}
+
+#tray menu separator {
+    padding: 0px 5px;
+    transition: all 0.3s ease;
 }

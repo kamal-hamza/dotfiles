@@ -122,6 +122,9 @@ packages:
             - "ttf-jetbrains-mono-nerd"
             - "perl-local-lib"
             - "swww"
+            - "hypridle"
+            - "hyprlock"
+            - "pywalfox"
 
         aur:
             # --- AUR (Arch User Repository) ---
