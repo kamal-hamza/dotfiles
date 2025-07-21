@@ -75,6 +75,10 @@ packages:
             - "make"
             - "neovim"
             - "nvm"
+            - "swww"
+            - "hypridle"
+            - "hyprlock"
+            - "pywalfox"
             - "perl"
             - "php"
             - "python-poetry"
@@ -112,7 +116,6 @@ packages:
             - "xdg-desktop-portal-hyprland"
             - "firefox"
             - "dolphin"
-            - "pywal"
             - "wl-clipboard"
             - "cliphist"
             - "grim"
@@ -121,13 +124,10 @@ packages:
             - "pacman-contrib"
             - "ttf-jetbrains-mono-nerd"
             - "perl-local-lib"
-            - "swww"
-            - "hypridle"
-            - "hyprlock"
-            - "pywalfox"
 
         aur:
             # --- AUR (Arch User Repository) ---
+            - "python-pywal16"
             - "google-chrome"
             - "visual-studio-code-bin"
             - "github-desktop-bin"
