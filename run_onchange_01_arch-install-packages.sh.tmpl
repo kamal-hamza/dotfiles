@@ -18,5 +18,5 @@ fi
 # Use yay to install all packages from both official repos and AUR
 # yay acts as a wrapper around pacman and handles AUR packages seamlessly
 echo "Installing packages with yay..."
-yay -Syu --noconfirm {{ .packages.arch.pacman | join " " }}
+yay -Syu --noconfirm --needed {{ .packages.arch.pacman | join " " }}
 {{ end -}}
