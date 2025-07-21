@@ -78,7 +78,6 @@ packages:
             - "swww"
             - "hypridle"
             - "hyprlock"
-            - "pywalfox"
             - "perl"
             - "php"
             - "python-poetry"
@@ -128,6 +127,7 @@ packages:
         aur:
             # --- AUR (Arch User Repository) ---
             - "python-pywal16"
+            - "python-pywalfox"
             - "google-chrome"
             - "visual-studio-code-bin"
             - "github-desktop-bin"
