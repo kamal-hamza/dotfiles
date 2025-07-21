@@ -11,6 +11,10 @@ if [[ "$(uname)" == "Darwin" ]]; then
   fi
 fi
 
+# Initialize Zsh completion system
+autoload -Uz compinit
+compinit
+
 # -----------------------------------------------------------------------------
 # Custom Prompt
 # -----------------------------------------------------------------------------
@@ -40,7 +44,6 @@ fi
 if command -v perl &> /dev/null; then
     eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
 fi
-
 
 # -----------------------------------------------------------------------------
 # OS-Specific Sourcing for Shell Plugins
@@ -117,3 +120,38 @@ format-cpp() {
 
     echo "Formatting Complete"
 }
+
+# -----------------------------------------------------------------------------
+# OS-Specific Conda Initialization (MUST BE LAST)
+# -----------------------------------------------------------------------------
+if [[ "$(uname)" == "Darwin" ]]; then
+  # Conda for macOS
+  if [ -x "/opt/anaconda3/bin/conda" ]; then
+    __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+            . "/opt/anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="/opt/anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+  fi
+elif [[ "$(uname)" == "Linux" ]]; then
+  # Conda for Linux
+  if [ -x "$HOME/anaconda3/bin/conda" ]; then
+    __conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+            . "$HOME/anaconda3/etc/profile.d/conda.sh"
+        else
+            export PATH="$HOME/anaconda3/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+  fi
+fi

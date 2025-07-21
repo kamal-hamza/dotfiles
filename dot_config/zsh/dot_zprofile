@@ -22,29 +22,13 @@ export TEXINPUTS="$HOME/.config/tex/latex//:"
 export NVM_DIR="$HOME/.nvm"
 
 # -----------------------------------------------------------------------------
-# OS-Specific Configuration
+# OS-Specific Environment Configuration
 # -----------------------------------------------------------------------------
 if [[ "$(uname)" == "Darwin" ]]; then
   # --- macOS Specific Exports ---
   export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
   export DOTNET_ROOT="/usr/local/share/dotnet"
   export PATH="$DOTNET_ROOT/sdk:$PATH"
-
-  # Conda for macOS
-  if [ -x "/opt/anaconda3/bin/conda" ]; then
-    export ANACONDA_PATH="/opt/anaconda3/"
-    __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-            . "/opt/anaconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="/opt/anaconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-  fi
 
 elif [[ "$(uname)" == "Linux" ]]; then
   # --- Arch Linux Specific Exports ---
@@ -63,29 +47,9 @@ elif [[ "$(uname)" == "Linux" ]]; then
   if [ -s "/usr/share/nvm/nvm.sh" ]; then
     . "/usr/share/nvm/nvm.sh"
   fi
-
-  # Conda for Linux
-  if [ -x "$HOME/anaconda3/bin/conda" ]; then
-    export ANACONDA_PATH="$HOME/anaconda3/"
-    __conda_setup="$('$HOME/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-        eval "$__conda_setup"
-    else
-        if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
-            . "$HOME/anaconda3/etc/profile.d/conda.sh"
-        else
-            export PATH="$HOME/anaconda3/bin:$PATH"
-        fi
-    fi
-    unset __conda_setup
-  fi
 fi
 
 # Docker completion
 if [ -d "$HOME/.docker/completions" ]; then
     FPATH="$HOME/.docker/completions:$FPATH"
 fi
-
-# Initialize completions
-autoload -Uz compinit
-compinit
