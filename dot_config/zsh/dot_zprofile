@@ -34,6 +34,7 @@ elif [[ "$(uname)" == "Linux" ]]; then
   # --- Arch Linux Specific Exports ---
   export DOTNET_ROOT="/usr/share/dotnet"
   export PATH="$DOTNET_ROOT:$PATH"
+  export PATH="$HOME/.local/bin:$PATH"
 
   # Set ODBC config path for Linux
   export ODBCSYSINI="/etc"
