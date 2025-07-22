@@ -15,7 +15,7 @@ bold_italic_font auto
 
 {{ if eq .chezmoi.os "darwin" }}
 font_size 20.0
-{{ else if eq .chezmoi.osRelease.ID "arch" }}
+{{ else if eq .chezmoi.os "linux" }}
 font_size 12.0
 {{ else }}
 font_size 14.0
