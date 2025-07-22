@@ -2,7 +2,7 @@
     "layer": "top",
     "position": "bottom",
     "height": 40,
-    "margin-bottom": 18,
+    "margin-top": 18,
     "spacing": 5, // Spacing between module groups
 
     // Modules that will appear on the left
