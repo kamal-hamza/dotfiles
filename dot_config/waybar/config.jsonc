@@ -1,6 +1,6 @@
 {
     "layer": "top",
-    "position": "bottom",
+    "position": "top",
     "height": 40,
     "margin-bottom": 18,
     "spacing": 5, // Spacing between module groups
@@ -35,7 +35,7 @@
         },
     },
     "battery": {
-        "format": "{icon} {capacity}%",
+        "format": "{capacity}% {icon}",
         "format-icons": ["", "", "", "", ""],
         "states": {
             "warning": 30,
@@ -43,8 +43,8 @@
         },
     },
     "network": {
-        "format-wifi": " {essid}",
-        "format-ethernet": "󰈀 {ifname}",
+        "format-wifi": "{essid}  ",
+        "format-ethernet": "{ifname} 󰈀",
         "format-disconnected": "󰖪",
     },
 }
