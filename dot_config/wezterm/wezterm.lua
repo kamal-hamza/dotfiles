@@ -34,8 +34,10 @@ end
 config.colors = load_wal_colors()
 
 -- Font configuration from Kitty
-config.font = wezterm.font("Fira Code")
+config.font = wezterm.font("FiraCode Nerd Font Mono")
 config.font_size = 24
+
+config.enable_wayland = false
 
 -- Cursor configuration
 config.default_cursor_style = 'SteadyBlock'
