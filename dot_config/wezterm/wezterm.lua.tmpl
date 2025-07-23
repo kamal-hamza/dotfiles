@@ -3,10 +3,6 @@ local wezterm = require 'wezterm'
 -- This will be used to store the configuration table
 local config = {}
 
-local is_windows = wezterm.target_triple:find("windows") ~= nil
-local is_macos = wezterm.target_triple:find("darwin") ~= nil
-local is_arch = wezterm.target_triple:find("linux") ~= nil
-
 -- In newer versions of WezTerm, use the config_builder which is recommended
 if wezterm.config_builder then
     config = wezterm.config_builder()
@@ -17,25 +13,18 @@ end
 -- ===================================================================
 --
 -- Safely load the color scheme from pywal's generated JSON file.
-local function load_wal_colors()
-    local wal_path = os.getenv('HOME') .. '/.cache/wal/colors.json'
-    local f = io.open(wal_path, "r")
-    if not f then
-        return nil
-    end
-    f:close()
-    local scheme = wezterm.colors.from_file(wal_path)
-    if scheme and scheme.colors then
-        return scheme.colors
-    end
-    return nil
-end
-
-config.colors = load_wal_colors()
-
 -- Font configuration from Kitty
+
 config.font = wezterm.font("FiraCode Nerd Font Mono")
-config.font_size = 24
+
+
+{{ if eq .chezmoi.os "darwin" }}
+    config.font_size = 24
+{{end}}
+
+{{ if eq .chezmoi.os "linux" }}
+    config.font_size = 16
+{{end}}
 
 config.enable_wayland = false
 
@@ -45,17 +34,14 @@ config.cursor_blink_rate = 0
 
 -- Background opacity from Kitty
 config.window_background_opacity = 0.4
-if is_macos then
+
+{{ if eq .chezmoi.os "darwin" }}
     config.macos_window_background_blur = 15
-end
+{{ end }}
 
-if is_arch then
-    config.kde_window_background_blur = true
-end
-
-if is_windows then
+{{ if eq .chezmoi.os "windows" }}
     config.win32_system_backdrop = "Acrylic"
-end
+{{ end }}
 
 -- Window padding from Kitty
 config.window_padding = {
