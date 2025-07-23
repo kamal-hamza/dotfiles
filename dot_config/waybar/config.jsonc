@@ -16,9 +16,10 @@
 
     // Individual module configurations go here...
     "clock": {
-        "format": " {:%I:%M:%S %p}",
+        "format": "  {:%I:%M:%S %p}",
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
     },
+
     "hyprland/workspaces": {
         "disable-scroll": true,
         "all-outputs": true,
@@ -28,12 +29,18 @@
             "2": "",
             "3": "",
             "4": "",
-            "5": "",
             "urgent": "",
             "focused": "",
             "default": "",
         },
+        "persistent-workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+        },
     },
+
     "battery": {
         "format": "{capacity}% {icon}",
         "format-icons": ["", "", "", "", ""],
@@ -42,6 +49,7 @@
             "critical": 15,
         },
     },
+
     "network": {
         "format-wifi": "{essid}  ",
         "format-ethernet": "{ifname} 󰈀",
