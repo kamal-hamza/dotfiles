@@ -1,5 +1,3 @@
-packages.json
-
 # Ignore LaTeX build artifacts
 *.aux
 *.log
