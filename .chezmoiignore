@@ -1,5 +1,8 @@
 packages.json
 
+# images folder
+img/
+
 # Ignore LaTeX build artifacts
 *.aux
 *.log
