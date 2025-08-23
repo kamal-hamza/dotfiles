@@ -15,7 +15,7 @@ export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
 export FZF_DEFAULT_OPTS='
---color=fg:15,bg:0,hl:15,fg+:15,bg+:0
+--color=fg:15,bg:-1,hl:15,fg+:15,bg+:-1
 --color=hl+:15:bold:underline,info:15,prompt:15,pointer:15:bold
 --color=marker:15,spinner:15,header:15
 --border=rounded --height=40% --reverse --cycle --bind "tab:down,shift-tab:up"
