@@ -103,9 +103,11 @@ alias fman="compgen -c | fzf | xargs man"
 alias what='tldr'
 
 # Script Alias
-alias tt="tmux-new"
-alias ccp="create-project"
-alias dp="delete-project"
+alias tt="executable_tmux-new"
+alias ccp="executable_create-project"
+alias dp="executable_delete-project"
+alias m="executable_man"
+alias bb="executable_branch-change"
 
 # -----------------------------------------------------------------------------
 # OS Specific Aliases
