@@ -48,34 +48,38 @@ fi
 # -----------------------------------------------------------------------------
 # OS-Specific Sourcing for Shell Plugins
 # -----------------------------------------------------------------------------
-if [[ "$(uname)" == "Darwin" ]]; then
-  # macOS (Homebrew)
-  # Source plugins using the $HOMEBREW_PREFIX variable for robustness
-  if [ -n "$HOMEBREW_PREFIX" ]; then
-    if [ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-        source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-    fi
-    if [ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-        source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-    fi
-    if [ -f "$HOMEBREW_PREFIX/share/zsh-autopair/autopair.zsh" ]; then
-        source "$HOMEBREW_PREFIX/share/zsh-autopair/autopair.zsh"
-    fi
+source_if_exists() {
+  if [[ -f "$1" && -r "$1" ]]; then
+    source "$1"
   fi
-elif [[ "$(uname)" == "Linux" ]]; then
-  # Arch Linux (check common pacman/yay paths)
-  if [ -f /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-      source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-  elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-      source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-  fi
+}
 
-  if [ -f /usr/share/zsh/plugins/zsh-autopair/zsh-autopair.plugin.zsh ]; then
-      source /usr/share/zsh/plugins/zsh-autopair/zsh-autopair.plugin.zsh
-  elif [ -f /usr/share/zsh-autopair/autopair.zsh ]; then
-      source /usr/share/zsh-autopair/autopair.zsh
-  fi
+if [[ "$(uname)" == "Darwin" ]]; then
+  # macOS with Homebrew
+  # Use a default Homebrew path if HOMEBREW_PREFIX isn't set
+  local brew_share_path="${HOMEBREW_PREFIX:-/opt/homebrew}/share"
+
+  source_if_exists "$brew_share_path/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source_if_exists "$brew_share_path/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source_if_exists "$brew_share_path/zsh-autopair/autopair.zsh"
+
+elif [[ "$(uname)" == "Linux" ]]; then
+  # Linux with common package manager paths (e.g., pacman, apt)
+
+  # zsh-autosuggestions
+  source_if_exists "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source_if_exists "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+  # zsh-syntax-highlighting
+  source_if_exists "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source_if_exists "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+  # zsh-autopair
+  source_if_exists "/usr/share/zsh/plugins/zsh-autopair/zsh-autopair.plugin.zsh"
+  source_if_exists "/usr/share/zsh-autopair/autopair.zsh"
 fi
+
+unset -f source_if_exists
 
 # FZF (generic, sourced after OS-specific setup to avoid path issues)
 if command -v fzf &> /dev/null; then
@@ -113,28 +117,6 @@ elif [[ "$(uname)" == "Linux" ]]; then
     # add arch specific aliases here
     alias zed="zeditor"
 fi
-
-
-# -----------------------------------------------------------------------------
-# Functions
-# -----------------------------------------------------------------------------
-format-cpp() {
-    if [ -f ".clang-format" ]; then
-        echo "Using .clang-format found in the current directory."
-    elif [ -f "../.clang-format" ]; then
-        echo "Using .clang-format found in the parent directory."
-    else
-        echo "No .clang-format file found in the current or parent directory."
-        return 1
-    fi
-
-    find . -name "*.cpp" -o -name "*.h" | while read -r file; do
-        echo "Formatting $file..."
-        clang-format -i "$file"
-    done
-
-    echo "Formatting Complete"
-}
 
 # -----------------------------------------------------------------------------
 # OS-Specific Conda Initialization (MUST BE LAST)

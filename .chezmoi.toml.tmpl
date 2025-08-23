@@ -1,0 +1,11 @@
+# Apply scripts from the 'on-unix' directory for both Linux and macOS
+{{ if or (eq .chezmoi.os "linux") (eq .chezmoi.os "darwin") -}}
+[".config/scripts"]
+    source = ".script_sources/on-unix"
+{{ end -}}
+
+# Apply scripts from the 'on-windows' directory only for Windows
+{{ if eq .chezmoi.os "windows" -}}
+[".config/scripts"]
+    source = ".script_sources/on-windows"
+{{ end -}}
