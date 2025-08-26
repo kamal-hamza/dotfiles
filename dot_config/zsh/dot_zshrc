@@ -97,17 +97,19 @@ alias v="nvim"
 alias vi="nvim"
 alias t="tmux a"
 alias cd="z"
-alias y="yazi"
+alias yy="yazi"
 alias gs="git status --short"
 alias fman="compgen -c | fzf | xargs man"
 alias what='tldr'
 
 # Script Alias
-alias tt="executable_tmux-new"
-alias ccp="executable_create-project"
-alias dp="executable_delete-project"
-alias m="executable_man"
-alias bb="executable_branch-change"
+alias tt="tmux-new.sh"
+alias ccp="create-project.sh"
+alias dp="delete-project.sh"
+alias m="man.sh"
+alias bb="branch-change.sh"
+alias dc="docker-image-runner.sh"
+alias dd="docker-image-stop.sh"
 
 # -----------------------------------------------------------------------------
 # OS Specific Aliases
