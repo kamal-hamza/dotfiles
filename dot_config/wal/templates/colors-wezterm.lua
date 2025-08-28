@@ -2,7 +2,7 @@
 -- For best results, use pywal with the `-s` flag to avoid terminal escape sequences.
 -- Template by Gemini - MODIFIED FOR ZSH SYNTAX HIGHLIGHTING
 
-return {
+return { {
     -- The default text color.
     foreground = '{foreground}',
 
@@ -24,15 +24,8 @@ return {
     -- The color of the split lines between panes.
     split = '{color8}',
 
-    -- ANSI COLORS:
-    -- We are INTENTIONALLY OMITTING the `ansi` table that defines the first 8 colors.
-    -- This allows Wezterm to use its default, high-contrast ANSI colors, which
-    -- prevents conflicts with tools like zsh-syntax-highlighting that rely on them.
-    -- Pywal will still theme the rest of the terminal for a consistent look.
-
-    -- BRIGHTS: These are less likely to cause issues, but you can comment out
-    -- this section as well if you still see problems.
-    brights = {{
+    -- BRIGHTS: These are less likely to cause issues with zsh-syntax-highlighting.
+    brights = { {
         '{color8}',
         '{color9}',
         '{color10}',
@@ -41,38 +34,30 @@ return {
         '{color13}',
         '{color14}',
         '{color15}',
-    }},
+    } },
 
     -- Tab Bar Styling
-    tab_bar = {{
+    tab_bar = { {
         background = '{background}',
-
-        -- Style for the active tab.
-        active_tab = {{
+        active_tab = { {
             bg_color = '{color2}',
             fg_color = '{background}',
-        }},
-
-        -- Style for inactive tabs.
-        inactive_tab = {{
+        } },
+        inactive_tab = { {
             bg_color = '{color8}',
             fg_color = '{foreground}',
-        }},
-
-        -- Style for inactive tabs when the mouse is hovering over them.
-        inactive_tab_hover = {{
+        } },
+        inactive_tab_hover = { {
             bg_color = '{color7}',
             fg_color = '{background}',
-        }},
-
-        -- Style for the "new tab" button.
-        new_tab = {{
+        } },
+        new_tab = { {
             bg_color = '{background}',
             fg_color = '{foreground}',
-        }},
-        new_tab_hover = {{
+        } },
+        new_tab_hover = { {
             bg_color = '{color3}',
             fg_color = '{background}',
-        }},
-    }},
-}}
+        } },
+    } },
+} }
