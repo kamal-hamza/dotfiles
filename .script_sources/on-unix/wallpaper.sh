@@ -32,7 +32,7 @@ fi
 wallpaper="$wallpaper_dir/$selected_filename"
 
 # Generate color scheme with wal
-wal -q -i "$wallpaper" -o "$HOME/.config/scripts/zed-theme.sh"
+wal -q -i "$wallpaper" -o "$HOME/.config/scripts/post-pywal.sh"
 
 # Source the new colors and relaunch waybar
 source "$HOME/.cache/wal/colors.sh"
