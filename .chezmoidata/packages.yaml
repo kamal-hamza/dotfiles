@@ -85,7 +85,6 @@ packages:
             - "python-poetry"
             - "stylua"
             - "tldr"
-            - "texlive-most" # For TeX Live and latexindent
             - "tmux"
             - "yazi"
             - "zathura"
