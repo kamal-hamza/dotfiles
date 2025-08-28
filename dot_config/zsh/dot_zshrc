@@ -77,6 +77,10 @@ elif [[ "$(uname)" == "Linux" ]]; then
   # zsh-autopair
   source_if_exists "/usr/share/zsh/plugins/zsh-autopair/zsh-autopair.plugin.zsh"
   source_if_exists "/usr/share/zsh-autopair/autopair.zsh"
+
+  # GTK Theme
+  source_if_exists "$HOME/.cache/wal/colors.sh"
+  gsettings set org.gnome.desktop.interface gtk-theme "$WAL_GTK_THEME"
 fi
 
 unset -f source_if_exists

@@ -105,7 +105,7 @@ packages:
             # --- Hyprland Desktop Environment & Utilities ---
             - "hyprland"
             - "waybar"
-            - "rofi"
+            - "rofi-wayland"
             - "mako"
             - "swaylock"
             - "swww"
@@ -118,6 +118,7 @@ packages:
             - "firefox"
             - "dolphin"
             - "wl-clipboard"
+            - "network-manager-applet"
             - "cliphist"
             - "grim"
             - "slurp"

@@ -54,5 +54,6 @@
         "format-wifi": "{essid}  ",
         "format-ethernet": "{ifname} 󰈀",
         "format-disconnected": "󰖪",
+        "onclick": "network_manager_ui",
     },
 }
