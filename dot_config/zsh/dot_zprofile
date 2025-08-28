@@ -37,6 +37,12 @@ if [[ "$(uname)" == "Darwin" ]]; then
   export PATH="$DOTNET_ROOT/sdk:$PATH"
 
 elif [[ "$(uname)" == "Linux" ]]; then
+  # --- SSH Agent Auto Config ---
+  if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)" > /dev/null
+  fi
+  ssh-add -q ~/.ssh/id_ed25519 2>/dev/null
+
   # --- Arch Linux Specific Exports ---
   export DOTNET_ROOT="/usr/share/dotnet"
   export PATH="$DOTNET_ROOT:$PATH"
