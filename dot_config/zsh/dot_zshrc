@@ -110,6 +110,7 @@ alias m="man.sh"
 alias bb="branch-change.sh"
 alias dc="docker-image-runner.sh"
 alias dd="docker-image-stop.sh"
+alias ss="stack-search.sh"
 
 # -----------------------------------------------------------------------------
 # OS Specific Aliases
