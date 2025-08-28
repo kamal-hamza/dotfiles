@@ -243,33 +243,52 @@ wezterm.on('update-status', function(window, pane)
 end)
 
 -- ===================================================================
--- Tab Bar Formatting
+-- Tab Bar Formatting and Theme
 -- Note: This custom formatter will override pywal colors for the tab bar.
 -- ===================================================================
 
-wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
-    -- Use pywal colors if available, otherwise default
-    local background = (config.colors and config.colors.tab_bar.background) or '#080808'
-    local foreground = '#cccccc'
+-- Function to check if a file exists
+local function file_exists(name)
+  local f = io.open(name, "r")
+  if f ~= nil then
+    io.close(f)
+    return true
+  else
+    return false
+  end
+end
 
-    if tab.is_active then
-        background = (config.colors and config.colors.tab_bar.active_tab.bg_color) or '#1f1f1f'
-        foreground = (config.colors and config.colors.tab_bar.active_tab.fg_color) or '#ffffff'
-    end
+-- Path to the pywal-generated theme
+local pywal_theme_path = os.getenv("HOME") .. "/.cache/wal/colors-wezterm.lua"
 
-    if hover then
-        background = (config.colors and config.colors.tab_bar.inactive_tab_hover.bg_color) or '#3f3f3f'
-        foreground = (config.colors and config.colors.tab_bar.inactive_tab_hover.fg_color) or '#ffffff'
-    end
+-- Check if the pywal theme exists and apply it
+if file_exists(pywal_theme_path) then
+  config.colors = wezterm.color.load_scheme(pywal_theme_path)
+else
+    wezterm.on('format-tab-title', function(tab, tabs, panes, config, hover, max_width)
+        -- Use pywal colors if available, otherwise default
+        local background = (config.colors and config.colors.tab_bar.background) or '#080808'
+        local foreground = '#cccccc'
 
-    local title = string.format(" %s ", tab.tab_index .. ": " .. tab.active_pane.title)
+        if tab.is_active then
+            background = (config.colors and config.colors.tab_bar.active_tab.bg_color) or '#1f1f1f'
+            foreground = (config.colors and config.colors.tab_bar.active_tab.fg_color) or '#ffffff'
+        end
 
-    return {
-        { Background = { Color = background } },
-        { Foreground = { Color = foreground } },
-        { Text = title },
-    }
-end)
+        if hover then
+            background = (config.colors and config.colors.tab_bar.inactive_tab_hover.bg_color) or '#3f3f3f'
+            foreground = (config.colors and config.colors.tab_bar.inactive_tab_hover.fg_color) or '#ffffff'
+        end
+
+        local title = string.format(" %s ", tab.tab_index .. ": " .. tab.active_pane.title)
+
+        return {
+            { Background = { Color = background } },
+            { Foreground = { Color = foreground } },
+            { Text = title },
+        }
+    end)
+end
 
 -- Finally, return the configuration table
 return config

@@ -19,7 +19,9 @@
     "XML": [
       "*.sln",
       "*.*proj"
-    ]
+    ],
+    "Shell": ["*.sh.tmpl"],
+    "Lua": ["*.lua.tmpl"],
   },
   "icon_theme": "Colored Zed Icons Theme Dark",
   "show_edit_predictions": false,
