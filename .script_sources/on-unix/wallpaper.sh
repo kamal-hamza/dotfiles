@@ -38,6 +38,9 @@ wal -q -i "$wallpaper"
 source "$HOME/.cache/wal/colors.sh"
 ~/.config/waybar/launch.sh
 
+# Copy the Zed theme to the proper directory
+cp ~/.cache/wal/zed-pywal.json ~/.config/zed/themes/zed-pywal.json
+
 # Set the new wallpaper with swww
 transition_type="grow"
 swww img "$wallpaper" \

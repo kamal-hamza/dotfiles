@@ -1,4 +1,4 @@
-{{/* Define the absolute path to the pywal theme file on the target machine */}}
+{{/* Define the absolut{{/* Define the absolute path to the pywal theme file on the target machine */}}
 {{ $walThemePath := joinPath .chezmoi.homeDir ".cache/wal/colors-waybar.css" }}
 
 {{/* Check if the pywal theme file exists */}}
@@ -21,20 +21,21 @@ window#waybar {
 #workspaces,
 #battery,
 #network {
-    /* Use the background color from pywal with 40% opacity */
     background-color: alpha(@background, 0.4);
-    /* Use the foreground color from pywal */
     color: @foreground;
     padding: 0px 20px;
     margin: 0px 5px;
 }
 
-#workspaces button.active {
-    transition: ease-in;
-    transition-duration: 0.5s;
-    /* Use an accent color from pywal for the active workspace */
-    color: @color2;
-    background-color: alpha(@color1, 0.3);
+/* Style for all workspace buttons (the dots) */
+#workspaces button {
+    color: @color7; /* A dimmer color for inactive workspaces */
+    transition: none; /* Disable transitions for a snappy feel */
+}
+
+/* Style ONLY for the currently focused workspace dot */
+#workspaces button.focused {
+    color: @color4; /* A bright accent color from your wallpaper */
 }
 
 {{ else }}
@@ -62,11 +63,15 @@ window#waybar {
     margin: 0px 5px;
 }
 
-#workspaces button.active {
-    transition: ease-in;
-    transition-duration: 0.5s;
-    /* Hardcoded fallback color */
-    color: #ffffff;
+/* Style for all workspace buttons (the dots) */
+#workspaces button {
+    color: #aaaaaa; /* A dimmer grey for inactive workspaces */
+    transition: none;
+}
+
+/* Style ONLY for the currently focused workspace dot */
+#workspaces button.focused {
+    color: #ffffff; /* Bright white for the focused workspace */
 }
 
 #clock,
