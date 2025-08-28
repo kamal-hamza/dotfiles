@@ -6,10 +6,13 @@
 #
 
 # Variables
-current_wp_file="$CONFIG/wallpapers/default.jpg"
-blurred_wp="$CONFIG/wallpapers/default.jpg"
+wallpaper_dir="$HOME/.config/wallpapers"
+blurred_dir="$wallpaper_dir/blurred"
+current_wp_file="$wallpaper_dir/current_wallpaper.txt"
 blur="50x30"
-wallpaper_dir="$CONFIG/wallpapers"
+
+# Create the blurred directory if it doesn't exist
+mkdir -p "$blurred_dir"
 
 # Create current wallpaper file if it doesn't exist
 if [ ! -f "$current_wp_file" ]; then
@@ -17,19 +20,16 @@ if [ ! -f "$current_wp_file" ]; then
     echo "$wallpaper_dir/default.jpg" > "$current_wp_file"
 fi
 
-# Get current wallpaper path
-current_wallpaper=$(cat "$current_wp_file")
-
-# Rofi command to select a new wallpaper
-selected_wallpaper=$(find "$wallpaper_dir" -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) | rofi -dmenu -p "Select Wallpaper")
+# Rofi command to select a new wallpaper (shows only filename)
+selected_filename=$(find "$wallpaper_dir" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) -printf "%f\n" | rofi -dmenu -p "Select Wallpaper")
 
 # Exit if no wallpaper is selected
-if [ -z "$selected_wallpaper" ]; then
+if [ -z "$selected_filename" ]; then
     exit 0
 fi
 
-# Set the wallpaper variable to the selected one
-wallpaper="$selected_wallpaper"
+# Construct the full path to the selected wallpaper
+wallpaper="$wallpaper_dir/$selected_filename"
 
 # Generate color scheme with wal
 wal -q -i "$wallpaper"
@@ -44,12 +44,18 @@ swww img "$wallpaper" \
     --transition-type=$transition_type \
     --transition-pos top-right
 
+# Define the path for the blurred wallpaper
+blurred_wp="$blurred_dir/$selected_filename"
+
 # Create a blurred version for the lock screen
-magick "$wallpaper" -resize 1920x1080\! "$wallpaper"
+# First, resize the original image to a standard resolution (optional but good for consistency)
+magick "$wallpaper" -resize 1920x1080\! "$blurred_wp"
 echo ":: Resized"
+
+# Then, apply the blur to the resized image
 if [ ! "$blur" == "0x0" ] ; then
-    magick "$wallpaper" -blur "$blur" "$blurred_wp"
-    echo ":: Blurred"
+    magick "$blurred_wp" -blur "$blur" "$blurred_wp"
+    echo ":: Blurred and saved to $blurred_wp"
 fi
 
 # Update the current wallpaper file
