@@ -1,0 +1,76 @@
+{{/* Define the absolute path to the pywal theme file on the target machine */}}
+{{ $walThemePath := joinPath .chezmoi.homeDir ".cache/wal/colors-waybar.css" }}
+
+{{/* Check if the pywal theme file exists */}}
+{{ if (stat $walThemePath) }}
+/* --- Pywal Theme Found --- */
+@import '{{ $walThemePath }}';
+
+* {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+window#waybar {
+    background-color: transparent;
+}
+
+#clock,
+#workspaces,
+#battery,
+#network {
+    /* Use the background color from pywal with 40% opacity */
+    background-color: alpha(@background, 0.4);
+    /* Use the foreground color from pywal */
+    color: @foreground;
+    padding: 0px 20px;
+    margin: 0px 5px;
+}
+
+#workspaces button.active {
+    transition: ease-in;
+    transition-duration: 0.5s;
+    /* Use an accent color from pywal for the active workspace */
+    color: @color2;
+    background-color: alpha(@color1, 0.3);
+}
+
+{{ else }}
+/* --- Fallback Theme (Pywal colors not found) --- */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+window#waybar {
+    background-color: transparent;
+}
+
+#clock,
+#workspaces,
+#battery,
+#network {
+    /* Hardcoded fallback colors */
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #ffffff;
+    padding: 0px 20px;
+    margin: 0px 5px;
+}
+
+#workspaces button.active {
+    transition: ease-in;
+    transition-duration: 0.5s;
+    /* Hardcoded fallback color */
+    color: #ffffff;
+}
+
+#clock,
+#battery,
+#network {
+}
+{{ end }}
