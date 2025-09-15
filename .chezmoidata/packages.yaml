@@ -34,6 +34,7 @@ packages:
             - "mpd"
             - "mpc"
             - "ncmpcpp"
+            - "markdown-oxide"
         casks:
             - "aerospace"
             - "chatgpt"
@@ -53,6 +54,7 @@ packages:
             - "zed"
             - "font-fira-code-nerd-font"
             - "font-meslo-lg-nerd-font"
+            - "obsidian"
 
     # 🐧 Arch Linux packages
     # Note: AUR packages require an AUR helper (e.g., yay, paru)
@@ -107,7 +109,6 @@ packages:
             - "waybar"
             - "rofi-wayland"
             - "mako"
-            - "swaylock"
             - "swww"
             - "polkit-kde-agent"
             - "qt5-wayland"
@@ -139,6 +140,7 @@ packages:
             - "zsh-autopair-git"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
+            - "hyprlock-git"
 
     # 🪟 Windows packages using Chocolatey
     windows:

@@ -7,6 +7,7 @@ export PATH="$HOME/.config/scripts/:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.composer/vendor/bin:$PATH"
 export PATH="$HOME/.dotnet/tools:$PATH"
+export PATH="$HOME/.zvm/bin/zig:$PATH"
 
 # FZF Configuration
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git "
@@ -26,6 +27,10 @@ export FZF_TMUX_OPTS=" -p90%,70% "
 export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
 export TEXINPUTS="$HOME/.config/tex/latex//:"
 export NVM_DIR="$HOME/.nvm"
+export ZVM_INSTALL="$HOME/.zvm/self"
+export PATH="$PATH:$HOME/.zvm/bin"
+export PATH="$PATH:$ZVM_INSTALL/"
+export ZIG_PATH="$HOME/.zvm/bin/zig"
 
 # -----------------------------------------------------------------------------
 # OS-Specific Environment Configuration

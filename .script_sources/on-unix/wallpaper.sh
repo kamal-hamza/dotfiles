@@ -1,65 +1,69 @@
 #!/bin/bash
-#   _ _ _ _____ __    __    _____ _____ _____ _____ _____
-#  | | | |  _  |  |  |  |  |  _  |  _  |  _  |   __| __  |
-#  | | | |     |  |__|  |__|   __|     |   __|   __|    -|
-#  |_____|__|__|_____|_____|__|  |__|__|__|  |_____|__|__|
-#
+# -----------------------------------------------------------------------------
+# Dynamic Wallpaper Script for Wayland (Hyprland) with pywal & multi-monitor support
+# -----------------------------------------------------------------------------
 
-# Variables
 wallpaper_dir="$HOME/.config/wallpapers"
 blurred_dir="$wallpaper_dir/blurred"
 current_wp_file="$wallpaper_dir/current_wallpaper.txt"
 blur="50x30"
 
-# Create the blurred directory if it doesn't exist
+# Ensure directories exist
 mkdir -p "$blurred_dir"
+[ ! -f "$current_wp_file" ] && echo "$wallpaper_dir/default.jpg" > "$current_wp_file"
 
-# Create current wallpaper file if it doesn't exist
-if [ ! -f "$current_wp_file" ]; then
-    touch "$current_wp_file"
-    echo "$wallpaper_dir/default.jpg" > "$current_wp_file"
-fi
+# -----------------------------------------------------------------------------
+# Detect all connected monitors
+# -----------------------------------------------------------------------------
+mapfile -t monitors < <(wlr-randr | grep -v "off")
 
-# Rofi command to select a new wallpaper (shows only filename)
-selected_filename=$(find "$wallpaper_dir" -maxdepth 1 -type f \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) -printf "%f\n" | rofi -dmenu -p "Select Wallpaper")
+# Default to first monitor for rofi menu
+first_monitor_info="${monitors[0]}"
+monitor_name=$(echo "$first_monitor_info" | awk '{print $1}')
 
-# Exit if no wallpaper is selected
-if [ -z "$selected_filename" ]; then
-    exit 0
-fi
+# -----------------------------------------------------------------------------
+# Wallpaper selection via rofi-wayland
+# -----------------------------------------------------------------------------
+selected_filename=$(find "$wallpaper_dir" -maxdepth 1 -type f \
+    \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) \
+    | rofi -dmenu -p "Select Wallpaper" -monitor "$monitor_name")
 
-# Construct the full path to the selected wallpaper
+[ -z "$selected_filename" ] && exit 0
 wallpaper="$wallpaper_dir/$selected_filename"
 
-# Generate color scheme with wal
+# -----------------------------------------------------------------------------
+# Generate pywal colors
+# -----------------------------------------------------------------------------
 wal -q -i -g "$wallpaper" -o "$HOME/.config/scripts/post-pywal.sh"
-
-# Source the new colors and relaunch waybar
 source "$HOME/.cache/wal/colors.sh"
+
+# Reload Waybar
 ~/.config/waybar/launch.sh
 
-# Copy the Zed theme to the proper directory
+# Update Zed theme
 cp ~/.cache/wal/zed-pywal.json ~/.config/zed/themes/zed-pywal.json
 
-# Set the new wallpaper with swww
-transition_type="grow"
-swww img "$wallpaper" \
-    --transition-type=$transition_type \
-    --transition-pos top-right
+# -----------------------------------------------------------------------------
+# Set wallpaper and blurred version on all monitors
+# -----------------------------------------------------------------------------
+for monitor_info in "${monitors[@]}"; do
+    mon_name=$(echo "$monitor_info" | awk '{print $1}')
+    res=$(echo "$monitor_info" | awk '{print $2}' | cut -d'+' -f1)
+    width=$(echo "$res" | cut -d'x' -f1)
+    height=$(echo "$res" | cut -d'x' -f2)
 
-# Define the path for the blurred wallpaper
-blurred_wp="$blurred_dir/$selected_filename"
+    # Set wallpaper with swww for this monitor
+    swww img "$wallpaper" --output "$mon_name" --transition-type grow --transition-pos top-right
 
-# Create a blurred version for the lock screen
-# First, resize the original image to a standard resolution (optional but good for consistency)
-magick "$wallpaper" -resize 1920x1080\! "$blurred_wp"
-echo ":: Resized"
+    # Create blurred wallpaper for lockscreen
+    blurred_wp="$blurred_dir/${mon_name}_$selected_filename"
+    magick "$wallpaper" -resize "${width}x${height}!" "$blurred_wp"
+    [ "$blur" != "0x0" ] && magick "$blurred_wp" -blur "$blur" "$blurred_wp"
+done
 
-# Then, apply the blur to the resized image
-if [ ! "$blur" == "0x0" ] ; then
-    magick "$blurred_wp" -blur "$blur" "$blurred_wp"
-    echo ":: Blurred and saved to $blurred_wp"
-fi
-
-# Update the current wallpaper file
+# -----------------------------------------------------------------------------
+# Update current wallpaper file
+# -----------------------------------------------------------------------------
 echo "$wallpaper" > "$current_wp_file"
+
+echo ":: Wallpaper set successfully on all connected monitors"
