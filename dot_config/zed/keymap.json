@@ -11,83 +11,77 @@
         }
     },
     {
-        "context": "(Editor && vim_mode == normal && !menu) || (EmptyPane || SharedScreen)",
+        "context": "(Editor && vim_mode == normal && !Terminal) || (EmptyPane && !Terminal) || (SharedScreen && !Terminal)",
         "bindings": {
             // File Finder & Project Management
             "space f f": "file_finder::Toggle",
             "space f p": "projects::OpenRecent",
             "space f g": "workspace::NewSearch",
             "space f b": "tab_switcher::Toggle",
-
             // Panel & Dock Toggles
             "space p p": "project_panel::ToggleFocus",
             "space g g": "git_panel::ToggleFocus",
-
             // Git Commands (global)
             "space g c": "git::Commit",
             "space g P": "git::Pull",
             "space g p": "git::ForcePush",
             "space g b": "git::Branch",
             "space g i": "git::Init",
-
             // Agent Commands (global)
-            "space a a": "workspace::ToggleRightDock", // Main toggle for the agent
-            "space a n": "agent::NewThread", // Modern way to start a new conversation
+            "space a a": "workspace::ToggleRightDock",
+            "space a n": "agent::NewThread",
             "space a h": "agent::OpenHistory",
-            
             // Terminal Commands (global)
             "space d d": "workspace::ToggleBottomDock",
-
             // LSP Diagnostics (global)
             "space l l": "lsp_tool::ToggleMenu"
         }
     },
-
     //========================================================================
     // Editor-Specific Bindings
     //========================================================================
     {
-        "context": "Editor && vim_mode == normal && !menu",
+        "context": "Editor && vim_mode == normal && !Terminal && !menu",
         "bindings": {
             // Unset default Vim keys
             "/": null,
             "#": null,
             ".": null,
-
-            "shift-y": ["workspace::SendKeystrokes", "y $"],
+            "shift-y": [
+                "workspace::SendKeystrokes",
+                "y $"
+            ],
             "shift-k": "editor::Hover",
             ":": "command_palette::Toggle",
             "?": "command_palette::Toggle",
-
             // Search & Replace
             "space /": "vim::Search",
             "space r r": "editor::SelectAllMatches",
-
             // Buffer/Tab management
-            "space d b": ["pane::CloseActiveItem", { "close_pinned": false }],
+            "space d b": [
+                "pane::CloseActiveItem",
+                {
+                    "close_pinned": false
+                }
+            ],
             "space s": "outline::Toggle",
             "space S": "project_symbols::Toggle",
-
             // Code Actions & Diagnostics
             "space c c": "editor::ToggleCodeActions",
             "space t d": "diagnostics::Deploy",
-
             // Code Navigation
             "g d": "editor::GoToDefinition",
             "g D": "editor::GoToDefinitionSplit",
             "g t": "editor::GoToTypeDefinition",
             "g T": "editor::GoToTypeDefinitionSplit",
-
             // Git commands (editor-contextual)
             "space g a": "git::Add",
             "space g A": "git::StageAll",
             "space g u": "git::UnstageAll",
             "space g d": "git::Diff",
-
             // AI Assistant (editor-contextual)
             "space a i": "assistant::InlineAssist",
-            "space a q": "assistant::QuoteSelection", // Shared action
-
+            "space a q": "agent::QuoteSelection", // Shared action
             // Debugger Controls (editor-contextual)
             "space d t": "editor::ToggleBreakpoint",
             "space d s": "debugger::Start",
@@ -96,14 +90,13 @@
         }
     },
     {
-        "context": "Editor && vim_mode == visual && !menu",
+        "context": "Editor && vim_mode == visual && !menu && !Terminal",
         "bindings": {
             "shift-j": "editor::MoveLineDown",
             "shift-k": "editor::MoveLineUp",
             "space a i": "assistant::InlineAssist"
         }
     },
-
     //========================================================================
     // Context-Specific Panel Bindings
     //========================================================================
@@ -128,9 +121,24 @@
     {
         "context": "vim_mode == normal && Editor && extension == tex",
         "bindings": {
-            "space /": ["task::Spawn", { "task_name": "forward_search" }],
-            "space l P": ["task::Spawn", { "task_name": "pdflatex_view" }],
-            "space l p": ["task::Spawn", { "task_name": "latexmk_view" }],
+            "space /": [
+                "task::Spawn",
+                {
+                    "task_name": "forward_search"
+                }
+            ],
+            "space l P": [
+                "task::Spawn",
+                {
+                    "task_name": "pdflatex_view"
+                }
+            ],
+            "space l p": [
+                "task::Spawn",
+                {
+                    "task_name": "latexmk_view"
+                }
+            ],
         }
     },
     {
@@ -168,10 +176,9 @@
     {
         "context": "Terminal",
         "bindings": {
-            "space d d": "workspace::ToggleBottomDock",
+            "ctrl+d": "workspace::ToggleBottomDock"
         }
     },
-
     //========================================================================
     // Menus
     //========================================================================

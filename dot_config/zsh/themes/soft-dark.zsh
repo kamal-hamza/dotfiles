@@ -1,0 +1,16 @@
+typeset -A ZSH_HIGHLIGHT_STYLES
+
+ZSH_HIGHLIGHT_STYLES[default]='fg=#f5f5f5'
+ZSH_HIGHLIGHT_STYLES[comment]='fg=#888888,italic'
+ZSH_HIGHLIGHT_STYLES[command]='fg=#067BC2,bold'
+ZSH_HIGHLIGHT_STYLES[alias]='fg=#067BC2,bold'
+ZSH_HIGHLIGHT_STYLES[builtin]='fg=#C42847'
+ZSH_HIGHLIGHT_STYLES[function]='fg=#67b7f5'
+ZSH_HIGHLIGHT_STYLES[keyword]='fg=#ff4c6a,bold'
+ZSH_HIGHLIGHT_STYLES[reserved-word]='fg=#ff4c6a,bold'
+ZSH_HIGHLIGHT_STYLES[string]='fg=#77aa77'
+ZSH_HIGHLIGHT_STYLES[param]='fg=#f5f5f5'
+ZSH_HIGHLIGHT_STYLES[command-subst]='fg=#067BC2'
+ZSH_HIGHLIGHT_STYLES[back-quote]='fg=#067BC2'
+ZSH_HIGHLIGHT_STYLES[operator]='fg=#C42847'
+ZSH_HIGHLIGHT_STYLES[history-expansion]='fg=#D4B87B'
