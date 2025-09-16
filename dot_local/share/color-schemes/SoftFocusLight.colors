@@ -20,7 +20,7 @@ IntensityEffect=0
 
 [Colors:Button]
 BackgroundAlternate=240,240,240
-BackgroundNormal=251,251,251
+BackgroundNormal=251,252,248
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -28,13 +28,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=6,123,194
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=30,30,30
+ForegroundNormal=0,0,0
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [Colors:Complementary]
 BackgroundAlternate=220,220,220
-BackgroundNormal=251,251,251
+BackgroundNormal=251,252,248
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -42,7 +42,7 @@ ForegroundInactive=124,124,124
 ForegroundLink=6,123,194
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=30,30,30
+ForegroundNormal=0,0,0
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
@@ -70,13 +70,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=6,123,194
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=30,30,30
+ForegroundNormal=0,0,0
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [Colors:View]
 BackgroundAlternate=248,248,248
-BackgroundNormal=255,255,255
+BackgroundNormal=251,252,248
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -84,13 +84,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=106,124,223
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=30,30,30
+ForegroundNormal=0,0,0
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [Colors:Window]
 BackgroundAlternate=240,240,240
-BackgroundNormal=255,255,255
+BackgroundNormal=251,252,248
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -98,20 +98,20 @@ ForegroundInactive=124,124,124
 ForegroundLink=106,124,223
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=30,30,30
+ForegroundNormal=0,0,0
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [General]
-ColorScheme=Soft-Light
-Name=Soft Light
+ColorScheme=SoftFocusLight
+Name=Soft Focus Light
 shadeSortColumn=true
 
 [KDE]
 contrast=4
 
 [WM]
-activeBackground=255,255,255
-activeForeground=30,30,30
+activeBackground=251,252,248
+activeForeground=0,0,0
 inactiveBackground=240,240,240
 inactiveForeground=124,124,124

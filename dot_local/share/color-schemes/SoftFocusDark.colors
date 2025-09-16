@@ -19,8 +19,8 @@ IntensityAmount=0
 IntensityEffect=0
 
 [Colors:Button]
-BackgroundAlternate=42,46,50
-BackgroundNormal=49,54,59
+BackgroundAlternate=26,26,26
+BackgroundNormal=34,34,34
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -28,13 +28,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=41,128,185
 ForegroundNegative=196,40,71
 ForegroundNeutral=255,184,0
-ForegroundNormal=234,234,234
+ForegroundNormal=245,245,245
 ForegroundPositive=76,175,80
 ForegroundVisited=124,28,67
 
 [Colors:Complementary]
-BackgroundAlternate=30,87,116
-BackgroundNormal=42,46,50
+BackgroundAlternate=20,20,20
+BackgroundNormal=15,15,15
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -42,7 +42,7 @@ ForegroundInactive=124,124,124
 ForegroundLink=41,128,185
 ForegroundNegative=196,40,71
 ForegroundNeutral=255,184,0
-ForegroundNormal=234,234,234
+ForegroundNormal=245,245,245
 ForegroundPositive=76,175,80
 ForegroundVisited=124,28,67
 
@@ -61,8 +61,8 @@ ForegroundPositive=39,174,96
 ForegroundVisited=155,89,182
 
 [Colors:Tooltip]
-BackgroundAlternate=77,77,77
-BackgroundNormal=53,57,69
+BackgroundAlternate=40,40,40
+BackgroundNormal=26,26,26
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -70,13 +70,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=41,128,185
 ForegroundNegative=196,40,71
 ForegroundNeutral=255,184,0
-ForegroundNormal=234,234,234
+ForegroundNormal=245,245,245
 ForegroundPositive=76,175,80
 ForegroundVisited=124,28,67
 
 [Colors:View]
-BackgroundAlternate=35,38,41
-BackgroundNormal=0,0,0
+BackgroundAlternate=15,15,15
+BackgroundNormal=5,5,5
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -84,13 +84,13 @@ ForegroundInactive=124,124,124
 ForegroundLink=106,124,223
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=234,234,234
+ForegroundNormal=245,245,245
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [Colors:Window]
-BackgroundAlternate=49,54,59
-BackgroundNormal=42,46,50
+BackgroundAlternate=26,26,26
+BackgroundNormal=5,5,5
 DecorationFocus=6,123,194
 DecorationHover=6,123,194
 ForegroundActive=6,123,194
@@ -98,20 +98,20 @@ ForegroundInactive=124,124,124
 ForegroundLink=106,124,223
 ForegroundNegative=196,40,71
 ForegroundNeutral=193,130,44
-ForegroundNormal=234,234,234
+ForegroundNormal=245,245,245
 ForegroundPositive=66,144,55
 ForegroundVisited=183,28,67
 
 [General]
-ColorScheme=Soft-Dark
-Name=Soft Dark
+ColorScheme=SoftFocusDark
+Name=Soft Focus Dark
 shadeSortColumn=true
 
 [KDE]
 contrast=4
 
 [WM]
-activeBackground=42,46,50
-activeForeground=234,234,234
-inactiveBackground=42,46,50
+activeBackground=5,5,5
+activeForeground=245,245,245
+inactiveBackground=5,5,5
 inactiveForeground=124,124,124
