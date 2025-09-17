@@ -1,0 +1,20 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "kamal.hamza@outlook.com",
+                "Name": "Hamza Kamal"
+            }
+        ],
+        "Category": "",
+        "Dependencies": [
+        ],
+        "Description": "Soft light theme",
+        "EnabledByDefault": true,
+        "Id": "SoftFocusLight",
+        "License": "MIT",
+        "Name": "SoftFocusLight",
+        "Version": "1.0",
+        "Website": "https://github.com/kamal-hamza/dotfiles.git"
+    }
+}
