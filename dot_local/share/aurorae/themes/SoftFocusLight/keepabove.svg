@@ -23,7 +23,7 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="6.0506762"
-     inkscape:cx="55.613619"
+     inkscape:cx="55.77889"
      inkscape:cy="20.410942"
      inkscape:window-width="1512"
      inkscape:window-height="920"
@@ -72,7 +72,7 @@
      id="pressed-center"
      style="fill:#000000;fill-opacity:1">
     <rect
-       style="opacity:0.001;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:0.001;fill:#c42847;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4164"
        width="22"
        height="22"
@@ -87,7 +87,7 @@
     <path
        id="path4173"
        d="M 57.000001,7 59.5,10 62,13 H 57.000001 52 l 2.500001,-3 z"
-       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:5.76674747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       style="opacity:1;fill:#c42847;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:5.76674747;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
   <g
      id="inactive-center"
@@ -100,7 +100,7 @@
        x="69"
        y="0" />
     <path
-       style="opacity:0.3;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:8;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="opacity:0.3;fill:#c42847;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:8;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path4181"
        d="m 12.148778,4.0285726 2.886751,4.9999999 2.886751,4.9999995 -5.773502,0 -5.7735027,0 2.8867516,-4.9999994 z"
        transform="matrix(0.86602542,0,0,0.60000001,69.47885,4.5828564)" />
