@@ -79,7 +79,7 @@
        ry="10.999992"
        rx="10.999991"
        id="ellipse4862-3"
-       style="display:inline;opacity:0.5;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="display:inline;opacity:1;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        cx="79.428299"
        cy="-54.631432" />
     <g
@@ -162,7 +162,7 @@
     <ellipse
        cy="-54.631432"
        cx="79.428299"
-       style="display:inline;opacity:0.5;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       style="display:inline;opacity:1;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        id="ellipse5303-3"
        rx="11.000009"
        ry="11.00001" />
@@ -249,7 +249,7 @@
          ry="7.99999"
          rx="7.9999895"
          id="ellipse5399"
-         style="display:inline;opacity:0.5;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+         style="display:inline;opacity:1;fill:#d4b87b;fill-opacity:1;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
          cx="1302"
          cy="255" />
       <g
