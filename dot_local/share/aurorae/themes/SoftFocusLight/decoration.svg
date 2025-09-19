@@ -85,6 +85,100 @@
        gradientTransform="matrix(0.71429,0,0,1,-317.71,1251.4)"
        gradientUnits="userSpaceOnUse"
        xlink:href="#linearGradient948" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="linearGradient913"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.71429,0,0,1,-317.71,1250.4)"
+       x1="83.593498"
+       y1="-970.40002"
+       x2="83.593498"
+       y2="-952.40002" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="linearGradient998"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.71429,0,0,1,-317.71,1250.4)"
+       x1="83.593498"
+       y1="-970.40002"
+       x2="83.593498"
+       y2="-956.40002" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="linearGradient1000"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.71429,0,0,1,-317.71,1251.4)"
+       x1="83.593498"
+       y1="-970.40002"
+       x2="83.593498"
+       y2="-958.40002" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="radialGradient1902"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(7.8051429e-6,-1.643834,1.4470083,6.8705883e-6,-1275.1016,1787.4991)"
+       cx="984"
+       cy="905.35999"
+       fx="984"
+       fy="905.35999"
+       r="8.5" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="radialGradient1904"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0,-1.4085479,1.4470223,0,-1275.1064,1555.9838)"
+       cx="984"
+       cy="905.35999"
+       fx="984"
+       fy="905.35999"
+       r="8.5" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="linearGradient1906"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.71429,0,0,0.94444447,-317.71,1197.4889)"
+       x1="83.593498"
+       y1="-970.39996"
+       x2="83.593498"
+       y2="-958.07001" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="radialGradient1908"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.00356957,-2.1144211,1.9964334,0.00337038,-1776.0338,2247.5115)"
+       cx="984"
+       cy="905.35999"
+       fx="984"
+       fy="905.35999"
+       r="8.5" />
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="radialGradient1910"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.0035668,-1.7614826,1.9964322,0.00404254,-1776.0299,1899.6115)"
+       cx="984"
+       cy="905.35999"
+       fx="984"
+       fy="905.35999"
+       r="8.5" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient948"
+       id="linearGradient1912"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.71429,0,0,0.94444447,-317.71,1197.4889)"
+       x1="83.593498"
+       y1="-970.39996"
+       x2="83.593498"
+       y2="-953.39996" />
   </defs>
   <rect
      id="decoration-inactive-center"
@@ -102,12 +196,10 @@
      style="opacity:0.8;fill:#fbfcf8;fill-opacity:1" />
   <g
      id="decoration-left"
-     transform="matrix(1.0588235,0,0,1,12,28)"
-     style="fill:#fbfcf8;fill-opacity:1">
+     transform="matrix(1.0588235,0,0,1,12,28)">
     <g
        id="shadow-left-3-9"
-       transform="matrix(-1,0,0,1,298,-240)"
-       style="fill:#fbfcf8;fill-opacity:1">
+       transform="matrix(-1,0,0,1,298,-240)">
       <rect
          id="rect31-1"
          transform="rotate(-90)"
@@ -115,7 +207,7 @@
          y="288.55554"
          width="50"
          height="9.4444447"
-         style="opacity:0.25;fill:#fbfcf8;stroke-width:0.9718253;fill-opacity:1" />
+         style="opacity:0.25;fill:url(#linearGradient1912);stroke-width:0.9718253" />
       <rect
          id="rect33-2"
          transform="translate(3,2)"
@@ -123,7 +215,7 @@
          y="257"
          width="7"
          height="1"
-         style="fill-opacity:1;fill:#fbfcf8" />
+         style="fill-opacity:0" />
     </g>
     <path
        id="path71-7"
@@ -133,12 +225,10 @@
   </g>
   <g
      id="decoration-bottom"
-     transform="translate(13,29)"
-     style="fill:#fbfcf8;fill-opacity:1">
+     transform="translate(13,29)">
     <g
        id="shadow-bottom-0"
-       transform="rotate(90,269,55)"
-       style="fill:#fbfcf8;fill-opacity:1">
+       transform="rotate(90,269,55)">
       <rect
          id="rect39-6"
          transform="rotate(-90)"
@@ -146,7 +236,7 @@
          y="288"
          width="50"
          height="10"
-         style="opacity:0.25;fill:#fbfcf8;fill-opacity:1" />
+         style="opacity:0.25;fill:url(#linearGradient913)" />
       <rect
          id="rect41-2"
          transform="translate(3,2)"
@@ -154,7 +244,7 @@
          y="257"
          width="7"
          height="1"
-         style="fill-opacity:1;fill:#fbfcf8" />
+         style="fill-opacity:0" />
     </g>
     <path
        id="path95-6"
@@ -164,12 +254,10 @@
   </g>
   <g
      id="decoration-top"
-     transform="translate(13,28)"
-     style="fill:#fbfcf8;fill-opacity:1">
+     transform="translate(13,28)">
     <g
        id="shadow-top-6-7"
-       transform="matrix(0,-1,-1,0,324,298)"
-       style="fill:#fbfcf8;fill-opacity:1">
+       transform="matrix(0,-1,-1,0,324,298)">
       <rect
          id="rect51-9"
          transform="rotate(-90)"
@@ -177,7 +265,7 @@
          y="289"
          width="50"
          height="10"
-         style="opacity:0.25;fill:#fbfcf8;fill-opacity:1" />
+         style="opacity:0.25;fill:url(#linearGradient1951)" />
       <rect
          id="rect53-2"
          transform="translate(3,2)"
@@ -185,7 +273,7 @@
          y="257"
          width="7"
          height="1"
-         style="fill-opacity:1;fill:#fbfcf8" />
+         style="fill-opacity:0" />
     </g>
     <path
        id="path111-0"
@@ -200,10 +288,9 @@
   </g>
   <g
      id="decoration-topleft"
-     transform="matrix(1.0588225,0,0,1.0588225,12,27.00002)"
-     style="fill:#fbfcf8;fill-opacity:1">
+     transform="matrix(1.0588225,0,0,1.0588225,12,27.00002)">
     <path
-       style="opacity:0.25;fill:#fbfcf8;stroke-width:1.05882251;fill-opacity:1"
+       style="opacity:0.25;fill:url(#radialGradient1910);stroke-width:1.05882251"
        d="m 17,152 v 18 h 10 c 0,-4.432 3.568,-8 8,-8 v -10 z"
        transform="matrix(0.94444536,0,0,0.94444536,-16.055571,-143.55571)"
        id="shadow-topleft-7" />
@@ -222,13 +309,12 @@
   </g>
   <g
      transform="matrix(1.0588225,0,0,-1.0588225,12,112.99998)"
-     id="decoration-bottomleft"
-     style="fill:#fbfcf8;fill-opacity:1">
+     id="decoration-bottomleft">
     <path
        id="path928"
        transform="matrix(0.94444536,0,0,0.94444536,-16.055571,-143.55571)"
        d="m 17,152 v 18 h 10 c 0,-4.432 3.568,-8 8,-8 v -10 z"
-       style="opacity:0.25;fill:#fbfcf8;stroke-width:1.05882251;fill-opacity:1"
+       style="opacity:0.25;fill:url(#radialGradient1908);stroke-width:1.05882251"
        inkscape:connector-curvature="0" />
     <path
        id="path930"
@@ -263,14 +349,12 @@
      height="100%" />
   <g
      transform="matrix(1.0588235,0,0,1,114,28)"
-     id="decoration-inactive-left"
-     style="fill:#fbfcf8;fill-opacity:1">
+     id="decoration-inactive-left">
     <g
        transform="matrix(-1,0,0,1,298,-240)"
-       id="g948"
-       style="fill:#fbfcf8;fill-opacity:1">
+       id="g948">
       <rect
-         style="opacity:0.25;fill:#fbfcf8;stroke-width:0.9718253;fill-opacity:1"
+         style="opacity:0.25;fill:url(#linearGradient1906);stroke-width:0.9718253"
          height="9.4444447"
          width="50"
          y="288.55554"
@@ -278,7 +362,7 @@
          transform="rotate(-90)"
          id="rect944" />
       <rect
-         style="fill-opacity:1;fill:#fbfcf8"
+         style="fill-opacity:0"
          height="1"
          width="7"
          y="257"
@@ -293,13 +377,12 @@
   </g>
   <g
      transform="matrix(1.0588225,0,0,1.0588225,114,27.00002)"
-     id="decoration-inactive-topleft"
-     style="fill:#fbfcf8;fill-opacity:1">
+     id="decoration-inactive-topleft">
     <path
        id="path956"
        transform="matrix(0.94444536,0,0,0.94444536,-16.055571,-143.55571)"
        d="m 17,152 v 18 h 10 c 0,-4.432 3.568,-8 8,-8 v -10 z"
-       style="opacity:0.25;fill:#fbfcf8;stroke-width:1.05882251;fill-opacity:1"
+       style="opacity:0.25;fill:url(#radialGradient1904);stroke-width:1.05882251"
        inkscape:connector-curvature="0" />
     <path
        id="path958"
@@ -315,11 +398,10 @@
   </g>
   <g
      id="decoration-inactive-bottomleft"
-     transform="matrix(1.0588225,0,0,-1.0588225,114,112.99998)"
-     style="fill:#fbfcf8;fill-opacity:1">
+     transform="matrix(1.0588225,0,0,-1.0588225,114,112.99998)">
     <path
        inkscape:connector-curvature="0"
-       style="opacity:0.25;fill:#fbfcf8;stroke-width:1.05882251;fill-opacity:1"
+       style="opacity:0.25;fill:url(#radialGradient1902);stroke-width:1.05882251"
        d="m 17,152 v 18 h 10 c 0,-4.432 3.568,-8 8,-8 v -10 z"
        transform="matrix(0.94444536,0,0,0.94444536,-16.055571,-143.55571)"
        id="path964" />
@@ -331,14 +413,12 @@
   </g>
   <g
      transform="translate(115,29)"
-     id="decoration-inactive-bottom"
-     style="fill:#fbfcf8;fill-opacity:1">
+     id="decoration-inactive-bottom">
     <g
        transform="rotate(90,269,55)"
-       id="g980"
-       style="fill:#fbfcf8;fill-opacity:1">
+       id="g980">
       <rect
-         style="opacity:0.25;fill:#fbfcf8;fill-opacity:1"
+         style="opacity:0.25;fill:url(#linearGradient998)"
          height="10"
          width="50"
          y="288"
@@ -346,7 +426,7 @@
          transform="rotate(-90)"
          id="rect976" />
       <rect
-         style="fill-opacity:1;fill:#fbfcf8"
+         style="fill-opacity:0"
          height="1"
          width="7"
          y="257"
@@ -361,14 +441,12 @@
   </g>
   <g
      transform="translate(115,28)"
-     id="decoration-inactive-top"
-     style="fill:#fbfcf8;fill-opacity:1">
+     id="decoration-inactive-top">
     <g
        transform="matrix(0,-1,-1,0,324,298)"
-       id="g990"
-       style="fill:#fbfcf8;fill-opacity:1">
+       id="g990">
       <rect
-         style="opacity:0.25;fill:#fbfcf8;fill-opacity:1"
+         style="opacity:0.25;fill:url(#linearGradient1000)"
          height="10"
          width="50"
          y="289"
@@ -382,7 +460,7 @@
          x="278"
          transform="translate(3,2)"
          id="rect988"
-         style="fill-opacity:1;fill:#fbfcf8" />
+         style="fill-opacity:0" />
     </g>
     <path
        style="color:#383c4a;opacity:0.8;fill:#fbfcf8;stroke-width:1.06904495;fill-opacity:1"
