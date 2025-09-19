@@ -6,7 +6,7 @@
    viewBox="0 0 22 22"
    id="svg33"
    sodipodi:docname="compass.svg"
-   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -22,14 +22,16 @@
      inkscape:pagecheckerboard="0"
      showgrid="false"
      inkscape:zoom="4.435488"
-     inkscape:cx="10.370899"
-     inkscape:cy="-15.556349"
-     inkscape:window-width="1440"
-     inkscape:window-height="750"
+     inkscape:cx="19.050891"
+     inkscape:cy="-20.403617"
+     inkscape:window-width="1512"
+     inkscape:window-height="920"
      inkscape:window-x="0"
-     inkscape:window-y="32"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg33" />
+     inkscape:window-y="34"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg33"
+     inkscape:showpageshadow="0"
+     inkscape:deskcolor="#505050" />
   <defs
      id="defs16">
     <linearGradient
@@ -87,16 +89,6 @@
        y2="16.599585"
        gradientUnits="userSpaceOnUse"
        xlink:href="#linearGradient995" />
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient995"
-       id="linearGradient1149"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.63636,0,0,0.63636,26,1.0273)"
-       y1="3.1181188"
-       x2="18.308504"
-       y2="18.801296"
-       x1="3.8032568" />
   </defs>
   <g
      id="16-16-compass">
@@ -115,7 +107,7 @@
        d="m33 1.0273c-3.866 0-7 3.1182-7 7s3.134 7 7 7 7-3.1182 7-7-3.134-7-7-7zm0 1.9727c2.7614 0 5 2.2909 5 5.0273s-2.2386 5.0273-5 5.0273-5-2.2909-5-5.0273 2.2386-5.0273 5-5.0273zm3.5 1.5273-3.5 1.1455c-1.2217 0-2.334 1.1455-2.334 2.3545l-1.166 3.5 3.5-1.1455c1.2217 0 2.334-1.1455 2.334-2.3545zm-3.5 2.3545c0.61088 0 1.166 0.50909 1.166 1.1455-1.9e-5 0.63636-0.55518 1.1455-1.166 1.1455-0.61085 0-1.166-0.50909-1.166-1.1455-3e-5 -0.63636 0.55514-1.1455 1.166-1.1455z"
        fill="url(#linearGradient848)"
        id="path20"
-       style="fill-opacity:1;fill:url(#linearGradient1149)" />
+       style="fill-opacity:1;fill:#000000" />
   </g>
   <g
      id="compass"
@@ -135,7 +127,7 @@
        d="m33 1.0273c-3.866 0-7 3.1182-7 7s3.134 7 7 7 7-3.1182 7-7-3.134-7-7-7zm0 1.9727c2.7614 0 5 2.2909 5 5.0273s-2.2386 5.0273-5 5.0273-5-2.2909-5-5.0273 2.2386-5.0273 5-5.0273zm3.5 1.5273-3.5 1.1455c-1.2217 0-2.334 1.1455-2.334 2.3545l-1.166 3.5 3.5-1.1455c1.2217 0 2.334-1.1455 2.334-2.3545zm-3.5 2.3545c0.61088 0 1.166 0.50909 1.166 1.1455-1.9e-5 0.63636-0.55518 1.1455-1.166 1.1455-0.61085 0-1.166-0.50909-1.166-1.1455-3e-5 -0.63636 0.55514-1.1455 1.166-1.1455z"
        fill="url(#linearGradient848)"
        id="path25"
-       style="fill-opacity:1;fill:url(#linearGradient848)" />
+       style="fill-opacity:1;fill:#000000" />
   </g>
   <g
      id="22-22-compass"
@@ -150,11 +142,11 @@
        fill="#a2c725"
        opacity=".25"
        id="circle28"
-       style="fill:#6f871c;fill-opacity:1" />
+       style="fill:#fbfcf8;fill-opacity:1" />
     <path
        d="m16.657 5.3431a8 8 0 0 0-11.314 0 8 8 0 0 0 0 11.314 8 8 0 0 0 11.314 0 8 8 0 0 0 0-11.314zm-1.4142 1.4142a6 6 0 0 1 0 8.4853 6 6 0 0 1-8.4853 0 6 6 0 0 1 0-8.4853 6 6 0 0 1 8.4853 0zm0 0-3.2731 1.4032a3 3 0 0 0-3.0908 0.71816 3 3 0 0 0-0.71816 3.0881l-1.4032 3.2759 3.2731-1.4032a3 3 0 0 0 3.0908-0.71816 3 3 0 0 0 0.71816-3.0881zm-3.5355 3.5355a1 1 0 0 1 0 1.4142 1 1 0 0 1-1.4142 0 1 1 0 0 1 0-1.4142 1 1 0 0 1 1.4142 0z"
        fill="url(#linearGradient877)"
        id="path30"
-       style="fill:url(#linearGradient877)" />
+       style="fill:#000000;fill-opacity:1" />
   </g>
 </svg>
