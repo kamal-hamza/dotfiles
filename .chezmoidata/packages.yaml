@@ -93,6 +93,19 @@ packages:
             - "ttf-firacode-nerd"
             - "ttf-meslo-nerd-font-powerlevel10k"
             - "ttf-jetbrains-mono-nerd"
+            - "perl-local-lib"
+
+            # --- Hyprland / Arch Tools ---
+            - "hyprland"
+            - "hyprpaper"
+            - "hyprlock"
+            - "hypridle"
+            - "hyprcursor"
+            - "waybar"
+            - "rofi"
+            - "mako"
+            - "nemo"
+
         aur:
             # --- AUR (Arch User Repository) ---
             - "python-pywal16"
