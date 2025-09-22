@@ -1,5 +1,6 @@
 local wezterm = require 'wezterm'
-local theme = require 'current-theme'
+local lightTheme = require("soft-focus-light")
+local darkTheme = require("soft-focus-dark")
 -- This will be used to store the configuration table
 local config = {}
 
@@ -13,7 +14,7 @@ end
 -- ===================================================================
 --
 -- Font configuration from Kitty
-config.color_scheme = theme.color_scheme
+config.color_scheme = lightTheme.color_scheme
 config.font = wezterm.font("FiraCode Nerd Font Mono")
 
 
