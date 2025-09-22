@@ -103,6 +103,7 @@ packages:
             - "hyprcursor"
             - "ly"
             - "waybar"
+            - "firefox"
             - "rofi"
             - "mako"
             - "nemo"
