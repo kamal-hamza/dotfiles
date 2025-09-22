@@ -1,0 +1,164 @@
+* {
+    /* Color Palette */
+    bg-col: #000000;
+    bg-col-light: #111111;
+    border-col: #448cbb;
+    selected-col: #77aa77;
+    blue: #448cbb;
+    green: #77aa77;
+    yellow: #D4B87B;
+    red: #C42847;
+    fg-col: #fbfcf8;
+    fg-col2: #448cbb;
+    grey: #aaaaaa77;
+
+    width: 600;
+    font: "Monospace 12";
+}
+
+element-text, element-icon, mode-switcher {
+    background-color: inherit;
+    text-color: inherit;
+}
+
+window {
+    height: 360px;
+    border: 3px;
+    border-color: @border-col;
+    background-color: @bg-col;
+    border-radius: 15px;
+}
+
+mainbox {
+    background-color: @bg-col;
+}
+
+inputbar {
+    children: [prompt, entry];
+    background-color: @bg-col;
+    border-radius: 10px;
+    padding: 8px;
+    margin: 10px;
+    border: 2px;
+    border-color: @blue;
+}
+
+prompt {
+    background-color: @blue;
+    color: @bg-col;
+    padding: 8px 12px;
+    text-color: @fg-col;
+    border-radius: 6px;
+    margin: 0px 8px 0px 0px;
+}
+
+textbox-prompt-colon {
+    expand: false;
+    str: "";
+}
+
+entry {
+    padding: 8px;
+    text-color: @fg-col;
+    background-color: @bg-col;
+    placeholder-color: @grey;
+    placeholder: "Type to search...";
+}
+
+listview {
+    border: 0px 0px 0px;
+    padding: 6px 0px 0px;
+    margin: 10px 10px 0px 10px;
+    columns: 1;
+    lines: 8;
+    background-color: @bg-col;
+}
+
+element {
+    padding: 8px;
+    background-color: @bg-col;
+    text-color: @fg-col;
+    border-radius: 8px;
+    margin: 2px;
+}
+
+element-icon {
+    size: 25px;
+    margin: 0px 10px 0px 0px;
+}
+
+element.selected {
+    background-color: @selected-col;
+    text-color: @bg-col;
+}
+
+element.selected.active {
+    background-color: @green;
+    text-color: @bg-col;
+}
+
+element.selected.urgent {
+    background-color: @red;
+    text-color: @fg-col;
+}
+
+element.normal.active {
+    background-color: transparent;
+    text-color: @green;
+}
+
+element.normal.urgent {
+    background-color: transparent;
+    text-color: @red;
+}
+
+element.alternate.normal {
+    background-color: transparent;
+    text-color: @fg-col;
+}
+
+element.alternate.active {
+    background-color: transparent;
+    text-color: @green;
+}
+
+element.alternate.urgent {
+    background-color: transparent;
+    text-color: @red;
+}
+
+mode-switcher {
+    spacing: 0;
+}
+
+button {
+    padding: 10px;
+    background-color: @bg-col-light;
+    text-color: @grey;
+    vertical-align: 0.5;
+    horizontal-align: 0.5;
+    border: 2px;
+    border-color: transparent;
+    border-radius: 8px;
+    margin: 5px;
+}
+
+button.selected {
+    background-color: @selected-col;
+    text-color: @bg-col;
+    border-color: @selected-col;
+}
+
+message {
+    background-color: @bg-col;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 5px;
+}
+
+textbox {
+    padding: 6px;
+    margin: 20px 0px 0px 20px;
+    text-color: @fg-col2;
+    background-color: @bg-col;
+}

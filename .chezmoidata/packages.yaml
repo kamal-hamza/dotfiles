@@ -101,6 +101,7 @@ packages:
             - "hyprlock"
             - "hypridle"
             - "hyprcursor"
+            - "ly"
             - "waybar"
             - "rofi"
             - "mako"
