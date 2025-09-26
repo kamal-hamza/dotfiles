@@ -17,10 +17,14 @@ source_if_exists() {
 
 alias_if_exists() {
     local name="$1"
-    local cmd="$2"
+    shift
+    local cmd="$*"
 
-    # Check if the command exists
-    if command -v "$cmd" >/dev/null 2>&1; then
+    # Extract the actual binary name (first argument only, respecting quotes)
+    local bin
+    bin=$(printf '%s\n' "$cmd" | awk '{print $1}')
+
+    if command -v "$bin" >/dev/null 2>&1; then
         alias "$name"="$cmd"
     fi
 }
