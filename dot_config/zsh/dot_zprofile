@@ -1,73 +1,48 @@
-# -----------------------------------------------------------------------------
-# Generic Exports (Cross-Platform)
-# -----------------------------------------------------------------------------
-export EDITOR="zed"
-export PATH="$HOME/.pyenv/bin:$PATH"
-export PATH="$HOME/.config/scripts/:$PATH"
-export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.composer/vendor/bin:$PATH"
-export PATH="$HOME/.dotnet/tools:$PATH"
-export PATH="$HOME/.zvm/bin/zig:$PATH"
+export_if_exists() {
+    local var_name="$1"
+    local value="$2"
+    if [ -n "${!var_name+x}" ]; then
+        export "$var_name=$value"
+    fi
+}
+
+# Path exports
+export_if_exists PATH "$HOME/.pyenv/bin:$PATH"
+export_if_exists PATH "$HOME/.config/scripts/:$PATH"
+export_if_exists PATH "$HOME/.cargo/bin:$PATH"
+export_if_exists PATH "$HOME/.composer/vendor/bin:$PATH"
+export_if_exists PATH "$HOME/.dotnet/tools:$PATH"
+export_if_exists PATH "$HOME/.zvm/bin/zig:$PATH"
+export_if_exists PATH "/Applications/Docker.app/Contents/Resources/bin:$PATH"
+export_if_exists PATH "$DOTNET_ROOT/sdk:$PATH"
+export_if_exists PATH="$DOTNET_ROOT:$PATH"
+export_if_exists PATH="$HOME/.local/bin:$PATH"
 
 # FZF Configuration
-export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git "
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-export FZF_CTRL_T_OPTS="--preview 'bat --color=always -n --line-range :500 {}'"
-export FZF_ALT_C_OPTS="--preview 'eza --icons=always --tree --color=always {} | head -200'"
-export FZF_DEFAULT_OPTS='
+export_if_exists FZF_DEFAULT_COMMAND "fd --hidden --strip-cwd-prefix --exclude .git"
+export_if_exists FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
+export_if_exists FZF_ALT_C_COMMAND "fd --type=d --hidden --strip-cwd-prefix --exclude .git"
+export_if_exists FZF_CTRL_T_OPTS "--preview 'bat --color=always -n --line-range :500 {}'"
+export_if_exists FZF_ALT_C_OPTS "--preview 'eza --icons=always --tree --color=always {} | head -200'"
+export_if_exists FZF_DEFAULT_OPTS '
 --color=fg:15,bg:-1,hl:15,fg+:15,bg+:-1
 --color=hl+:15:bold:underline,info:15,prompt:15,pointer:15:bold
 --color=marker:15,spinner:15,header:15
 --border=rounded --height=40% --reverse --cycle --bind "tab:down,shift-tab:up"
 '
-export FZF_TMUX_OPTS=" -p90%,70% "
 
-# Other Generic Exports
-export GIT_CONFIG_GLOBAL="$HOME/.config/git/config"
-export TEXINPUTS="$HOME/.config/tex/latex//:"
-export NVM_DIR="$HOME/.nvm"
-export ZVM_INSTALL="$HOME/.zvm/self"
-export PATH="$PATH:$HOME/.zvm/bin"
-export PATH="$PATH:$ZVM_INSTALL/"
-export ZIG_PATH="$HOME/.zvm/bin/zig"
-
-# -----------------------------------------------------------------------------
-# OS-Specific Environment Configuration
-# -----------------------------------------------------------------------------
-if [[ "$(uname)" == "Darwin" ]]; then
-  # --- macOS Specific Exports ---
-  export PATH="/Applications/Docker.app/Contents/Resources/bin:$PATH"
-  export DOTNET_ROOT="/usr/local/share/dotnet"
-  export PATH="$DOTNET_ROOT/sdk:$PATH"
-
-elif [[ "$(uname)" == "Linux" ]]; then
-  # --- SSH Agent Auto Config ---
-  if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    eval "$(ssh-agent -s)" > /dev/null
-  fi
-  ssh-add -q ~/.ssh/id_ed25519 2>/dev/null
-
-  # --- Arch Linux Specific Exports ---
-  export DOTNET_ROOT="/usr/share/dotnet"
-  export PATH="$DOTNET_ROOT:$PATH"
-  export PATH="$HOME/.local/bin:$PATH"
-
-  # Set ODBC config path for Linux
-  export ODBCSYSINI="/etc"
-
-  # Add path for mssql-tools if it exists
-  if [ -d /opt/mssql-tools18/bin ]; then
-    export PATH="/opt/mssql-tools18/bin:$PATH"
-  fi
-
-  # NVM for Linux
-  if [ -s "/usr/share/nvm/nvm.sh" ]; then
-    . "/usr/share/nvm/nvm.sh"
-  fi
-fi
-
-# Docker completion
-if [ -d "$HOME/.docker/completions" ]; then
-    FPATH="$HOME/.docker/completions:$FPATH"
-fi
+# Variable Exports
+export_if_exists EDITOR "zed"
+export_if_exists FZF_TMUX_OPTS " -p90%,70% "
+export_if_exists GIT_CONFIG_GLOBAL "$HOME/.config/git/config"
+export_if_exists TEXINPUTS "$HOME/.config/tex/latex//:"
+export_if_exists NVM_DIR "$HOME/.nvm"
+export_if_exists ZVM_INSTALL "$HOME/.zvm/self"
+export_if_exists PATH "$PATH:$HOME/.zvm/bin"
+export_if_exists PATH "$PATH:$ZVM_INSTALL/"
+export_if_exists ZIG_PATH "$HOME/.zvm/bin/zig"
+export_if_exists DOTNET_ROOT "/usr/local/share/dotnet"
+export_if_exists DOTNET_ROOT="/usr/share/dotnet"
+export_if_exists ODBCSYSINI="/etc"
+export_if_exists FPATH "$HOME/.docker/completions:$FPATH"
+export_if_exists PATH "/opt/mssql-tools18/bin:$PATH"
