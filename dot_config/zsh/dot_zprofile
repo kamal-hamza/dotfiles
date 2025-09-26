@@ -1,9 +1,9 @@
 export_if_exists() {
-    local var_name="$1"
-    local value="$2"
-    if [ -n "${!var_name+x}" ]; then
-        export "$var_name=$value"
-    fi
+  local var_name="$1"
+  local value="$2"
+  if [[ -n ${(P)var_name} ]]; then
+    export "$var_name=$value"
+  fi
 }
 
 # Path exports
@@ -15,8 +15,8 @@ export_if_exists PATH "$HOME/.dotnet/tools:$PATH"
 export_if_exists PATH "$HOME/.zvm/bin/zig:$PATH"
 export_if_exists PATH "/Applications/Docker.app/Contents/Resources/bin:$PATH"
 export_if_exists PATH "$DOTNET_ROOT/sdk:$PATH"
-export_if_exists PATH="$DOTNET_ROOT:$PATH"
-export_if_exists PATH="$HOME/.local/bin:$PATH"
+export_if_exists PATH "$DOTNET_ROOT:$PATH"
+export_if_exists PATH "$HOME/.local/bin:$PATH"
 
 # FZF Configuration
 export_if_exists FZF_DEFAULT_COMMAND "fd --hidden --strip-cwd-prefix --exclude .git"
@@ -42,7 +42,7 @@ export_if_exists PATH "$PATH:$HOME/.zvm/bin"
 export_if_exists PATH "$PATH:$ZVM_INSTALL/"
 export_if_exists ZIG_PATH "$HOME/.zvm/bin/zig"
 export_if_exists DOTNET_ROOT "/usr/local/share/dotnet"
-export_if_exists DOTNET_ROOT="/usr/share/dotnet"
-export_if_exists ODBCSYSINI="/etc"
+export_if_exists DOTNET_ROOT "/usr/share/dotnet"
+export_if_exists ODBCSYSINI "/etc"
 export_if_exists FPATH "$HOME/.docker/completions:$FPATH"
 export_if_exists PATH "/opt/mssql-tools18/bin:$PATH"
