@@ -15,6 +15,16 @@ source_if_exists() {
   fi
 }
 
+alias_if_exists() {
+    local name="$1"
+    local cmd="$2"
+
+    # Check if the command exists
+    if command -v "$cmd" >/dev/null 2>&1; then
+        alias "$name"="$cmd"
+    fi
+}
+
 # -----------------------------------------------------------------------------
 # Evals & Sourcing
 # -----------------------------------------------------------------------------
@@ -70,28 +80,30 @@ source_if_exists "$HOME/.cache/wal/colors.sh"
 # -----------------------------------------------------------------------------
 # Global Aliases
 # -----------------------------------------------------------------------------
-alias tree='tree -I "node_modules|bower_components"'
-alias la='ls -la'
-alias l='eza --all --icons'
-alias cls='clear'
-alias v="nvim"
-alias vi="nvim"
-alias t="tmux a"
-alias cd="z"
-alias yy="yazi"
-alias gs="git status --short"
-alias fman="compgen -c | fzf | xargs man"
-alias what='tldr'
+alias_if_exists tree "tree -I 'node_modules|bower_components'"
+alias_if_exists la "ls -la"
+alias_if_exists l "eza --all --icons"
+alias_if_exists cls "clear"
+alias_if_exists v "nvim"
+alias_if_exists vi "nvim"
+alias_if_exists t "tmux a"
+alias_if_exists cd "z"
+alias_if_exists yy "yazi"
+alias_if_exists gs "git status --short"
+alias_if_exists fman "compgen -c | fzf | xargs man"
+alias_if_exists what "tldr"
 
+# -----------------------------------------------------------------------------
 # Script Aliases
-alias tt="tmux-new.sh"
-alias ccp="create-project.sh"
-alias dp="delete-project.sh"
-alias m="man.sh"
-alias bb="branch-change.sh"
-alias dc="docker-image-runner.sh"
-alias dd="docker-image-stop.sh"
-alias ss="stack-search.sh"
+# -----------------------------------------------------------------------------
+alias_if_exists tt "tmux-new.sh"
+alias_if_exists ccp "create-project.sh"
+alias_if_exists dp "delete-project.sh"
+alias_if_exists m "man.sh"
+alias_if_exists bb "branch-change.sh"
+alias_if_exists dc "docker-image-runner.sh"
+alias_if_exists dd "docker-image-stop.sh"
+alias_if_exists ss "stack-search.sh"
 
 # -----------------------------------------------------------------------------
 # Conda Initialization (MUST BE LAST)
