@@ -1,0 +1,44 @@
+# Default style
+background-color=#050505
+text-color=#f5f5f5
+border-color=#67b7f5
+border-size=2
+border-radius=8
+padding=12
+margin=10
+font=sans 11
+
+# Icons
+icon-location=left
+max-icon-size=48
+
+# Progress bar
+progress-color=over #67b7f5
+
+# Default timeout
+default-timeout=5000
+
+# Grouping
+group-by=app-name
+
+# Urgency: low
+[urgency=low]
+background-color=#2a2b2e99
+text-color=#bbbbbb
+border-color=#77aa77
+
+# Urgency: normal (uses default)
+
+# Urgency: critical
+[urgency=critical]
+background-color=#ff4c6a26
+text-color=#f5f5f5
+border-color=#ff4c6a
+default-timeout=0
+
+# App-specific styles
+[app-name="Volume"]
+border-color=#D4B87B
+
+[app-name="Brightness"]
+border-color=#D4B87B

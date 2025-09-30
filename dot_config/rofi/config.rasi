@@ -1,3 +1,5 @@
+@theme "themes/soft-focus-dark"
+
 configuration {
     modi: "drun,run,window";
     show-icons: true;
@@ -6,80 +8,5 @@ configuration {
     display-run: "Run";
     display-window: "Window";
     drun-display-format: "{name}";
-    font: "Inter 11";
-}
-
-* {
-    bg: #1e1e2e;
-    fg: #cdd6f4;
-    fg-alt: #6c7086;
-    accent: #89b4fa;
-    border: #313244;
-
-    background-color: transparent;
-    text-color: @fg;
-}
-
-window {
-    background-color: @bg;
-    border: 2px;
-    border-color: @border;
-    border-radius: 12px;
-    padding: 16px;
-    width: 640px;
-}
-
-mainbox {
-    spacing: 16px;
-    children: [inputbar, listview];
-}
-
-inputbar {
-    spacing: 12px;
-    padding: 12px 16px;
-    background-color: @border;
-    border-radius: 8px;
-    children: [prompt, entry];
-}
-
-prompt {
-    text-color: @accent;
-}
-
-entry {
-    placeholder: "Search apps...";
-    placeholder-color: @fg-alt;
-}
-
-listview {
-    lines: 8;
-    spacing: 6px;
-    scrollbar: false;
-}
-
-element {
-    padding: 10px 12px;
-    border-radius: 8px;
-    spacing: 12px;
-}
-
-element normal {
-    background-color: transparent;
-    text-color: @fg;
-}
-
-element selected {
-    background-color: @accent;
-    text-color: @bg;
-}
-
-element-icon {
-    size: 28px;
-    background-color: transparent;
-}
-
-element-text {
-    background-color: transparent;
-    text-color: inherit;
-    vertical-align: 0.5;
+    font: "FiraCode Nerd Font Mono";
 }
