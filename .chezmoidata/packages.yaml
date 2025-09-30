@@ -106,6 +106,7 @@ packages:
             - "firefox"
             - "mako"
             - "nemo"
+            - "rofi"
             - "vulkan-intel"
             - "libva-intel-driver"
 
@@ -121,7 +122,6 @@ packages:
             - "zsh-autopair-git"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
-            - "walker-bin"
 
     # 🪟 Windows packages using Chocolatey
     windows:
