@@ -106,6 +106,8 @@ packages:
             - "firefox"
             - "mako"
             - "nemo"
+            - "vulkan-intel"
+            - "libva-intel-driver"
 
         aur:
             # --- AUR (Arch User Repository) ---
