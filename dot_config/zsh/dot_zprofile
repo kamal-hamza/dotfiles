@@ -9,6 +9,7 @@ export_if_exists() {
 # Path exports
 export_if_exists PATH "$HOME/.pyenv/bin:$PATH"
 export_if_exists PATH "$HOME/.config/scripts/:$PATH"
+export_if_exists PATH "$HOME/.config/walker/scripts/:$PATH"
 export_if_exists PATH "$HOME/.cargo/bin:$PATH"
 export_if_exists PATH "$HOME/.composer/vendor/bin:$PATH"
 export_if_exists PATH "$HOME/.dotnet/tools:$PATH"

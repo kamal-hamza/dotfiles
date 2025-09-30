@@ -104,7 +104,6 @@ packages:
             - "ly"
             - "waybar"
             - "firefox"
-            - "rofi"
             - "mako"
             - "nemo"
 
@@ -120,6 +119,7 @@ packages:
             - "zsh-autopair-git"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
+            - "walker"
 
     # 🪟 Windows packages using Chocolatey
     windows:
