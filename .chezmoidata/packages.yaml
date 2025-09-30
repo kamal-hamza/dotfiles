@@ -119,7 +119,7 @@ packages:
             - "zsh-autopair-git"
             - "excalidraw-desktop"
             - "chatgpt-desktop-bin"
-            - "walker"
+            - "walker-bin"
 
     # 🪟 Windows packages using Chocolatey
     windows:
