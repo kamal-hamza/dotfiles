@@ -176,7 +176,7 @@
     {
         "context": "Terminal",
         "bindings": {
-            "ctrl+d": "workspace::ToggleBottomDock"
+            "alt+d": "workspace::ToggleBottomDock"
         }
     },
     //========================================================================
