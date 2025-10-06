@@ -1,9 +1,20 @@
 export_if_exists() {
   local var_name="$1"
   local value="$2"
-  if [[ -n ${(P)var_name} ]]; then
-    export "$var_name=$value"
-  fi
+
+  case "$var_name" in
+    *PATH|FPATH|TEXINPUTS)
+      if [[ -z ${(P)var_name} ]]; then
+        # Not set → initialize
+        export $var_name="$value"
+      else
+        export $var_name="$value:${(P)var_name}"
+      fi
+      ;;
+    *)
+      export $var_name="$value"
+      ;;
+  esac
 }
 
 # Path exports
