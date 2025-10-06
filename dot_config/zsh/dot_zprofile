@@ -36,7 +36,7 @@ export_if_exists FZF_DEFAULT_OPTS '
 export_if_exists EDITOR "zed"
 export_if_exists FZF_TMUX_OPTS " -p90%,70% "
 export_if_exists GIT_CONFIG_GLOBAL "$HOME/.config/git/config"
-export_if_exists TEXINPUTS "$HOME/.config/tex/latex//:"
+export TEXINPUTS="$HOME/.config/tex/latex//:"
 export_if_exists NVM_DIR "$HOME/.nvm"
 export_if_exists ZVM_INSTALL "$HOME/.zvm/self"
 export_if_exists PATH "$PATH:$HOME/.zvm/bin"
