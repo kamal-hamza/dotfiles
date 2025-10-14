@@ -47,10 +47,7 @@
             "/": null,
             "#": null,
             ".": null,
-            "shift-y": [
-                "workspace::SendKeystrokes",
-                "y $"
-            ],
+            "shift-y": ["workspace::SendKeystrokes", "y $"],
             "shift-k": "editor::Hover",
             ":": "command_palette::Toggle",
             "?": "command_palette::Toggle",
@@ -138,7 +135,7 @@
                 {
                     "task_name": "latexmk_view"
                 }
-            ],
+            ]
         }
     },
     {
@@ -176,7 +173,7 @@
     {
         "context": "Terminal",
         "bindings": {
-            "alt+d": "workspace::ToggleBottomDock"
+            "<Esc>": "workspace::ToggleBottomDock"
         }
     },
     //========================================================================
