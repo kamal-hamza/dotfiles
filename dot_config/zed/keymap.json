@@ -10,6 +10,7 @@
             "ctrl-k": "workspace::ActivatePaneUp"
         }
     },
+
     {
         "context": "(Editor && vim_mode == normal && !Terminal) || (EmptyPane && !Terminal) || (SharedScreen && !Terminal)",
         "bindings": {
@@ -19,22 +20,31 @@
             "space f g": "workspace::NewSearch",
             "space f b": "tab_switcher::Toggle",
             // Panel & Dock Toggles
-            "space p p": "project_panel::ToggleFocus",
+            "space e e": "project_panel::ToggleFocus",
             "space g g": "git_panel::ToggleFocus",
+            "space k k": "terminal_panel::Toggle",
+            "space d d": "debug_panel::ToggleFocus",
+            "space a a": "agent::ToggleFocus",
             // Git Commands (global)
             "space g c": "git::Commit",
             "space g P": "git::Pull",
-            "space g p": "git::ForcePush",
+            "space g p": "git::Push",
             "space g b": "git::Branch",
             "space g i": "git::Init",
             // Agent Commands (global)
-            "space a a": "workspace::ToggleRightDock",
             "space a n": "agent::NewThread",
             "space a h": "agent::OpenHistory",
             // Terminal Commands (global)
-            "space d d": "workspace::ToggleBottomDock",
             // LSP Diagnostics (global)
-            "space l l": "lsp_tool::ToggleMenu"
+            "space l l": "lsp_tool::ToggleMenu",
+            // Close all docks
+            "escape": "workspace::CloseActiveDock",
+            "space d b": [
+                "pane::CloseActiveItem",
+                {
+                    "close_pinned": false
+                }
+            ]
         }
     },
     //========================================================================
@@ -44,7 +54,6 @@
         "context": "Editor && vim_mode == normal && !Terminal && !menu",
         "bindings": {
             // Unset default Vim keys
-            "/": null,
             "#": null,
             ".": null,
             "shift-y": ["workspace::SendKeystrokes", "y $"],
@@ -52,15 +61,9 @@
             ":": "command_palette::Toggle",
             "?": "command_palette::Toggle",
             // Search & Replace
-            "space /": "vim::Search",
+            "/": "vim::Search",
             "space r r": "editor::SelectAllMatches",
             // Buffer/Tab management
-            "space d b": [
-                "pane::CloseActiveItem",
-                {
-                    "close_pinned": false
-                }
-            ],
             "space s": "outline::Toggle",
             "space S": "project_symbols::Toggle",
             // Code Actions & Diagnostics
@@ -87,6 +90,12 @@
         }
     },
     {
+        "context": "Dock || Terminal || ProjectPanel || (AssistantPanel && vim_mode==normal) || CollabPanel || GitPanel",
+        "bindings": {
+            "escape": "workspace::CloseActiveDock"
+        }
+    },
+    {
         "context": "Editor && vim_mode == visual && !menu && !Terminal",
         "bindings": {
             "shift-j": "editor::MoveLineDown",
@@ -104,8 +113,18 @@
             "space a p": "agent::ToggleProfileSelector",
             "space a c": "agent::ToggleContextPicker",
             "space a e": "agent::ExpandMessageEditor",
-            "space a a": "workspace::ToggleRightDock",
             "space a m": "agent::ToggleModelSelector"
+        }
+    },
+    {
+        "context": "workspace",
+        "bindings": {
+            "space d b": [
+                "pane::CloseActiveItem",
+                {
+                    "close_pinned": false
+                }
+            ]
         }
     },
     {
@@ -155,6 +174,18 @@
         }
     },
     {
+        "context": "Editor && edit_prediction",
+        "bindings": {
+            "cmd-k": "editor::AcceptEditPrediction"
+        }
+    },
+    {
+        "context": "Editor && edit_prediction_conflict",
+        "bindings": {
+            "cmd-k": "editor::AcceptEditPrediction"
+        }
+    },
+    {
         "context": "ProjectPanel && not_editing",
         "bindings": {
             "h": "project_panel::CollapseSelectedEntry",
@@ -165,15 +196,9 @@
         }
     },
     {
-        "context": "GitPanel && ChangesList",
-        "bindings": {
-            "space g g": "git_panel::Close"
-        }
-    },
-    {
         "context": "Terminal",
         "bindings": {
-            "<Esc>": "workspace::ToggleBottomDock"
+            "ctrl-d": "workspace::ToggleBottomDock"
         }
     },
     //========================================================================

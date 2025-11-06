@@ -1,0 +1,72 @@
+# Soft Focus Dark Theme for Yazi
+# Auto-generated from central color palette
+
+[manager]
+cwd = { fg = "#448cbb", bold = true }
+hovered = { fg = "#f5f5f5", bg = "#1f2a33" }
+preview_hovered = { underline = true }
+find_keyword = { fg = "#D4B87B", bold = true }
+find_position = { fg = "#67b7f5", bg = "reset", bold = true }
+marker_selected = { fg = "#77aa77", bg = "#448cbb" }
+marker_copied = { fg = "#D4B87B", bg = "#D4B87B" }
+marker_cut = { fg = "#C42847", bg = "#C42847" }
+tab_active = { fg = "#f5f5f5", bg = "#1a1a1a", bold = true }
+tab_inactive = { fg = "#bbbbbb", bg = "#050505" }
+tab_width = 1
+border_symbol = "│"
+border_style = { fg = "#333333" }
+syntect_theme = ""
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#333333", bg = "#333333" }
+mode_normal = { fg = "#050505", bg = "#448cbb", bold = true }
+mode_select = { fg = "#050505", bg = "#77aa77", bold = true }
+mode_unset = { fg = "#050505", bg = "#D4B87B", bold = true }
+progress_label = { fg = "#f5f5f5", bold = true }
+progress_normal = { fg = "#448cbb", bg = "#0a0a0a" }
+progress_error = { fg = "#C42847", bg = "#0a0a0a" }
+permissions_t = { fg = "#77aa77" }
+permissions_r = { fg = "#D4B87B" }
+permissions_w = { fg = "#C42847" }
+permissions_x = { fg = "#67b7f5" }
+permissions_s = { fg = "#888888" }
+
+[input]
+border = { fg = "#448cbb" }
+title = { fg = "#448cbb" }
+value = { fg = "#f5f5f5" }
+selected = { bg = "#448cbb", fg = "#050505" }
+
+[select]
+border = { fg = "#448cbb" }
+active = { fg = "#448cbb", bold = true }
+inactive = { fg = "#bbbbbb" }
+
+[tasks]
+border = { fg = "#448cbb" }
+title = { fg = "#448cbb" }
+hovered = { fg = "#f5f5f5", bg = "#1a1a1a" }
+
+[which]
+cols = 3
+mask = { bg = "#050505" }
+cand = { fg = "#f5f5f5" }
+rest = { fg = "#888888" }
+desc = { fg = "#67b7f5" }
+separator = "  "
+separator_style = { fg = "#333333" }
+
+[help]
+on = { fg = "#77aa77" }
+run = { fg = "#67b7f5" }
+desc = { fg = "#bbbbbb" }
+hovered = { bg = "#1a1a1a" }
+footer = { fg = "#f5f5f5", bg = "#050505" }
+
+[filetype]
+rules = [
+  { name = "*/", fg = "#448cbb", bold = true },
+  { name = "*", fg = "#f5f5f5" },
+]

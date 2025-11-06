@@ -67,3 +67,6 @@ dot_config/tex/latex/*.snm
 dot_config/tex/latex/*.vrb
 dot_config/tex/latex/*.xdv
 dot_config/tex/latex/*-temp.listing
+
+
+__pycache__/

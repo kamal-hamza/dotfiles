@@ -27,33 +27,86 @@ My shell is customized for a more efficient and user-friendly experience. Here a
 
 # Configured Applications
 
-## Terminals
+## Terminals (✅ Themed)
 
 - **WezTerm:** A GPU-accelerated cross-platform terminal emulator and multiplexer.
 - **Kitty:** A fast, feature-rich, GPU-based terminal emulator.
 
-## Editors
+## Editors (✅ Themed)
 
 - **Neovim:** A highly extensible Vim-based text editor.
 - **Zed:** A lightning-fast, collaborative code editor written in Rust.
 
-## Shell
+## Shell (✅ Themed)
 
-- **Zsh:** A powerful shell with scripting capabilities.
+- **Zsh:** A powerful shell with scripting capabilities with Soft Focus syntax highlighting.
 - **PowerShell:** A cross-platform task automation solution. My dotfiles include a number of custom PowerShell scripts for Windows.
 
-## Tools
+## Tools (✅ Themed)
 
 - **Chezmoi:** A tool for managing dotfiles across multiple machines.
 - **fzf:** A command-line fuzzy finder.
-- **tmux:** A terminal multiplexer.
-- **mpd/ncmpcpp:** A terminal-based music player setup.
+- **tmux:** A terminal multiplexer with Soft Focus theme.
+- **yazi:** A terminal file manager written in Rust with Soft Focus theme.
+- **btop:** A resource monitor with Soft Focus theme.
 
-## Other
+# Theme Management System
 
-- **Hyprland:** A dynamic tiling Wayland compositor with a focus on animations.
-- **Aerospace:** An i3-like tiling window manager for macOS.
-- **Yazi:** A terminal file manager written in Rust.
+All applications use the **Soft Focus** theme with consistent colors across platforms. The theme management system provides centralized color control and easy switching between light and dark modes.
+
+## Quick Theme Switching
+
+Switch between light and dark themes with a single command:
+
+```bash
+# Switch to dark theme
+theme-switch dark
+
+# Switch to light theme
+theme-switch light
+
+# Toggle between themes
+theme-switch toggle
+
+# Check current theme
+theme-switch status
+```
+
+## Features
+
+- **🎨 Central Color Palette**: Single source of truth for all theme colors
+- **🔄 One-Command Switching**: Change all applications at once
+- **🖥️ Cross-Platform**: Works on Linux, macOS, and Windows
+- **⚙️ System Integration**: Syncs with OS dark/light mode
+- **⏰ Auto-Scheduling**: Optional time-based theme switching
+- **🛠️ Easy Customization**: Edit colors in JSON, regenerate themes
+
+## Customizing Colors
+
+1. Edit the central color palette:
+
+    ```bash
+    vim ~/.local/share/chezmoi/.chezmoidata/colors/soft-focus-dark.json
+    ```
+
+2. Regenerate all theme files:
+
+    ```bash
+    theme-gen all
+    ```
+
+3. Apply changes:
+    ```bash
+    chezmoi apply
+    theme-switch dark
+    ```
+
+See [docs/THEME_MANAGEMENT.md](docs/THEME_MANAGEMENT.md) for complete documentation.
+
+## Window Managers (✅ Themed)
+
+- **Hyprland:** A dynamic tiling Wayland compositor with a focus on animations (Linux).
+- **Aerospace:** An i3-like tiling window manager for macOS (config pending).
 
 # Aliases
 

@@ -1,73 +1,30 @@
-{{ if eq .chezmoi.os "linux" -}}
-# Import pywal theme on Linux
+# Soft Focus Theme for Yazi
+# This file uses chezmoi templating to select the appropriate theme
 
+{{ if eq .chezmoi.os "linux" -}}
+# On Linux, you can optionally use pywal colors by uncommenting the line below
+# import = ["{{ .chezmoi.homeDir }}/.cache/wal/colors-yazi.toml"]
+
+# Or use Soft Focus Dark theme (default)
+import = ["~/.config/yazi/themes/soft-focus-dark.toml"]
 {{ else -}}
-import = ["{{ .chezmoi.homeDir }}/.cache/wal/colors-yazi.toml"]
-# Your personal fallback theme for macOS and Windows
-[flavor]
-name = "Monochrome"
+# On macOS and Windows, use Soft Focus Dark theme
+import = ["~/.config/yazi/themes/soft-focus-dark.toml"]
+{{ end -}}
+
+# To switch to light theme, change the import above to:
+# import = ["~/.config/yazi/themes/soft-focus-light.toml"]
+
+# Additional Yazi theme customizations can be added below
+# These will override the imported theme settings
 
 [manager]
-cwd = { fg = "blue", bold = true }
-
-# Border
-border_style = { fg = "darkGray" }
-border_symbol = ' '
-border_hovered = { fg = "white" }
-
-# Highlighting
-hovered = { bg = "darkGray", fg = "white" }
-preview_hovered = { bg = "darkGray", underline = true }
-
-# Find
-find_keyword = { fg = "magenta", bold = true }
-find_position = { fg = "magenta", bg = "gray", bold = true, underline = true }
-
-# Marker
-marker_selected = { fg = "blue" }
-marker_copied = { fg = "yellow" }
-marker_cut = { fg = "red" }
-
-# Tab
-tab_active = { fg = "white", bg = "blue" }
-tab_inactive = { fg = "darkGray", bg = "gray" }
-tab_width = 2
-
-# Count
-count_copied = { fg = "yellow" }
-count_cut = { fg = "red" }
-
-# Selection
-selection_bg = "gray"
-
-# Progress
-progress_normal = { fg = "blue" }
-progress_error = { fg = "red" }
-
-# Preview
-preview_title = { fg = "darkGray" }
-
-# Permission
-permissions = { others = "darkGray", user = "gray", group = "gray" }
-
-# Symlink
-symlink_symbol = "→ "
+# You can add custom overrides here
+# Example: cwd = { fg = "#custom_color", bold = true }
 
 [filetype]
-
-{{ end -}}
+# Additional file type rules
 rules = [
-    # Images
-    { mime = "image/*", fg = "cyan" },
-    # Videos
-    { mime = "video/*", fg = "magenta" },
-    # Audios
-    { mime = "audio/*", fg = "magenta" },
-    # Archives
-    { mime = "application/zip", fg = "red" },
-    { mime = "application/x-tar", fg = "red" },
-    { mime = "application/x-gzip", fg = "red" },
-    { mime = "application/x-bzip2", fg = "red" },
-    { mime = "application/x-7z-compressed", fg = "red" },
-    { mime = "application/x-rar", fg = "red" },
+	# Add any custom file type rules here
+	# Example: { name = "*.custom", fg = "#color" }
 ]

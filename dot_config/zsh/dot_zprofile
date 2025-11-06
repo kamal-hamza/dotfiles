@@ -6,6 +6,21 @@ export_if_exists() {
   fi
 }
 
+
+export_env() {
+  local var_name="$1"
+  local value="$2"
+  local prepend_to_path="${3:-false}"
+
+  # Only export if the path exists
+  if [[ -d "$value" ]]; then
+    export "$var_name=$value"
+    if [[ "$prepend_to_path" == "true" ]]; then
+      export PATH="$value:$PATH"
+    fi
+  fi
+}
+
 # Path exports
 export_if_exists PATH "$HOME/.pyenv/bin:$PATH"
 export_if_exists PATH "$HOME/.config/scripts/:$PATH"
@@ -42,8 +57,8 @@ export_if_exists ZVM_INSTALL "$HOME/.zvm/self"
 export_if_exists PATH "$PATH:$HOME/.zvm/bin"
 export_if_exists PATH "$PATH:$ZVM_INSTALL/"
 export_if_exists ZIG_PATH "$HOME/.zvm/bin/zig"
-export_if_exists DOTNET_ROOT "/usr/local/share/dotnet"
-export_if_exists DOTNET_ROOT "/usr/share/dotnet"
+export_env "DOTNET_ROOT" "/usr/local/share/dotnet"
+export_env "DOTNET_ROOT" "/usr/share/dotnet"
 export_if_exists ODBCSYSINI "/etc"
 export_if_exists FPATH "$HOME/.docker/completions:$FPATH"
 export_if_exists PATH "/opt/mssql-tools18/bin:$PATH"

@@ -1,12 +1,7 @@
 #? Config file for btop v1.4.3
 
-{{ if eq .chezmoi.os "linux" -}}
-# Pywal theme for Linux
-color_theme = "{{ .chezmoi.homeDir }}/.cache/wal/colors.btop"
-{{ else -}}
-# Fallback theme for other OSes
-color_theme = "greyscale"
-{{ end -}}
+# Soft Focus Dark theme (cross-platform)
+color_theme = "{{ .chezmoi.homeDir }}/.config/btop/themes/soft-focus-dark"
 theme_background = false
 true_color = true
 force_tty = false

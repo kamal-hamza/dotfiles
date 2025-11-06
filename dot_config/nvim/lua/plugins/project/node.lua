@@ -1,5 +1,10 @@
 return {
     {
+        "nvim-treesitter/nvim-treesitter",
+        optional = true,
+        opts = { ensure_installed = { "javascript", "typescript", "tsx", "json", "jsonc" } },
+    },
+    {
         "mxsdev/nvim-dap-vscode-js",
         cond = function()
             return require("utils.project").check_project_condition("node")
@@ -107,12 +112,4 @@ return {
             return require("utils.project").check_project_condition("node")
         end
     },
-    {
-        "windwp/nvim-ts-autotag",
-        opts = {
-            enable_close = true,
-            enable_rename = true,
-            enable_close_on_slash = false
-        }
-    }
 }

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# User-friendly wrapper for theme switcher
+# Part of Soft Focus Dotfiles theme management system
+
+SWITCHER="${HOME}/.local/share/chezmoi/.script_sources/theme-system/theme-switch.sh"
+
+if [ ! -f "$SWITCHER" ]; then
+    echo "❌ Theme switcher not found at: $SWITCHER"
+    echo "   Run 'chezmoi apply' to set up the theme system"
+    exit 1
+fi
+
+exec bash "$SWITCHER" "$@"

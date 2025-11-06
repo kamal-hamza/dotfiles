@@ -9,23 +9,20 @@ if wezterm.config_builder then
     config = wezterm.config_builder()
 end
 
+-- Detect the operating system
+local is_windows = wezterm.target_triple:find("windows") ~= nil
+local is_macos = wezterm.target_triple:find("darwin") ~= nil
+local is_linux = wezterm.target_triple:find("linux") ~= nil
+
 -- ===================================================================
 -- General Appearance (Merged from kitty.conf)
 -- ===================================================================
 --
 -- Font configuration from Kitty
 config.colors = lightTheme.scheme["Soft Focus Light"]
-config.font = wezterm.font("FiraCode Nerd Font Mono")
+config.font = wezterm.font("Liga SFMono Nerd Font")
 
-
-{{ if eq .chezmoi.os "darwin" }}
-    config.font_size = 18
-{{end}}
-
-{{ if eq .chezmoi.os "linux" }}
-    config.font_size = 16
-{{end}}
-
+config.font_size = 14
 config.enable_wayland = false
 
 -- Cursor configuration
@@ -76,8 +73,6 @@ config.mouse_bindings = {
 -- ===================================================================
 -- Multiplexer Keybindings (Conditional for Windows vs. Other OS)
 -- ===================================================================
-
--- First, detect the OS. This will be true on Windows and false elsewhere.
 
 -- Set the leader key (prefix)
 

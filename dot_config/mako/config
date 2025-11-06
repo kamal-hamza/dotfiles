@@ -1,45 +1,28 @@
-include=~/.config/mako/themes/soft-focus-light
-
-# overrides
-default-timeout=4000
-# Appearance
-font=FiraCode Nerd Font Mono
-background-color=#1e1e2e
-text-color=#cdd6f4
-border-color=#313244
-progress-color=over #89b4fa
+# Mako Notification Daemon Configuration
+# Theme colors are loaded from themes/
+include=~/.config/mako/themes/soft-focus-dark
 
 # Layout
 width=350
 height=150
 margin=20
 padding=16
-border-size=2
 border-radius=12
+anchor=top-right
+layer=overlay
 
 # Behavior
 default-timeout=5000
 ignore-timeout=0
+group-by=app-name
 
 # Icons
 icons=1
 max-icon-size=48
-icon-path=/usr/share/icons/Papirus
+icon-path=/usr/share/icons/Papirus-Dark
 
-# Positioning
-anchor=top-right
-layer=overlay
-
-# Urgency levels
-[urgency=low]
-border-color=#313244
-default-timeout=3000
-
-[urgency=normal]
-border-color=#89b4fa
-default-timeout=5000
-
-[urgency=critical]
-border-color=#f38ba8
-default-timeout=0
-ignore-timeout=1
+# Interaction
+on-button-left=dismiss
+on-button-middle=none
+on-button-right=dismiss-all
+on-notify=exec mpv /usr/share/sounds/freedesktop/stereo/message.oga

@@ -1,19 +1,22 @@
+# Soft Focus Light Theme for Mako
+# Auto-generated from central color palette
+
 # Default style
-background-color=#fbfcf8
+background-color=#ffffff
 text-color=#000000
-border-color=#067BC2
+border-color=#448cbb
 border-size=2
 border-radius=8
 padding=12
 margin=10
-font=sans 11
+font=JetBrainsMono Nerd Font 11
 
 # Icons
 icon-location=left
 max-icon-size=48
 
 # Progress bar
-progress-color=over #067BC2
+progress-color=over #448cbb
 
 # Default timeout
 default-timeout=5000
@@ -23,22 +26,34 @@ group-by=app-name
 
 # Urgency: low
 [urgency=low]
-background-color=#f0f0f099
-text-color=#555555
-border-color=#334139
+background-color=#eeeeee
+text-color=#666666
+border-color=#558855
+default-timeout=3000
 
-# Urgency: normal (uses default)
+# Urgency: normal (uses default colors)
+[urgency=normal]
+background-color=#ffffff
+text-color=#000000
+border-color=#448cbb
+default-timeout=5000
 
 # Urgency: critical
 [urgency=critical]
 background-color=#C4284726
 text-color=#000000
-border-color=#C42847
+border-color=#ff4c6a
 default-timeout=0
 
 # App-specific styles
 [app-name="Volume"]
-border-color=#D4B87B
+border-color=#b8943d
 
 [app-name="Brightness"]
-border-color=#D4B87B
+border-color=#b8943d
+
+[app-name="Network"]
+border-color=#448cbb
+
+[app-name="Battery"]
+border-color=#558855

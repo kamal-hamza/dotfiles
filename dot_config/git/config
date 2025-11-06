@@ -1,3 +1,174 @@
 [user]
 	email = kamal.hamza@outlook.com
 	name = kamal-hamza
+
+[core]
+	editor = nvim
+	pager = delta
+	autocrlf = input
+	whitespace = trailing-space,space-before-tab
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+	tool = nvimdiff
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	# Soft Focus Dark Theme Colors
+	features = soft-focus-dark
+	navigate = true    # use n and N to move between diff sections
+	light = false      # set to true for light background terminals
+	side-by-side = false
+	line-numbers = true
+	syntax-theme = base16
+
+[delta "soft-focus-dark"]
+	# Syntax highlighting
+	minus-style = syntax "#C42847"
+	minus-emph-style = syntax "#ff4c6a"
+	plus-style = syntax "#77aa77"
+	plus-emph-style = syntax "#99cc99"
+	
+	# Line numbers
+	line-numbers-minus-style = "#C42847"
+	line-numbers-plus-style = "#77aa77"
+	line-numbers-zero-style = "#888888"
+	line-numbers-left-style = "#888888"
+	line-numbers-right-style = "#888888"
+	
+	# File headers
+	file-style = "#067BC2" bold
+	file-decoration-style = "#067BC2" ul
+	
+	# Hunk headers (commit info)
+	hunk-header-style = file line-number syntax
+	hunk-header-decoration-style = "#67b7f5" box
+	
+	# Commit style
+	commit-decoration-style = "#067BC2" box
+	commit-style = "#67b7f5" bold
+	
+	# Misc
+	zero-style = syntax
+	whitespace-error-style = "#C42847" reverse
+	
+	# Blame
+	blame-palette = "#050505" "#0a0a0a" "#1f2a33"
+	blame-code-style = syntax
+	
+	# Merge conflicts
+	merge-conflict-begin-symbol = ⌃
+	merge-conflict-end-symbol = ⌄
+	merge-conflict-ours-diff-header-style = "#D4B87B" bold
+	merge-conflict-ours-diff-header-decoration-style = "#D4B87B" box
+	merge-conflict-theirs-diff-header-style = "#067BC2" bold
+	merge-conflict-theirs-diff-header-decoration-style = "#067BC2" box
+
+[delta "soft-focus-light"]
+	# Light theme variant (for reference)
+	light = true
+	minus-style = syntax "#C42847"
+	minus-emph-style = syntax "#ff4c6a"
+	plus-style = syntax "#558855"
+	plus-emph-style = syntax "#77aa77"
+	
+	line-numbers-minus-style = "#C42847"
+	line-numbers-plus-style = "#558855"
+	line-numbers-zero-style = "#666666"
+	
+	file-style = "#067BC2" bold
+	file-decoration-style = "#067BC2" ul
+	hunk-header-decoration-style = "#67b7f5" box
+	commit-decoration-style = "#067BC2" box
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
+[color "branch"]
+	current = "#067BC2" bold
+	local = "#f5f5f5"
+	remote = "#67b7f5"
+
+[color "diff"]
+	meta = "#067BC2" bold
+	frag = "#67b7f5" bold
+	old = "#C42847"
+	new = "#77aa77"
+	whitespace = "#C42847" reverse
+
+[color "status"]
+	added = "#77aa77"
+	changed = "#D4B87B"
+	untracked = "#888888"
+	branch = "#067BC2" bold
+	nobranch = "#C42847" bold
+
+[alias]
+	# Common shortcuts
+	st = status -sb
+	co = checkout
+	br = branch
+	ci = commit
+	df = diff
+	dc = diff --cached
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	ll = log --pretty=format:'%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]' --decorate --numstat
+	ls = log --pretty=format:'%C(yellow)%h %Cred%d %Creset%s%Cblue [%cn]' --decorate
+	amend = commit --amend --no-edit
+	
+	# Undo operations
+	undo = reset --soft HEAD^
+	unstage = reset HEAD --
+	
+	# Working with branches
+	branches = branch -a
+	tags = tag -l
+	remotes = remote -v
+	
+	# Stash operations
+	stash-all = stash save --include-untracked
+	
+	# Clean operations
+	clean-merged = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+	
+	# Show changes
+	contributors = shortlog --summary --numbered
+	
+	# Find commits by message
+	find = log --all --oneline --grep
+
+[url "git@github.com:"]
+	insteadOf = gh:
+
+[url "git@gitlab.com:"]
+	insteadOf = gl:
+
+[url "https://github.com/"]
+	insteadOf = github:
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

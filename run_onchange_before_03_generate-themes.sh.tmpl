@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Automatically regenerate themes when color palettes change
+# This runs before applying files if palettes have been modified
+
+set -e
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🎨 Checking if theme regeneration is needed..."
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+# Color palette hashes - chezmoi will re-run this script if these change
+# soft-focus-dark.json hash: {{ include ".chezmoidata/colors/soft-focus-dark.json" | sha256sum }}
+# soft-focus-light.json hash: {{ include ".chezmoidata/colors/soft-focus-light.json" | sha256sum }}
+
+SCRIPT_DIR="{{ .chezmoi.sourceDir }}/.script_sources/theme-system"
+GENERATOR="$SCRIPT_DIR/generate_themes.py"
+
+if [ ! -f "$GENERATOR" ]; then
+    echo "⚠️  Theme generator not found, skipping theme generation"
+    exit 0
+fi
+
+# Check if Python is available
+if ! command -v python3 &> /dev/null; then
+    echo "⚠️  Python 3 not found, skipping theme generation"
+    exit 0
+fi
+
+echo ""
+echo "🔄 Regenerating themes from color palettes..."
+echo ""
+
+# Run theme generator
+if python3 "$GENERATOR" all; then
+    echo ""
+    echo "✅ Themes successfully generated!"
+    echo "   Theme files will be applied with 'chezmoi apply'"
+    echo ""
+else
+    echo ""
+    echo "⚠️  Theme generation failed (non-fatal)"
+    echo "   You can manually run: theme-gen all"
+    echo ""
+    exit 0  # Don't fail chezmoi apply
+fi
+
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

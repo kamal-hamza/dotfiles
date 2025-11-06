@@ -1,0 +1,147 @@
+# Soft Focus Dark Color Palette
+# Single source of truth for all dark theme colors
+# Author: Hamza Kamal
+
+name: "Soft Focus Dark"
+appearance: "dark"
+
+# Core UI Colors
+palette:
+  # Base colors
+  background: "#050505"
+  foreground: "#f5f5f5"
+  background_alt: "#0a0a0a"
+  background_elevated: "#1f2a33"
+  foreground_alt: "#bbbbbb"
+  foreground_dim: "#888888"
+
+  # Primary accent colors
+  primary: "#067BC2"
+  secondary: "#67b7f5"
+  tertiary: "#4da6ff"
+  accent_mint: "#D5F2E3"  # Light mint accent for special highlights
+
+  # Syntax highlighting
+  keyword: "#067BC2"
+  function: "#67b7f5"
+  string: "#77aa77"
+  type: "#4da6ff"
+  comment: "#888888"
+  variable: "#f5f5f5"
+  constant: "#D4B87B"
+  operator: "#bbbbbb"
+
+  # Semantic colors
+  success: "#77aa77"
+  warning: "#D4B87B"
+  error: "#C42847"
+  info: "#67b7f5"
+  hint: "#888888"
+
+  # Git colors
+  git_add: "#77aa77"
+  git_change: "#D4B87B"
+  git_delete: "#C42847"
+  git_conflict: "#B88E8D"
+
+  # UI elements
+  border: "#ffffff1A"
+  border_active: "#067BC2"
+  cursor: "#ffffff"
+  cursor_text: "#050505"
+  cursor_line: "#0a0a0a"
+  visual: "#067BC2"
+  search: "#D4B87B"
+  match: "#77aa77"
+
+  # Terminal colors (ANSI 16-color palette)
+  terminal:
+    black: "#111111"
+    red: "#C42847"
+    green: "#77aa77"
+    yellow: "#D4B87B"
+    blue: "#067BC2"
+    magenta: "#B88E8D"
+    cyan: "#67b7f5"
+    white: "#f5f5f5"
+    bright_black: "#333333"
+    bright_red: "#ff4c6a"
+    bright_green: "#99cc99"
+    bright_yellow: "#f0d08a"
+    bright_blue: "#4da6ff"
+    bright_magenta: "#d4a6a6"
+    bright_cyan: "#77d5ff"
+    bright_white: "#ffffff"
+
+# Application-specific overrides
+overrides:
+  # WezTerm specific
+  wezterm:
+    tab_bar_background: "#050505"
+    active_tab_bg: "#1f2a33"
+    active_tab_fg: "#f5f5f5"
+    inactive_tab_bg: "#050505"
+    inactive_tab_fg: "#bbbbbb"
+    new_tab_hover_bg: "#067BC2"
+    new_tab_hover_fg: "#ffffff"
+
+  # Tmux specific
+  tmux:
+    status_bg: "#050505"
+    status_fg: "#f5f5f5"
+    window_status_current_bg: "#1f2a33"
+    window_status_current_fg: "#067BC2"
+    pane_border: "#333333"
+    pane_active_border: "#067BC2"
+    message_bg: "#1f2a33"
+    message_fg: "#067BC2"
+
+  # Yazi specific
+  yazi:
+    border: "#333333"
+    border_active: "#067BC2"
+    hovered_bg: "#1f2a33"
+    selected_bg: "#067BC2"
+    preview_border: "#333333"
+
+  # btop specific
+  btop:
+    main_bg: "#050505"
+    main_fg: "#f5f5f5"
+    title: "#067BC2"
+    selected_bg: "#1f2a33"
+    selected_fg: "#067BC2"
+    inactive_fg: "#888888"
+    proc_misc: "#67b7f5"
+    cpu_box: "#067BC2"
+    mem_box: "#77aa77"
+    net_box: "#D4B87B"
+    proc_box: "#B88E8D"
+    graph_text: "#f5f5f5"
+
+  # Neovim specific
+  nvim:
+    float_bg: "#0a0a0a"
+    float_border: "#333333"
+    pmenu_bg: "#0a0a0a"
+    pmenu_sel_bg: "#1f2a33"
+    statusline_bg: "#050505"
+    statusline_fg: "#f5f5f5"
+
+  # Rofi specific
+  rofi:
+    window_bg: "#050505"
+    window_border: "#067BC2"
+    prompt_bg: "#1f2a33"
+    prompt_fg: "#067BC2"
+    entry_bg: "#050505"
+    entry_fg: "#f5f5f5"
+    selected_bg: "#067BC2"
+    selected_fg: "#ffffff"
+
+# Transparency values (0-255 for hex, 0.0-1.0 for decimal)
+transparency:
+  background_opacity: 0.95
+  inactive_window_opacity: 0.90
+  blur_radius: 10
+  border_opacity: 0.10

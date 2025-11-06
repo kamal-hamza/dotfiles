@@ -1,0 +1,169 @@
+# EditorConfig - Consistent Coding Styles
+# https://editorconfig.org/
+# Soft Focus Dotfiles
+
+# Top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+# YAML
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON
+[*.json]
+indent_size = 2
+
+# Python
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# Shell scripts
+[*.{sh,bash,zsh}]
+indent_size = 2
+indent_style = space
+
+# Makefiles
+[Makefile]
+indent_style = tab
+indent_size = 4
+
+[*.{mk,mak}]
+indent_style = tab
+
+# Go
+[*.go]
+indent_style = tab
+indent_size = 4
+
+# Rust
+[*.rs]
+indent_size = 4
+max_line_length = 100
+
+# C/C++
+[*.{c,h,cpp,hpp,cc,cxx}]
+indent_size = 4
+
+# Java
+[*.java]
+indent_size = 4
+
+# JavaScript/TypeScript
+[*.{js,jsx,ts,tsx,mjs,cjs}]
+indent_size = 2
+
+# Vue
+[*.vue]
+indent_size = 2
+
+# HTML
+[*.{html,htm}]
+indent_size = 2
+
+# CSS/SCSS/LESS
+[*.{css,scss,sass,less}]
+indent_size = 2
+
+# XML
+[*.{xml,svg}]
+indent_size = 2
+
+# Configuration files
+[*.{conf,config,ini,toml}]
+indent_size = 2
+
+# LaTeX
+[*.{tex,bib}]
+indent_size = 2
+
+# SQL
+[*.sql]
+indent_size = 2
+
+# Ruby
+[*.rb]
+indent_size = 2
+
+# PHP
+[*.php]
+indent_size = 4
+
+# Lua
+[*.lua]
+indent_size = 2
+
+# Docker
+[Dockerfile*]
+indent_size = 2
+
+[*.{dockerfile,Dockerfile}]
+indent_size = 2
+
+# Package managers
+[package.json]
+indent_size = 2
+
+[composer.json]
+indent_size = 4
+
+[Cargo.toml]
+indent_size = 4
+
+[pyproject.toml]
+indent_size = 4
+
+[setup.py]
+indent_size = 4
+
+# Git
+[.gitconfig]
+indent_style = tab
+
+[.gitattributes]
+indent_size = 2
+
+[.gitignore]
+indent_size = 2
+
+# CI/CD
+[*.{github,gitlab-ci}*.{yml,yaml}]
+indent_size = 2
+
+[.travis.yml]
+indent_size = 2
+
+[appveyor.yml]
+indent_size = 2
+
+# Batch files (Windows)
+[*.{cmd,bat}]
+end_of_line = crlf
+
+# PowerShell
+[*.ps1]
+indent_size = 4
+charset = utf-8-bom
+
+# Specific files
+[{LICENSE,README,TODO,CHANGELOG,AUTHORS}*]
+indent_size = 2
+
+# Minified files - no modifications
+[*.min.*]
+insert_final_newline = false
+trim_trailing_whitespace = false

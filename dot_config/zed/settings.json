@@ -1,13 +1,20 @@
 {
     "agent": {
+        "always_allow_tool_actions": true,
+        "default_profile": "write",
         "default_model": {
             "provider": "copilot_chat",
-            "model": "gpt-4.1"
+            "model": "claude-sonnet-4.5"
         },
         "inline_assistant_model": {
             "provider": "copilot_chat",
-            "model": "gpt-4.1"
-        }
+            "model": "claude-sonnet-4.5"
+        },
+        "dock": "right",
+        "default_width": 150
+    },
+    "edit_predictions": {
+        "mode": "subtle"
     },
     "file_types": {
         "JSONC": [
@@ -16,36 +23,25 @@
             "**/Zed/**/*.json",
             "**/.vscode/**/*.json"
         ],
-        "XML": [
-            "*.sln",
-            "*.*proj"
-        ],
-        "Shell": [
-            "*.sh.tmpl"
-        ],
-        "Lua": [
-            "*.lua.tmpl"
-        ],
-        "CSS": [
-            "*.css.tmpl"
-        ],
-        "JSON": [
-            "*.json.tmpl"
-        ]
+        "XML": ["*.sln", "*.*proj"],
+        "Shell": ["*.sh.tmpl"],
+        "Lua": ["*.lua.tmpl"],
+        "CSS": ["*.css.tmpl"],
+        "JSON": ["*.json.tmpl"]
     },
     // "icon_theme": "Colored Zed Icons Theme Dark",
     "icon_theme": "Colored Zed Icons Theme Dark",
-    "show_edit_predictions": false,
+    "show_edit_predictions": true,
     "features": {
-        "edit_prediction_provider": "zed"
+        "edit_prediction_provider": "copilot"
     },
     "vim_mode": true,
     "theme": "Soft Focus Light",
-    "ui_font_family": "FiraCode Nerd Font Mono",
-    "buffer_font_family": "FiraCode Nerd Font Mono",
-    "ui_font_size": 15,
-    "buffer_font_size": 15,
-    "agent_font_size": 20,
+    "ui_font_family": "Liga SFMono Nerd Font",
+    "buffer_font_family": "Liga SFMono Nerd Font",
+    "ui_font_size": 12,
+    "buffer_font_size": 12,
+    "agent_ui_font_size": 16,
     "buffer_font_features": {
         "calt": false
     },
@@ -126,10 +122,6 @@
     "git_panel": {
         "dock": "left"
     },
-    "chat_panel": {
-        "dock": "right",
-        "default_width": 150
-    },
     "project_panel": {
         "dock": null
     },
@@ -137,7 +129,7 @@
         "dock": null
     },
     "terminal": {
-        "dock": null
+        "dock": "bottom"
     },
     "notification_panel": {
         "dock": null

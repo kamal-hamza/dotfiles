@@ -1,0 +1,4 @@
+# Python dependencies for Soft Focus Theme System
+# Install with: pip3 install -r requirements.txt
+
+PyYAML>=6.0
