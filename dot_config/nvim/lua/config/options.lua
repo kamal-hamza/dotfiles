@@ -61,12 +61,12 @@ vim.g.markdown_recommended_style = 0
 
 -- Folding
 opt.fillchars = {
-  foldopen = "",
-  foldclose = "",
-  fold = " ",
-  foldsep = " ",
-  diff = "╱",
-  eob = " ",
+    foldopen = "",
+    foldclose = "",
+    fold = " ",
+    foldsep = " ",
+    diff = "╱",
+    eob = " ",
 }
 opt.foldlevel = 99
 opt.smoothscroll = true
@@ -75,28 +75,28 @@ opt.foldtext = ""
 
 -- Diagnostic settings
 local diagnostics = {
-  Error = " ",
-  Warn = " ",
-  Hint = " ",
-  Info = " ",
+    Error = " ",
+    Warn = " ",
+    Hint = " ",
+    Info = " ",
 }
 vim.diagnostic.config {
-  underline = true,
-  update_in_insert = false,
-  virtual_text = {
-    spacing = 4,
-    source = "if_many",
-    prefix = "●",
-  },
-  severity_sort = true,
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = diagnostics.Error,
-      [vim.diagnostic.severity.WARN] = diagnostics.Warn,
-      [vim.diagnostic.severity.HINT] = diagnostics.Hint,
-      [vim.diagnostic.severity.INFO] = diagnostics.Info,
+    underline = true,
+    update_in_insert = false,
+    virtual_text = {
+        spacing = 4,
+        source = "if_many",
+        prefix = "●",
     },
-  },
+    severity_sort = true,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = diagnostics.Error,
+            [vim.diagnostic.severity.WARN] = diagnostics.Warn,
+            [vim.diagnostic.severity.HINT] = diagnostics.Hint,
+            [vim.diagnostic.severity.INFO] = diagnostics.Info,
+        },
+    },
 }
 
 -- Disable providers
@@ -104,22 +104,3 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 vim.g.loaded_python3_provider = 0
-
--- Setup options for Neovide
--- Install neovide: ❯ brew install --ignore-dependencies  neovide
-if vim.g.neovide then
-  vim.opt.guifont = { "DankMono Nerd Font", ":h20" }
-  vim.g.neovide_hide_mouse_when_typing = true
-  vim.g.neovide_cursor_antialiasing = false
-  vim.g.neovide_input_macos_option_key_is_meta = "only_left"
-  vim.g.neovide_input_ime = true
-  --
-  -- -- Helper function for transparency formatting
-  -- local alpha = function()
-  --   return string.format("%x", math.floor(255 * vim.g.transparency or 0.8))
-  -- end
-  -- -- g:neovide_opacity should be 0 if you want to unify transparency of content and title bar.
-  -- vim.g.neovide_opacity = 0.9
-  -- vim.g.transparency = 0.5
-  -- vim.g.neovide_background_color = "#0f1117" .. alpha()
-end

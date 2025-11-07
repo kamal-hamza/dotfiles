@@ -1,4 +1,12 @@
 packages:
+    # 🐧 NixOS packages (handled by configuration.nix)
+    # NixOS uses declarative package management in /etc/nixos/configuration.nix
+    # This section is for reference only - actual packages are defined in nixos/modules/packages.nix
+    nixos:
+        note: "Packages are managed in /etc/nixos/modules/packages.nix"
+        # All packages from arch.pacman list are available in NixOS
+        # Use: nix search nixpkgs <package-name> to find packages
+
     # 💻 macOS packages using Homebrew
     darwin:
         brews:

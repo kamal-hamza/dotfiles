@@ -1,0 +1,122 @@
+-- Neovide Configuration
+-- Install neovide: brew install --cask neovide
+
+if not vim.g.neovide then
+    return
+end
+
+-- Font Configuration
+vim.opt.guifont = { "Liga SFMono Nerd Font", ":h12" }
+vim.g.neovide_scale_factor = 1.0
+
+-- Cursor Configuration
+vim.g.neovide_cursor_animation_length = 0.13
+vim.g.neovide_cursor_trail_size = 0.8
+vim.g.neovide_cursor_antialiasing = true
+vim.g.neovide_cursor_animate_in_insert_mode = true
+vim.g.neovide_cursor_animate_command_line = true
+vim.g.neovide_cursor_unfocused_outline_width = 0.125
+
+-- Cursor particle effects (choose one by uncommenting)
+-- Options: "", "railgun", "torpedo", "pixiedust", "sonicboom", "ripple", "wireframe"
+vim.g.neovide_cursor_vfx_mode = "railgun"
+vim.g.neovide_cursor_vfx_opacity = 200.0
+vim.g.neovide_cursor_vfx_particle_lifetime = 1.2
+vim.g.neovide_cursor_vfx_particle_density = 7.0
+vim.g.neovide_cursor_vfx_particle_speed = 10.0
+
+-- Scroll Animation
+vim.g.neovide_scroll_animation_length = 0.3
+vim.g.neovide_scroll_animation_far_lines = 1
+
+-- Floating Window Configuration
+vim.g.neovide_floating_blur_amount_x = 2.0
+vim.g.neovide_floating_blur_amount_y = 2.0
+vim.g.neovide_floating_shadow = true
+vim.g.neovide_floating_z_height = 10
+vim.g.neovide_light_angle_degrees = 45
+vim.g.neovide_light_radius = 5
+
+-- Window Configuration
+vim.g.neovide_opacity = 0.95
+vim.g.neovide_window_blurred = true
+vim.g.neovide_show_border = true
+vim.g.neovide_fullscreen = false
+
+-- Input Configuration
+vim.g.neovide_input_macos_option_key_is_meta = "only_left"
+vim.g.neovide_input_ime = true
+vim.g.neovide_hide_mouse_when_typing = true
+vim.g.neovide_touch_deadzone = 6.0
+vim.g.neovide_touch_drag_timeout = 0.17
+
+-- Performance
+vim.g.neovide_refresh_rate = 60
+vim.g.neovide_refresh_rate_idle = 5
+vim.g.neovide_no_idle = true
+vim.g.neovide_confirm_quit = true
+vim.g.neovide_remember_window_size = true
+
+-- Padding
+vim.g.neovide_padding_top = 0
+vim.g.neovide_padding_bottom = 0
+vim.g.neovide_padding_right = 0
+vim.g.neovide_padding_left = 0
+
+-- Keybindings for Neovide-specific features
+local map = vim.keymap.set
+
+-- Scale factor adjustment
+map("n", "<D-=>", function()
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor * 1.1
+end, { desc = "Increase Neovide scale" })
+
+map("n", "<D-->", function()
+    vim.g.neovide_scale_factor = vim.g.neovide_scale_factor / 1.1
+end, { desc = "Decrease Neovide scale" })
+
+map("n", "<D-0>", function()
+    vim.g.neovide_scale_factor = 1.0
+end, { desc = "Reset Neovide scale" })
+
+-- Fullscreen toggle
+map("n", "<D-CR>", function()
+    vim.g.neovide_fullscreen = not vim.g.neovide_fullscreen
+end, { desc = "Toggle Neovide fullscreen" })
+
+-- Clipboard support (Cmd+C, Cmd+V for macOS)
+map("v", "<D-c>", '"+y', { desc = "Copy to clipboard" })
+map("n", "<D-v>", '"+p', { desc = "Paste from clipboard" })
+map("i", "<D-v>", '<C-r>+', { desc = "Paste from clipboard" })
+map("c", "<D-v>", '<C-r>+', { desc = "Paste from clipboard" })
+
+-- Optional: Change cursor vfx mode on the fly
+map("n", "<leader>nvr", function()
+    vim.g.neovide_cursor_vfx_mode = "railgun"
+    vim.notify("Cursor VFX: Railgun", vim.log.levels.INFO)
+end, { desc = "Neovide: Railgun cursor" })
+
+map("n", "<leader>nvt", function()
+    vim.g.neovide_cursor_vfx_mode = "torpedo"
+    vim.notify("Cursor VFX: Torpedo", vim.log.levels.INFO)
+end, { desc = "Neovide: Torpedo cursor" })
+
+map("n", "<leader>nvp", function()
+    vim.g.neovide_cursor_vfx_mode = "pixiedust"
+    vim.notify("Cursor VFX: Pixiedust", vim.log.levels.INFO)
+end, { desc = "Neovide: Pixiedust cursor" })
+
+map("n", "<leader>nvs", function()
+    vim.g.neovide_cursor_vfx_mode = "sonicboom"
+    vim.notify("Cursor VFX: Sonicboom", vim.log.levels.INFO)
+end, { desc = "Neovide: Sonicboom cursor" })
+
+map("n", "<leader>nvw", function()
+    vim.g.neovide_cursor_vfx_mode = "wireframe"
+    vim.notify("Cursor VFX: Wireframe", vim.log.levels.INFO)
+end, { desc = "Neovide: Wireframe cursor" })
+
+map("n", "<leader>nvo", function()
+    vim.g.neovide_cursor_vfx_mode = ""
+    vim.notify("Cursor VFX: Off", vim.log.levels.INFO)
+end, { desc = "Neovide: Disable cursor VFX" })

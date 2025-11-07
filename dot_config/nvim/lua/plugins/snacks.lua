@@ -16,11 +16,11 @@ return {
  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
 ]],
                 keys = {
-                    { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.picker.files()" },
+                    { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
                     { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Find Text", action = ":lua Snacks.picker.grep()" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":lua Snacks.picker.recent()" },
-                    { icon = " ", key = "c", desc = "Config", action = ":lua Snacks.picker.files({ cwd = vim.fn.stdpath('config') })" },
+                    { icon = " ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
+                    { icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
+                    { icon = " ", key = "c", desc = "Config", action = ":lua require('telescope.builtin').find_files({ cwd = vim.fn.stdpath('config') })" },
                     { icon = " ", key = "s", desc = "Restore Session", section = "session" },
                     { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
                     { icon = " ", key = "q", desc = "Quit", action = ":qa" },
@@ -28,7 +28,7 @@ return {
             },
             sections = {
                 { section = "header" },
-                { section = "keys", gap = 1, padding = 1 },
+                { section = "keys",   gap = 1, padding = 1 },
                 { section = "startup" },
             }
         },
@@ -36,7 +36,7 @@ return {
         indent = { enabled = true },
         input = { enabled = true },
         picker = {
-            enabled = true,
+            enabled = false,
             toggles = {
                 hidden = { icon = "h", value = true },
             }
@@ -50,16 +50,6 @@ return {
         words = { enabled = false },
     },
     keys = {
-        { "<leader>fb",      function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
-        { "<leader>fc",      function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
-        { "<leader>ff",      function() Snacks.picker.files() end,                                   desc = "Find Files" },
-        { "<leader>fg",      function() Snacks.picker.git_files() end,                               desc = "Find Git Files" },
-        { "<leader>fr",      function() Snacks.picker.recent() end,                                  desc = "Recent" },
-        { "<leader><space>", function() Snacks.picker.smart() end,                                   desc = "Smart Find Files" },
-        { "<leader>,",       function() Snacks.picker.buffers() end,                                 desc = "Buffers" },
-        { "<leader>/",       function() Snacks.picker.grep() end,                                    desc = "Grep" },
-        { "<leader>:",       function() Snacks.picker.command_history() end,                         desc = "Command History" },
-        { "<leader>n",       function() Snacks.picker.notifications() end,                           desc = "Notification History" },
         {
             "<leader>N",
             desc = "Neovim News",
