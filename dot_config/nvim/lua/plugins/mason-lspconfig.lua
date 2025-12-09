@@ -26,25 +26,25 @@ return {
                 -- List of tools to ensure are installed
                 ensure_installed = {
                     -- Formatters
-                    "stylua",           -- Lua
-                    "prettier",         -- JS/TS/JSON/YAML/Markdown/CSS/HTML
-                    "prettierd",        -- Faster prettier
-                    "ruff",             -- Python (formatting + linting)
-                    "goimports",        -- Go imports (includes formatting)
-                    "clang-format",     -- C/C++
-                    "csharpier",        -- C#
-                    "shfmt",            -- Shell
-                    "taplo",            -- TOML
+                    "stylua",       -- Lua
+                    "prettier",     -- JS/TS/JSON/YAML/Markdown/CSS/HTML
+                    "prettierd",    -- Faster prettier
+                    "ruff",         -- Python (formatting + linting)
+                    "goimports",    -- Go imports (includes formatting)
+                    "clang-format", -- C/C++
+                    "csharpier",    -- C#
+                    "shfmt",        -- Shell
+                    "taplo",        -- TOML
 
                     -- Linters
-                    "eslint_d",         -- JS/TS
-                    "markdownlint",     -- Markdown
-                    "hadolint",         -- Dockerfile
-                    "yamllint",         -- YAML
-                    "shellcheck",       -- Shell
+                    "eslint_d",     -- JS/TS
+                    "markdownlint", -- Markdown
+                    "hadolint",     -- Dockerfile
+                    "yamllint",     -- YAML
+                    "shellcheck",   -- Shell
 
                     -- DAP (Debug Adapters)
-                    "debugpy",          -- Python
+                    "debugpy", -- Python
                 },
 
                 -- Auto-update tools (only when manually running :MasonToolsUpdate)
@@ -75,7 +75,7 @@ return {
         dependencies = {
             "williamboman/mason.nvim",
             "neovim/nvim-lspconfig",
-            "saghen/blink.cmp",  -- Ensure blink.cmp loads first
+            "saghen/blink.cmp", -- Ensure blink.cmp loads first
         },
         config = function()
             local mason_lspconfig = require("mason-lspconfig")
@@ -90,19 +90,19 @@ return {
             mason_lspconfig.setup({
                 automatic_installation = true,
                 ensure_installed = {
-                    "lua_ls",           -- Lua
-                    "ts_ls",            -- TypeScript/JavaScript
-                    "jsonls",           -- JSON
-                    "html",             -- HTML
-                    "cssls",            -- CSS
-                    "eslint",           -- ESLint
+                    "lua_ls",        -- Lua
+                    "ts_ls",         -- TypeScript/JavaScript
+                    "jsonls",        -- JSON
+                    "html",          -- HTML
+                    "cssls",         -- CSS
+                    "eslint",        -- ESLint
                     -- NOTE: pyright removed - using pyrefly instead
-                    "clangd",           -- C/C++
-                    "rust_analyzer",    -- Rust
-                    "gopls",            -- Go
-                    "yamlls",           -- YAML
-                    "bashls",           -- Bash
-                    "marksman",         -- Markdown
+                    "clangd",        -- C/C++
+                    "rust_analyzer", -- Rust
+                    "gopls",         -- Go
+                    "yamlls",        -- YAML
+                    "bashls",        -- Bash
+                    "marksman",      -- Markdown
                 },
             })
 
@@ -119,7 +119,7 @@ return {
 
             -- Helper function to get root directory patterns
             local function root_pattern(...)
-                local patterns = {...}
+                local patterns = { ... }
                 return function(fname)
                     local util = require('lspconfig.util')
                     return util.root_pattern(unpack(patterns))(fname) or util.path.dirname(fname)
@@ -132,7 +132,8 @@ return {
                 lua_ls = {
                     cmd = { "lua-language-server" },
                     filetypes = { "lua" },
-                    root_dir = root_pattern(".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml", ".git"),
+                    root_dir = root_pattern(".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml",
+                        "selene.toml", "selene.yml", ".git"),
                     settings = {
                         Lua = {
                             runtime = { version = "LuaJIT" },
@@ -217,7 +218,8 @@ return {
                         "--fallback-style=llvm",
                     },
                     filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-                    root_dir = root_pattern(".clangd", ".clang-tidy", ".clang-format", "compile_commands.json", "compile_flags.txt", "configure.ac", ".git"),
+                    root_dir = root_pattern(".clangd", ".clang-tidy", ".clang-format", "compile_commands.json",
+                        "compile_flags.txt", "configure.ac", ".git"),
                     init_options = {
                         usePlaceholders = true,
                         completeUnimported = true,
@@ -298,21 +300,14 @@ return {
                 -- Skip pyright if it's installed - we're using pyrefly instead
                 if server_name ~= "pyright" then
                     local config = server_configs[server_name]
-                    
+
                     if config then
                         -- Use new vim.lsp.config API for Neovim 0.11+
+                        -- Server will auto-attach based on filetypes and root_dir
                         vim.lsp.config(server_name, vim.tbl_deep_extend("force", {
                             capabilities = capabilities,
                             on_attach = Lsp.on_attach,
                         }, config))
-                        
-                        -- Enable the server for appropriate filetypes
-                        vim.api.nvim_create_autocmd("FileType", {
-                            pattern = config.filetypes,
-                            callback = function(args)
-                                vim.lsp.enable(server_name)
-                            end,
-                        })
                     end
                 end
             end
@@ -320,10 +315,12 @@ return {
             -- Setup pyrefly as THE Python LSP (not pyright)
             local pyrefly_cmd = vim.fn.exepath("pyrefly")
             if pyrefly_cmd ~= "" then
+                -- Pyrefly will auto-attach to Python files based on root_dir
                 vim.lsp.config("pyrefly", {
                     cmd = { pyrefly_cmd, "lsp" },
                     filetypes = { "python" },
-                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git"),
+                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile",
+                        ".git"),
                     capabilities = capabilities,
                     on_attach = Lsp.on_attach,
                     settings = {
@@ -332,23 +329,16 @@ return {
                         },
                     },
                 })
-
-                -- Enable pyrefly for Python files
-                vim.api.nvim_create_autocmd("FileType", {
-                    pattern = "python",
-                    callback = function(args)
-                        vim.lsp.enable("pyrefly")
-                    end,
-                })
             else
                 -- Fallback to pyright only if pyrefly is not installed
                 vim.notify("pyrefly not found, install it with: cargo install pyrefly", vim.log.levels.WARN)
-                
-                -- Use pyright as fallback
+
+                -- Pyright will auto-attach to Python files based on root_dir
                 vim.lsp.config("pyright", {
                     cmd = { "pyright-langserver", "--stdio" },
                     filetypes = { "python" },
-                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile", ".git"),
+                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile",
+                        ".git"),
                     capabilities = capabilities,
                     on_attach = Lsp.on_attach,
                     settings = {
@@ -360,13 +350,6 @@ return {
                             },
                         },
                     },
-                })
-
-                vim.api.nvim_create_autocmd("FileType", {
-                    pattern = "python",
-                    callback = function(args)
-                        vim.lsp.enable("pyright")
-                    end,
                 })
             end
 
