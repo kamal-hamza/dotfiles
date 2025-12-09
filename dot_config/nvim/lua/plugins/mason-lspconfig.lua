@@ -230,29 +230,30 @@ return {
                 },
             }
 
-            -- Setup each installed LSP server using handlers
-            mason_lspconfig.setup_handlers({
-                -- Default handler for servers without custom config
-                function(server_name)
-                    -- Skip pyright - we use pyrefly for Python
-                    if server_name == "pyright" then
-                        return
-                    end
+            -- Setup each installed LSP server
+            -- We manually loop through installed servers instead of using setup_handlers
+            -- to have explicit control over which servers get configured
+            for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+                -- Skip pyright - we use pyrefly for Python
+                if server_name == "pyright" then
+                    goto continue
+                end
 
-                    -- Skip ruff LSP - we only want ruff as a linter/formatter via nvim-lint and conform
-                    -- Ruff LSP doesn't provide full language server features (no completion, hover, etc.)
-                    if server_name == "ruff" or server_name == "ruff_lsp" then
-                        return
-                    end
+                -- Skip ruff LSP - we only want ruff as a linter/formatter via nvim-lint and conform
+                -- Ruff LSP doesn't provide full language server features (no completion, hover, etc.)
+                if server_name == "ruff" or server_name == "ruff_lsp" then
+                    goto continue
+                end
 
-                    local config = vim.tbl_deep_extend(
-                        "force",
-                        default_config,
-                        server_configs[server_name] or {}
-                    )
-                    lspconfig[server_name].setup(config)
-                end,
-            })
+                local config = vim.tbl_deep_extend(
+                    "force",
+                    default_config,
+                    server_configs[server_name] or {}
+                )
+                lspconfig[server_name].setup(config)
+
+                ::continue::
+            end
 
             -- Setup pyrefly as THE Python LSP (not pyright)
             local pyrefly_cmd = vim.fn.exepath("pyrefly")

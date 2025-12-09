@@ -28,6 +28,22 @@ return {
         },
 
         completion = {
+            trigger = {
+                -- Show completions automatically on trigger characters
+                show_on_insert_on_trigger_character = true,
+                -- Show completions automatically after typing keywords
+                show_on_keyword = true,
+                -- Show completions immediately in insert mode
+                show_in_snippet = true,
+                -- Don't block completions on any characters
+                show_on_x_blocked_trigger_characters = {},
+            },
+
+            keyword = {
+                -- Show completions after typing just 1 character
+                range = 'prefix',
+            },
+
             list = {
                 selection = {
                     preselect = false,
