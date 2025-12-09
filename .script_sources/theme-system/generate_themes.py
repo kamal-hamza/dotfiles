@@ -624,6 +624,14 @@ button selected {{
             "editorGutter.addedBackground": p["success"],
             "editorGutter.deletedBackground": p["error"],
 
+            # Inlay hints - use grey/comment color
+            "editorInlayHint.foreground": p["comment"],
+            "editorInlayHint.background": p["background"],
+            "editorInlayHint.typeForeground": p["comment"],
+            "editorInlayHint.typeBackground": p["background"],
+            "editorInlayHint.parameterForeground": p["comment"],
+            "editorInlayHint.parameterBackground": p["background"],
+
             # Sidebar colors
             "sideBar.background": p["background"],
             "sideBar.foreground": p["foreground_alt"],
@@ -948,9 +956,9 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "warning": t["yellow"],
                         "warning.background": p["background"],
                         "warning.border": t["yellow"],
-                        "hint": p["secondary"],
+                        "hint": p["comment"],
                         "hint.background": p["background"],
-                        "hint.border": p["secondary"],
+                        "hint.border": p["comment"],
                         "info": p["info"],
                         "info.background": p["background"],
                         "info.border": p["info"],
@@ -2385,7 +2393,7 @@ M.colors = {{
     error = "{t["bright_red"]}",
     warn = "{p["warning"]}",
     info = "{p["success"]}",
-    hint = "{p["secondary"]}",
+    hint = "{p["comment"]}",
 
     -- Terminal colors
     term_black = "{t["black"]}",
@@ -2559,19 +2567,22 @@ M.setup = function()
     hl("LspCodeLens", {{ fg = colors.comment }})
     hl("LspCodeLensSeparator", {{ fg = colors.comment }})
 
+    -- LSP Inlay Hints (grey virtual text)
+    hl("LspInlayHint", {{ fg = colors.comment, bg = colors.bg }})
+
     -- Diagnostics
     hl("DiagnosticError", {{ fg = colors.error }})
     hl("DiagnosticWarn", {{ fg = colors.warn }})
     hl("DiagnosticInfo", {{ fg = colors.info }})
     hl("DiagnosticHint", {{ fg = colors.hint }})
-    hl("DiagnosticVirtualTextError", {{ fg = colors.error, bg = colors.bg }})
-    hl("DiagnosticVirtualTextWarn", {{ fg = colors.warn, bg = colors.bg }})
-    hl("DiagnosticVirtualTextInfo", {{ fg = colors.info, bg = colors.bg }})
-    hl("DiagnosticVirtualTextHint", {{ fg = colors.hint, bg = colors.bg }})
+    hl("DiagnosticVirtualTextError", {{ fg = colors.comment, bg = colors.bg }})
+    hl("DiagnosticVirtualTextWarn", {{ fg = colors.comment, bg = colors.bg }})
+    hl("DiagnosticVirtualTextInfo", {{ fg = colors.comment, bg = colors.bg }})
+    hl("DiagnosticVirtualTextHint", {{ fg = colors.comment, bg = colors.bg }})
     hl("DiagnosticUnderlineError", {{ sp = colors.error, undercurl = true }})
     hl("DiagnosticUnderlineWarn", {{ sp = colors.warn, undercurl = true }})
     hl("DiagnosticUnderlineInfo", {{ sp = colors.info, undercurl = true }})
-    hl("DiagnosticUnderlineHint", {{ sp = colors.hint, undercurl = true }})
+    hl("DiagnosticUnderlineHint", {{ sp = colors.comment, undercurl = true }})
 
     -- Telescope
     hl("TelescopeNormal", {{ fg = colors.fg, bg = colors.bg_elevated }})
@@ -2621,17 +2632,17 @@ M.setup = function()
     hl("NotifyWARNBorder", {{ fg = colors.warn }})
     hl("NotifyINFOBorder", {{ fg = colors.info }})
     hl("NotifyDEBUGBorder", {{ fg = colors.comment }})
-    hl("NotifyTRACEBorder", {{ fg = colors.hint }})
+    hl("NotifyTRACEBorder", {{ fg = colors.comment }})
     hl("NotifyERRORIcon", {{ fg = colors.error }})
     hl("NotifyWARNIcon", {{ fg = colors.warn }})
     hl("NotifyINFOIcon", {{ fg = colors.info }})
     hl("NotifyDEBUGIcon", {{ fg = colors.comment }})
-    hl("NotifyTRACEIcon", {{ fg = colors.hint }})
+    hl("NotifyTRACEIcon", {{ fg = colors.comment }})
     hl("NotifyERRORTitle", {{ fg = colors.error }})
     hl("NotifyWARNTitle", {{ fg = colors.warn }})
     hl("NotifyINFOTitle", {{ fg = colors.info }})
     hl("NotifyDEBUGTitle", {{ fg = colors.comment }})
-    hl("NotifyTRACETitle", {{ fg = colors.hint }})
+    hl("NotifyTRACETitle", {{ fg = colors.comment }})
 
     -- Bufferline
     hl("BufferLineIndicatorSelected", {{ fg = colors.blue }})
@@ -2697,11 +2708,16 @@ M.setup = function()
     hl("CocErrorSign", {{ fg = colors.red_bright }})
     hl("CocWarningSign", {{ fg = colors.orange }})
     hl("CocInfoSign", {{ fg = colors.blue_light }})
-    hl("CocHintSign", {{ fg = colors.cyan }})
+    hl("CocHintSign", {{ fg = colors.comment }})
     hl("CocErrorFloat", {{ fg = colors.red_bright }})
     hl("CocWarningFloat", {{ fg = colors.orange }})
     hl("CocInfoFloat", {{ fg = colors.blue_light }})
-    hl("CocHintFloat", {{ fg = colors.cyan }})
+    hl("CocHintFloat", {{ fg = colors.comment }})
+
+    -- CoC virtual text (inlay hints - grey)
+    hl("CocInlayHint", {{ fg = colors.comment, bg = colors.bg }})
+    hl("CocInlayHintType", {{ fg = colors.comment, bg = colors.bg }})
+    hl("CocInlayHintParameter", {{ fg = colors.comment, bg = colors.bg }})
 
     -- Highlight references
     hl("CocHighlightText", {{ bg = colors.select }})

@@ -56,6 +56,12 @@
         "html",
         "css"
     ],
+    "snippets.ultisnips.enable": false,
+    "snippets.ultisnips.pythonPrompt": false,
+    "snippets.extends": {
+        "javascriptreact": ["javascript"],
+        "typescriptreact": ["typescript"]
+    },
     "languageserver": {
         "pyrefly": {
             "command": "pyrefly",

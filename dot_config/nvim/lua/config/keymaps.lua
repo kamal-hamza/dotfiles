@@ -94,21 +94,50 @@ map("n", "<leader>gA", "<cmd>Git add .<CR>", { desc = "Git Stage All" })
 map("n", "<leader>gu", "<cmd>Git reset<CR>", { desc = "Git Unstage All" })
 
 -- Zed: space g d - git::Diff
-map("n", "<leader>gd", "<cmd>Git diff<CR>", { desc = "Git Diff" })
+-- Zed: space g h d - git::Diff
+map("n", "<leader>ghd", "<cmd>Git diff<CR>", { desc = "Git Diff" })
 
 -- ========================================================================
--- LSP & Diagnostics
+-- LSP & Diagnostics (CoC.nvim)
+-- Matches Zed editor LSP keybindings
 -- ========================================================================
+
+-- Zed: shift-k - editor::Hover
+map("n", "K", "<cmd>call CocActionAsync('doHover')<CR>", { desc = "Show Hover Documentation" })
+
+-- Zed: g d - editor::GoToDefinition
+map("n", "gd", "<Plug>(coc-definition)", { desc = "Go to Definition" })
+
+-- Zed: g D - editor::GoToDefinitionSplit
+map("n", "gD", "<cmd>call CocAction('jumpDefinition', 'split')<CR>", { desc = "Go to Definition (Split)" })
+
+-- Zed: g t - editor::GoToTypeDefinition
+map("n", "gt", "<Plug>(coc-type-definition)", { desc = "Go to Type Definition" })
+
+-- Zed: g T - editor::GoToTypeDefinitionSplit
+map("n", "gT", "<cmd>call CocAction('jumpTypeDefinition', 'split')<CR>", { desc = "Go to Type Definition (Split)" })
 
 -- Zed: space c c - editor::ToggleCodeActions
-map("n", "<leader>cc", vim.lsp.buf.code_action, { desc = "Code Actions" })
-map("v", "<leader>cc", vim.lsp.buf.code_action, { desc = "Code Actions" })
+map("n", "<leader>cc", "<Plug>(coc-codeaction-cursor)", { desc = "Code Actions" })
+map("v", "<leader>cc", "<Plug>(coc-codeaction-selected)", { desc = "Code Actions" })
+
+-- Zed: space r r - editor::Rename
+map("n", "<leader>rr", "<Plug>(coc-rename)", { desc = "Rename Symbol" })
+
+-- Zed: space r R - editor::SelectAllMatches (search & replace)
+map("n", "<leader>rR", ":%s//g<Left><Left>", { desc = "Search and Replace All" })
 
 -- Zed: space t d - diagnostics::Deploy
 map("n", "<leader>td", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", { desc = "Buffer Diagnostics" })
 
--- LSP info
-map("n", "<leader>ll", "<cmd>LspInfo<CR>", { desc = "LSP Info" })
+-- Zed: space l l - lsp_tool::ToggleMenu
+map("n", "<leader>ll", "<cmd>CocInfo<CR>", { desc = "CoC Info" })
+
+-- Zed: space s - outline::Toggle
+map("n", "<leader>s", "<cmd>Telescope lsp_document_symbols<CR>", { desc = "Document Symbols (Outline)" })
+
+-- Zed: space S - project_symbols::Toggle
+map("n", "<leader>S", "<cmd>Telescope lsp_workspace_symbols<CR>", { desc = "Project Symbols" })
 
 -- ========================================================================
 -- Buffer/Tab Management
@@ -134,22 +163,21 @@ map("n", "<leader>dc", function() require("dap").continue() end, { desc = "Conti
 map("n", "<leader>dS", function() require("dap").terminate() end, { desc = "Stop Debugger" })
 
 -- ========================================================================
--- Search & Replace
+-- Search
 -- ========================================================================
 
 -- Zed: / - vim::Search
 map("n", "/", "/", { desc = "Search" })
 
--- Zed: space r r - editor::SelectAllMatches
-map("n", "<leader>rr", ":%s//g<Left><Left>", { desc = "Search and Replace" })
-
 -- ========================================================================
 -- Command Palette
 -- ========================================================================
 
--- Zed: : or ? - command_palette::Toggle
+-- Zed: : - command_palette::Toggle
 map("n", ":", ":", { desc = "Command Mode" })
-map("n", "?", "<cmd>Telescope command_history<cr>", { desc = "Command History" })
+
+-- Zed: ? - command_palette::Toggle
+map("n", "?", "<cmd>Telescope commands<cr>", { desc = "Command Palette" })
 
 -- ========================================================================
 -- Vim Enhancements
@@ -165,8 +193,10 @@ map("n", "<Esc>", "<cmd>noh<CR><Esc>", { desc = "Clear search highlights" })
 -- Visual Mode: Text Manipulation
 -- ========================================================================
 
--- Zed: shift-j/k - editor::MoveLineDown/Up
+-- Zed: shift-j - editor::MoveLineDown
 map("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down" })
+
+-- Zed: shift-k - editor::MoveLineUp
 map("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up" })
 
 -- Better indenting (maintain visual selection)
