@@ -25,10 +25,51 @@ M.on_attach = function(client, buffer)
     -- Enable native LSP completion
     vim.lsp.completion.enable(true, client.id, buffer, { autotrigger = true })
 
+    -- Setup automatic completion when typing keywords
+    local completion_group = vim.api.nvim_create_augroup('LspCompletion_' .. buffer, { clear = true })
+    vim.api.nvim_create_autocmd('TextChangedI', {
+        group = completion_group,
+        buffer = buffer,
+        callback = function()
+            -- Only trigger if we're not already showing completions
+            if vim.fn.pumvisible() == 0 then
+                -- Get the character before cursor
+                local line = vim.api.nvim_get_current_line()
+                local col = vim.api.nvim_win_get_cursor(0)[2]
+                local before_cursor = line:sub(1, col)
+
+                -- Check if we're typing a keyword (letters, numbers, underscore)
+                -- and have typed at least 1 character
+                if before_cursor:match('[%w_]$') and col > 0 then
+                    vim.lsp.completion.get()
+                end
+            end
+        end,
+    })
+
     -- Setup completion keymaps
     vim.keymap.set('i', '<C-Space>', function()
-        vim.lsp.complete()
+        vim.lsp.completion.get()
     end, { buffer = buffer, desc = 'Trigger completion' })
+
+    -- Tab to select next completion, or insert tab if no completion
+    vim.keymap.set('i', '<Tab>', function()
+        if vim.fn.pumvisible() == 1 then
+            return '<C-n>'
+        else
+            return '<Tab>'
+        end
+    end, { buffer = buffer, expr = true, desc = 'Next completion or Tab' })
+
+    -- Shift-Tab to select previous completion, or shift-tab if no completion
+    vim.keymap.set('i', '<S-Tab>', function()
+        if vim.fn.pumvisible() == 1 then
+            return '<C-p>'
+        else
+            return '<S-Tab>'
+        end
+    end, { buffer = buffer, expr = true, desc = 'Previous completion or Shift-Tab' })
+
     vim.keymap.set('i', '<C-n>', '<C-n>', { buffer = buffer, desc = 'Next completion' })
     vim.keymap.set('i', '<C-p>', '<C-p>', { buffer = buffer, desc = 'Previous completion' })
 
