@@ -13,6 +13,12 @@ return {
             "coc-pyright",
             "coc-lua",
             "coc-snippets",
+            "coc-yaml",
+            "coc-sh",
+            "coc-tailwindcss",
+            "coc-emmet",
+            "coc-eslint",
+            "coc-prettier",
         }
 
         -- Use Tab for trigger completion and navigate
