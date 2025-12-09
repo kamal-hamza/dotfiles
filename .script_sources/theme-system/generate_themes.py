@@ -2655,42 +2655,58 @@ M.setup = function()
     hl("FloatBorder", {{ fg = colors.border, bg = colors.bg }})
     hl("FloatTitle", {{ fg = colors.blue_light, bg = colors.bg, bold = true }})
 
-    -- nvim-cmp (completion)
-    hl("CmpItemAbbrMatch", {{ fg = colors.cyan, bold = true }})
-    hl("CmpItemAbbrMatchFuzzy", {{ fg = colors.cyan, bold = true }})
-    hl("CmpItemKind", {{ fg = colors.orange }})
-    hl("CmpItemMenu", {{ fg = colors.comment }})
-    hl("CmpItemAbbrDeprecated", {{ fg = colors.comment, strikethrough = true }})
+    -- coc.nvim (completion)
+    hl("CocSearch", {{ fg = colors.cyan }})
+    hl("CocMenuSel", {{ bg = colors.select, fg = colors.cyan }})
+    hl("CocFloating", {{ bg = colors.bg, fg = colors.fg }})
+    hl("CocFloatDividingLine", {{ fg = colors.border }})
 
-    -- nvim-cmp kind-specific highlights (semantic coloring like Zed)
-    hl("CmpItemKindText", {{ fg = colors.fg }})
-    hl("CmpItemKindMethod", {{ fg = colors.cyan }})
-    hl("CmpItemKindFunction", {{ fg = colors.cyan }})
-    hl("CmpItemKindConstructor", {{ fg = colors.orange }})
-    hl("CmpItemKindField", {{ fg = colors.fg }})
-    hl("CmpItemKindVariable", {{ fg = colors.fg }})
-    hl("CmpItemKindClass", {{ fg = colors.orange }})
-    hl("CmpItemKindInterface", {{ fg = colors.orange }})
-    hl("CmpItemKindModule", {{ fg = colors.orange }})
-    hl("CmpItemKindProperty", {{ fg = colors.fg }})
-    hl("CmpItemKindUnit", {{ fg = colors.orange }})
-    hl("CmpItemKindValue", {{ fg = colors.orange }})
-    hl("CmpItemKindEnum", {{ fg = colors.orange }})
-    hl("CmpItemKindKeyword", {{ fg = colors.red_bright }})
-    hl("CmpItemKindSnippet", {{ fg = colors.cyan }})
-    hl("CmpItemKindColor", {{ fg = colors.green }})
-    hl("CmpItemKindFile", {{ fg = colors.fg }})
-    hl("CmpItemKindReference", {{ fg = colors.fg }})
-    hl("CmpItemKindFolder", {{ fg = colors.cyan }})
-    hl("CmpItemKindEnumMember", {{ fg = colors.orange }})
-    hl("CmpItemKindConstant", {{ fg = colors.orange }})
-    hl("CmpItemKindStruct", {{ fg = colors.orange }})
-    hl("CmpItemKindEvent", {{ fg = colors.orange }})
-    hl("CmpItemKindOperator", {{ fg = colors.fg }})
-    hl("CmpItemKindTypeParameter", {{ fg = colors.orange }})
-    hl("CmpItemKindCopilot", {{ fg = colors.cyan }})
-    hl("CmpItemKindCodeium", {{ fg = colors.cyan }})
-    hl("CmpItemKindTabNine", {{ fg = colors.cyan }})
+    -- Completion menu items
+    hl("CocPumMenu", {{ bg = colors.bg, fg = colors.fg }})
+    hl("CocPumShortcut", {{ fg = colors.comment }})
+    hl("CocPumVirtualText", {{ fg = colors.comment }})
+
+    -- Kind icons and labels with semantic coloring
+    hl("CocSymbolText", {{ fg = colors.fg }})
+    hl("CocSymbolMethod", {{ fg = colors.cyan }})
+    hl("CocSymbolFunction", {{ fg = colors.cyan }})
+    hl("CocSymbolConstructor", {{ fg = colors.orange }})
+    hl("CocSymbolField", {{ fg = colors.fg }})
+    hl("CocSymbolVariable", {{ fg = colors.fg }})
+    hl("CocSymbolClass", {{ fg = colors.orange }})
+    hl("CocSymbolInterface", {{ fg = colors.orange }})
+    hl("CocSymbolModule", {{ fg = colors.orange }})
+    hl("CocSymbolProperty", {{ fg = colors.fg }})
+    hl("CocSymbolUnit", {{ fg = colors.orange }})
+    hl("CocSymbolValue", {{ fg = colors.orange }})
+    hl("CocSymbolEnum", {{ fg = colors.orange }})
+    hl("CocSymbolKeyword", {{ fg = colors.red_bright }})
+    hl("CocSymbolSnippet", {{ fg = colors.cyan }})
+    hl("CocSymbolColor", {{ fg = colors.green }})
+    hl("CocSymbolFile", {{ fg = colors.fg }})
+    hl("CocSymbolReference", {{ fg = colors.fg }})
+    hl("CocSymbolFolder", {{ fg = colors.cyan }})
+    hl("CocSymbolEnumMember", {{ fg = colors.orange }})
+    hl("CocSymbolConstant", {{ fg = colors.orange }})
+    hl("CocSymbolStruct", {{ fg = colors.orange }})
+    hl("CocSymbolEvent", {{ fg = colors.orange }})
+    hl("CocSymbolOperator", {{ fg = colors.fg }})
+    hl("CocSymbolTypeParameter", {{ fg = colors.orange }})
+
+    -- Diagnostics
+    hl("CocErrorSign", {{ fg = colors.red_bright }})
+    hl("CocWarningSign", {{ fg = colors.orange }})
+    hl("CocInfoSign", {{ fg = colors.blue_light }})
+    hl("CocHintSign", {{ fg = colors.cyan }})
+    hl("CocErrorFloat", {{ fg = colors.red_bright }})
+    hl("CocWarningFloat", {{ fg = colors.orange }})
+    hl("CocInfoFloat", {{ fg = colors.blue_light }})
+    hl("CocHintFloat", {{ fg = colors.cyan }})
+
+    -- Highlight references
+    hl("CocHighlightText", {{ bg = colors.select }})
+    hl("CocHighlightRead", {{ bg = colors.select }})
+    hl("CocHighlightWrite", {{ bg = colors.select }})
 
     -- Terminal colors
     vim.g.terminal_color_0 = colors.term_black
@@ -2916,46 +2932,28 @@ def main():
         help="Theme to generate (default: all)",
     )
     parser.add_argument(
-        "--chezmoi-root",
+        "--root",
         type=Path,
         default=None,
-        help="Path to chezmoi source directory (default: auto-detect)",
+        help="Path to project root directory (default: current directory)",
     )
 
     args = parser.parse_args()
 
-    if args.chezmoi_root is None:
-        home = Path.home()
+    # Use current directory as default root
+    if args.root is None:
+        args.root = Path.cwd()
 
-        # Platform-specific chezmoi locations
-        if system == "Windows":
-            possible_roots = [
-                home / "AppData" / "Local" / "chezmoi",
-                home / ".local" / "share" / "chezmoi",
-                Path.cwd(),
-            ]
-        else:  # macOS and Linux
-            possible_roots = [
-                home / ".local" / "share" / "chezmoi",
-                home / ".chezmoi",
-                Path.cwd(),
-            ]
-
-        for root in possible_roots:
-            if (root / ".chezmoidata" / "colors").exists():
-                args.chezmoi_root = root
-                break
-
-        if args.chezmoi_root is None:
-            print("❌ Could not auto-detect chezmoi root directory.")
-            print("   Please specify --chezmoi-root")
-            print(f"\n   Searched in:")
-            for root in possible_roots:
-                print(f"   - {root}")
-            sys.exit(1)
+    # Verify the directory structure exists
+    if not (args.root / ".chezmoidata" / "colors").exists():
+        print(f"❌ Could not find .chezmoidata/colors in: {args.root}")
+        print("   Make sure you're running this from the project root directory")
+        sys.exit(1)
 
     print(f"🔧 Platform: {system}")
-    print(f"📁 Chezmoi root: {args.chezmoi_root}\n")
+    print(f"📁 Project root: {args.root}\n")
+
+    args.chezmoi_root = args.root
 
     generator = ThemeGenerator(args.chezmoi_root)
 
@@ -2968,14 +2966,8 @@ def main():
 
         print("✅ Theme generation complete!")
         print("\n💡 Next steps:")
-        if system == "Windows":
-            print("   1. Review generated theme files")
-            print("   2. Run 'chezmoi apply' to deploy changes")
-            print("   3. Use PowerShell theme-switch script to activate themes")
-        else:
-            print("   1. Review generated theme files")
-            print("   2. Run 'chezmoi apply' to deploy changes")
-            print("   3. Use theme-switch script to activate themes")
+        print("   1. Review generated theme files in dot_config/")
+        print("   2. Commit changes to git if desired")
         print()
 
     except Exception as e:
