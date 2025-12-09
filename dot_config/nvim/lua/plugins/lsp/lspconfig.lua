@@ -3,18 +3,16 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     cmd = { "LspInfo", "LspStart", "LspStop", "LspRestart" },
     dependencies = {
-        "hrsh7th/cmp-nvim-lsp",
         { "antosha417/nvim-lsp-file-operations", config = true },
         { "folke/lazydev.nvim",                  ft = "lua",   opts = {} },
     },
     config = function()
         local lspconfig = require("lspconfig")
         local configs = require("lspconfig.configs")
-        local cmp_nvim_lsp = require("cmp_nvim_lsp")
         local keymap = vim.keymap
 
-        -- Enable capabilities for autocompletion
-        local capabilities = cmp_nvim_lsp.default_capabilities()
+        -- Use default capabilities (coc.nvim handles completion separately)
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
 
         -- Register pyrefly as a custom LSP server (not built into lspconfig)
         if not configs.pyrefly then
