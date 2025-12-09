@@ -6,11 +6,11 @@
 
 -- Helper function to set keymap
 local function map(mode, lhs, rhs, opts)
-  local options = { noremap = true, silent = true }
-  if opts then
-    options = vim.tbl_extend("force", options, opts)
-  end
-  vim.keymap.set(mode, lhs, rhs, options)
+    local options = { noremap = true, silent = true }
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    vim.keymap.set(mode, lhs, rhs, options)
 end
 
 -- Set leader key
@@ -38,16 +38,16 @@ map("t", "<C-k>", "<C-\\><C-n><C-w>k", { desc = "Navigate to up pane from termin
 -- ========================================================================
 
 -- Zed: space f f - file_finder::Toggle
-map("n", "<leader>ff", function() Snacks.picker.files() end, { desc = "Find Files" })
+map("n", "<leader>ff", function() require('mini.pick').builtin.files() end, { desc = "Find Files" })
 
 -- Zed: space f p - projects::OpenRecent
-map("n", "<leader>fp", function() Snacks.picker.recent() end, { desc = "Recent Files" })
+map("n", "<leader>fp", "<cmd>Telescope oldfiles<cr>", { desc = "Recent Files" })
 
 -- Zed: space f g - workspace::NewSearch
-map("n", "<leader>fg", function() Snacks.picker.grep() end, { desc = "Grep Search" })
+map("n", "<leader>fg", function() require('mini.pick').builtin.grep_live() end, { desc = "Grep Search" })
 
 -- Zed: space f b - tab_switcher::Toggle
-map("n", "<leader>fb", function() Snacks.picker.buffers() end, { desc = "Find Buffers" })
+map("n", "<leader>fb", function() require('mini.pick').builtin.buffers() end, { desc = "Find Buffers" })
 
 -- ========================================================================
 -- Panel & Dock Toggles
@@ -64,9 +64,6 @@ map("n", "<leader>kk", function() Snacks.terminal.toggle() end, { desc = "Toggle
 
 -- Zed: space d d - debug_panel::ToggleFocus
 map("n", "<leader>dd", "<cmd>Trouble diagnostics toggle<CR>", { desc = "Toggle Diagnostics" })
-
--- Zed: space a a - agent::ToggleFocus
-map("n", "<leader>aa", "<cmd>CopilotChatToggle<CR>", { desc = "Toggle AI Assistant" })
 
 -- ========================================================================
 -- Git Commands
@@ -98,23 +95,6 @@ map("n", "<leader>gu", "<cmd>Git reset<CR>", { desc = "Git Unstage All" })
 
 -- Zed: space g d - git::Diff
 map("n", "<leader>gd", "<cmd>Git diff<CR>", { desc = "Git Diff" })
-
--- ========================================================================
--- AI Assistant Commands
--- ========================================================================
-
--- Zed: space a n - agent::NewThread
-map("n", "<leader>an", "<cmd>CopilotChatReset<CR>", { desc = "New AI Chat Thread" })
-
--- Zed: space a h - agent::OpenHistory
-map("n", "<leader>ah", function() Snacks.picker.notifications() end, { desc = "Notification History" })
-
--- Zed: space a i - assistant::InlineAssist
-map("n", "<leader>ai", "<cmd>CopilotChatInline<CR>", { desc = "AI Inline Assist" })
-map("v", "<leader>ai", ":CopilotChatInline<CR>", { desc = "AI Inline Assist" })
-
--- Zed: space a q - agent::QuoteSelection
-map("v", "<leader>aq", ":CopilotChatQuick<CR>", { desc = "Quick AI Chat with Selection" })
 
 -- ========================================================================
 -- LSP & Diagnostics
@@ -194,7 +174,7 @@ map("n", "<leader>rr", ":%s//g<Left><Left>", { desc = "Search and Replace" })
 
 -- Zed: : or ? - command_palette::Toggle
 map("n", ":", ":", { desc = "Command Mode" })
-map("n", "?", function() Snacks.picker.command_history() end, { desc = "Command History" })
+map("n", "?", "<cmd>Telescope command_history<cr>", { desc = "Command History" })
 
 -- ========================================================================
 -- Vim Enhancements
@@ -234,14 +214,14 @@ map("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 -- ========================================================================
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    -- Zed: space m p - markdown::OpenPreviewToTheSide
-    map("n", "<leader>mp", "<cmd>MarkdownPreview<CR>", { desc = "Markdown Preview", buffer = true })
-    
-    -- Zed: space m P - markdown::OpenPreview
-    map("n", "<leader>mP", "<cmd>MarkdownPreviewStop<CR>", { desc = "Stop Markdown Preview", buffer = true })
-  end,
+    pattern = "markdown",
+    callback = function()
+        -- Zed: space m p - markdown::OpenPreviewToTheSide
+        map("n", "<leader>mp", "<cmd>MarkdownPreview<CR>", { desc = "Markdown Preview", buffer = true })
+
+        -- Zed: space m P - markdown::OpenPreview
+        map("n", "<leader>mP", "<cmd>MarkdownPreviewStop<CR>", { desc = "Stop Markdown Preview", buffer = true })
+    end,
 })
 
 -- ========================================================================
@@ -277,8 +257,9 @@ map("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
 map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
 map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
 map("n", "<leader>cf", function()
-  require("conform").format({ async = true, lsp_fallback = true })
+    require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "Format buffer" })
+
 
 -- Quickfix navigation
 map("n", "[q", "<cmd>cprev<CR>", { desc = "Previous quickfix" })

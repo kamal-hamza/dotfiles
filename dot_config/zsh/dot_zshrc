@@ -29,6 +29,27 @@ alias_if_exists() {
     fi
 }
 
+# For user scripts - create alias without checking if command exists
+# This is needed because scripts might not be in PATH yet during .zshrc execution
+alias_script() {
+    local name="$1"
+    shift
+    local cmd="$*"
+    alias "$name"="$cmd"
+}
+
+# -----------------------------------------------------------------------------
+# PATH Setup (Fallback for non-login shells)
+# -----------------------------------------------------------------------------
+# Ensure critical paths are set even if .zprofile wasn't sourced
+# This handles the case where a non-login shell is started
+if [[ ! "$PATH" =~ "$HOME/.config/scripts" ]]; then
+  export PATH="$HOME/.config/scripts:$PATH"
+fi
+if [[ ! "$PATH" =~ "$HOME/.local/bin" ]]; then
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
 # -----------------------------------------------------------------------------
 # Evals & Sourcing
 # -----------------------------------------------------------------------------
@@ -109,16 +130,16 @@ alias_if_exists fman "compgen -c | fzf | xargs man"
 alias_if_exists what "tldr"
 
 # -----------------------------------------------------------------------------
-# Script Aliases
+# Script Aliases (scripts in ~/.config/scripts/)
 # -----------------------------------------------------------------------------
-alias_if_exists tt "tmux-new.sh"
-alias_if_exists ccp "create-project.sh"
-alias_if_exists dp "delete-project.sh"
-alias_if_exists m "man.sh"
-alias_if_exists bb "branch-change.sh"
-alias_if_exists dc "docker-image-runner.sh"
-alias_if_exists dd "docker-image-stop.sh"
-alias_if_exists ss "stack-search.sh"
+alias_script tt "tmux-new.sh"
+alias_script ccp "create-project.sh"
+alias_script dp "delete-project.sh"
+alias_script m "man.sh"
+alias_script bb "branch-change.sh"
+alias_script dc "docker-image-runner.sh"
+alias_script dd "docker-image-stop.sh"
+alias_script ss "stack-search.sh"
 
 # -----------------------------------------------------------------------------
 # Conda Initialization (MUST BE LAST)

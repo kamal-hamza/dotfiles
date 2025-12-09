@@ -7,11 +7,7 @@
             "name": "Soft Focus Dark",
             "appearance": "dark",
             "style": {
-                "accents": [
-                    "#D5F2E3",
-                    "#448cbb",
-                    "#67b7f5"
-                ],
+                "accents": ["#D5F2E3", "#448cbb", "#67b7f5"],
                 "background": "#050505",
                 "border": "#333333",
                 "border.variant": "#00000000",
@@ -162,9 +158,9 @@
                 "warning": "#D4B87B",
                 "warning.background": "#050505",
                 "warning.border": "#D4B87B",
-                "hint": "#67b7f5",
+                "hint": "#999999",
                 "hint.background": "#050505",
-                "hint.border": "#67b7f5",
+                "hint.border": "#999999",
                 "info": "#67b7f5",
                 "info.background": "#050505",
                 "info.border": "#67b7f5",

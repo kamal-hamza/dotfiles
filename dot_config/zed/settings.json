@@ -29,7 +29,6 @@
         "CSS": ["*.css.tmpl"],
         "JSON": ["*.json.tmpl"]
     },
-    // "icon_theme": "Colored Zed Icons Theme Dark",
     "icon_theme": "Colored Zed Icons Theme Dark",
     "show_edit_predictions": true,
     "features": {
@@ -39,9 +38,9 @@
     "theme": "Soft Focus Light",
     "ui_font_family": "Liga SFMono Nerd Font",
     "buffer_font_family": "Liga SFMono Nerd Font",
-    "ui_font_size": 12,
-    "buffer_font_size": 12,
-    "agent_ui_font_size": 16,
+    "ui_font_size": 16,
+    "buffer_font_size": 16,
+    "agent_ui_font_size": 20,
     "buffer_font_features": {
         "calt": false
     },
@@ -57,10 +56,13 @@
     "outline_panel": {
         "button": false
     },
-    "relative_line_numbers": true,
+    "relative_line_numbers": "enabled",
     "tab_size": 4,
     "inlay_hints": {
-        "enabled": false
+        "enabled": true,
+        "show_type_hints": true,
+        "show_parameter_hints": true,
+        "show_other_hints": true
     },
     "file_finder": {
         "modal_max_width": "large"
@@ -105,6 +107,21 @@
         },
         "JSON": {
             "formatter": "prettier"
+        },
+        "Python": {
+            "language_servers": ["pyrefly", "!pyright", "!pylsp"]
+        }
+    },
+    "lsp": {
+        "pyrefly": {
+            "settings": {
+                "python": {
+                    "pythonPath": ".venv/bin/python"
+                },
+                "pyrefly": {
+                    "python_interpreter": ".venv/bin/python"
+                }
+            }
         }
     },
     "format_on_save": "on",

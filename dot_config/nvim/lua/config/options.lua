@@ -12,33 +12,34 @@ opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clip
 opt.completeopt = "menu,menuone,noselect,fuzzy"
 opt.conceallevel = 0
 opt.confirm = true             -- Confirm to save changes before exiting modified buffer
-opt.cursorline = true          -- Enable highlighting of the current line
+opt.cursorline = false         -- Disable highlighting of the current line
 opt.expandtab = true           -- Use spaces instead of tabs
 opt.formatoptions = "jcroqlnt" -- tcqj
 opt.grepformat = "%f:%l:%c:%m"
 opt.grepprg = "rg --vimgrep"
-opt.ignorecase = true      -- Ignore case
-opt.inccommand = "nosplit" -- preview incremental substitute
-opt.laststatus = 3         -- global statusline
-opt.linebreak = true       -- Wrap lines at convenient points
-opt.list = false           -- Show some invisible characters (tabs...
+opt.ignorecase = true                          -- Ignore case
+opt.inccommand = "nosplit"                     -- preview incremental substitute
+opt.laststatus = 3                             -- global statusline
+opt.linebreak = true                           -- Wrap lines at convenient points
+opt.list = false                               -- Show some invisible characters (tabs...
 opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
-opt.mouse = "a"            -- Enable mouse mode
-opt.number = true          -- Print line number
-opt.pumblend = 10          -- Popup blend
-opt.pumheight = 10         -- Maximum number of entries in a popup
-opt.relativenumber = true  -- Relative line numbers
-opt.ruler = false          -- Disable the default ruler
-opt.scrolloff = 4          -- Lines of context
+opt.mouse = "a"                                -- Enable mouse mode
+opt.listchars:append({ leadmultispace = " " }) -- Disable indent guides
+opt.number = true                              -- Print line number
+opt.pumblend = 10                              -- Popup blend
+opt.pumheight = 10                             -- Maximum number of entries in a popup
+opt.relativenumber = true                      -- Relative line numbers
+opt.ruler = false                              -- Disable the default ruler
+opt.scrolloff = 4                              -- Lines of context
 opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
-opt.shiftround = true      -- Round indent
-opt.shiftwidth = 4         -- Size of an indent
+opt.shiftround = true                          -- Round indent
+opt.shiftwidth = 4                             -- Size of an indent
 opt.shortmess:append { W = true, I = true, c = true, C = true }
-opt.showmode = false       -- Dont show mode since we have a statusline
-opt.sidescrolloff = 8      -- Columns of context
-opt.signcolumn = "yes"     -- Always show the signcolumn, otherwise it would shift the text each time
-opt.smartcase = true       -- Don't ignore case with capitals
-opt.smartindent = true     -- Insert indents automatically
+opt.showmode = false                           -- Dont show mode since we have a statusline
+opt.sidescrolloff = 8                          -- Columns of context
+opt.signcolumn = "yes"                         -- Always show the signcolumn, otherwise it would shift the text each time
+opt.smartcase = true                           -- Don't ignore case with capitals
+opt.smartindent = true                         -- Insert indents automatically
 opt.spelllang = { "en" }
 opt.spelloptions:append "noplainbuffer"
 opt.splitbelow = true                         -- Put new windows below current
@@ -61,8 +62,6 @@ vim.g.markdown_recommended_style = 0
 
 -- Folding
 opt.fillchars = {
-    foldopen = "",
-    foldclose = "",
     fold = " ",
     foldsep = " ",
     diff = "╱",
@@ -73,22 +72,33 @@ opt.smoothscroll = true
 opt.foldmethod = "expr"
 opt.foldtext = ""
 
--- Diagnostic settings
+-- Diagnostic settings - More discrete
 local diagnostics = {
-    Error = " ",
-    Warn = " ",
-    Hint = " ",
-    Info = " ",
+    Error = "●",
+    Warn = "●",
+    Hint = "●",
+    Info = "●",
 }
+
 vim.diagnostic.config {
     underline = true,
     update_in_insert = false,
+    -- Use simple virtual text instead of virtual lines
     virtual_text = {
         spacing = 4,
         source = "if_many",
         prefix = "●",
+        -- Only show errors and warnings, hide hints and info
+        severity = { min = vim.diagnostic.severity.WARN },
     },
+    virtual_lines = false,  -- Disable virtual lines completely
     severity_sort = true,
+    float = {
+        border = "rounded",
+        source = "always",
+        header = "",
+        prefix = "",
+    },
     signs = {
         text = {
             [vim.diagnostic.severity.ERROR] = diagnostics.Error,

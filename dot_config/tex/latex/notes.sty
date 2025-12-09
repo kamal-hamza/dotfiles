@@ -1,0 +1,378 @@
+% ============================================================================
+% csbnotes.sty - CS Book Notes Style Package
+% A LaTeX style package for computer science students taking book notes
+% Optimized for: algorithms, data structures, theory, code snippets, and math
+%
+% Usage: \usepackage{csbnotes}
+% ============================================================================
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{csbnotes}[2024/11/27 CS Book Notes Style Package v1.0]
+
+% ============================================================================
+% PACKAGE IMPORTS
+% ============================================================================
+
+% --- Math and CS Theory ---
+\RequirePackage{amsmath, amsthm, amssymb, mathtools, bm}
+\RequirePackage{algorithm, algpseudocode}  % For pseudocode
+\RequirePackage{complexity}                 % For complexity classes
+
+% --- Code Listings ---
+\RequirePackage{listings}
+\RequirePackage{xcolor}
+
+% --- Graphics and Figures ---
+\RequirePackage{graphicx, float, caption, subcaption}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows, automata, positioning, graphs}
+
+% --- Page Layout ---
+\RequirePackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+\RequirePackage{fancyhdr}
+\RequirePackage{parskip}  % Better paragraph spacing
+
+% --- Fonts and Typography ---
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
+\RequirePackage{inconsolata}  % Better monospace font for code
+
+% --- Hyperlinks and References ---
+\RequirePackage[colorlinks=true, linkcolor=blue, citecolor=red, urlcolor=purple]{hyperref}
+
+% --- Lists and Enumerations ---
+\RequirePackage{enumitem}
+
+% --- Tables ---
+\RequirePackage{booktabs, tabularx}
+
+% --- Colored Boxes ---
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{marginnote}  % For margin notes
+\RequirePackage{soul}        % For highlighting
+
+% ============================================================================
+% CODE LISTING CONFIGURATION
+% ============================================================================
+
+% Define custom colors for syntax highlighting
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\definecolor{keywordcolor}{rgb}{0.0,0.0,0.8}
+\definecolor{commentcolor}{rgb}{0.133,0.545,0.133}
+\definecolor{stringcolor}{rgb}{0.627,0.126,0.941}
+
+% General code style
+\lstdefinestyle{codestyle}{
+    backgroundcolor=\color{backcolour},
+    commentstyle=\color{commentcolor}\ttfamily\itshape,
+    keywordstyle=\color{keywordcolor}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{stringcolor},
+    basicstyle=\ttfamily\small,
+    breakatwhitespace=false,
+    breaklines=true,
+    captionpos=b,
+    keepspaces=true,
+    numbers=left,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=2,
+    frame=single,
+    rulecolor=\color{black!30}
+}
+
+\lstset{style=codestyle}
+
+% Language-specific styles
+\lstdefinestyle{pythonstyle}{
+    style=codestyle,
+    language=Python,
+    morekeywords={self, True, False, None}
+}
+
+\lstdefinestyle{javastyle}{
+    style=codestyle,
+    language=Java,
+    morekeywords={var}
+}
+
+\lstdefinestyle{cppstyle}{
+    style=codestyle,
+    language=C++,
+    morekeywords={nullptr, constexpr}
+}
+
+% ============================================================================
+% THEOREM ENVIRONMENTS
+% ============================================================================
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}{Example}[section]
+\newtheorem{algorithm-text}{Algorithm}[section]
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{intuition}{Intuition}
+
+% ============================================================================
+% COLORED BOX ENVIRONMENTS
+% ============================================================================
+
+% Key Concept Box
+\newtcolorbox{keybox}[1][]{
+    colback=blue!5!white,
+    colframe=blue!75!black,
+    fonttitle=\bfseries,
+    title=Key Concept,
+    #1
+}
+
+% Important Box
+\newtcolorbox{importantbox}[1][]{
+    colback=red!5!white,
+    colframe=red!75!black,
+    fonttitle=\bfseries,
+    title=Important,
+    #1
+}
+
+% Implementation Note Box
+\newtcolorbox{implbox}[1][]{
+    colback=green!5!white,
+    colframe=green!75!black,
+    fonttitle=\bfseries,
+    title=Implementation Note,
+    #1
+}
+
+% Summary Box
+\newtcolorbox{summarybox}[1][]{
+    colback=yellow!10!white,
+    colframe=orange!75!black,
+    fonttitle=\bfseries,
+    title=Summary,
+    #1
+}
+
+% Warning Box
+\newtcolorbox{warningbox}[1][]{
+    colback=red!10!white,
+    colframe=red!60!black,
+    fonttitle=\bfseries,
+    title=Warning: Common Pitfall,
+    #1
+}
+
+% Question Box
+\newtcolorbox{questionbox}[1][]{
+    colback=purple!5!white,
+    colframe=purple!75!black,
+    fonttitle=\bfseries,
+    title=Question,
+    #1
+}
+
+% Review Box
+\newtcolorbox{reviewbox}[1][]{
+    colback=cyan!5!white,
+    colframe=cyan!75!black,
+    fonttitle=\bfseries,
+    title=Review,
+    #1
+}
+
+% Exercise Box
+\newtcolorbox{exercisebox}[1][]{
+    colback=gray!5!white,
+    colframe=gray!75!black,
+    fonttitle=\bfseries,
+    title=Exercise,
+    #1
+}
+
+% Flashcard Box
+\newtcolorbox{flashcard}[2][]{
+    enhanced,
+    colback=white,
+    colframe=black!50!white,
+    fonttitle=\bfseries,
+    title=#2,
+    #1
+}
+
+% ============================================================================
+% CUSTOM COMMANDS - MATH & CS
+% ============================================================================
+
+% --- Complexity Classes ---
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\bigOmega}{\Omega}
+\newcommand{\bigTheta}{\Theta}
+\newcommand{\littleO}{o}
+\newcommand{\littleOmega}{\omega}
+
+% --- Common Sets ---
+\newcommand{\N}{\mathbb{N}}  % Natural numbers
+\newcommand{\Z}{\mathbb{Z}}  % Integers
+\newcommand{\Q}{\mathbb{Q}}  % Rationals
+\newcommand{\R}{\mathbb{R}}  % Reals
+\newcommand{\C}{\mathbb{C}}  % Complex numbers
+
+% --- Probability & Statistics ---
+\newcommand{\E}{\mathbb{E}}           % Expectation
+\newcommand{\Var}{\text{Var}}         % Variance
+\newcommand{\Cov}{\text{Cov}}         % Covariance
+\newcommand{\Prob}{\mathbb{P}}        % Probability
+
+% --- Algorithms & Analysis ---
+\newcommand{\runtime}[1]{\bigO(#1)}
+\newcommand{\worstcase}[1]{\bigO(#1)}
+\newcommand{\bestcase}[1]{\bigOmega(#1)}
+\newcommand{\avgcase}[1]{\bigTheta(#1)}
+\newcommand{\spacecomplexity}[1]{\bigO(#1)}
+\newcommand{\amortized}[1]{\bigO(#1)_{\text{amortized}}}
+\newcommand{\expected}[1]{\bigO(#1)_{\text{expected}}}
+\newcommand{\polyTime}{\text{poly}}
+
+% --- Discrete Math & Set Operations ---
+\newcommand{\union}{\cup}
+\newcommand{\intersect}{\cap}
+\newcommand{\powerset}[1]{\mathcal{P}(#1)}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\card}[1]{\left|#1\right|}
+\newcommand{\size}[1]{\left|#1\right|}
+\newcommand{\seq}[1]{\left\{#1\right\}}
+
+% --- Linear Algebra ---
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\inner}[2]{\left\langle#1,#2\right\rangle}
+\newcommand{\transpose}{^{\top}}
+\newcommand{\T}{^{\top}}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\trace}{trace}
+\DeclareMathOperator{\Det}{det}
+\newcommand{\diag}[1]{\text{diag}(#1)}
+
+% --- Graph Theory ---
+\newcommand{\graph}[2]{G = (#1, #2)}
+\newcommand{\degree}[1]{\text{deg}(#1)}
+\newcommand{\path}{\text{Path}}
+\newcommand{\cycle}{\text{Cycle}}
+
+% --- Number Theory & Cryptography ---
+\DeclareMathOperator{\Mod}{mod}
+\newcommand{\gcd}[2]{\text{gcd}(#1, #2)}
+\newcommand{\lcm}[2]{\text{lcm}(#1, #2)}
+\newcommand{\divides}{\mid}
+
+% --- Probability (Extended) ---
+\newcommand{\given}{\,|\,}
+\newcommand{\iid}{\stackrel{\text{iid}}{\sim}}
+\newcommand{\dist}{\sim}
+
+% --- Logic ---
+\newcommand{\true}{\texttt{true}}
+\newcommand{\false}{\texttt{false}}
+\newcommand{\nil}{\texttt{nil}}
+
+% --- Common Operators ---
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\poly}{poly}
+\DeclareMathOperator{\polylog}{polylog}
+
+% --- Data Structures Notation ---
+\newcommand{\array}{\texttt{Array}}
+\newcommand{\list}{\texttt{List}}
+\newcommand{\tree}{\texttt{Tree}}
+\newcommand{\stack}{\texttt{Stack}}
+\newcommand{\queue}{\texttt{Queue}}
+
+% --- Quick formatting ---
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\inlinecode}[1]{\colorbox{backcolour}{\texttt{#1}}}
+\newcommand{\concept}[1]{\textbf{#1}}
+\newcommand{\vocab}[1]{\textbf{\textit{#1}}}
+\newcommand{\highlight}[1]{\colorbox{yellow!30}{#1}}
+
+% --- Code Complexity Annotation ---
+\newcommand{\complexity}[1]{\hfill\text{\color{codegray}// #1}}
+
+% --- Reference Commands ---
+\newcommand{\chapterref}[1]{Chapter~\ref{#1}}
+\newcommand{\sectionref}[1]{Section~\ref{#1}}
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\tableref}[1]{Table~\ref{#1}}
+\newcommand{\eqnref}[1]{Equation~(\ref{#1})}
+
+% --- Study Aid Commands ---
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{TODO: }#1}}
+\newcommand{\marginnote}[1]{\marginpar{\small\textit{#1}}}
+
+% --- Pseudocode Environment (Simple) ---
+\newenvironment{pseudocode}
+    {\begin{quote}\ttfamily\small}
+    {\end{quote}}
+
+% ============================================================================
+% HEADER/FOOTER CONFIGURATION
+% ============================================================================
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape\nouppercase{\leftmark}}
+\fancyhead[R]{\small\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% ============================================================================
+% TITLE PAGE COMMANDS
+% ============================================================================
+
+% Define book info commands
+\newcommand{\booktitle}[1]{\newcommand{\thebooktitle}{#1}}
+\newcommand{\bookauthor}[1]{\newcommand{\thebookauthor}{#1}}
+\newcommand{\notesauthor}[1]{\newcommand{\thenotesauthor}{#1}}
+\newcommand{\coursecode}[1]{\newcommand{\thecoursecode}{#1}}
+
+% Custom title page
+\renewcommand{\maketitle}{
+    \begin{titlepage}
+        \centering
+        \vspace*{1cm}
+
+        {\Huge\bfseries Reading Notes\par}
+        \vspace{1.5cm}
+
+        {\Large\itshape\thebooktitle\par}
+        \vspace{0.5cm}
+        {\large by \thebookauthor\par}
+
+        \vfill
+
+        {\large Notes by: \thenotesauthor\par}
+        \ifdefined\thecoursecode
+            {\normalsize Course: \thecoursecode\par}
+        \fi
+        \vspace{0.5cm}
+        {\normalsize Last Updated: \today\par}
+
+        \vfill
+    \end{titlepage}
+}
+
+\endinput

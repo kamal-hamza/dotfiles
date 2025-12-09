@@ -1,23 +1,21 @@
 return {
-  {
-    "luckasRanarison/tailwind-tools.nvim",
-    name = "tailwind-tools",
-    build = ":UpdateRemotePlugins",
-    dependencies = {
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-telescope/telescope.nvim",
-      "neovim/nvim-lspconfig",
-    },
-    config = function()
-      require("tailwind-tools").setup({
-        server = {
-          -- Let tailwind-tools manage the LSP setup
-          override = true,
+    {
+        "luckasRanarison/tailwind-tools.nvim",
+        name = "tailwind-tools",
+        build = ":UpdateRemotePlugins",
+        dependencies = {
+            "nvim-treesitter/nvim-treesitter",
+            "nvim-telescope/telescope.nvim",
+            "neovim/nvim-lspconfig",
         },
-        cmp = {
-          highlight = "background",
+        opts = {
+            server = {
+                -- Don't override LSP setup, let mason-lspconfig handle it
+                override = false,
+            },
+            cmp = {
+                highlight = "background",
+            },
         },
-      })
-    end,
-  }
+    }
 }

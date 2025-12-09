@@ -10,7 +10,6 @@
             "ctrl-k": "workspace::ActivatePaneUp"
         }
     },
-
     {
         "context": "(Editor && vim_mode == normal && !Terminal) || (EmptyPane && !Terminal) || (SharedScreen && !Terminal)",
         "bindings": {
@@ -22,7 +21,7 @@
             // Panel & Dock Toggles
             "space e e": "project_panel::ToggleFocus",
             "space g g": "git_panel::ToggleFocus",
-            "space k k": "terminal_panel::Toggle",
+            "space t t": "terminal_panel::Toggle",
             "space d d": "debug_panel::ToggleFocus",
             "space a a": "agent::ToggleFocus",
             // Git Commands (global)
@@ -44,7 +43,9 @@
                 {
                     "close_pinned": false
                 }
-            ]
+            ],
+            // Toggle diagnostics
+            "space t d": "diagnostics::Deploy"
         }
     },
     //========================================================================
@@ -62,13 +63,13 @@
             "?": "command_palette::Toggle",
             // Search & Replace
             "/": "vim::Search",
-            "space r r": "editor::SelectAllMatches",
+            "space r R": "editor::SelectAllMatches",
+            "space r r": "editor::Rename",
             // Buffer/Tab management
             "space s": "outline::Toggle",
             "space S": "project_symbols::Toggle",
             // Code Actions & Diagnostics
             "space c c": "editor::ToggleCodeActions",
-            "space t d": "diagnostics::Deploy",
             // Code Navigation
             "g d": "editor::GoToDefinition",
             "g D": "editor::GoToDefinitionSplit",
@@ -78,10 +79,10 @@
             "space g a": "git::Add",
             "space g A": "git::StageAll",
             "space g u": "git::UnstageAll",
-            "space g d": "git::Diff",
+            "space g h d": "git::Diff",
             // AI Assistant (editor-contextual)
             "space a i": "assistant::InlineAssist",
-            "space a q": "agent::QuoteSelection", // Shared action
+            "space a q": "agent::AddSelectionToThread", // Shared action
             // Debugger Controls (editor-contextual)
             "space d t": "editor::ToggleBreakpoint",
             "space d s": "debugger::Start",
@@ -193,12 +194,6 @@
             "j": "menu::SelectNext",
             "k": "menu::SelectPrevious",
             "o": "menu::Confirm"
-        }
-    },
-    {
-        "context": "Terminal",
-        "bindings": {
-            "ctrl-d": "workspace::ToggleBottomDock"
         }
     },
     //========================================================================

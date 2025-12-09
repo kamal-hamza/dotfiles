@@ -4,36 +4,9 @@ return {
     lazy = false,
     opts = {
         bigfile = { enabled = true },
-        dashboard = {
-            enabled = true,
-            preset = {
-                header = [[
- ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗
- ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║
- ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║
- ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║
- ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║
- ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝
-]],
-                keys = {
-                    { icon = " ", key = "f", desc = "Find File", action = ":Telescope find_files" },
-                    { icon = " ", key = "n", desc = "New File", action = ":ene | startinsert" },
-                    { icon = " ", key = "g", desc = "Find Text", action = ":Telescope live_grep" },
-                    { icon = " ", key = "r", desc = "Recent Files", action = ":Telescope oldfiles" },
-                    { icon = " ", key = "c", desc = "Config", action = ":lua require('telescope.builtin').find_files({ cwd = vim.fn.stdpath('config') })" },
-                    { icon = " ", key = "s", desc = "Restore Session", section = "session" },
-                    { icon = "󰒲 ", key = "l", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
-                    { icon = " ", key = "q", desc = "Quit", action = ":qa" },
-                },
-            },
-            sections = {
-                { section = "header" },
-                { section = "keys",   gap = 1, padding = 1 },
-                { section = "startup" },
-            }
-        },
+        dashboard = { enabled = false },  -- DISABLED
         explorer = { enabled = false },
-        indent = { enabled = true },
+        indent = { enabled = false },
         input = { enabled = true },
         picker = {
             enabled = false,
@@ -43,7 +16,7 @@ return {
         },
         notifier = { enabled = true },
         quickfile = { enabled = true },
-        scope = { enabled = true },
+        scope = { enabled = false },
         scroll = { enabled = false },
         statuscolumn = { enabled = false },
         terminal = { enabled = true },
@@ -67,7 +40,17 @@ return {
                     },
                 })
             end,
-        }
+        },
+        {
+            "<leader>un",
+            function() Snacks.notifier.show_history() end,
+            desc = "Notification History",
+        },
+        {
+            "<leader>nd",
+            function() Snacks.notifier.hide() end,
+            desc = "Dismiss All Notifications",
+        },
     },
     init = function()
         vim.api.nvim_create_autocmd("User", {
@@ -80,7 +63,7 @@ return {
                 _G.bt = function()
                     Snacks.debug.backtrace()
                 end
-                vim.print = _G.dd -- Override print to use snacks for `:=` command
+                vim.print = _G.dd -- Override print to use snacks for := command
 
                 -- Create some toggle mappings
                 Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")

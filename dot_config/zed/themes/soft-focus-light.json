@@ -7,11 +7,7 @@
             "name": "Soft Focus Light",
             "appearance": "light",
             "style": {
-                "accents": [
-                    "#2d5f4f",
-                    "#448cbb",
-                    "#4da6ff"
-                ],
+                "accents": ["#2d5f4f", "#448cbb", "#4da6ff"],
                 "background": "#ffffff",
                 "border": "#d0d0d0",
                 "border.variant": "#00000000",
@@ -162,9 +158,9 @@
                 "warning": "#b8943d",
                 "warning.background": "#ffffff",
                 "warning.border": "#b8943d",
-                "hint": "#4da6ff",
+                "hint": "#777777",
                 "hint.background": "#ffffff",
-                "hint.border": "#4da6ff",
+                "hint.border": "#777777",
                 "info": "#448cbb",
                 "info.background": "#ffffff",
                 "info.border": "#448cbb",

@@ -9,12 +9,15 @@ return {
     require("nvim-treesitter.configs").setup({
       -- Automatically install missing parsers when entering buffer
       auto_install = true,
-      
+
       -- List of parsers to always install
       ensure_installed = {
+        -- Core languages
         "bash",
         "c",
+        "cpp",
         "css",
+        "go",
         "html",
         "javascript",
         "json",
@@ -28,32 +31,41 @@ return {
         "vim",
         "vimdoc",
         "yaml",
+        
+        -- Additional useful parsers
+        "tsx",
+        "toml",
+        "dockerfile",
+        "gitignore",
+        "sql",
+        "comment",
       },
-      
+
       -- Install parsers synchronously (only applied to `ensure_installed`)
       sync_install = false,
-      
+
       -- Highlight configuration
       highlight = {
         enable = true,
-        -- Disable highlighting for large files
+        -- Disable highlighting for large files for performance
         disable = function(lang, buf)
-          local max_filesize = 100 * 1024 -- 100 KB
+          local max_filesize = 200 * 1024 -- 200 KB
           local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
           if ok and stats and stats.size > max_filesize then
+            vim.notify("File too large for treesitter highlighting", vim.log.levels.WARN)
             return true
           end
         end,
         additional_vim_regex_highlighting = false,
       },
-      
+
       -- Indentation based on treesitter
       indent = {
         enable = true,
-        -- Disable for certain languages if needed
+        -- Python indentation is better handled by the LSP
         disable = { "python" },
       },
-      
+
       -- Incremental selection
       incremental_selection = {
         enable = true,
@@ -64,8 +76,8 @@ return {
           node_decremental = "<bs>",
         },
       },
-      
-      -- Text objects
+
+      -- Text objects for better navigation and manipulation
       textobjects = {
         select = {
           enable = true,
@@ -79,6 +91,8 @@ return {
             ["il"] = "@loop.inner",
             ["aa"] = "@parameter.outer",
             ["ia"] = "@parameter.inner",
+            ["ai"] = "@conditional.outer",
+            ["ii"] = "@conditional.inner",
           },
         },
         move = {
@@ -116,7 +130,7 @@ return {
         },
       },
     })
-    
+
     -- Enable folding based on treesitter
     vim.opt.foldmethod = "expr"
     vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
