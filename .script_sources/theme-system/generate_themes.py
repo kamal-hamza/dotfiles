@@ -2657,7 +2657,7 @@ M.setup = function()
 
     -- coc.nvim (completion)
     hl("CocSearch", {{ fg = colors.cyan }})
-    hl("CocMenuSel", {{ bg = colors.select, fg = colors.cyan }})
+    hl("CocMenuSel", {{ bg = colors.primary, fg = colors.bg, bold = true }})
     hl("CocFloating", {{ bg = colors.bg, fg = colors.fg }})
     hl("CocFloatDividingLine", {{ fg = colors.border }})
 

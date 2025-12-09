@@ -4,9 +4,12 @@
     "suggest.detailField": "menu",
     "suggest.snippetIndicator": "",
     "suggest.maxCompleteItemCount": 15,
-    "suggest.noselect": true,
+    "suggest.noselect": false,
+    "suggest.acceptSuggestionOnCommitCharacter": false,
+    "suggest.insertMode": "replace",
     "suggest.labelMaxLength": 60,
     "suggest.formatItems": ["kind", "abbr", "menu"],
+    "suggest.selection": "recentlyUsed",
     "suggest.completionItemKindLabels": {
         "text": "󰉿",
         "method": "󰆧",
