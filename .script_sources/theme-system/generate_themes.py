@@ -122,10 +122,10 @@ color15 {t["bright_white"]}
         overrides = palette.get("overrides", {}).get("wezterm", {})
 
         # Format arrays for TOML
-        ansi_colors = [t["black"], t["red"], t["green"], t["yellow"], 
+        ansi_colors = [t["black"], t["red"], t["green"], t["yellow"],
                       t["blue"], t["magenta"], t["cyan"], t["white"]]
-        brights_colors = [t["bright_black"], t["bright_red"], t["bright_green"], 
-                         t["bright_yellow"], t["bright_blue"], t["bright_magenta"], 
+        brights_colors = [t["bright_black"], t["bright_red"], t["bright_green"],
+                         t["bright_yellow"], t["bright_blue"], t["bright_magenta"],
                          t["bright_cyan"], t["bright_white"]]
 
         content = f"""# Soft Focus {appearance.title()} Theme for WezTerm
@@ -373,7 +373,7 @@ decoration {{
 group {{
     col.border_active = $border_active
     col.border_inactive = $border
-    
+
     groupbar {{
         col.active = $primary
         col.inactive = $border
@@ -509,7 +509,7 @@ window#waybar {{
     active: {p["success"]};
     border: {p["border"]};
     border-active: {p["border_active"]};
-    
+
     background-color: transparent;
     text-color: @foreground;
 }}
@@ -623,7 +623,7 @@ button selected {{
             "editorGutter.modifiedBackground": p["warning"],
             "editorGutter.addedBackground": p["success"],
             "editorGutter.deletedBackground": p["error"],
-            
+
             # Sidebar colors
             "sideBar.background": p["background"],
             "sideBar.foreground": p["foreground_alt"],
@@ -632,7 +632,7 @@ button selected {{
             "sideBarSectionHeader.background": p["background_elevated"],
             "sideBarSectionHeader.foreground": p["foreground"],
             "sideBarSectionHeader.border": p["border"],
-            
+
             # Activity bar
             "activityBar.background": p["background"],
             "activityBar.foreground": p["primary"],
@@ -640,7 +640,7 @@ button selected {{
             "activityBar.border": p["border"],
             "activityBarBadge.background": p["primary"],
             "activityBarBadge.foreground": p["background"],
-            
+
             # Status bar
             "statusBar.background": p["background"],
             "statusBar.foreground": p["foreground_alt"],
@@ -649,7 +649,7 @@ button selected {{
             "statusBar.debuggingForeground": p["background"],
             "statusBar.noFolderBackground": p["background"],
             "statusBar.noFolderForeground": p["foreground_alt"],
-            
+
             # Tabs
             "tab.activeBackground": p["background"],
             "tab.activeForeground": p["foreground"],
@@ -659,21 +659,21 @@ button selected {{
             "tab.border": p["border"],
             "editorGroupHeader.tabsBackground": p["background"],
             "editorGroupHeader.tabsBorder": p["border"],
-            
+
             # Title bar
             "titleBar.activeBackground": p["background"],
             "titleBar.activeForeground": p["foreground"],
             "titleBar.inactiveBackground": p["background"],
             "titleBar.inactiveForeground": p["foreground_dim"],
             "titleBar.border": p["border"],
-            
+
             # Panel (terminal, output, etc.)
             "panel.background": p["background"],
             "panel.border": p["border"],
             "panelTitle.activeBorder": p["primary"],
             "panelTitle.activeForeground": p["foreground"],
             "panelTitle.inactiveForeground": p["foreground_alt"],
-            
+
             # Terminal colors
             "terminal.background": p["background"],
             "terminal.foreground": p["foreground"],
@@ -693,19 +693,19 @@ button selected {{
             "terminal.ansiBrightMagenta": t["bright_magenta"],
             "terminal.ansiBrightCyan": t["bright_cyan"],
             "terminal.ansiBrightWhite": t["bright_white"],
-            
+
             # Git decorations
             "gitDecoration.modifiedResourceForeground": p["warning"],
             "gitDecoration.deletedResourceForeground": p["error"],
             "gitDecoration.untrackedResourceForeground": p["success"],
             "gitDecoration.ignoredResourceForeground": p["foreground_dim"],
             "gitDecoration.conflictingResourceForeground": p["error"],
-            
+
             # Buttons
             "button.background": p["primary"],
             "button.foreground": p["background"],
             "button.hoverBackground": p["secondary"],
-            
+
             # Lists and trees
             "list.activeSelectionBackground": p["visual"],
             "list.activeSelectionForeground": p["foreground"],
@@ -715,7 +715,7 @@ button selected {{
             "list.hoverForeground": p["foreground"],
             "list.focusBackground": p["visual"],
             "list.focusForeground": p["foreground"],
-            
+
             # Peek view
             "peekView.border": p["primary"],
             "peekViewEditor.background": p["background"],
@@ -724,13 +724,13 @@ button selected {{
             "peekViewResult.matchHighlightBackground": p["search"],
             "peekViewResult.selectionBackground": p["visual"],
             "peekViewTitle.background": p["background_elevated"],
-            
+
             # Notifications
             "notificationCenter.border": p["border"],
             "notificationCenterHeader.background": p["background_elevated"],
             "notifications.background": p["background_elevated"],
             "notifications.border": p["border"],
-            
+
             # Search
             "searchEditor.findMatchBackground": p["search"],
             "search.resultsInfoForeground": p["foreground_alt"],
@@ -1001,11 +1001,11 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
         p = palette["palette"]
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
-        
+
         # Generate userChrome.css (browser UI)
         userchrome_content = f"""/**
  * Soft Focus {appearance.title()} Theme for Firefox
- * 
+ *
  * Installation:
  * 1. Navigate to about:config
  * 2. Set toolkit.legacyUserProfileCustomizations.stylesheets to true
@@ -1367,7 +1367,7 @@ scrollbar thumb:hover {{
         # Generate userContent.css (web content pages)
         usercontent_content = f"""/**
  * Soft Focus {appearance.title()} Theme for Firefox - Content Styles
- * 
+ *
  * This file themes web content pages (like about: pages and reader mode)
  * Place this file as chrome/userContent.css in your Firefox profile
  */
@@ -1664,13 +1664,13 @@ button {{
 
         # Write files
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         with open(output_dir / "userChrome.css", "w") as f:
             f.write(userchrome_content)
-        
+
         with open(output_dir / "userContent.css", "w") as f:
             f.write(usercontent_content)
-        
+
         print(f"✓ Generated Firefox theme: {output_dir}")
 
     def generate_obsidian_theme(self, palette: Dict[str, Any], output_dir: Path):
@@ -1679,7 +1679,7 @@ button {{
         t = p["terminal"]
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
-        
+
         # Generate manifest.json
         manifest = {
             "name": f"Soft Focus {appearance.title()}",
@@ -1688,7 +1688,7 @@ button {{
             "author": "Hamza Kamal",
             "authorUrl": "https://github.com/kamal-hamza"
         }
-        
+
         # Generate theme.css
         theme_css = f"""/*
  * Soft Focus {appearance.title()} Theme for Obsidian
@@ -2319,13 +2319,13 @@ textarea:focus {{
 
         # Write files
         output_dir.mkdir(parents=True, exist_ok=True)
-        
+
         with open(output_dir / "manifest.json", "w") as f:
             json.dump(manifest, f, indent=2)
-        
+
         with open(output_dir / "theme.css", "w") as f:
             f.write(theme_css)
-        
+
         print(f"✓ Generated Obsidian theme: {output_dir}")
 
     def generate_nvim_theme(self, palette: Dict[str, Any], output_path: Path):
@@ -2334,7 +2334,7 @@ textarea:focus {{
         t = p["terminal"]
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
-        
+
         # Generate Lua theme content
         theme_lua = f"""-- Soft Focus {appearance.title()} Neovim Theme
 -- Auto-generated from central color palette
@@ -2651,13 +2651,17 @@ M.setup = function()
     hl("NeoTreeIndentMarker", {{ fg = colors.comment }})
     hl("NeoTreeExpander", {{ fg = colors.comment }})
 
+    -- Floating windows (generic)
+    hl("FloatBorder", {{ fg = colors.border, bg = colors.bg }})
+    hl("FloatTitle", {{ fg = colors.blue_light, bg = colors.bg, bold = true }})
+
     -- nvim-cmp (completion)
     hl("CmpItemAbbrMatch", {{ fg = colors.cyan, bold = true }})
     hl("CmpItemAbbrMatchFuzzy", {{ fg = colors.cyan, bold = true }})
     hl("CmpItemKind", {{ fg = colors.orange }})
     hl("CmpItemMenu", {{ fg = colors.comment }})
     hl("CmpItemAbbrDeprecated", {{ fg = colors.comment, strikethrough = true }})
-    
+
     -- nvim-cmp kind-specific highlights (semantic coloring like Zed)
     hl("CmpItemKindText", {{ fg = colors.fg }})
     hl("CmpItemKindMethod", {{ fg = colors.cyan }})
@@ -2720,7 +2724,7 @@ return M
         """Generate Ly (display manager) theme file."""
         p = palette["palette"]
         appearance = palette["appearance"]
-        
+
         # Generate INI theme content
         theme_ini = f"""# Soft Focus {appearance.title()} Theme for Ly Display Manager
 # Auto-generated from central color palette
@@ -2758,7 +2762,7 @@ button = {p["secondary"][1:]}
         t = p["terminal"]
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
-        
+
         # Generate Mako config content
         theme_config = f"""# Soft Focus {appearance.title()} Theme for Mako
 # Auto-generated from central color palette
@@ -2900,7 +2904,7 @@ def main():
     """Main entry point for theme generation."""
     # Detect platform for helpful messages
     system = platform.system()
-    
+
     parser = argparse.ArgumentParser(
         description="Generate application-specific theme files from color palettes (Cross-platform: Windows, macOS, Linux)"
     )
@@ -2922,7 +2926,7 @@ def main():
 
     if args.chezmoi_root is None:
         home = Path.home()
-        
+
         # Platform-specific chezmoi locations
         if system == "Windows":
             possible_roots = [

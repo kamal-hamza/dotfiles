@@ -8,7 +8,7 @@ return {
         opts = {
             lsp = {
                 auto_attach = true,
-                preference = { "pyrefly" },  -- Prefer pyrefly over pyright
+                preference = { "pyrefly" }, -- Prefer pyrefly over pyright
             },
             highlight = true,
             separator = "  ",
@@ -68,10 +68,10 @@ return {
                     end
 
                     -- Check if modified
-                    local modified = vim.bo.modified and " ●" or ""
+                    local modified = vim.bo.modified and "  ●" or ""
 
-                    -- Simple winbar with just filename
-                    vim.wo.winbar = "%#WinBarFilename#  " .. filename .. "%#WinBarModified#" .. modified .. " "
+                    -- Simple winbar with just filename (right-aligned)
+                    vim.wo.winbar = "%=%#WinBarFilename# " .. filename .. "%#WinBarModified#" .. modified .. " "
                 end,
             })
 
@@ -88,11 +88,11 @@ return {
                 local colors = theme.colors or {}
 
                 local bg = colors.bg or "#050505"
-                local blue = colors.blue or "#448cbb"
-                local orange = colors.orange or "#d4956b"
+                local blue_light = colors.blue_light or colors.blue or "#67b7f5"
+                local fg_dim = colors.fg_dim or colors.comment or "#888888"
 
-                vim.api.nvim_set_hl(0, "WinBarFilename", { fg = blue, bg = bg, bold = true })
-                vim.api.nvim_set_hl(0, "WinBarModified", { fg = orange, bg = bg })
+                vim.api.nvim_set_hl(0, "WinBarFilename", { fg = blue_light, bg = bg, bold = true })
+                vim.api.nvim_set_hl(0, "WinBarModified", { fg = fg_dim, bg = bg })
             end
 
             -- Apply highlights on startup

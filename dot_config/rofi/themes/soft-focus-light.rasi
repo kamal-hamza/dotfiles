@@ -12,7 +12,7 @@
     active: #558855;
     border: #d0d0d0;
     border-active: #448cbb;
-    
+
     background-color: transparent;
     text-color: @foreground;
 }

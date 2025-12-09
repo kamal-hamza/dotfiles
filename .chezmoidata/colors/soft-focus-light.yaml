@@ -7,141 +7,149 @@ appearance: "light"
 
 # Core UI Colors
 palette:
-  # Base colors
-  background: "#ffffff"
-  foreground: "#000000"
-  background_alt: "#f5f5f5"
-  background_elevated: "#e8f4f8"
-  foreground_alt: "#666666"
-  foreground_dim: "#888888"
+    # Base colors
+    background: "#ffffff"
+    foreground: "#000000"
+    background_alt: "#f5f5f5"
+    background_elevated: "#eeeeee"
+    foreground_alt: "#666666"
+    foreground_dim: "#888888"
 
-  # Primary accent colors
-  primary: "#067BC2"
-  secondary: "#4da6ff"
-  tertiary: "#67b7f5"
-  accent_mint: "#2d5f4f"  # Dark mint accent for special highlights (dark for light theme)
+    # Primary accent colors
+    primary: "#448cbb"
+    secondary: "#4da6ff"
+    tertiary: "#67b7f5"
+    accent_mint: "#2d5f4f" # Dark mint accent for special highlights
 
-  # Syntax highlighting
-  keyword: "#067BC2"
-  function: "#4da6ff"
-  string: "#558855"
-  type: "#067BC2"
-  comment: "#888888"
-  variable: "#000000"
-  constant: "#b8943d"
-  operator: "#666666"
+    # Syntax highlighting
+    keyword: "#448cbb"
+    function: "#4da6ff"
+    string: "#558855"
+    type: "#67b7f5"
+    comment: "#888888"
+    variable: "#000000"
+    constant: "#b8943d"
+    operator: "#666666"
 
-  # Semantic colors
-  success: "#558855"
-  warning: "#b8943d"
-  error: "#C42847"
-  info: "#067BC2"
-  hint: "#888888"
+    # Semantic colors
+    success: "#558855"
+    warning: "#b8943d"
+    error: "#C42847"
+    info: "#4da6ff"
+    hint: "#888888"
 
-  # Git colors
-  git_add: "#558855"
-  git_change: "#b8943d"
-  git_delete: "#C42847"
-  git_conflict: "#9a6e6d"
+    # Git colors
+    git_add: "#558855"
+    git_change: "#b8943d"
+    git_delete: "#C42847"
+    git_conflict: "#9a6e6d"
 
-  # UI elements
-  border: "#d0d0d0"
-  border_active: "#067BC2"
-  cursor: "#000000"
-  cursor_text: "#ffffff"
-  cursor_line: "#f5f5f5"
-  visual: "#067BC2"
-  search: "#D4B87B"
-  match: "#77aa77"
+    # UI elements
+    border: "#d0d0d0"
+    border_active: "#448cbb"
+    cursor: "#000000"
+    cursor_text: "#ffffff"
+    cursor_line: "#f0f0f0"
+    visual: "#e0e0e0"
+    search: "#d5d5d5"
+    match: "#558855"
 
-  # Terminal colors (ANSI 16-color palette)
-  terminal:
-    black: "#000000"
-    red: "#C42847"
-    green: "#558855"
-    yellow: "#b8943d"
-    blue: "#067BC2"
-    magenta: "#9a6e6d"
-    cyan: "#067BC2"
-    white: "#f5f5f5"
-    bright_black: "#666666"
-    bright_red: "#ff4c6a"
-    bright_green: "#77aa77"
-    bright_yellow: "#D4B87B"
-    bright_blue: "#4da6ff"
-    bright_magenta: "#B88E8D"
-    bright_cyan: "#67b7f5"
-    bright_white: "#ffffff"
+    # Neovim-specific UI colors
+    lsp_reference_bg: "#e8e8e8"
+    diff_add_bg: "#d0f5d0"
+    diff_change_bg: "#f5f5d0"
+    diff_delete_bg: "#f5d0d0"
+    indent_guide: "#d0d0d0"
+    indent_guide_active: "#448cbb"
+
+    # Terminal colors (ANSI 16-color palette)
+    terminal:
+        black: "#000000"
+        red: "#C42847"
+        green: "#558855"
+        yellow: "#b8943d"
+        blue: "#448cbb"
+        magenta: "#9a6e6d"
+        cyan: "#448cbb"
+        white: "#f5f5f5"
+        bright_black: "#666666"
+        bright_red: "#ff4c6a"
+        bright_green: "#77aa77"
+        bright_yellow: "#D4B87B"
+        bright_blue: "#4da6ff"
+        bright_magenta: "#B88E8D"
+        bright_cyan: "#67b7f5"
+        bright_white: "#ffffff"
 
 # Application-specific overrides
 overrides:
-  # WezTerm specific
-  wezterm:
-    tab_bar_background: "#ffffff"
-    active_tab_bg: "#e8f4f8"
-    active_tab_fg: "#000000"
-    inactive_tab_bg: "#f5f5f5"
-    inactive_tab_fg: "#666666"
-    new_tab_hover_bg: "#067BC2"
-    new_tab_hover_fg: "#ffffff"
+    # WezTerm specific
+    wezterm:
+        tab_bar_background: "#ffffff"
+        active_tab_bg: "#eeeeee"
+        active_tab_fg: "#000000"
+        inactive_tab_bg: "#ffffff"
+        inactive_tab_fg: "#666666"
+        new_tab_hover_bg: "#448cbb"
+        new_tab_hover_fg: "#ffffff"
 
-  # Tmux specific
-  tmux:
-    status_bg: "#ffffff"
-    status_fg: "#000000"
-    window_status_current_bg: "#e8f4f8"
-    window_status_current_fg: "#067BC2"
-    pane_border: "#d0d0d0"
-    pane_active_border: "#067BC2"
-    message_bg: "#e8f4f8"
-    message_fg: "#067BC2"
+    # Tmux specific
+    tmux:
+        status_bg: "#ffffff"
+        status_fg: "#000000"
+        window_status_current_bg: "#eeeeee"
+        window_status_current_fg: "#448cbb"
+        pane_border: "#d0d0d0"
+        pane_active_border: "#448cbb"
+        message_bg: "#eeeeee"
+        message_fg: "#448cbb"
 
-  # Yazi specific
-  yazi:
-    border: "#d0d0d0"
-    border_active: "#067BC2"
-    hovered_bg: "#e8f4f8"
-    selected_bg: "#067BC2"
-    preview_border: "#d0d0d0"
+    # Yazi specific
+    yazi:
+        border: "#d0d0d0"
+        border_active: "#448cbb"
+        hovered_bg: "#eeeeee"
+        selected_bg: "#448cbb"
+        preview_border: "#d0d0d0"
 
-  # btop specific
-  btop:
-    main_bg: "#ffffff"
-    main_fg: "#000000"
-    title: "#067BC2"
-    selected_bg: "#e8f4f8"
-    selected_fg: "#067BC2"
-    inactive_fg: "#888888"
-    proc_misc: "#4da6ff"
-    cpu_box: "#067BC2"
-    mem_box: "#558855"
-    net_box: "#b8943d"
-    proc_box: "#9a6e6d"
-    graph_text: "#000000"
+    # btop specific
+    btop:
+        main_bg: "#ffffff"
+        main_fg: "#000000"
+        title: "#448cbb"
+        selected_bg: "#eeeeee"
+        selected_fg: "#448cbb"
+        inactive_fg: "#888888"
+        proc_misc: "#4da6ff"
+        cpu_box: "#448cbb"
+        mem_box: "#558855"
+        net_box: "#b8943d"
+        proc_box: "#9a6e6d"
+        graph_text: "#000000"
 
-  # Neovim specific
-  nvim:
-    float_bg: "#f5f5f5"
-    float_border: "#d0d0d0"
-    pmenu_bg: "#f5f5f5"
-    pmenu_sel_bg: "#e8f4f8"
-    statusline_bg: "#ffffff"
-    statusline_fg: "#000000"
+    # Neovim specific
+    nvim:
+        float_bg: "#f5f5f5"
+        float_border: "#d0d0d0"
+        pmenu_bg: "#f5f5f5"
+        pmenu_sel_bg: "#eeeeee"
+        statusline_bg: "#ffffff"
+        statusline_fg: "#000000"
 
-  # Rofi specific
-  rofi:
-    window_bg: "#ffffff"
-    window_border: "#067BC2"
-    prompt_bg: "#e8f4f8"
-    prompt_fg: "#067BC2"
-    entry_bg: "#ffffff"
-    entry_fg: "#000000"
-    selected_bg: "#067BC2"
-    selected_fg: "#ffffff"
+    # Rofi specific
+    rofi:
+        window_bg: "#ffffff"
+        window_border: "#448cbb"
+        prompt_bg: "#eeeeee"
+        prompt_fg: "#448cbb"
+        entry_bg: "#ffffff"
+        entry_fg: "#000000"
+        selected_bg: "#448cbb"
+        selected_fg: "#ffffff"
 
 # Transparency values (0-255 for hex, 0.0-1.0 for decimal)
 transparency:
-  background_opacity: 0.98
-  inactive_window_opacity: 0.95
-  blur_radius: 10
-  border_opacity: 0.80
+    background_opacity: 0.95
+    inactive_window_opacity: 0.90
+    blur_radius: 10
+    border_opacity: 0.06

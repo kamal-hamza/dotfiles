@@ -30,7 +30,7 @@ return {
             defaults = {
                 prompt_prefix = "   ",
                 selection_caret = "  ",
-                entry_prefix = "",
+                entry_prefix = "  ",
                 multi_icon = "  ",
                 sorting_strategy = "ascending",
                 layout_strategy = "horizontal",
@@ -51,6 +51,7 @@ return {
                 color_devicons = true,
                 path_display = { "truncate" },
                 dynamic_preview_title = true,
+                results_title = false,
                 mappings = {
                     i = {
                         -- Tab/Shift-Tab ONLY move selection (no multi-select)
@@ -193,30 +194,39 @@ return {
                         border = "#333333",
                         blue = "#448cbb",
                         blue_light = "#67b7f5",
-                        green = "#77aa77",
-                        red_bright = "#ff4c6a",
+                        cursor_line = "#1a1a1a",
                         comment = "#888888",
                     }
                 end
 
-                -- Telescope main colors
+                -- Telescope main colors - unified and consistent
                 vim.api.nvim_set_hl(0, "TelescopeNormal", { bg = colors.bg, fg = colors.fg })
                 vim.api.nvim_set_hl(0, "TelescopeBorder", { bg = colors.bg, fg = colors.border })
-                vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = colors.bg_alt })
-                vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = colors.bg_alt, fg = colors.border })
-                vim.api.nvim_set_hl(0, "TelescopePromptTitle", { bg = colors.blue, fg = colors.bg, bold = true })
-                vim.api.nvim_set_hl(0, "TelescopePromptPrefix", { bg = colors.bg_alt, fg = colors.blue_light })
 
-                vim.api.nvim_set_hl(0, "TelescopePreviewTitle", { bg = colors.green, fg = colors.bg, bold = true })
-                vim.api.nvim_set_hl(0, "TelescopeResultsTitle",
-                    { bg = colors.bg_elevated, fg = colors.fg_alt, bold = true })
+                -- Prompt section
+                vim.api.nvim_set_hl(0, "TelescopePromptNormal", { bg = colors.bg, fg = colors.fg })
+                vim.api.nvim_set_hl(0, "TelescopePromptBorder", { bg = colors.bg, fg = colors.border })
+                vim.api.nvim_set_hl(0, "TelescopePromptTitle", { bg = colors.bg, fg = colors.blue_light, bold = true })
+                vim.api.nvim_set_hl(0, "TelescopePromptPrefix", { bg = colors.bg, fg = colors.blue_light })
 
-                vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = colors.bg_elevated, fg = colors.fg, bold = true })
+                -- Results section
+                vim.api.nvim_set_hl(0, "TelescopeResultsNormal", { bg = colors.bg, fg = colors.fg })
+                vim.api.nvim_set_hl(0, "TelescopeResultsBorder", { bg = colors.bg, fg = colors.border })
+                vim.api.nvim_set_hl(0, "TelescopeResultsTitle", { bg = colors.bg, fg = colors.fg_alt })
+
+                -- Preview section
+                vim.api.nvim_set_hl(0, "TelescopePreviewNormal", { bg = colors.bg, fg = colors.fg })
+                vim.api.nvim_set_hl(0, "TelescopePreviewBorder", { bg = colors.bg, fg = colors.border })
+                vim.api.nvim_set_hl(0, "TelescopePreviewTitle", { bg = colors.bg, fg = colors.fg_alt })
+
+                -- Selection and matching
+                vim.api.nvim_set_hl(0, "TelescopeSelection",
+                    { bg = colors.cursor_line or colors.bg_elevated, fg = colors.fg, bold = true })
                 vim.api.nvim_set_hl(0, "TelescopeSelectionCaret",
-                    { bg = colors.bg_elevated, fg = colors.blue_light, bold = true })
-
+                    { bg = colors.cursor_line or colors.bg_elevated, fg = colors.blue_light, bold = true })
                 vim.api.nvim_set_hl(0, "TelescopeMatching", { fg = colors.blue_light, bold = true })
-                vim.api.nvim_set_hl(0, "TelescopeMultiSelection", { bg = colors.bg_alt, fg = colors.red_bright })
+                vim.api.nvim_set_hl(0, "TelescopeMultiSelection", { bg = colors.bg_alt, fg = colors.blue_light })
+                vim.api.nvim_set_hl(0, "TelescopeMultiIcon", { fg = colors.blue_light })
             end,
         })
 

@@ -193,22 +193,20 @@ return {
 
             local colors = theme.colors or {}
             local bg = colors.bg or "#050505"
-            local bg_alt = colors.bg_alt or "#0a0a0a"
-            local bg_elevated = colors.bg_elevated or "#1a1a1a"
             local fg = colors.fg or "#f5f5f5"
-            local blue = colors.blue or "#448cbb"
             local border = colors.border or "#333333"
+            local blue_light = colors.blue_light or colors.blue or "#67b7f5"
 
             -- Input window
-            vim.api.nvim_set_hl(0, "DressingInputNormalFloat", { bg = bg_alt, fg = fg })
-            vim.api.nvim_set_hl(0, "DressingInputFloatBorder", { bg = bg_alt, fg = blue })
-            vim.api.nvim_set_hl(0, "DressingInputFloatTitle", { bg = bg_alt, fg = blue, bold = true })
+            vim.api.nvim_set_hl(0, "DressingInputNormalFloat", { bg = bg, fg = fg })
+            vim.api.nvim_set_hl(0, "DressingInputFloatBorder", { bg = bg, fg = border })
+            vim.api.nvim_set_hl(0, "DressingInputFloatTitle", { bg = bg, fg = blue_light, bold = true })
 
             -- Select window
             vim.api.nvim_set_hl(0, "DressingSelectNormalFloat", { bg = bg, fg = fg })
             vim.api.nvim_set_hl(0, "DressingSelectFloatBorder", { bg = bg, fg = border })
-            vim.api.nvim_set_hl(0, "DressingSelectFloatTitle", { bg = bg, fg = blue, bold = true })
-            vim.api.nvim_set_hl(0, "DressingSelectIdx", { fg = blue, bold = true })
+            vim.api.nvim_set_hl(0, "DressingSelectFloatTitle", { bg = bg, fg = blue_light, bold = true })
+            vim.api.nvim_set_hl(0, "DressingSelectIdx", { fg = blue_light, bold = true })
         end
 
         -- Apply highlights on load

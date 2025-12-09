@@ -313,13 +313,17 @@ M.setup = function()
     hl("NeoTreeIndentMarker", { fg = colors.comment })
     hl("NeoTreeExpander", { fg = colors.comment })
 
+    -- Floating windows (generic)
+    hl("FloatBorder", { fg = colors.border, bg = colors.bg })
+    hl("FloatTitle", { fg = colors.blue_light, bg = colors.bg, bold = true })
+
     -- nvim-cmp (completion)
     hl("CmpItemAbbrMatch", { fg = colors.cyan, bold = true })
     hl("CmpItemAbbrMatchFuzzy", { fg = colors.cyan, bold = true })
     hl("CmpItemKind", { fg = colors.orange })
     hl("CmpItemMenu", { fg = colors.comment })
     hl("CmpItemAbbrDeprecated", { fg = colors.comment, strikethrough = true })
-    
+
     -- nvim-cmp kind-specific highlights (semantic coloring like Zed)
     hl("CmpItemKindText", { fg = colors.fg })
     hl("CmpItemKindMethod", { fg = colors.cyan })

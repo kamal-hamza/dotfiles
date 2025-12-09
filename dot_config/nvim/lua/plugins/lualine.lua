@@ -26,31 +26,33 @@ return {
 
                 if theme == "light" then
                     return {
-                        bg = "#fafafa",
-                        fg = "#2a2a2a",
-                        yellow = "#D4B87B",
-                        cyan = "#5e9e9e",
-                        green = "#4d7843",
-                        orange = "#c47830",
-                        violet = "#7d5c8f",
-                        magenta = "#8f5c7d",
-                        blue = "#2e5f7d",
+                        bg = "#ffffff",
+                        fg = "#000000",
+                        fg_alt = "#666666",
+                        yellow = "#b8943d",
+                        cyan = "#4da6ff",
+                        green = "#558855",
+                        orange = "#b8943d",
+                        violet = "#9a6e6d",
+                        magenta = "#9a6e6d",
+                        blue = "#448cbb",
                         red = "#C42847",
-                        pink = "#a94f6f",
+                        pink = "#9a6e6d",
                     }
                 else
                     return {
                         bg = "#050505",
                         fg = "#f5f5f5",
+                        fg_alt = "#bbbbbb",
                         yellow = "#D4B87B",
-                        cyan = "#7eb8b8",
-                        green = "#87af87",
-                        orange = "#d4956b",
-                        violet = "#a995c4",
-                        magenta = "#c495b2",
+                        cyan = "#67b7f5",
+                        green = "#77aa77",
+                        orange = "#D4B87B",
+                        violet = "#B88E8D",
+                        magenta = "#B88E8D",
                         blue = "#448cbb",
                         red = "#C42847",
-                        pink = "#c47890",
+                        pink = "#B88E8D",
                     }
                 end
             end
@@ -135,26 +137,26 @@ return {
                 color = function()
                     local c = get_theme_colors()
                     local mode_color = {
-                        n = c.red,
-                        i = c.green,
-                        v = c.blue,
-                        [''] = c.blue,
-                        V = c.blue,
-                        c = c.magenta,
-                        no = c.red,
-                        s = c.orange,
-                        S = c.orange,
-                        [''] = c.orange,
-                        ic = c.yellow,
-                        R = c.violet,
-                        Rv = c.violet,
-                        cv = c.red,
-                        ce = c.red,
+                        n = c.blue,   -- Normal: blue
+                        i = c.green,  -- Insert: green
+                        v = c.violet, -- Visual: violet
+                        [''] = c.violet,
+                        V = c.violet,
+                        c = c.orange, -- Command: orange
+                        no = c.blue,
+                        s = c.pink,   -- Select: pink
+                        S = c.pink,
+                        [''] = c.pink,
+                        ic = c.green,
+                        R = c.red, -- Replace: red
+                        Rv = c.red,
+                        cv = c.orange,
+                        ce = c.orange,
                         r = c.cyan,
                         rm = c.cyan,
                         ['r?'] = c.cyan,
                         ['!'] = c.red,
-                        t = c.red,
+                        t = c.cyan, -- Terminal: cyan
                     }
                     return { bg = c.bg, fg = mode_color[vim.fn.mode()] }
                 end,
