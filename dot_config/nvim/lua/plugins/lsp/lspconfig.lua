@@ -9,11 +9,31 @@ return {
     },
     config = function()
         local lspconfig = require("lspconfig")
+        local configs = require("lspconfig.configs")
         local cmp_nvim_lsp = require("cmp_nvim_lsp")
         local keymap = vim.keymap
 
         -- Enable capabilities for autocompletion
         local capabilities = cmp_nvim_lsp.default_capabilities()
+
+        -- Register pyrefly as a custom LSP server (not built into lspconfig)
+        if not configs.pyrefly then
+            configs.pyrefly = {
+                default_config = {
+                    cmd = { "pyrefly", "lsp" },
+                    filetypes = { "python" },
+                    root_dir = lspconfig.util.root_pattern(
+                        "pyproject.toml",
+                        "setup.py",
+                        "setup.cfg",
+                        "requirements.txt",
+                        "Pipfile",
+                        ".git"
+                    ),
+                    settings = {},
+                },
+            }
+        end
 
         -- Change diagnostic symbols in sign column
         local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
@@ -111,16 +131,6 @@ return {
         -- Configure pyrefly (installed globally via homebrew/cargo)
         lspconfig["pyrefly"].setup({
             capabilities = capabilities,
-            cmd = { "pyrefly", "lsp" },
-            filetypes = { "python" },
-            root_dir = lspconfig.util.root_pattern(
-                "pyproject.toml",
-                "setup.py",
-                "setup.cfg",
-                "requirements.txt",
-                "Pipfile",
-                ".git"
-            ),
             settings = {
                 pyrefly = {
                     displayTypeErrors = "force-on",
