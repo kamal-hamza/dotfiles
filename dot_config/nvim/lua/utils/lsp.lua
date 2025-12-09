@@ -27,9 +27,8 @@ M.on_attach = function(client, buffer)
 
     -- Setup completion keymaps
     vim.keymap.set('i', '<C-Space>', function()
-        vim.lsp.completion.trigger()
+        vim.lsp.complete()
     end, { buffer = buffer, desc = 'Trigger completion' })
-
     vim.keymap.set('i', '<C-n>', '<C-n>', { buffer = buffer, desc = 'Next completion' })
     vim.keymap.set('i', '<C-p>', '<C-p>', { buffer = buffer, desc = 'Previous completion' })
 

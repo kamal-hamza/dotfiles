@@ -77,8 +77,17 @@ return {
             "neovim/nvim-lspconfig",
         },
         config = function()
+            -- Temporarily suppress lspconfig deprecation warnings
+            -- We'll migrate to vim.lsp.config API later when it's more stable
+            local original_deprecate = vim.deprecate
+            vim.deprecate = function() end
+
             local mason_lspconfig = require("mason-lspconfig")
             local lspconfig = require("lspconfig")
+
+            -- Restore vim.deprecate
+            vim.deprecate = original_deprecate
+
             local Lsp = require("utils.lsp")
 
             -- Suppress the workspace/diagnostic/refresh MethodNotFound error
@@ -237,12 +246,22 @@ return {
                     goto continue
                 end
 
-                local config = vim.tbl_deep_extend(
-                    "force",
-                    default_config,
-                    server_configs[server_name] or {}
-                )
-                lspconfig[server_name].setup(config)
+                -- Check if server exists in lspconfig before trying to setup
+                local ok = pcall(function()
+                    local config = vim.tbl_deep_extend(
+                        "force",
+                        default_config,
+                        server_configs[server_name] or {}
+                    )
+                    lspconfig[server_name].setup(config)
+                end)
+
+                if not ok then
+                    vim.notify(
+                        string.format("Failed to setup LSP server: %s (not found in lspconfig)", server_name),
+                        vim.log.levels.WARN
+                    )
+                end
 
                 ::continue::
             end
@@ -298,8 +317,10 @@ return {
                 callback = function(args)
                     local client = vim.lsp.get_client_by_id(args.data.client_id)
                     if client and client.name == "ruff" then
-                        vim.lsp.stop_client(client.id)
-                        vim.notify("Stopped ruff LSP - using pyrefly for Python instead", vim.log.levels.INFO)
+                        -- Stop ruff LSP silently
+                        vim.schedule(function()
+                            pcall(vim.lsp.stop_client, client.id, true)
+                        end)
                     end
                 end,
             })
