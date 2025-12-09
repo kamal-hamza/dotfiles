@@ -19,6 +19,7 @@ return {
             "coc-emmet",
             "coc-eslint",
             "coc-prettier",
+            "coc-rust-analyzer",
         }
 
         -- Use Tab for trigger completion and navigate
