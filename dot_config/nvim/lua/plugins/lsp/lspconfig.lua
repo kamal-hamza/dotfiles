@@ -123,53 +123,73 @@ return {
         }
 
         for _, server in ipairs(servers) do
-            lspconfig[server].setup({
-                capabilities = capabilities,
-            })
+            -- Only setup if the server config exists (Mason has installed it)
+            local ok, _ = pcall(function()
+                lspconfig[server].setup({
+                    capabilities = capabilities,
+                })
+            end)
+            if not ok then
+                vim.notify(
+                    string.format("LSP server '%s' not available yet. Install via :Mason", server),
+                    vim.log.levels.WARN
+                )
+            end
         end
 
         -- Configure pyrefly (installed globally via homebrew/cargo)
-        lspconfig["pyrefly"].setup({
-            capabilities = capabilities,
-            settings = {
-                pyrefly = {
-                    displayTypeErrors = "force-on",
+        local pyrefly_ok, _ = pcall(function()
+            lspconfig["pyrefly"].setup({
+                capabilities = capabilities,
+                settings = {
+                    pyrefly = {
+                        displayTypeErrors = "force-on",
+                    },
                 },
-            },
-        })
+            })
+        end)
+        if not pyrefly_ok then
+            vim.notify("pyrefly LSP not available. Ensure 'pyrefly' is installed globally.", vim.log.levels.WARN)
+        end
 
         -- Configure svelte with special on_attach
-        lspconfig["svelte"].setup({
-            capabilities = capabilities,
-            on_attach = function(client, bufnr)
-                vim.api.nvim_create_autocmd("BufWritePost", {
-                    pattern = { "*.js", "*.ts" },
-                    callback = function(ctx)
-                        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-                    end,
-                })
-            end,
-        })
+        pcall(function()
+            lspconfig["svelte"].setup({
+                capabilities = capabilities,
+                on_attach = function(client, bufnr)
+                    vim.api.nvim_create_autocmd("BufWritePost", {
+                        pattern = { "*.js", "*.ts" },
+                        callback = function(ctx)
+                            client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
+                        end,
+                    })
+                end,
+            })
+        end)
 
         -- Configure graphql with custom filetypes
-        lspconfig["graphql"].setup({
-            capabilities = capabilities,
-            filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-        })
+        pcall(function()
+            lspconfig["graphql"].setup({
+                capabilities = capabilities,
+                filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+            })
+        end)
 
         -- Configure emmet_ls with custom filetypes
-        lspconfig["emmet_ls"].setup({
-            capabilities = capabilities,
-            filetypes = {
-                "html",
-                "typescriptreact",
-                "javascriptreact",
-                "css",
-                "sass",
-                "scss",
-                "less",
-                "svelte",
-            },
-        })
+        pcall(function()
+            lspconfig["emmet_ls"].setup({
+                capabilities = capabilities,
+                filetypes = {
+                    "html",
+                    "typescriptreact",
+                    "javascriptreact",
+                    "css",
+                    "sass",
+                    "scss",
+                    "less",
+                    "svelte",
+                },
+            })
+        end)
     end,
 }
