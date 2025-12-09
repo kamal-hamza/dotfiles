@@ -75,7 +75,6 @@ return {
         dependencies = {
             "williamboman/mason.nvim",
             "neovim/nvim-lspconfig",
-            "saghen/blink.cmp", -- Ensure blink.cmp loads first
         },
         config = function()
             local mason_lspconfig = require("mason-lspconfig")
@@ -108,16 +107,9 @@ return {
                 },
             })
 
-            -- Get enhanced capabilities from blink.cmp if available
+            -- Use native Neovim completion capabilities
             local capabilities = vim.lsp.protocol.make_client_capabilities()
-            local has_blink, blink = pcall(require, 'blink.cmp')
-            if has_blink then
-                capabilities = vim.tbl_deep_extend(
-                    'force',
-                    capabilities,
-                    blink.get_lsp_capabilities()
-                )
-            end
+            -- Native completion is enabled in on_attach via vim.lsp.completion.enable()
 
             -- Default config for all servers
             local default_config = {
@@ -258,26 +250,31 @@ return {
             -- Setup pyrefly as THE Python LSP (not pyright)
             local pyrefly_cmd = vim.fn.exepath("pyrefly")
             if pyrefly_cmd ~= "" then
-                lspconfig.pyrefly = {
-                    default_config = {
-                        cmd = { pyrefly_cmd, "lsp" },
-                        filetypes = { "python" },
-                        root_dir = lspconfig.util.root_pattern(
-                            "pyproject.toml",
-                            "setup.py",
-                            "setup.cfg",
-                            "requirements.txt",
-                            "Pipfile",
-                            ".git"
-                        ),
-                        settings = {
-                            pyrefly = {
-                                displayTypeErrors = "force-on",
-                            },
+                -- Register pyrefly as a custom server
+                local configs = require('lspconfig.configs')
+                if not configs.pyrefly then
+                    configs.pyrefly = {
+                        default_config = {
+                            cmd = { pyrefly_cmd, "lsp" },
+                            filetypes = { "python" },
+                            root_dir = lspconfig.util.root_pattern(
+                                "pyproject.toml",
+                                "setup.py",
+                                "setup.cfg",
+                                "requirements.txt",
+                                "Pipfile",
+                                ".git"
+                            ),
+                        },
+                    }
+                end
+                lspconfig.pyrefly.setup(vim.tbl_deep_extend("force", default_config, {
+                    settings = {
+                        pyrefly = {
+                            displayTypeErrors = "force-on",
                         },
                     },
-                }
-                lspconfig.pyrefly.setup(default_config)
+                }))
             else
                 -- Fallback to pyright only if pyrefly is not installed
                 vim.notify("pyrefly not found, install it with: cargo install pyrefly", vim.log.levels.WARN)

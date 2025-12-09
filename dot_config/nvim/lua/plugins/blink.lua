@@ -1,5 +1,6 @@
 return {
     'saghen/blink.cmp',
+    enabled = false, -- Using native Neovim completion instead
     dependencies = {
         'rafamadriz/friendly-snippets',
         "mgalliou/blink-cmp-tmux",

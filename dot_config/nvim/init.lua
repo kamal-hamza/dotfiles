@@ -2,6 +2,7 @@ require("config.options")
 require("config.neovide")
 require("config.keymaps")
 require("config.autocmds")
+require("config.completion")
 require("config.lazy")
 require("utils.todo").setup({
     target_file = "todo.md",
