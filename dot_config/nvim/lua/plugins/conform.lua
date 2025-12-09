@@ -44,7 +44,7 @@ return {
             rust = { "rustfmt" },
             c = { "clang_format" },
             cpp = { "clang_format" },
-            go = { "goimports" },  -- goimports handles both imports and formatting
+            go = { "goimports" }, -- goimports handles both imports and formatting
             cs = { "csharpier" },
 
             -- Shell

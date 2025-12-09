@@ -6,7 +6,6 @@ return {
         'nvim-lualine/lualine.nvim',
         dependencies = {
             'nvim-tree/nvim-web-devicons',
-            'SmiteshP/nvim-navic',
         },
         event = "VeryLazy",
         config = function()
@@ -68,7 +67,6 @@ return {
                 vim.api.nvim_set_hl(0, 'LualineDiagnosticsError', { bg = c.bg, fg = c.red })
                 vim.api.nvim_set_hl(0, 'LualineDiagnosticsWarn', { bg = c.bg, fg = c.yellow })
                 vim.api.nvim_set_hl(0, 'LualineDiagnosticsInfo', { bg = c.bg, fg = c.cyan })
-                vim.api.nvim_set_hl(0, 'LualineLsp', { bg = c.bg, fg = c.pink })
                 vim.api.nvim_set_hl(0, 'LualineBranch', { bg = c.bg, fg = c.violet, bold = true })
                 vim.api.nvim_set_hl(0, 'LualineDiffAdded', { bg = c.bg, fg = c.green, bold = true })
                 vim.api.nvim_set_hl(0, 'LualineDiffModified', { bg = c.bg, fg = c.orange, bold = true })
@@ -189,54 +187,11 @@ return {
                 },
             })
 
-            -- LSP Breadcrumbs (navic)
-            ins_left({
-                function()
-                    local navic = require("nvim-navic")
-                    if navic.is_available() then
-                        local location = navic.get_location()
-                        if location ~= "" then
-                            return "  " .. location
-                        end
-                    end
-                    return ""
-                end,
-                cond = function()
-                    local navic = require("nvim-navic")
-                    return navic.is_available()
-                end,
-                color = function()
-                    local c = get_theme_colors()
-                    return { fg = c.fg_alt or "#bbbbbb", bg = c.bg }
-                end,
-            })
-
             -- Mid section spacer
             ins_left({
                 function()
                     return '%='
                 end,
-            })
-
-            -- LSP status
-            ins_right({
-                function()
-                    local msg = ''
-                    local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = 0 })
-                    local clients = vim.lsp.get_clients()
-                    if next(clients) == nil then
-                        return msg
-                    end
-                    for _, client in ipairs(clients) do
-                        local filetypes = client.config.filetypes
-                        if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-                            return client.name
-                        end
-                    end
-                    return msg
-                end,
-                icon = '󰧑',
-                color = 'LualineLsp',
             })
 
             -- Git branch

@@ -100,9 +100,6 @@ map("n", "<leader>gd", "<cmd>Git diff<CR>", { desc = "Git Diff" })
 -- LSP & Diagnostics
 -- ========================================================================
 
--- Zed: space l l - lsp_tool::ToggleMenu
-map("n", "<leader>ll", "<cmd>LspInfo<CR>", { desc = "LSP Info" })
-
 -- Zed: space c c - editor::ToggleCodeActions
 map("n", "<leader>cc", vim.lsp.buf.code_action, { desc = "Code Actions" })
 map("v", "<leader>cc", vim.lsp.buf.code_action, { desc = "Code Actions" })
@@ -110,37 +107,15 @@ map("v", "<leader>cc", vim.lsp.buf.code_action, { desc = "Code Actions" })
 -- Zed: space t d - diagnostics::Deploy
 map("n", "<leader>td", "<cmd>Trouble diagnostics toggle filter.buf=0<CR>", { desc = "Buffer Diagnostics" })
 
+-- LSP info
+map("n", "<leader>ll", "<cmd>LspInfo<CR>", { desc = "LSP Info" })
+
 -- ========================================================================
 -- Buffer/Tab Management
 -- ========================================================================
 
 -- Zed: space d b - pane::CloseActiveItem
 map("n", "<leader>db", "<cmd>bd<CR>", { desc = "Close Buffer" })
-
--- Zed: space s - outline::Toggle
-map("n", "<leader>s", "<cmd>Trouble lsp_document_symbols toggle<CR>", { desc = "Document Symbols" })
-
--- Zed: space S - project_symbols::Toggle
-map("n", "<leader>S", "<cmd>Trouble lsp_workspace_symbols toggle<CR>", { desc = "Workspace Symbols" })
-
--- ========================================================================
--- Code Navigation
--- ========================================================================
-
--- Zed: g d - editor::GoToDefinition
-map("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
-
--- Zed: g D - editor::GoToDefinitionSplit
-map("n", "gD", "<cmd>split | lua vim.lsp.buf.definition()<CR>", { desc = "Go to Definition (Split)" })
-
--- Zed: g t - editor::GoToTypeDefinition
-map("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to Type Definition" })
-
--- Zed: g T - editor::GoToTypeDefinitionSplit
-map("n", "gT", "<cmd>split | lua vim.lsp.buf.type_definition()<CR>", { desc = "Go to Type Definition (Split)" })
-
--- Zed: shift-k - editor::Hover
-map("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
 
 -- ========================================================================
 -- Debugger Controls
@@ -250,15 +225,15 @@ map("n", "<C-u>", "<C-u>zz", { desc = "Scroll up and center" })
 map("n", "n", "nzzzv", { desc = "Next search result (centered)" })
 map("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
 
--- LSP navigation
+-- Diagnostic navigation
 map("n", "[d", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
 map("n", "]d", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
-map("n", "gr", vim.lsp.buf.references, { desc = "Go to references" })
-map("n", "gi", vim.lsp.buf.implementation, { desc = "Go to implementation" })
-map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+
+-- Formatting
 map("n", "<leader>cf", function()
     require("conform").format({ async = true, lsp_fallback = true })
 end, { desc = "Format buffer" })
+
 
 
 -- Quickfix navigation

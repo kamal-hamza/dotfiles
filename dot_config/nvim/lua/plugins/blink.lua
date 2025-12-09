@@ -6,8 +6,6 @@ return {
         "mgalliou/blink-cmp-tmux",
         "bydlw98/blink-cmp-env",
         'nvim-lua/plenary.nvim',
-        "tailwind-tools",
-        "onsails/lspkind-nvim",
         "echasnovski/mini.icons",
     },
     version = '1.*',
