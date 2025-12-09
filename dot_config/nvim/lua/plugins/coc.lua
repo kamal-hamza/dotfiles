@@ -1,7 +1,7 @@
 return {
     "neoclide/coc.nvim",
     branch = "release",
-    event = "InsertEnter",
+    event = "VeryLazy",
     build = "npm ci",
     config = function()
         -- Coc extensions to install automatically
