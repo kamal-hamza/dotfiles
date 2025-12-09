@@ -79,6 +79,7 @@ return {
         },
         config = function()
             local mason_lspconfig = require("mason-lspconfig")
+            local lspconfig = require("lspconfig")
             local Lsp = require("utils.lsp")
 
             -- Suppress the workspace/diagnostic/refresh MethodNotFound error
@@ -86,9 +87,10 @@ return {
                 return vim.NIL
             end
 
-            -- Setup mason-lspconfig with automatic installation
+            -- Setup mason-lspconfig
+            -- automatic_installation is disabled to prevent unwanted servers (like ruff LSP) from auto-installing
             mason_lspconfig.setup({
-                automatic_installation = true,
+                automatic_installation = false,
                 ensure_installed = {
                     "lua_ls",        -- Lua
                     "ts_ls",         -- TypeScript/JavaScript
@@ -117,23 +119,16 @@ return {
                 )
             end
 
-            -- Helper function to get root directory patterns
-            local function root_pattern(...)
-                local patterns = { ... }
-                return function(fname)
-                    local util = require('lspconfig.util')
-                    return util.root_pattern(unpack(patterns))(fname) or util.path.dirname(fname)
-                end
-            end
+            -- Default config for all servers
+            local default_config = {
+                capabilities = capabilities,
+                on_attach = Lsp.on_attach,
+            }
 
-            -- Server-specific configurations using new vim.lsp.config API
+            -- Server-specific configurations
             local server_configs = {
                 -- Lua Language Server
                 lua_ls = {
-                    cmd = { "lua-language-server" },
-                    filetypes = { "lua" },
-                    root_dir = root_pattern(".luarc.json", ".luarc.jsonc", ".luacheckrc", ".stylua.toml", "stylua.toml",
-                        "selene.toml", "selene.yml", ".git"),
                     settings = {
                         Lua = {
                             runtime = { version = "LuaJIT" },
@@ -150,9 +145,6 @@ return {
 
                 -- TypeScript/JavaScript
                 ts_ls = {
-                    cmd = { "typescript-language-server", "--stdio" },
-                    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" },
-                    root_dir = root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
                     settings = {
                         typescript = {
                             inlayHints = {
@@ -174,36 +166,12 @@ return {
 
                 -- JSON with SchemaStore
                 jsonls = {
-                    cmd = { "vscode-json-language-server", "--stdio" },
-                    filetypes = { "json", "jsonc" },
-                    root_dir = root_pattern(".git"),
                     settings = {
                         json = {
                             schemas = require("schemastore").json.schemas(),
                             validate = { enable = true },
                         },
                     },
-                },
-
-                -- HTML
-                html = {
-                    cmd = { "vscode-html-language-server", "--stdio" },
-                    filetypes = { "html" },
-                    root_dir = root_pattern(".git"),
-                },
-
-                -- CSS
-                cssls = {
-                    cmd = { "vscode-css-language-server", "--stdio" },
-                    filetypes = { "css", "scss", "less" },
-                    root_dir = root_pattern(".git"),
-                },
-
-                -- ESLint
-                eslint = {
-                    cmd = { "vscode-eslint-language-server", "--stdio" },
-                    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" },
-                    root_dir = root_pattern(".eslintrc", ".eslintrc.js", ".eslintrc.json", "package.json", ".git"),
                 },
 
                 -- C/C++ (Clangd)
@@ -217,9 +185,6 @@ return {
                         "--function-arg-placeholders",
                         "--fallback-style=llvm",
                     },
-                    filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-                    root_dir = root_pattern(".clangd", ".clang-tidy", ".clang-format", "compile_commands.json",
-                        "compile_flags.txt", "configure.ac", ".git"),
                     init_options = {
                         usePlaceholders = true,
                         completeUnimported = true,
@@ -229,9 +194,6 @@ return {
 
                 -- Rust Analyzer
                 rust_analyzer = {
-                    cmd = { "rust-analyzer" },
-                    filetypes = { "rust" },
-                    root_dir = root_pattern("Cargo.toml", "rust-project.json", ".git"),
                     settings = {
                         ["rust-analyzer"] = {
                             cargo = {
@@ -251,9 +213,6 @@ return {
 
                 -- Go (gopls)
                 gopls = {
-                    cmd = { "gopls" },
-                    filetypes = { "go", "gomod", "gowork", "gotmpl" },
-                    root_dir = root_pattern("go.work", "go.mod", ".git"),
                     settings = {
                         gopls = {
                             analyses = { unusedparams = true },
@@ -263,84 +222,66 @@ return {
                     },
                 },
 
-                -- YAML
-                yamlls = {
-                    cmd = { "yaml-language-server", "--stdio" },
-                    filetypes = { "yaml", "yaml.docker-compose" },
-                    root_dir = root_pattern(".git"),
-                },
-
-                -- Bash
-                bashls = {
-                    cmd = { "bash-language-server", "start" },
-                    filetypes = { "sh" },
-                    root_dir = root_pattern(".git"),
-                },
-
-                -- Markdown
-                marksman = {
-                    cmd = { "marksman", "server" },
-                    filetypes = { "markdown" },
-                    root_dir = root_pattern(".git", ".marksman.toml"),
-                },
-
                 -- C# (OmniSharp)
                 omnisharp = {
-                    cmd = { "omnisharp" },
-                    filetypes = { "cs" },
-                    root_dir = root_pattern("*.sln", "*.csproj", ".git"),
                     enable_import_completion = true,
                     organize_imports_on_format = true,
                     enable_roslyn_analyzers = true,
                 },
             }
 
-            -- Setup each LSP server using new vim.lsp.config API
-            for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-                -- Skip pyright if it's installed - we're using pyrefly instead
-                if server_name ~= "pyright" then
-                    local config = server_configs[server_name]
-
-                    if config then
-                        -- Use new vim.lsp.config API for Neovim 0.11+
-                        -- Server will auto-attach based on filetypes and root_dir
-                        vim.lsp.config(server_name, vim.tbl_deep_extend("force", {
-                            capabilities = capabilities,
-                            on_attach = Lsp.on_attach,
-                        }, config))
+            -- Setup each installed LSP server using handlers
+            mason_lspconfig.setup_handlers({
+                -- Default handler for servers without custom config
+                function(server_name)
+                    -- Skip pyright - we use pyrefly for Python
+                    if server_name == "pyright" then
+                        return
                     end
-                end
-            end
+
+                    -- Skip ruff LSP - we only want ruff as a linter/formatter via nvim-lint and conform
+                    -- Ruff LSP doesn't provide full language server features (no completion, hover, etc.)
+                    if server_name == "ruff" or server_name == "ruff_lsp" then
+                        return
+                    end
+
+                    local config = vim.tbl_deep_extend(
+                        "force",
+                        default_config,
+                        server_configs[server_name] or {}
+                    )
+                    lspconfig[server_name].setup(config)
+                end,
+            })
 
             -- Setup pyrefly as THE Python LSP (not pyright)
             local pyrefly_cmd = vim.fn.exepath("pyrefly")
             if pyrefly_cmd ~= "" then
-                -- Pyrefly will auto-attach to Python files based on root_dir
-                vim.lsp.config("pyrefly", {
-                    cmd = { pyrefly_cmd, "lsp" },
-                    filetypes = { "python" },
-                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile",
-                        ".git"),
-                    capabilities = capabilities,
-                    on_attach = Lsp.on_attach,
-                    settings = {
-                        pyrefly = {
-                            displayTypeErrors = "force-on",
+                lspconfig.pyrefly = {
+                    default_config = {
+                        cmd = { pyrefly_cmd, "lsp" },
+                        filetypes = { "python" },
+                        root_dir = lspconfig.util.root_pattern(
+                            "pyproject.toml",
+                            "setup.py",
+                            "setup.cfg",
+                            "requirements.txt",
+                            "Pipfile",
+                            ".git"
+                        ),
+                        settings = {
+                            pyrefly = {
+                                displayTypeErrors = "force-on",
+                            },
                         },
                     },
-                })
+                }
+                lspconfig.pyrefly.setup(default_config)
             else
                 -- Fallback to pyright only if pyrefly is not installed
                 vim.notify("pyrefly not found, install it with: cargo install pyrefly", vim.log.levels.WARN)
 
-                -- Pyright will auto-attach to Python files based on root_dir
-                vim.lsp.config("pyright", {
-                    cmd = { "pyright-langserver", "--stdio" },
-                    filetypes = { "python" },
-                    root_dir = root_pattern("pyproject.toml", "setup.py", "setup.cfg", "requirements.txt", "Pipfile",
-                        ".git"),
-                    capabilities = capabilities,
-                    on_attach = Lsp.on_attach,
+                lspconfig.pyright.setup(vim.tbl_deep_extend("force", default_config, {
                     settings = {
                         python = {
                             analysis = {
@@ -350,31 +291,18 @@ return {
                             },
                         },
                     },
-                })
+                }))
             end
 
-            -- Setup newly installed servers automatically
-            vim.api.nvim_create_autocmd("User", {
-                pattern = "MasonToolsUpdateCompleted",
-                callback = function()
-                    vim.schedule(function()
-                        for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-                            -- Skip pyright - using pyrefly for Python
-                            if server_name ~= "pyright" then
-                                local config = server_configs[server_name]
-                                if config then
-                                    -- Check if already configured
-                                    local existing = vim.lsp.get_clients({ name = server_name })
-                                    if #existing == 0 then
-                                        vim.lsp.config(server_name, vim.tbl_deep_extend("force", {
-                                            capabilities = capabilities,
-                                            on_attach = Lsp.on_attach,
-                                        }, config))
-                                    end
-                                end
-                            end
-                        end
-                    end)
+            -- Explicitly prevent ruff LSP from attaching to Python files
+            -- We only want ruff as a linter/formatter, not as an LSP server
+            vim.api.nvim_create_autocmd("LspAttach", {
+                callback = function(args)
+                    local client = vim.lsp.get_client_by_id(args.data.client_id)
+                    if client and client.name == "ruff" then
+                        vim.lsp.stop_client(client.id)
+                        vim.notify("Stopped ruff LSP - using pyrefly for Python instead", vim.log.levels.INFO)
+                    end
                 end,
             })
         end,
