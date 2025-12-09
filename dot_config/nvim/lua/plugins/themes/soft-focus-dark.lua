@@ -322,14 +322,18 @@ M.setup = function()
 
     -- coc.nvim (completion)
     hl("CocSearch", { fg = colors.cyan })
-    hl("CocMenuSel", { bg = colors.primary, fg = colors.bg, bold = true })
-    hl("CocFloating", { bg = colors.bg, fg = colors.fg })
+    hl("CocMenuSel", { bg = colors.cursor_line, fg = colors.fg, bold = true })
+    hl("CocFloating", { bg = colors.bg_elevated, fg = colors.fg })
     hl("CocFloatDividingLine", { fg = colors.border })
 
     -- Completion menu items
-    hl("CocPumMenu", { bg = colors.bg, fg = colors.fg })
+    hl("CocPumMenu", { bg = colors.bg_elevated, fg = colors.fg })
+    hl("CocPumSearch", { fg = colors.blue_light })
+    hl("CocPumDetail", { fg = colors.fg_alt })
     hl("CocPumShortcut", { fg = colors.comment })
     hl("CocPumVirtualText", { fg = colors.comment })
+    hl("CocPumSelected", { bg = colors.cursor_line, fg = colors.fg, bold = true })
+    hl("CocPumDeprecated", { fg = colors.comment, strikethrough = true })
 
     -- Kind icons and labels with semantic coloring
     hl("CocSymbolText", { fg = colors.fg })
