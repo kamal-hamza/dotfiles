@@ -42,7 +42,7 @@ return {
                 "yamlls",      -- YAML
                 "bashls",      -- Bash
                 "marksman",    -- Markdown
-                "pyrefly"      -- Python
+                -- Note: pyrefly is installed globally via homebrew/cargo, not via Mason
             },
             -- Auto-install configured servers (with lspconfig)
             automatic_installation = true,

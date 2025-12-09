@@ -4,14 +4,11 @@ return {
     cmd = { "LspInfo", "LspStart", "LspStop", "LspRestart" },
     dependencies = {
         "hrsh7th/cmp-nvim-lsp",
-        "williamboman/mason.nvim",
-        "williamboman/mason-lspconfig.nvim",
         { "antosha417/nvim-lsp-file-operations", config = true },
         { "folke/lazydev.nvim",                  ft = "lua",   opts = {} },
     },
     config = function()
         local lspconfig = require("lspconfig")
-        local mason_lspconfig = require("mason-lspconfig")
         local cmp_nvim_lsp = require("cmp_nvim_lsp")
         local keymap = vim.keymap
 
@@ -73,74 +70,96 @@ return {
             end,
         })
 
-        -- Default handlers for all servers
-        mason_lspconfig.setup_handlers({
-            -- Default handler for all servers
-            function(server_name)
-                lspconfig[server_name].setup({
-                    capabilities = capabilities,
-                })
-            end,
-
-            -- Custom handler for lua_ls
-            ["lua_ls"] = function()
-                lspconfig["lua_ls"].setup({
-                    capabilities = capabilities,
-                    settings = {
-                        Lua = {
-                            diagnostics = {
-                                globals = { "vim" },
-                            },
-                            workspace = {
-                                library = {
-                                    [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                                    [vim.fn.stdpath("config") .. "/lua"] = true,
-                                },
-                            },
+        -- Configure lua_ls for Neovim development
+        lspconfig["lua_ls"].setup({
+            capabilities = capabilities,
+            settings = {
+                Lua = {
+                    diagnostics = {
+                        globals = { "vim" },
+                    },
+                    workspace = {
+                        library = {
+                            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                            [vim.fn.stdpath("config") .. "/lua"] = true,
                         },
                     },
-                })
-            end,
+                },
+            },
+        })
 
-            -- Custom handler for svelte
-            ["svelte"] = function()
-                lspconfig["svelte"].setup({
-                    capabilities = capabilities,
-                    on_attach = function(client, bufnr)
-                        vim.api.nvim_create_autocmd("BufWritePost", {
-                            pattern = { "*.js", "*.ts" },
-                            callback = function(ctx)
-                                client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
-                            end,
-                        })
+        -- Configure other servers with default settings
+        local servers = {
+            "ts_ls",
+            "html",
+            "cssls",
+            "tailwindcss",
+            "jsonls",
+            "yamlls",
+            "bashls",
+            "marksman",
+            "eslint",
+            "prismals",
+        }
+
+        for _, server in ipairs(servers) do
+            lspconfig[server].setup({
+                capabilities = capabilities,
+            })
+        end
+
+        -- Configure pyrefly (installed globally via homebrew/cargo)
+        lspconfig["pyrefly"].setup({
+            capabilities = capabilities,
+            cmd = { "pyrefly", "lsp" },
+            filetypes = { "python" },
+            root_dir = lspconfig.util.root_pattern(
+                "pyproject.toml",
+                "setup.py",
+                "setup.cfg",
+                "requirements.txt",
+                "Pipfile",
+                ".git"
+            ),
+            settings = {
+                pyrefly = {
+                    displayTypeErrors = "force-on",
+                },
+            },
+        })
+
+        -- Configure svelte with special on_attach
+        lspconfig["svelte"].setup({
+            capabilities = capabilities,
+            on_attach = function(client, bufnr)
+                vim.api.nvim_create_autocmd("BufWritePost", {
+                    pattern = { "*.js", "*.ts" },
+                    callback = function(ctx)
+                        client.notify("$/onDidChangeTsOrJsFile", { uri = ctx.match })
                     end,
                 })
             end,
+        })
 
-            -- Custom handler for graphql
-            ["graphql"] = function()
-                lspconfig["graphql"].setup({
-                    capabilities = capabilities,
-                    filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
-                })
-            end,
+        -- Configure graphql with custom filetypes
+        lspconfig["graphql"].setup({
+            capabilities = capabilities,
+            filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+        })
 
-            -- Custom handler for emmet_ls
-            ["emmet_ls"] = function()
-                lspconfig["emmet_ls"].setup({
-                    capabilities = capabilities,
-                    filetypes = {
-                        "html",
-                        "typescriptreact",
-                        "javascriptreact",
-                        "css",
-                        "sass",
-                        "scss",
-                        "less",
-                        "svelte",
-                    },
-                })
-            end,
+        -- Configure emmet_ls with custom filetypes
+        lspconfig["emmet_ls"].setup({
+            capabilities = capabilities,
+            filetypes = {
+                "html",
+                "typescriptreact",
+                "javascriptreact",
+                "css",
+                "sass",
+                "scss",
+                "less",
+                "svelte",
+            },
         })
     end,
 }
