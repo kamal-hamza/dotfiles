@@ -2,9 +2,10 @@ return {
     'echasnovski/mini.nvim',
     version = "*",
     dependencies = {
-        { 'echasnovski/mini.pairs', version = '*' },
-        { 'echasnovski/mini.icons', version = '*' },
-        { 'echasnovski/mini.pick',  version = '*' },
+        { 'echasnovski/mini.pairs',   version = '*' },
+        { 'echasnovski/mini.icons',   version = '*' },
+        { 'echasnovski/mini.pick',    version = '*' },
+        { 'echasnovski/mini.comment', version = '*' },
     },
     keys = {
         { "<leader>ff", function() require('mini.pick').builtin.files() end,     desc = "Find Files (Mini Pick)" },
@@ -18,6 +19,22 @@ return {
 
         -- Setup mini.icons
         require("mini.icons").setup()
+
+        -- Setup mini.comment
+        require("mini.comment").setup({
+            options = {
+                custom_commentstring = nil,
+                ignore_blank_line = false,
+                start_of_line = false,
+                pad_comment_parts = true,
+            },
+            mappings = {
+                comment = 'gc',
+                comment_line = 'gcc',
+                comment_visual = 'gc',
+                textobject = 'gc',
+            },
+        })
 
         -- Setup mini.pick with configuration
         local pick = require("mini.pick")
@@ -34,9 +51,9 @@ return {
                 caret_right = '<Right>',
 
                 choose = '<CR>',
-                choose_in_split = '<C-s>',
+                choose_in_split = '<C-h>',
                 choose_in_tabpage = '<C-t>',
-                choose_in_vsplit = '<C-v>',
+                choose_in_vsplit = '<C-l>',
                 choose_marked = '<M-CR>',
 
                 delete_char = '<BS>',

@@ -66,6 +66,10 @@ return {
                         ["<C-j>"] = actions.move_selection_next,
                         ["<C-k>"] = actions.move_selection_previous,
 
+                        -- Split keybindings
+                        ["<C-h>"] = actions.select_horizontal,
+                        ["<C-l>"] = actions.select_vertical,
+
                         -- Use Space for multi-select toggle
                         ["<C-Space>"] = actions.toggle_selection + actions.move_selection_next,
 
@@ -100,6 +104,10 @@ return {
                         -- gg/G for top/bottom
                         ["gg"] = actions.move_to_top,
                         ["G"] = actions.move_to_bottom,
+
+                        -- Split keybindings
+                        ["<C-h>"] = actions.select_horizontal,
+                        ["<C-l>"] = actions.select_vertical,
 
                         -- Use Space for multi-select toggle
                         ["<Space>"] = actions.toggle_selection + actions.move_selection_next,

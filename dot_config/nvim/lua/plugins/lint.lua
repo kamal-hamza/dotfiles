@@ -10,7 +10,7 @@ return {
             typescript = { "eslint_d" },
             javascriptreact = { "eslint_d" },
             typescriptreact = { "eslint_d" },
-            python = { "ruff" },              -- Fast modern linter
+            python = { "ruff" }, -- Fast modern linter
             -- lua = { "luacheck" },          -- Disabled: requires luarocks
             markdown = { "markdownlint" },
             dockerfile = { "hadolint" },
@@ -25,8 +25,30 @@ return {
         vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave", "TextChanged" }, {
             group = lint_augroup,
             callback = function()
+                -- Filetypes to exclude from linting
+                local excluded_filetypes = {
+                    "toggleterm",
+                    "terminal",
+                    "TelescopePrompt",
+                    "oil",
+                    "help",
+                    "fugitive",
+                    "gitcommit",
+                    "lazy",
+                    "mason",
+                    "",
+                }
+
+                -- Check if current filetype is excluded
+                local current_ft = vim.bo.filetype
+                for _, ft in ipairs(excluded_filetypes) do
+                    if current_ft == ft then
+                        return
+                    end
+                end
+
                 -- Only lint if the buffer is valid and has a filetype
-                if vim.api.nvim_buf_is_valid(0) and vim.bo.filetype ~= "" then
+                if vim.api.nvim_buf_is_valid(0) and current_ft ~= "" then
                     lint.try_lint()
                 end
             end,
