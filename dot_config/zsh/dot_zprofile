@@ -37,6 +37,7 @@ export_env() {
 path_if_exists "$HOME/.config/scripts"
 path_if_exists "$HOME/.config/walker/scripts"
 path_if_exists "$HOME/.local/bin"
+path_if_exists "$HOME/.dotnet/tools"
 
 # Language-specific tools
 path_if_exists "$HOME/.pyenv/bin"

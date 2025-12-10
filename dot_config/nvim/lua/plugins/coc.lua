@@ -20,7 +20,6 @@ return {
       "coc-eslint",
       "coc-prettier",
       "coc-rust-analyzer",
-      "coc-omnisharp",
     }
 
     -- Use Tab for trigger completion and navigate
