@@ -127,10 +127,32 @@ return {
                 table.insert(config.sections.lualine_x, component)
             end
 
-            -- Mode indicator
+            -- Mode indicator (single letter)
             ins_left({
                 function()
-                    return ''
+                    local mode_map = {
+                        n = 'N',    -- Normal
+                        i = 'I',    -- Insert
+                        v = 'V',    -- Visual
+                        [''] = 'V', -- Visual Block
+                        V = 'V',    -- Visual Line
+                        c = 'C',    -- Command
+                        no = 'N',
+                        s = 'S',    -- Select
+                        S = 'S',
+                        [''] = 'S',
+                        ic = 'I',
+                        R = 'R', -- Replace
+                        Rv = 'R',
+                        cv = 'C',
+                        ce = 'C',
+                        r = 'R',
+                        rm = 'R',
+                        ['r?'] = 'R',
+                        ['!'] = '!',
+                        t = 'T', -- Terminal
+                    }
+                    return mode_map[vim.fn.mode()] or '?'
                 end,
                 color = function()
                     local c = get_theme_colors()
@@ -156,7 +178,7 @@ return {
                         ['!'] = c.red,
                         t = c.cyan, -- Terminal: cyan
                     }
-                    return { bg = c.bg, fg = mode_color[vim.fn.mode()] }
+                    return { bg = c.bg, fg = mode_color[vim.fn.mode()], bold = true }
                 end,
                 padding = { right = 1 },
             })
