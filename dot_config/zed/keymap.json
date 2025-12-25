@@ -32,7 +32,6 @@
             "space g i": "git::Init",
             // Agent Commands (global)
             "space a n": "agent::NewThread",
-            "space a h": "agent::OpenHistory",
             // Terminal Commands (global)
             // LSP Diagnostics (global)
             "space l l": "lsp_tool::ToggleMenu",
@@ -84,10 +83,7 @@
             "space a i": "assistant::InlineAssist",
             "space a q": "agent::AddSelectionToThread", // Shared action
             // Debugger Controls (editor-contextual)
-            "space d t": "editor::ToggleBreakpoint",
-            "space d s": "debugger::Start",
-            "space d c": "debugger::Continue",
-            "space d S": "debugger::Stop"
+            "space d t": "editor::ToggleBreakpoint"
         }
     },
     {
@@ -108,13 +104,26 @@
     // Context-Specific Panel Bindings
     //========================================================================
     {
-        "context": "AgentPanel && vim_mode == normal",
+        "context": "DebugPanel && vim_mode == normal && !menu",
+        "bindings": {
+            "space d s": "debugger::Start",
+            "space d S": "debugger::Stop",
+            "space d r": "debugger::Restart",
+            "space d p": "debugger::Pause",
+            "space d c": "debugger::Continue",
+            "space d o": "debugger::StepOver",
+            "space d i": "debugger::StepInto",
+            "space d O": "debugger::StepOut"
+        }
+    },
+    {
+        "context": "AgentPanel && vim_mode == normal && !menu",
         "bindings": {
             "space a n": "agent::NewThread",
             "space a p": "agent::ToggleProfileSelector",
-            "space a c": "agent::ToggleContextPicker",
             "space a e": "agent::ExpandMessageEditor",
-            "space a m": "agent::ToggleModelSelector"
+            "space m m": "agent::ToggleModelSelector",
+            "space a h": "agent::OpenHistory"
         }
     },
     {
