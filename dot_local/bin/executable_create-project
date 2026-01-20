@@ -29,6 +29,19 @@ get_github_repo() {
     gh repo list --limit 300 | fzf --height 50% --reverse --prompt="Clone Repo: " | awk '{print $1}'
 }
 
+get_github_template() {
+    echo ""
+    echo "Enter template repository (username/repo format)"
+    echo "Examples:"
+    echo "  - vercel/next.js"
+    echo "  - tiangolo/full-stack-fastapi-template"
+    echo "  - your-org/your-template"
+    echo ""
+    read -rp "Template repo: " TEMPLATE
+    echo "$TEMPLATE"
+}
+</text>
+
 # --- Main Logic ---
 
 echo "Project Creator"
@@ -40,7 +53,7 @@ if [[ ! -d "$CODE_DIR" ]]; then
 fi
 
 # Choose Action
-ACTION=$(printf "Clone Existing Repo\nCreate Empty Folder" | \
+ACTION=$(printf "Clone Existing Repo\nCreate from GitHub Template\nCreate Empty Folder" | \
     fzf --height 40% --reverse --prompt="Action: ")
 
 if [[ -z "$ACTION" ]]; then
@@ -62,7 +75,28 @@ case "$ACTION" in
         gh repo clone "$REPO"
         ;;
 
+    "Create from GitHub Template")
+        if ! command -v gh &>/dev/null; then
+            echo "Error: GitHub CLI (gh) not installed." >&2
+            exit 1
+        fi
+
+        TEMPLATE=$(get_github_template)
+        [[ -z "$TEMPLATE" ]] && exit 1
+
+        read -rp "Project Name: " PROJECT_NAME
+        [[ -z "$PROJECT_NAME" ]] && exit 1
+
+        PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
+
+        echo "Creating from template $TEMPLATE..."
+        cd "$CODE_DIR"
+        gh repo create "$PROJECT_NAME" --template "$TEMPLATE" --clone --private
+        ;;
+
     "Create Empty Folder")
+</text>
+
         read -rp "Project Name: " PROJECT_NAME
         [[ -z "$PROJECT_NAME" ]] && exit 1
 
