@@ -32,7 +32,8 @@ packages:
       - zsh-autopair         # Auto-close brackets in zsh
       - zsh-autosuggestions  # Fish-like autosuggestions
       - zsh-syntax-highlighting  # Syntax highlighting for zsh
-      - git
+      - git                  # Version control system
+      - zoxide               # Smarter cd command
 
     # GUI Applications - Desktop applications
     casks:
@@ -60,6 +61,7 @@ packages:
       - zsh                  # Z shell
       - zsh-autosuggestions  # Fish-like autosuggestions
       - zsh-syntax-highlighting  # Syntax highlighting for zsh
+      - zoxide               # Smarter cd command
 
     # AUR (Arch User Repository) Packages
     aur:
