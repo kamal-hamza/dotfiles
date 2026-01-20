@@ -50,7 +50,7 @@ get_current_theme() {
     if [[ -f "$THEME_STATE_FILE" ]]; then
         cat "$THEME_STATE_FILE"
     else
-        echo "dark"  # Default to dark
+        echo "dark"  # Default theme
     fi
 }
 

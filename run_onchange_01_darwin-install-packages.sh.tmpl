@@ -52,7 +52,7 @@ print_info "Checking for Homebrew..."
 if ! command -v brew &> /dev/null; then
     print_warning "Homebrew not found. Installing..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    
+
     # Add Homebrew to PATH for this session
     if [[ -x /opt/homebrew/bin/brew ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -66,7 +66,7 @@ if ! command -v brew &> /dev/null; then
     fi
 else
     print_success "Homebrew is already installed"
-    
+
     # Ensure Homebrew is in PATH
     if [[ -x /opt/homebrew/bin/brew ]]; then
         eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -86,7 +86,35 @@ else
 fi
 
 # -----------------------------------------------------------------------------
-# Step 3: Install CLI Tools (brews)
+# Step 3: Add Homebrew Taps
+# -----------------------------------------------------------------------------
+{{ if .packages.darwin.taps -}}
+print_header "Adding Homebrew Taps"
+
+TAPS=(
+{{- range .packages.darwin.taps }}
+    {{ . | quote }}
+{{- end }}
+)
+
+for tap in "${TAPS[@]}"; do
+    if brew tap | grep -q "^${tap}$"; then
+        print_success "$tap (already tapped)"
+    else
+        print_info "Tapping $tap..."
+        if brew tap "$tap" &> /dev/null; then
+            print_success "$tap tapped"
+        else
+            print_error "Failed to tap $tap"
+        fi
+    fi
+done
+{{ else -}}
+print_warning "No taps defined in packages.yaml"
+{{ end -}}
+
+# -----------------------------------------------------------------------------
+# Step 4: Install CLI Tools (brews)
 # -----------------------------------------------------------------------------
 {{ if .packages.darwin.brews -}}
 print_header "Installing CLI Tools"
@@ -114,7 +142,7 @@ print_warning "No CLI tools defined in packages.yaml"
 {{ end -}}
 
 # -----------------------------------------------------------------------------
-# Step 4: Install GUI Applications (casks)
+# Step 5: Install GUI Applications (casks)
 # -----------------------------------------------------------------------------
 {{ if .packages.darwin.casks -}}
 print_header "Installing GUI Applications"
@@ -142,7 +170,7 @@ print_warning "No GUI applications defined in packages.yaml"
 {{ end -}}
 
 # -----------------------------------------------------------------------------
-# Step 5: Cleanup
+# Step 6: Cleanup
 # -----------------------------------------------------------------------------
 print_header "Cleanup"
 print_info "Running brew cleanup..."

@@ -1,0 +1,9 @@
+# =============================================================================
+# Theme Configuration
+# =============================================================================
+# Default theme to use when running `chezmoi apply`
+# Can be overridden with: chezmoi apply --promptString theme=light
+# Valid values: "dark" or "light"
+# =============================================================================
+
+theme: "dark"

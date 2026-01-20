@@ -50,55 +50,63 @@ bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' 'select-pane -D'
 bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' 'select-pane -U'
 bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' 'select-pane -R'
 
-bind-key -T copy-mode-vi 'C-h' select-pane -L
-bind-key -T copy-mode-vi 'C-j' select-pane -D
-bind-key -T copy-mode-vi 'C-k' select-pane -U
-bind-key -T copy-mode-vi 'C-l' select-pane -R
+# Restore clear screen keybind
+bind C-l send-keys 'C-l'
 
-# Increase history limit
-set -g history-limit 30000
-
-# Start windows and panes at 1 and not 0
+# Start window numbering from 1
 set -g base-index 1
-set -g pane-base-index 1
-set-window-option -g pane-base-index 1
-set-option -g renumber-windows on
+setw -g pane-base-index 1
+set -g renumber-windows on
 
-# Zero-out escape time delay for quicker response
-set -s escape-time 0
+# Increase scrollback buffer
+set -g history-limit 10000
 
-# Enable smart window renaming
-set-window-option -g automatic-rename on
-set -g automatic-rename-format "#{b:pane_current_path}"
-
-# ===================================================================
-# STATUS BAR CONFIGURATION
-# ===================================================================
-
-# Status bar configuration
-set -g status on
+# Status bar position
 set -g status-position bottom
-set -g status-justify "left"
-set -g status-left-length 50
+set -g status-interval 1
+
+# Status bar lengths
+set -g status-left-length 100
 set -g status-right-length 100
 
-# Colors
-set -g status-style "bg=#1c1c1c,fg=#ffffff"
-set -g message-style "bg=#1c1c1c,fg=#ffffff"
-set -g pane-border-style "fg=#444444"
-set -g pane-active-border-style "fg=#00afff"
+# Colors - Using Soft Focus {{ .theme | default "dark" }} theme
+{{ if eq (.theme | default "dark") "light" -}}
+# Light theme colors
+set -g status-style "bg=#ffffff,fg=#000000"
+set -g message-style "bg=#ffffff,fg=#4da6ff"
+set -g pane-border-style "fg=#d0d0d0"
+set -g pane-active-border-style "fg=#448cbb"
+set -g window-status-style "fg=#666666,bg=#ffffff"
+set -g window-status-current-style "fg=#ffffff,bg=#4da6ff,bold"
+set -g mode-style "bg=#448cbb,fg=#ffffff"
+set -g clock-mode-colour "#448cbb"
 
 # Status left: session name
-set -g status-left "#[fg=#000000,bg=#00afff,bold] #S #[default] "
+set -g status-left "#[fg=#ffffff,bg=#4da6ff,bold] #S #[default] "
 
 # Status right: current path and time
-set -g status-right "#[fg=#00afff]#{=/-32/...:#{b:pane_current_path}} #[fg=#666666]│#[fg=#888888] %H:%M "
+set -g status-right "#[fg=#4da6ff]#{=/-32/...:#{b:pane_current_path}} #[fg=#d0d0d0]│#[fg=#666666] %H:%M "
+{{ else -}}
+# Dark theme colors
+set -g status-style "bg=#050505,fg=#f5f5f5"
+set -g message-style "bg=#050505,fg=#67b7f5"
+set -g pane-border-style "fg=#333333"
+set -g pane-active-border-style "fg=#448cbb"
+set -g window-status-style "fg=#bbbbbb,bg=#050505"
+set -g window-status-current-style "fg=#050505,bg=#67b7f5,bold"
+set -g mode-style "bg=#448cbb,fg=#050505"
+set -g clock-mode-colour "#448cbb"
+
+# Status left: session name
+set -g status-left "#[fg=#050505,bg=#67b7f5,bold] #S #[default] "
+
+# Status right: current path and time
+set -g status-right "#[fg=#67b7f5]#{=/-32/...:#{b:pane_current_path}} #[fg=#333333]│#[fg=#888888] %H:%M "
+{{ end -}}
 
 # Window status format
 set -g window-status-format " #I:#W "
-set -g window-status-style "fg=#888888"
 set -g window-status-current-format " #I:#W "
-set -g window-status-current-style "fg=#000000,bg=#00afff,bold"
 set -g window-status-separator ""
 
 # Pane borders
@@ -109,4 +117,4 @@ set -g pane-border-status off
 bind '\' set status
 
 # Reload tmux config
-bind R source-file ~/.config/tmux/tmux.conf \; display-message "Config reloaded!"
+bind R source-file ~/.tmux.conf \; display-message "Config reloaded!"

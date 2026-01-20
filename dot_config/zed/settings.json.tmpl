@@ -46,7 +46,11 @@
         "edit_prediction_provider": "copilot"
     },
     "vim_mode": true,
+{{ if eq (.theme | default "dark") "light" -}}
     "theme": "Soft Focus Light",
+{{ else -}}
+    "theme": "Soft Focus Dark",
+{{ end -}}
     "ui_font_family": "Liga SFMono Nerd Font",
     "buffer_font_family": "Liga SFMono Nerd Font",
     "ui_font_size": 16,
@@ -163,7 +167,8 @@
         "dock": null
     },
     "terminal": {
-        "dock": "bottom"
+        "dock": "bottom",
+        "font_family": "Liga SFMono Nerd Font"
     },
     "notification_panel": {
         "dock": null

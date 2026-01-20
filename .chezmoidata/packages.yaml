@@ -6,6 +6,7 @@
 # After editing, run: chezmoi apply
 #
 # Package Types:
+# - taps: Homebrew taps to add (macOS only)
 # - brews: Command-line tools installed via Homebrew (macOS)
 # - casks: GUI applications installed via Homebrew Cask (macOS)
 # - pacman: Packages from official Arch repositories
@@ -17,6 +18,10 @@ packages:
   # macOS Packages (Homebrew)
   # ===========================================================================
   darwin:
+    # Homebrew Taps - Third-party repositories
+    taps:
+      - shaunsingh/SFMono-Nerd-Font-Ligaturized  # SFMono Nerd Font with ligatures
+
     # CLI Tools - Command-line utilities and development tools
     brews:
       - chezmoi              # Dotfiles manager
@@ -35,6 +40,7 @@ packages:
       - obsidian             # Knowledge management app
       - wezterm              # GPU-accelerated terminal
       - zed                  # Modern code editor
+      - font-sf-mono-nerd-font-ligaturized  # SFMono Nerd Font with ligatures
 
   # ===========================================================================
   # Arch Linux Packages
@@ -74,6 +80,11 @@ packages:
 #    chezmoi apply
 #
 # Examples:
+#
+#   # Add a tap on macOS:
+#   darwin:
+#     taps:
+#       - homebrew/cask-fonts
 #
 #   # Add a CLI tool on macOS:
 #   darwin:
