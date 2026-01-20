@@ -16,7 +16,6 @@
 
 HISTORY_LIMIT=5000
 FZF_HEIGHT="50%"
-PREVIEW_LINES=10
 
 # Ensure history is loaded
 HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
@@ -87,42 +86,6 @@ rank_history() {
 }
 
 # -----------------------------------------------------------------------------
-# Preview Command
-# -----------------------------------------------------------------------------
-
-preview_cmd='
-#!/usr/bin/env bash
-cmd="{}"
-
-# Header
-echo -e "\033[1;34m┌─ Command\033[0m"
-echo "│"
-
-# Show command with line numbers if multiline
-if [[ $(echo "$cmd" | wc -l) -gt 1 ]]; then
-  echo "$cmd" | nl -w2 -s"│ " | sed "s/^/│/"
-else
-  echo "│  $cmd"
-fi
-
-echo "│"
-echo -e "\033[1;34m└─ Syntax Preview\033[0m"
-echo
-
-# Try to use bat for syntax highlighting, fallback to cat
-if command -v bat &>/dev/null; then
-  echo "$cmd" | bat \
-    --language=bash \
-    --style=plain \
-    --color=always \
-    --theme="Monokai Extended" \
-    2>/dev/null
-else
-  echo "$cmd"
-fi
-'
-
-# -----------------------------------------------------------------------------
 # FZF Interface
 # -----------------------------------------------------------------------------
 
@@ -147,13 +110,8 @@ fzf_run() {
       --ansi \
       --no-sort \
       --exact \
-      --preview="$preview_cmd" \
-      --preview-window="right:50%:wrap" \
-      --header="^Y: Copy | ^D/U: Scroll | Enter: Select | Esc: Cancel" \
+      --header="^Y: Copy | Enter: Select | Esc: Cancel" \
       --bind='ctrl-y:execute-silent(echo -n {} | pbcopy)+abort' \
-      --bind='ctrl-d:preview-half-page-down' \
-      --bind='ctrl-u:preview-half-page-up' \
-      --bind='ctrl-/:toggle-preview' \
       --color='border:#448cbb,header:#888888,prompt:#67b7f5,pointer:#ff4c6a'
 }
 

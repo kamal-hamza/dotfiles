@@ -156,6 +156,11 @@ defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClic
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 print_success "Secondary click set to bottom right"
 
+# Set the repeat rate to 2 (fast)
+print_info "Setting repeat rate to 2"
+defaults write -g KeyRepeat -int 1
+print_success "Repeate rate set to 2"
+
 # =============================================================================
 # Done
 # =============================================================================

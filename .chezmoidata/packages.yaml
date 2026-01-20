@@ -35,6 +35,7 @@ packages:
       - zsh-syntax-highlighting  # Syntax highlighting for zsh
       - git                  # Version control system
       - zoxide               # Smarter cd command
+      - gh                   # Github CLI
 
     # GUI Applications - Desktop applications
     casks:
@@ -64,6 +65,7 @@ packages:
       - zsh-autosuggestions  # Fish-like autosuggestions
       - zsh-syntax-highlighting  # Syntax highlighting for zsh
       - zoxide               # Smarter cd command
+      - gh                   # Github CLI
 
     # AUR (Arch User Repository) Packages
     aur:
