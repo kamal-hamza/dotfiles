@@ -38,3 +38,16 @@ if command -v fzf >/dev/null 2>&1; then
   export FZF_DEFAULT_COMMAND='find . -type f 2>/dev/null'
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
+
+# -----------------------------------------------------------------------------
+# Development Tools Environment Variables
+# -----------------------------------------------------------------------------
+# Load machine-specific development tool configurations
+# These files are NOT tracked by chezmoi - create them manually as needed
+# Location: ~/.config/zsh/dev-tools/
+
+if [[ -d "$HOME/.config/zsh/dev-tools" ]]; then
+  for config in "$HOME/.config/zsh/dev-tools"/*.zsh; do
+    [[ -r "$config" ]] && source "$config"
+  done
+fi

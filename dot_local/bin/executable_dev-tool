@@ -1,0 +1,226 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Development Tool Configuration Manager
+# =============================================================================
+# Manage machine-specific development tool environment configurations
+#
+# Usage:
+#   dev-tool list              List all available example templates
+#   dev-tool add <tool>        Enable a tool from example template
+#   dev-tool edit <tool>       Edit an existing tool configuration
+#   dev-tool remove <tool>     Remove a tool configuration
+#   dev-tool show <tool>       Show a tool configuration
+# =============================================================================
+
+set -e
+
+DEV_TOOLS_DIR="$HOME/.config/zsh/dev-tools"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+print_success() { echo -e "${GREEN}✓${NC} $1"; }
+print_error() { echo -e "${RED}✗${NC} $1"; }
+print_info() { echo -e "${BLUE}→${NC} $1"; }
+print_warning() { echo -e "${YELLOW}⚠${NC}  $1"; }
+
+usage() {
+    echo "Usage: dev-tool <command> [tool]"
+    echo ""
+    echo "Commands:"
+    echo "  list              List all available example templates"
+    echo "  add <tool>        Enable a tool from example template"
+    echo "  edit <tool>       Edit an existing tool configuration"
+    echo "  remove <tool>     Remove a tool configuration"
+    echo "  show <tool>       Show a tool configuration"
+    echo ""
+    echo "Examples:"
+    echo "  dev-tool list"
+    echo "  dev-tool add bun"
+    echo "  dev-tool edit go"
+    echo "  dev-tool show dotnet"
+    echo "  dev-tool remove node"
+}
+
+list_tools() {
+    echo ""
+    echo "Available example templates:"
+    echo ""
+    
+    if [[ ! -d "$DEV_TOOLS_DIR" ]]; then
+        print_error "Dev tools directory not found: $DEV_TOOLS_DIR"
+        return 1
+    fi
+    
+    local examples=("$DEV_TOOLS_DIR"/*.example)
+    local active=("$DEV_TOOLS_DIR"/*.zsh)
+    
+    # Remove glob pattern if no files found
+    [[ "${examples[0]}" == "$DEV_TOOLS_DIR/*.example" ]] && examples=()
+    [[ "${active[0]}" == "$DEV_TOOLS_DIR/*.zsh" ]] && active=()
+    
+    if [[ ${#examples[@]} -eq 0 && ${#active[@]} -eq 0 ]]; then
+        print_warning "No example templates or configurations found"
+        return 0
+    fi
+    
+    for example in "${examples[@]}"; do
+        [[ -f "$example" ]] || continue
+        tool_name=$(basename "$example" .zsh.example)
+        config_file="$DEV_TOOLS_DIR/${tool_name}.zsh"
+        
+        if [[ -f "$config_file" ]]; then
+            echo -e "  ${GREEN}✓${NC} $tool_name (active)"
+        else
+            echo -e "  ${BLUE}○${NC} $tool_name (available)"
+        fi
+    done
+    
+    # Show active configs without examples
+    for config in "${active[@]}"; do
+        [[ -f "$config" ]] || continue
+        tool_name=$(basename "$config" .zsh)
+        example_file="$DEV_TOOLS_DIR/${tool_name}.zsh.example"
+        
+        if [[ ! -f "$example_file" ]]; then
+            echo -e "  ${GREEN}✓${NC} $tool_name (active, custom)"
+        fi
+    done
+    
+    echo ""
+}
+
+add_tool() {
+    local tool="$1"
+    
+    if [[ -z "$tool" ]]; then
+        print_error "Tool name required"
+        echo "Usage: dev-tool add <tool>"
+        return 1
+    fi
+    
+    local example_file="$DEV_TOOLS_DIR/${tool}.zsh.example"
+    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    
+    if [[ ! -f "$example_file" ]]; then
+        print_error "No example template found for '$tool'"
+        print_info "Available tools:"
+        list_tools
+        return 1
+    fi
+    
+    if [[ -f "$config_file" ]]; then
+        print_warning "Configuration already exists for '$tool'"
+        print_info "Use 'dev-tool edit $tool' to modify it"
+        return 1
+    fi
+    
+    cp "$example_file" "$config_file"
+    print_success "Created $tool configuration"
+    print_info "Edit the file to uncomment and configure: ${EDITOR:-vim} $config_file"
+    
+    # Offer to open in editor
+    read -p "Open in editor now? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        ${EDITOR:-vim} "$config_file"
+    fi
+}
+
+edit_tool() {
+    local tool="$1"
+    
+    if [[ -z "$tool" ]]; then
+        print_error "Tool name required"
+        echo "Usage: dev-tool edit <tool>"
+        return 1
+    fi
+    
+    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    
+    if [[ ! -f "$config_file" ]]; then
+        print_error "No configuration found for '$tool'"
+        print_info "Use 'dev-tool add $tool' to create it"
+        return 1
+    fi
+    
+    ${EDITOR:-vim} "$config_file"
+    print_success "Updated $tool configuration"
+}
+
+remove_tool() {
+    local tool="$1"
+    
+    if [[ -z "$tool" ]]; then
+        print_error "Tool name required"
+        echo "Usage: dev-tool remove <tool>"
+        return 1
+    fi
+    
+    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    
+    if [[ ! -f "$config_file" ]]; then
+        print_error "No configuration found for '$tool'"
+        return 1
+    fi
+    
+    read -p "Remove $tool configuration? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        rm "$config_file"
+        print_success "Removed $tool configuration"
+    else
+        print_info "Cancelled"
+    fi
+}
+
+show_tool() {
+    local tool="$1"
+    
+    if [[ -z "$tool" ]]; then
+        print_error "Tool name required"
+        echo "Usage: dev-tool show <tool>"
+        return 1
+    fi
+    
+    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    
+    if [[ ! -f "$config_file" ]]; then
+        print_error "No configuration found for '$tool'"
+        return 1
+    fi
+    
+    echo ""
+    echo "Configuration for $tool:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    cat "$config_file"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+}
+
+# Main
+case "${1:-}" in
+    list)
+        list_tools
+        ;;
+    add)
+        add_tool "$2"
+        ;;
+    edit)
+        edit_tool "$2"
+        ;;
+    remove)
+        remove_tool "$2"
+        ;;
+    show)
+        show_tool "$2"
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac

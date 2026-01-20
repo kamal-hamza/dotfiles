@@ -1,0 +1,23 @@
+# =============================================================================
+# Python Configuration
+# =============================================================================
+# Copy this file to python.zsh and uncomment the lines you need
+
+# Pyenv (Python version manager)
+# export PYENV_ROOT="$HOME/.pyenv"
+# export PATH="$PYENV_ROOT/bin:$PATH"
+# if command -v pyenv >/dev/null 2>&1; then
+#   eval "$(pyenv init -)"
+# fi
+
+# Poetry (Python package manager)
+# export PATH="$HOME/.local/bin:$PATH"
+
+# pipx (Python app installer)
+# export PIPX_HOME="$HOME/.local/pipx"
+# export PIPX_BIN_DIR="$HOME/.local/bin"
+
+# UV (fast Python package installer)
+# if command -v uv >/dev/null 2>&1; then
+#   export UV_CACHE_DIR="$HOME/.cache/uv"
+# fi

@@ -1,0 +1,24 @@
+# =============================================================================
+# Node.js Configuration (NVM)
+# =============================================================================
+# Copy this file to node.zsh and uncomment the lines you need
+
+# NVM (Node Version Manager)
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+# [ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
+# Alternative: Fast Node Manager (fnm)
+# if command -v fnm >/dev/null 2>&1; then
+#   eval "$(fnm env --use-on-cd)"
+# fi
+
+# Alternative: Volta
+# if command -v volta >/dev/null 2>&1; then
+#   export VOLTA_HOME="$HOME/.volta"
+#   export PATH="$VOLTA_HOME/bin:$PATH"
+# fi
+
+# Pnpm (if installed globally)
+# export PNPM_HOME="$HOME/.local/share/pnpm"
+# export PATH="$PNPM_HOME:$PATH"

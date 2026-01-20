@@ -1,0 +1,13 @@
+# =============================================================================
+# Bun Runtime Configuration
+# =============================================================================
+# Copy this file to bun.zsh and uncomment the lines you need
+
+# Bun installation directory
+# export BUN_INSTALL="$HOME/.bun"
+# export PATH="$BUN_INSTALL/bin:$PATH"
+
+# Bun completions (optional)
+# if command -v bun >/dev/null 2>&1; then
+#   [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+# fi

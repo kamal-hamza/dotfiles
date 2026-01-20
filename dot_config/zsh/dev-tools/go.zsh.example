@@ -1,0 +1,15 @@
+# =============================================================================
+# Go Language Configuration
+# =============================================================================
+# Copy this file to go.zsh and uncomment the lines you need
+
+# Go workspace
+# export GOPATH="$HOME/go"
+# export GOBIN="$GOPATH/bin"
+# export PATH="$GOBIN:$PATH"
+
+# Go private modules (optional)
+# export GOPRIVATE="github.com/yourcompany/*"
+
+# Go proxy (optional)
+# export GOPROXY="https://proxy.golang.org,direct"
