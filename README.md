@@ -209,3 +209,34 @@ This is useful for:
 ## License
 
 MIT
+
+## macOS System Settings
+
+The dotfiles automatically configure macOS system preferences on first run. This includes:
+
+### Configured Settings
+- **Keyboard**: Fast key repeat, disabled auto-correct/capitalization/smart quotes
+- **Trackpad**: Tap to click enabled, optimized tracking speed
+- **Finder**: Show hidden files, extensions, path bar, status bar
+- **Dock**: Auto-hide, custom size, disable recent apps
+- **Screenshots**: Save to Desktop in PNG format without shadows
+- **Developer Tools**: Safari developer menu, Activity Monitor optimizations
+- And many more...
+
+### Customizing Settings
+
+See [MACOS_SETTINGS.md](MACOS_SETTINGS.md) for:
+- Complete list of all settings
+- How to add/modify/disable settings
+- Commands reference
+
+### Re-running Configuration
+
+The configuration runs automatically on first `chezmoi apply`. To re-run:
+
+```bash
+# Delete the state and re-apply
+chezmoi state delete-bucket --bucket=scriptState
+chezmoi apply
+```
+
