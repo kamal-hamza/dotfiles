@@ -2,16 +2,14 @@
 
 # ==============================================================================
 #
-#          Advanced Project Creator & Tmux Session Manager
+#          Project Creator & Tmux Session Manager
 #
 #  Features:
 #  - Clone existing GitHub repositories
-#  - Create from GitHub templates
-#  - Create from local templates
 #  - Create empty projects
 #  - Auto-open in tmux session with editor
 #
-#  Dependencies: fzf, tmux, gh (GitHub CLI), and build tools for your languages
+#  Dependencies: fzf, tmux, gh (GitHub CLI)
 #
 # ==============================================================================
 
@@ -20,288 +18,6 @@ set -e
 # --- Configuration ---
 CODE_DIR="${CODE_DIR:-$HOME/Code}"
 MY_EDITOR="${EDITOR:-zed}"
-
-# --- GitHub Template List (username/repo format) ---
-github_templates=(
-    # Frontend
-    "vercel/next.js"
-    "vitejs/vite"
-    "angular/quickstart"
-    "sveltejs/template"
-    "vuejs/core"
-    "remix-run/remix"
-    "solidjs/templates"
-    # Backend & Fullstack
-    "dotnet/aspnetcore"
-    "nestjs/typescript-starter"
-    "expressjs/express"
-    "laravel/laravel"
-    "strapi/strapi"
-    # Python
-    "tiangolo/fastapi"
-    "pallets/flask"
-    "django/django"
-    # Systems & CLI
-    "rust-lang/rust"
-    "golang-standards/project-layout"
-    # Mobile & Desktop
-    "flutter/flutter"
-    "facebook/react-native"
-    "electron/electron-quick-start"
-    "tauri-apps/tauri"
-    # Tooling & Configs
-    "microsoft/TypeScript"
-    "tailwindlabs/tailwindcss"
-)
-
-# --- Local Template List ---
-local_templates=(
-    "dotnet-console"
-    "react-vite"
-    "expressjs"
-    "nestjs"
-    "django"
-    "flask"
-    "fastapi"
-    "python"
-    "rust"
-    "c"
-    "cpp"
-    "go"
-    "node"
-    "generic"
-)
-
-# --- Local Template Initialization Functions ---
-
-init_dotnet_console() {
-    echo "Initializing .NET Console App..."
-    dotnet new console --force
-}
-
-init_react_vite() {
-    echo "Initializing React (Vite) App..."
-    npm create vite@latest . -- --template react
-}
-
-init_c() {
-    echo "Creating C boilerplate..."
-    cat <<'EOF' > main.c
-#include <stdio.h>
-
-int main() {
-    printf("Hello, C World!\n");
-    return 0;
-}
-EOF
-    cat <<'EOF' > Makefile
-CC=gcc
-CFLAGS=-Wall -Wextra -std=c11
-TARGET=main
-
-all: $(TARGET)
-
-$(TARGET): main.c
-	$(CC) $(CFLAGS) -o $(TARGET) main.c
-
-clean:
-	rm -f $(TARGET)
-EOF
-}
-
-init_cpp() {
-    echo "Creating C++ boilerplate..."
-    cat <<'EOF' > main.cpp
-#include <iostream>
-
-int main() {
-    std::cout << "Hello, C++ World!" << std::endl;
-    return 0;
-}
-EOF
-    cat <<'EOF' > Makefile
-CXX=g++
-CXXFLAGS=-Wall -Wextra -std=c++17
-TARGET=main
-
-all: $(TARGET)
-
-$(TARGET): main.cpp
-	$(CXX) $(CXXFLAGS) -o $(TARGET) main.cpp
-
-clean:
-	rm -f $(TARGET)
-EOF
-}
-
-init_python() {
-    echo "Creating Python project with virtual environment..."
-    python3 -m venv .venv
-    cat <<'EOF' > .gitignore
-.venv/
-__pycache__/
-*.pyc
-.pytest_cache/
-.coverage
-EOF
-    cat <<'EOF' > main.py
-def main():
-    print("Hello from Python!")
-
-if __name__ == "__main__":
-    main()
-EOF
-    cat <<'EOF' > requirements.txt
-# Add your dependencies here
-EOF
-}
-
-init_node() {
-    echo "Initializing basic Node.js project..."
-    npm init -y > /dev/null
-    touch index.js
-    cat <<'EOF' > .gitignore
-node_modules/
-dist/
-.env
-*.log
-EOF
-}
-
-init_go() {
-    echo "Initializing Go module..."
-    go mod init "$PROJECT_NAME"
-    cat <<'EOF' > main.go
-package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello, Go World!")
-}
-EOF
-    cat <<'EOF' > .gitignore
-# Binaries
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-bin/
-EOF
-}
-
-init_rust() {
-    echo "Initializing Rust project with Cargo..."
-    cargo init --name "$PROJECT_NAME" .
-}
-
-init_django() {
-    echo "Initializing Django project..."
-    python3 -m venv .venv
-    .venv/bin/pip install django > /dev/null
-    .venv/bin/django-admin startproject config .
-    cat <<'EOF' > .gitignore
-.venv/
-__pycache__/
-*.pyc
-db.sqlite3
-*.log
-.env
-EOF
-    echo "Django project created. Activate venv: source .venv/bin/activate"
-}
-
-init_expressjs() {
-    echo "Initializing Express.js project..."
-    npm init -y > /dev/null
-    npm install express > /dev/null
-    cat <<'EOF' > index.js
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-    res.send('Hello from Express!');
-});
-
-app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
-});
-EOF
-    cat <<'EOF' > .gitignore
-node_modules/
-.env
-*.log
-EOF
-}
-
-init_nestjs() {
-    echo "Initializing NestJS project..."
-    npx --yes @nestjs/cli new . --skip-git --package-manager npm
-}
-
-init_flask() {
-    echo "Initializing Flask project..."
-    python3 -m venv .venv
-    .venv/bin/pip install Flask > /dev/null
-    cat <<'EOF' > app.py
-from flask import Flask
-
-app = Flask(__name__)
-
-@app.route('/')
-def hello_world():
-    return 'Hello, World!'
-
-if __name__ == '__main__':
-    app.run(debug=True)
-EOF
-    cat <<'EOF' > .gitignore
-.venv/
-__pycache__/
-*.pyc
-instance/
-.env
-EOF
-    cat <<'EOF' > requirements.txt
-Flask
-EOF
-    echo "Flask project created. Activate venv: source .venv/bin/activate"
-}
-
-init_fastapi() {
-    echo "Initializing FastAPI project..."
-    python3 -m venv .venv
-    .venv/bin/pip install fastapi uvicorn > /dev/null
-    cat <<'EOF' > main.py
-from fastapi import FastAPI
-
-app = FastAPI()
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
-
-# Run with: uvicorn main:app --reload
-EOF
-    cat <<'EOF' > .gitignore
-.venv/
-__pycache__/
-*.pyc
-.env
-EOF
-    cat <<'EOF' > requirements.txt
-fastapi
-uvicorn[standard]
-EOF
-    echo "FastAPI project created. Run with: source .venv/bin/activate && uvicorn main:app --reload"
-}
-
-init_generic() {
-    echo "Created a generic project folder."
-    touch README.md
-}
 
 # --- Helper Functions ---
 
@@ -313,32 +29,18 @@ get_github_repo() {
     gh repo list --limit 300 | fzf --height 50% --reverse --prompt="Clone Repo: " | awk '{print $1}'
 }
 
-get_github_template() {
-    printf "%s\n" "${github_templates[@]}" | fzf --height 50% --reverse --prompt="GitHub Template: "
-}
-
-get_local_template() {
-    printf "%s\n" "${local_templates[@]}" | fzf --height 50% --reverse --prompt="Local Template: "
-}
-
 # --- Main Logic ---
 
 echo "Project Creator"
 echo ""
 
-# 1. Select Parent Directory
+# Ensure CODE_DIR exists
 if [[ ! -d "$CODE_DIR" ]]; then
     mkdir -p "$CODE_DIR"
 fi
 
-TARGET_DIR=$( (echo "$CODE_DIR"; find "$CODE_DIR" -type d -mindepth 1 -maxdepth 1 2>/dev/null) | fzf --height 40% --reverse --prompt="Parent Directory: ")
-if [[ -z "$TARGET_DIR" ]]; then
-    echo "No directory selected. Using $CODE_DIR"
-    TARGET_DIR="$CODE_DIR"
-fi
-
-# 2. Choose Action
-ACTION=$(printf "Clone Existing Repo\nCreate from GitHub Template\nCreate from Local Template\nCreate Empty Folder" | \
+# Choose Action
+ACTION=$(printf "Clone Existing Repo\nCreate Empty Folder" | \
     fzf --height 40% --reverse --prompt="Action: ")
 
 if [[ -z "$ACTION" ]]; then
@@ -346,45 +48,26 @@ if [[ -z "$ACTION" ]]; then
     exit 1
 fi
 
-# 3. Execute Action
+# Execute Action
 case "$ACTION" in
     "Clone Existing Repo")
         REPO=$(get_github_repo)
         [[ -z "$REPO" ]] && exit 1
 
         PROJECT_NAME=$(basename "$REPO")
-        PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
+        PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
 
-        echo "Cloning $REPO..."
-        cd "$TARGET_DIR"
+        echo "Cloning $REPO into $CODE_DIR..."
+        cd "$CODE_DIR"
         gh repo clone "$REPO"
         ;;
 
-    "Create from GitHub Template")
-        if ! command -v gh &>/dev/null; then
-            echo "Error: GitHub CLI (gh) not installed." >&2
-            exit 1
-        fi
-
-        TEMPLATE=$(get_github_template)
-        [[ -z "$TEMPLATE" ]] && exit 1
-
+    "Create Empty Folder")
         read -rp "Project Name: " PROJECT_NAME
         [[ -z "$PROJECT_NAME" ]] && exit 1
 
-        PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-
-        echo "Creating from template $TEMPLATE..."
-        cd "$TARGET_DIR"
-        gh repo create "$PROJECT_NAME" --template "$TEMPLATE" --clone --private
-        ;;
-
-    "Create from Local Template")
-        read -rp "Project Name: " PROJECT_NAME
-        [[ -z "$PROJECT_NAME" ]] && exit 1
-
-        PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-
+        PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
+        
         if [[ -d "$PROJECT_PATH" ]]; then
             echo "Warning: Directory '$PROJECT_PATH' already exists."
             read -rp "Continue anyway? (y/N): " CONTINUE
@@ -392,42 +75,7 @@ case "$ACTION" in
         else
             mkdir -p "$PROJECT_PATH"
         fi
-
-        cd "$PROJECT_PATH"
-
-        TEMPLATE=$(get_local_template)
-        [[ -z "$TEMPLATE" ]] && exit 1
-
-        echo "Initializing '$TEMPLATE' project..."
-
-        case "$TEMPLATE" in
-            "dotnet-console") init_dotnet_console ;;
-            "react-vite")     init_react_vite ;;
-            "c")              init_c ;;
-            "cpp")            init_cpp ;;
-            "python")         init_python ;;
-            "node")           init_node ;;
-            "go")             init_go ;;
-            "rust")           init_rust ;;
-            "django")         init_django ;;
-            "expressjs")      init_expressjs ;;
-            "nestjs")         init_nestjs ;;
-            "flask")          init_flask ;;
-            "fastapi")        init_fastapi ;;
-            "generic")        init_generic ;;
-            *)
-                echo "Unknown template. Creating generic folder." >&2
-                init_generic
-                ;;
-        esac
-        ;;
-
-    "Create Empty Folder")
-        read -rp "Project Name: " PROJECT_NAME
-        [[ -z "$PROJECT_NAME" ]] && exit 1
-
-        PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-        mkdir -p "$PROJECT_PATH"
+        
         cd "$PROJECT_PATH"
         touch README.md
         ;;
@@ -438,7 +86,7 @@ case "$ACTION" in
         ;;
 esac
 
-# 4. Tmux and Editor Integration
+# Tmux and Editor Integration
 cd "$PROJECT_PATH"
 
 echo ""
