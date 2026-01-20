@@ -7,16 +7,7 @@
 # - Project-aware scoring (git repositories)
 # - Syntax highlighting preview with bat
 # - Multi-line command support
-# - Keybindings:
-#   - Ctrl-R: Open history search
-#   - Ctrl-Y: Copy selected command to clipboard
-#   - Ctrl-D: Preview half page down
-#   - Ctrl-U: Preview half page up
-#   - Enter: Execute command
 # =============================================================================
-
-setopt extendedglob
-setopt localoptions no_shwordsplit
 
 # -----------------------------------------------------------------------------
 # Configuration
@@ -66,7 +57,7 @@ rank_history() {
       }
       
       # Boost score for common development commands
-      if (match(cmd, /^(git|npm|yarn|docker|kubectl|cargo|go|python|make)/)) {
+      if (match(cmd, /^(git|npm|yarn|pnpm|docker|kubectl|cargo|go|python|make|cd|z)/)) {
         dev_score[cmd]+=2
       }
     }
@@ -128,7 +119,7 @@ fzf_run() {
   | fzf \
       --height="$FZF_HEIGHT" \
       --reverse \
-      --prompt="❯ " \
+      --prompt="History ❯ " \
       --info=inline \
       --border=rounded \
       --ansi \
@@ -136,7 +127,7 @@ fzf_run() {
       --exact \
       --preview="$preview_cmd" \
       --preview-window="right:50%:wrap" \
-      --header="^R: Search | ^Y: Copy | ^D/U: Scroll | Enter: Execute" \
+      --header="^Y: Copy | ^D/U: Scroll | Enter: Select | Esc: Cancel" \
       --bind='ctrl-y:execute-silent(echo -n {} | pbcopy)+abort' \
       --bind='ctrl-d:preview-half-page-down' \
       --bind='ctrl-u:preview-half-page-up' \
@@ -145,26 +136,13 @@ fzf_run() {
 }
 
 # -----------------------------------------------------------------------------
-# ZLE Widget
+# Main
 # -----------------------------------------------------------------------------
 
-fzf-history-pro-widget() {
-  local selected
-  selected="$(fzf_run)"
+selected="$(fzf_run)"
 
-  # Return if nothing selected
-  [[ -z "$selected" ]] && return
+# Exit if nothing selected
+[[ -z "$selected" ]] && exit 0
 
-  # Clear current buffer and insert selected command
-  BUFFER="$selected"
-  CURSOR=$#BUFFER
-  
-  # Redraw prompt
-  zle reset-prompt
-}
-
-# Register ZLE widget
-zle -N fzf-history-pro-widget
-
-# Bind to Ctrl-R
-bindkey '^R' fzf-history-pro-widget
+# Print selected command (can be captured or executed by caller)
+echo "$selected"

@@ -75,9 +75,30 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # -----------------------------------------------------------------------------
-# FZF History Pro (Advanced history search with Ctrl-R)
+# FZF History (Ctrl-R override)
 # -----------------------------------------------------------------------------
-source_if_exists "$HOME/.config/zsh/fzf-history-pro.zsh"
+if command -v fzf-history >/dev/null 2>&1; then
+  fzf-history-widget() {
+    local selected
+    selected="$(fzf-history)"
+    
+    # Return if nothing selected
+    [[ -z "$selected" ]] && return
+    
+    # Replace buffer with selected command
+    BUFFER="$selected"
+    CURSOR=$#BUFFER
+    
+    # Redraw prompt
+    zle reset-prompt
+  }
+  
+  # Register ZLE widget
+  zle -N fzf-history-widget
+  
+  # Bind to Ctrl-R
+  bindkey '^R' fzf-history-widget
+fi
 
 # -----------------------------------------------------------------------------
 # Zoxide Integration (smarter cd)
