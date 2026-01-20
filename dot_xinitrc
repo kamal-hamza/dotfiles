@@ -1,7 +1,0 @@
-#!/bin/sh
-# ~/.xinitrc
-# Set session type for Wayland
-export XDG_SESSION_TYPE=wayland
-export XDG_SESSION_DESKTOP=hyprland
-# Start Hyprland
-exec Hyprland

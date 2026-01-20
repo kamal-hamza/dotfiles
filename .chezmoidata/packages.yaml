@@ -1,189 +1,98 @@
+# =============================================================================
+# Package Configuration
+# =============================================================================
+# This file defines all packages to be installed on your system.
+# To add a new package, simply add it to the appropriate list below.
+# After editing, run: chezmoi apply
+#
+# Package Types:
+# - brews: Command-line tools installed via Homebrew (macOS)
+# - casks: GUI applications installed via Homebrew Cask (macOS)
+# - pacman: Packages from official Arch repositories
+# - aur: Packages from Arch User Repository (requires yay)
+# =============================================================================
+
 packages:
-    # 🐧 NixOS packages (handled by configuration.nix)
-    # NixOS uses declarative package management in /etc/nixos/configuration.nix
-    # This section is for reference only - actual packages are defined in nixos/modules/packages.nix
-    nixos:
-        note: "Packages are managed in /etc/nixos/modules/packages.nix"
-        # All packages from arch.pacman list are available in NixOS
-        # Use: nix search nixpkgs <package-name> to find packages
+  # ===========================================================================
+  # macOS Packages (Homebrew)
+  # ===========================================================================
+  darwin:
+    # CLI Tools - Command-line utilities and development tools
+    brews:
+      - chezmoi              # Dotfiles manager
+      - fzf                  # Fuzzy finder for terminal
+      - neovim               # Modern vim-based text editor
+      - tldr                 # Simplified man pages
+      - tmux                 # Terminal multiplexer
+      - zsh-autopair         # Auto-close brackets in zsh
+      - zsh-autosuggestions  # Fish-like autosuggestions
+      - zsh-syntax-highlighting  # Syntax highlighting for zsh
+      - git
 
-    # 💻 macOS packages using Homebrew
-    darwin:
-        brews:
-            - "bat"
-            - "btop"
-            - "chezmoi"
-            - "clang-format"
-            - "cmake"
-            - "curl"
-            - "eza"
-            - "ffmpeg"
-            - "fzf"
-            - "git"
-            - "go"
-            - "lazygit"
-            - "llvm"
-            - "lua-language-server"
-            - "make"
-            - "neovim"
-            - "nvm"
-            - "perl"
-            - "php"
-            - "poetry"
-            - "stylua"
-            - "tldr"
-            - "tmux"
-            - "yazi"
-            - "zoxide"
-            - "zsh"
-            - "zsh-autopair"
-            - "zsh-autosuggestions"
-            - "zsh-syntax-highlighting"
-            - "markdown-oxide"
-        casks:
-            - "chatgpt"
-            - "docker"
-            - "excalidrawz"
-            - "gimp"
-            - "github"
-            - "google-chrome"
-            - "mactex"
-            - "miniconda"
-            - "ollama"
-            - "skim"
-            - "visual-studio-code"
-            - "wezterm"
-            - "powershell"
-            - "zed"
-            - "font-fira-code-nerd-font"
-            - "font-meslo-lg-nerd-font"
-            - "obsidian"
+    # GUI Applications - Desktop applications
+    casks:
+      - chatgpt              # ChatGPT desktop app
+      - obsidian             # Knowledge management app
+      - wezterm              # GPU-accelerated terminal
+      - zed                  # Modern code editor
 
-    # 🐧 Arch Linux packages
-    # Note: AUR packages require an AUR helper (e.g., yay, paru)
-    arch:
-        pacman:
-            # --- General Development & CLI Tools ---
-            - "bat"
-            - "btop"
-            - "chezmoi"
-            - "clang"
-            - "cmake"
-            - "curl"
-            - "docker"
-            - "eza"
-            - "ffmpeg"
-            - "fzf"
-            - "git"
-            - "go"
-            - "lazygit"
-            - "llvm"
-            - "lua-language-server"
-            - "make"
-            - "neovim"
-            - "nvm"
-            - "perl"
-            - "php"
-            - "python-poetry"
-            - "stylua"
-            - "tldr"
-            - "tmux"
-            - "yazi"
-            - "zathura"
-            - "zathura-pdf-mupdf"
-            - "zoxide"
-            - "zsh"
-            - "zsh-autosuggestions"
-            - "zsh-syntax-highlighting"
-            - "gimp"
-            - "wezterm"
-            - "greenclip"
-            - "zed"
-            - "ttf-firacode-nerd"
-            - "ttf-meslo-nerd-font-powerlevel10k"
-            - "ttf-jetbrains-mono-nerd"
-            - "perl-local-lib"
+  # ===========================================================================
+  # Arch Linux Packages
+  # ===========================================================================
+  arch:
+    # Official Repository Packages
+    pacman:
+      - chezmoi              # Dotfiles manager
+      - fzf                  # Fuzzy finder for terminal
+      - git                  # Version control system
+      - neovim               # Modern vim-based text editor
+      - obsidian             # Knowledge management app
+      - tldr                 # Simplified man pages
+      - tmux                 # Terminal multiplexer
+      - wezterm              # GPU-accelerated terminal
+      - zed                  # Modern code editor
+      - zsh                  # Z shell
+      - zsh-autosuggestions  # Fish-like autosuggestions
+      - zsh-syntax-highlighting  # Syntax highlighting for zsh
 
-            # --- Hyprland / Arch Tools ---
-            - "hyprland"
-            - "hyprpaper"
-            - "hyprlock"
-            - "hypridle"
-            - "hyprcursor"
-            - "hyprshot"
-            - "satty"
-            - "wl-clipboard"
-            - "networkmanager"
-            - "wf-recorder"
-            - "pipewire"
-            - "pipewire-pulse"
-            - "pipewire-alsa"
-            - "pipewire-jack"
-            - "wireplumber"
-            - "ly"
-            - "waybar"
-            - "firefox"
-            - "mako"
-            - "nemo"
-            - "rofi"
-            - "vulkan-intel"
-            - "libva-intel-driver"
+    # AUR (Arch User Repository) Packages
+    aur:
+      - chatgpt-desktop-bin  # ChatGPT desktop app
+      - zsh-autopair-git     # Auto-close brackets in zsh
 
-        aur:
-            # --- AUR (Arch User Repository) ---
-            - "python-pywal16"
-            - "python-pywal"
-            - "ttf-jetbrains-mono-nerd"
-            - "google-chrome"
-            - "visual-studio-code-bin"
-            - "github-desktop-bin"
-            - "ollama"
-            - "zsh-autopair-git"
-            - "excalidraw-desktop"
-            - "chatgpt-desktop-bin"
-
-    # 🪟 Windows packages using Chocolatey
-    windows:
-        choco:
-            - "bat"
-            - "btop"
-            - "chezmoi"
-            - "cmake"
-            - "curl"
-            - "eza"
-            - "ffmpeg"
-            - "fzf"
-            - "git"
-            - "golang"
-            - "lazygit"
-            - "llvm"
-            - "lua-language-server"
-            - "make"
-            - "neovim"
-            - "nvm"
-            - "poetry"
-            - "strawberryperl"
-            - "php"
-            - "stylua"
-            - "tldr"
-            - "yazi"
-            - "zoxide"
-            - "chatgpt"
-            - "docker-desktop"
-            - "excalidraw"
-            - "gimp"
-            - "github-desktop"
-            - "googlechrome"
-            - "miktex" # For LaTeX
-            - "miniconda3"
-            - "ollama"
-            - "rapidapi"
-            - "sumatrapdf" # Zathura/Skim alternative
-            - "vscode"
-            - "wezterm"
-            - "zed-editor"
-            - "mpd"
-            - "mpc"
-            - "ncmpcpp"
-            - "NerdFonts.FiraCode"
-            - "NerdFonts.Meslo"
+# =============================================================================
+# How to Add New Packages
+# =============================================================================
+#
+# 1. Find your package name:
+#    - macOS: brew search <package-name>
+#    - Arch:  pacman -Ss <package-name>  or  yay -Ss <package-name>
+#
+# 2. Add it to the appropriate list above
+#
+# 3. Apply changes:
+#    chezmoi apply
+#
+# Examples:
+#
+#   # Add a CLI tool on macOS:
+#   darwin:
+#     brews:
+#       - git
+#
+#   # Add a GUI app on macOS:
+#   darwin:
+#     casks:
+#       - docker
+#
+#   # Add a package on Arch Linux:
+#   arch:
+#     pacman:
+#       - docker
+#
+#   # Add an AUR package on Arch:
+#   arch:
+#     aur:
+#       - visual-studio-code-bin
+#
+# =============================================================================

@@ -1,4 +1,0 @@
-[[mgr.prepend_keymap]]
-on = "x"
-run = "create_do --dir"
-desc = "Create Directory"

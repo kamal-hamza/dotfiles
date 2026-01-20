@@ -1,138 +1,40 @@
 # =============================================================================
+# Simple Cross-Platform Zsh Profile
+# =============================================================================
+
+# -----------------------------------------------------------------------------
 # Helper Functions
-# =============================================================================
-
-# Safely run a command and return output, or return empty string if cmd missing
-get_cmd_output() {
-  if command -v "$1" >/dev/null 2>&1; then
-    "$@"
-  fi
-}
-
-# Add a directory to PATH only if it exists
+# -----------------------------------------------------------------------------
 path_if_exists() {
-  local dir="$1"
-  if [[ -d "$dir" ]]; then
-    export PATH="$dir:$PATH"
-  fi
+  [[ -d "$1" ]] && export PATH="$1:$PATH"
 }
 
-# Export a variable unconditionally (for settings/strings)
-export_var() {
-  local var_name="$1"
-  local value="$2"
-  export "$var_name=$value"
-}
-
-# Export a variable only if the target file/directory exists
-export_path_var() {
-  local var_name="$1"
-  local value="$2"
-  if [[ -e "$value" ]]; then
-    export "$var_name=$value"
-  fi
-}
-
-# =============================================================================
-# 1. Environment Variables (Must come before PATH)
-# =============================================================================
-
+# -----------------------------------------------------------------------------
 # Editor
-export_var EDITOR "zed"
+# -----------------------------------------------------------------------------
+export EDITOR="nvim"
+export VISUAL="nvim"
 
-# Emacs Config Dir
-export_var EMACS_DIR "$HOME/.config/emacs"
-
-# Git
-export_path_var GIT_CONFIG_GLOBAL "$HOME/.config/git/config"
-
-# TeX
-export_var TEXINPUTS "$HOME/.config/tex/latex//:"
-
-# Node Version Manager
-export_path_var NVM_DIR "$HOME/.nvm"
-
-# Zig Version Manager
-export_path_var ZVM_INSTALL "$HOME/.zvm/self"
-export_path_var ZIG_PATH "$HOME/.zvm/bin/zig"
-
-# .NET
-export_path_var DOTNET_ROOT "/usr/local/share/dotnet"
-export_path_var DOTNET_ROOT "/usr/share/dotnet"
-
-# Android SDK
-# Replaced complex checks with your specific path, but kept the existence check
-export_path_var ANDROID_SDK_ROOT "$HOME/Library/Android/sdk"
-
-# Database
-export_path_var ODBCSYSINI "/etc"
-
-# Shell completions
-export_path_var FPATH "$HOME/.docker/completions:$FPATH"
-
-# =============================================================================
-# 2. PATH Configuration
-# =============================================================================
-
-# User scripts and local binaries
-path_if_exists "$HOME/.config/scripts"
-path_if_exists "$HOME/.config/walker/scripts"
+# -----------------------------------------------------------------------------
+# PATH Configuration
+# -----------------------------------------------------------------------------
 path_if_exists "$HOME/.local/bin"
-path_if_exists "$HOME/.dotnet/tools"
-
-# Language-specific tools
-path_if_exists "$HOME/.pyenv/bin"
 path_if_exists "$HOME/.cargo/bin"
-path_if_exists "$HOME/.composer/vendor/bin"
 
-# Android Dev Tools
-# Only add to path if the SDK root was actually found above
-if [[ -n "$ANDROID_SDK_ROOT" ]]; then
-  path_if_exists "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin"
-  path_if_exists "$ANDROID_SDK_ROOT/platform-tools"
-fi
-
-# Dart Path
-export PATH="$PATH":"$HOME/.pub-cache/bin"
-
-# Go
-if command -v go >/dev/null 2>&1; then
-  path_if_exists "$(go env GOPATH)/bin"
-fi
-
-# Brew Go (Fallback if go env isn't ready)
-if command -v brew >/dev/null 2>&1; then
-   path_if_exists "$(brew --prefix)/opt/go/bin"
-fi
-
-# .NET
-path_if_exists "$HOME/.dotnet/tools"
-if [[ -n "$DOTNET_ROOT" ]]; then
-  path_if_exists "$DOTNET_ROOT/sdk"
-  path_if_exists "$DOTNET_ROOT"
-fi
-
-# Zig
-path_if_exists "$HOME/.zvm/bin"
-path_if_exists "$ZVM_INSTALL"
-
-# Platform-specific tools
-path_if_exists "/Applications/Docker.app/Contents/Resources/bin"
-path_if_exists "/opt/mssql-tools18/bin"
-
-# =============================================================================
-# 3. FZF Configuration
-# =============================================================================
-
-export_var FZF_DEFAULT_COMMAND "fd --hidden --strip-cwd-prefix --exclude .git"
-export_var FZF_CTRL_T_COMMAND "$FZF_DEFAULT_COMMAND"
-export_var FZF_ALT_C_COMMAND "fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-export_var FZF_CTRL_T_OPTS "--preview 'bat --color=always -n --line-range :500 {}'"
-export_var FZF_ALT_C_OPTS "--preview 'eza --icons=always --tree --color=always {} | head -200'"
-export_var FZF_TMUX_OPTS " -p90%,70% "
-export_var FZF_DEFAULT_OPTS '
---color=fg:15,bg:-1,hl:15,fg+:15,bg+:-1
---color=hl+:15:bold:underline,info:15,prompt:15,pointer:15:bold
---color=marker:15,spinner:15,header:15
---border=rounded --height=40% --reverse --cycle --bind "tab:down,shift-tab:up"
+# -----------------------------------------------------------------------------
+# FZF Configuration
+# -----------------------------------------------------------------------------
+export FZF_DEFAULT_OPTS='
+--color=fg:#ffffff,bg:#000000,hl:#5fd7ff
+--color=fg+:#ffffff,bg+:#262626,hl+:#5fd7ff
+--color=info:#afaf87,prompt:#d7005f,pointer:#af5fff
+--color=marker:#87ff00,spinner:#af5fff,header:#87afaf
+--border=rounded --height=40% --reverse --cycle
+--bind="tab:down,shift-tab:up"
 '
+
+# Enable better command matching
+if command -v fzf >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='find . -type f 2>/dev/null'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi

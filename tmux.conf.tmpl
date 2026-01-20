@@ -11,29 +11,27 @@ bind C-s send-prefix
 
 # Enable 256-color mode and true color support
 set -g default-terminal "screen-256color"
-set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
-set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+set -ga terminal-features ",xterm-256color:RGB"
 
-bind v split-window -h -c "#{pane_current_path}" \; run-shell "~/.config/tmux/hooks/update-pane-status.sh"
-bind b split-window -v -c "#{pane_current_path}" \; run-shell "~/.config/tmux/hooks/update-pane-status.sh"
+# Split panes
+bind v split-window -h -c "#{pane_current_path}"
+bind b split-window -v -c "#{pane_current_path}"
 
-# Disable confirmation for killing a pane
+# Disable confirmation for killing a pane/window
 unbind x
 unbind X
-bind x kill-pane \; run-shell "~/.config/tmux/hooks/update-pane-status.sh"
-bind X kill-session
-
-# Disable confirmation for killing a window
 unbind &
+bind x kill-pane
+bind X kill-session
 bind & kill-window
 
-# sessions keybinds
+# Session keybinds
 unbind n
 unbind p
 bind n switch-client -n
 bind p switch-client -p
 
-# window keybinds
+# Window keybinds
 unbind l
 unbind k
 unbind r
@@ -41,34 +39,21 @@ bind l next-window
 bind k previous-window
 bind r command-prompt "rename-window '%%'"
 
-# yazi tmux config
-set -g allow-passthrough on
-set -ga update-environment TERM
-set -ga update-environment TERM_PROGRAM
-
-# copy and paste
+# Copy mode
 bind-key -T copy-mode-vi v send-keys -X begin-selection
 bind-key -T copy-mode-vi y send-keys -X copy-selection-and-cancel
 
-# Smart pane switching with awareness of Vim splits.
-# See: https://github.com/christoomey/vim-tmux-navigator
-is_vim="ps -o state= -o comm= -t '#{pane_tty}' \
-    | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?(-wrapped)?$'"
-bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h'  'select-pane -L'
-bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j'  'select-pane -D'
-bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k'  'select-pane -U'
-bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l'  'select-pane -R'
-tmux_version='$(tmux -V | sed -En "s/^tmux ([0-9]+(.[0-9]+)?).*/\1/p")'
-if-shell -b '[ "$(echo "$tmux_version < 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\'  'select-pane -l'"
-if-shell -b '[ "$(echo "$tmux_version >= 3.0" | bc)" = 1 ]' \
-    "bind-key -n 'C-\\' if-shell \"$is_vim\" 'send-keys C-\\\\'  'select-pane -l'"
+# Smart pane switching with vim awareness
+is_vim="ps -o state= -o comm= -t '#{pane_tty}' | grep -iqE '^[^TXZ ]+ +(\\S+\\/)?g?\.?(view|l?n?vim?x?|fzf)(diff)?$'"
+bind-key -n 'C-h' if-shell "$is_vim" 'send-keys C-h' 'select-pane -L'
+bind-key -n 'C-j' if-shell "$is_vim" 'send-keys C-j' 'select-pane -D'
+bind-key -n 'C-k' if-shell "$is_vim" 'send-keys C-k' 'select-pane -U'
+bind-key -n 'C-l' if-shell "$is_vim" 'send-keys C-l' 'select-pane -R'
 
 bind-key -T copy-mode-vi 'C-h' select-pane -L
 bind-key -T copy-mode-vi 'C-j' select-pane -D
 bind-key -T copy-mode-vi 'C-k' select-pane -U
 bind-key -T copy-mode-vi 'C-l' select-pane -R
-bind-key -T copy-mode-vi 'C-\' select-pane -l
 
 # Increase history limit
 set -g history-limit 30000
@@ -87,12 +72,8 @@ set-window-option -g automatic-rename on
 set -g automatic-rename-format "#{b:pane_current_path}"
 
 # ===================================================================
-# ENHANCED STATUS BAR (inspired by nikolovlazar's dotfiles)
-# Using Soft Focus Dark theme colors
+# STATUS BAR CONFIGURATION
 # ===================================================================
-
-# Source base theme colors
-source-file ~/.config/tmux/themes/soft-focus-dark.conf
 
 # Status bar configuration
 set -g status on
@@ -101,35 +82,28 @@ set -g status-justify "left"
 set -g status-left-length 50
 set -g status-right-length 100
 
-# Status left: session name only (like "bife")
-set -g status-left ""
-set -ga status-left "#{?client_prefix,#[fg=#050505 bg=#C42847 bold]  #S  ,#[fg=#050505 bg=#87af87 bold]  #S  }"
+# Colors
+set -g status-style "bg=#1c1c1c,fg=#ffffff"
+set -g message-style "bg=#1c1c1c,fg=#ffffff"
+set -g pane-border-style "fg=#444444"
+set -g pane-active-border-style "fg=#00afff"
 
-# Status right: current path, pane command, and zoom indicator
-set -g status-right ""
-set -ga status-right "#[fg=#448cbb]  #{=/-32/...:#{s|$USER|~|:#{b:pane_current_path}}} "
-set -ga status-right "#[fg=#555555 none]│"
-set -ga status-right "#[fg=#c47890]  #{pane_current_command} "
-set -ga status-right "#[fg=#555555 none]#{?window_zoomed_flag,│,}"
-set -ga status-right "#[fg=#D4B87B]#{?window_zoomed_flag,  zoom ,}"
+# Status left: session name
+set -g status-left "#[fg=#000000,bg=#00afff,bold] #S #[default] "
 
-# Window status format (tabs showing "nvim [1]", "zsh [2]", etc.)
-set -g window-status-format " #W [#{window_panes}] "
-set -g window-status-style "fg=#bbbbbb bg=#050505"
-set -g window-status-last-style "fg=#d4956b bg=#050505"
-set -g window-status-activity-style "bg=#C42847 fg=#050505"
-set -g window-status-bell-style "bg=#C42847 fg=#050505 bold"
-set -gF window-status-separator ""
-set -g window-status-current-format " #W [#{window_panes}] "
-set -g window-status-current-style "fg=#050505 bg=#448cbb bold"
+# Status right: current path and time
+set -g status-right "#[fg=#00afff]#{=/-32/...:#{b:pane_current_path}} #[fg=#666666]│#[fg=#888888] %H:%M "
 
-# Pane borders - show pane numbers when multiple panes exist
+# Window status format
+set -g window-status-format " #I:#W "
+set -g window-status-style "fg=#888888"
+set -g window-status-current-format " #I:#W "
+set -g window-status-current-style "fg=#000000,bg=#00afff,bold"
+set -g window-status-separator ""
+
+# Pane borders
 set -g pane-border-lines single
 set -g pane-border-status off
-set -g pane-border-format " Pane ##{pane_index} "
-
-# Update pane status based on number of panes
-set-hook -g pane-exited 'run-shell "~/.config/tmux/hooks/update-pane-status.sh"'
 
 # Toggle tmux status bar with prefix + \
 bind '\' set status

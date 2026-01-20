@@ -1,169 +1,98 @@
+# =============================================================================
+# Simple Cross-Platform Zsh Configuration
+# =============================================================================
+
 # -----------------------------------------------------------------------------
 # Helper Functions
 # -----------------------------------------------------------------------------
-eval_if_exists() {
-  local cmd="$1"
-  shift
-  if command -v "$cmd" >/dev/null 2>&1; then
-    eval "$("$cmd" "$@")"
-  fi
-}
-
 source_if_exists() {
-  if [[ -f "$1" && -r "$1" ]]; then
-    source "$1"
+  [[ -f "$1" && -r "$1" ]] && source "$1"
+}
+
+# -----------------------------------------------------------------------------
+# Homebrew Setup (macOS)
+# -----------------------------------------------------------------------------
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
   fi
-}
-
-alias_if_exists() {
-    local name="$1"
-    shift
-    local cmd="$*"
-
-    # Extract the actual binary name (first argument only, respecting quotes)
-    local bin
-    bin=$(printf '%s\n' "$cmd" | awk '{print $1}')
-
-    if command -v "$bin" >/dev/null 2>&1; then
-        alias "$name"="$cmd"
-    fi
-}
-
-# For user scripts - create alias without checking if command exists
-# This is needed because scripts might not be in PATH yet during .zshrc execution
-alias_script() {
-    local name="$1"
-    shift
-    local cmd="$*"
-    alias "$name"="$cmd"
-}
-
-# -----------------------------------------------------------------------------
-# PATH Setup (Fallback for non-login shells)
-# -----------------------------------------------------------------------------
-# Ensure critical paths are set even if .zprofile wasn't sourced
-# This handles the case where a non-login shell is started
-if [[ ! "$PATH" =~ "$HOME/.config/scripts" ]]; then
-  export PATH="$HOME/.config/scripts:$PATH"
-fi
-if [[ ! "$PATH" =~ "$HOME/.local/bin" ]]; then
-  export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # -----------------------------------------------------------------------------
-# Evals & Sourcing
-# -----------------------------------------------------------------------------
-# Initialize Homebrew (prefer /opt/homebrew on Apple Silicon, fallback to /usr/local on Intel)
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-elif [[ -x /usr/local/bin/brew ]]; then
-  eval "$(/usr/local/bin/brew shellenv)"
-fi
-eval_if_exists pyenv init --path
-eval_if_exists pyenv init -
-eval_if_exists pyenv virtualenv-init -
-eval_if_exists zoxide init zsh
-eval_if_exists perl -I"$HOME"/perl5/lib/perl5 -Mlocal::lib="$HOME"/perl5
-
-# fzf integration
-if command -v fzf >/dev/null 2>&1; then
-  source <(fzf --zsh)
-fi
-
-# -----------------------------------------------------------------------------
-# Initialize NVM
-# -----------------------------------------------------------------------------
-export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  source "$NVM_DIR/nvm.sh"
-fi
-
-
-# -----------------------------------------------------------------------------
-# Initialize Zsh completion system
+# Zsh Completion System
 # -----------------------------------------------------------------------------
 autoload -Uz compinit
-compinit -C   # use cache for speed
+compinit -C
 
 # -----------------------------------------------------------------------------
-# Custom Prompt
+# Load Theme
 # -----------------------------------------------------------------------------
-LS_COLORS="di=1;37"
+# Load current theme colors (dark by default)
+CURRENT_THEME="dark"
+if [[ -f "$HOME/.config/.current-theme" ]]; then
+    CURRENT_THEME=$(cat "$HOME/.config/.current-theme")
+fi
+source_if_exists "$HOME/.config/zsh/themes/soft-focus-${CURRENT_THEME}.zsh"
+
+# -----------------------------------------------------------------------------
+# Simple Prompt
+# -----------------------------------------------------------------------------
 autoload -Uz vcs_info
 precmd() { vcs_info }
 zstyle ':vcs_info:git:*' formats '(%b) '
 zstyle ':vcs_info:*' enable git
 setopt PROMPT_SUBST
-PROMPT='${CONDA_DEFAULT_ENV:+($CONDA_DEFAULT_ENV) }%1~ ${vcs_info_msg_0_}%% '
+PROMPT='%1~ ${vcs_info_msg_0_}%% '
 
 # -----------------------------------------------------------------------------
-# Sourcing
+# Zsh Plugins
 # -----------------------------------------------------------------------------
-brew_share_path="${HOMEBREW_PREFIX:-/opt/homebrew}/share"
-source_if_exists "$HOME/.config/zsh/themes/soft-light.zsh"
-source_if_exists "$HOME/.cache/wal/colors.sh"
-source_if_exists "$brew_share_path/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source_if_exists "$brew_share_path/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source_if_exists "$brew_share_path/zsh-autopair/autopair.zsh"
-source_if_exists "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source_if_exists "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source_if_exists "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source_if_exists "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source_if_exists "/usr/share/zsh/plugins/zsh-autopair/zsh-autopair.plugin.zsh"
-source_if_exists "/usr/share/zsh-autopair/autopair.zsh"
+# macOS (Homebrew)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  brew_share="${HOMEBREW_PREFIX:-/opt/homebrew}/share"
+  source_if_exists "$brew_share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source_if_exists "$brew_share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source_if_exists "$brew_share/zsh-autopair/autopair.zsh"
+fi
 
-
-# -----------------------------------------------------------------------------
-# Global Aliases
-# -----------------------------------------------------------------------------
-alias_if_exists tree "tree -I 'node_modules|bower_components'"
-alias_if_exists la "ls -la"
-alias_if_exists l "eza --all --icons"
-alias_if_exists cls "clear"
-alias_if_exists v "nvim"
-alias_if_exists vi "nvim"
-alias_if_exists t "tmux a"
-alias_if_exists cd "z"
-alias_if_exists yy "yazi"
-alias_if_exists gs "git status --short"
-alias_if_exists fman "compgen -c | fzf | xargs man"
-alias_if_exists what "tldr"
-alias_if_exists op "opencode"
+# Arch Linux (Pacman)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  source_if_exists "/usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source_if_exists "/usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source_if_exists "/usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source_if_exists "/usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  source_if_exists "/usr/share/zsh/plugins/zsh-autopair/autopair.zsh"
+  source_if_exists "/usr/share/zsh-autopair/autopair.zsh"
+fi
 
 # -----------------------------------------------------------------------------
-# Script Aliases (scripts in ~/.config/scripts/)
+# FZF Integration
 # -----------------------------------------------------------------------------
-alias_script tt "tmux-new.sh"
-alias_script ccp "create-project.sh"
-alias_script dp "delete-project.sh"
-alias_script m "man.sh"
-alias_script bb "branch-change.sh"
-alias_script dc "docker-image-runner.sh"
-alias_script dd "docker-image-stop.sh"
-alias_script ss "stack-search.sh"
+if command -v fzf >/dev/null 2>&1; then
+  source <(fzf --zsh)
+fi
 
 # -----------------------------------------------------------------------------
-# Conda Initialization (MUST BE LAST)
+# Aliases
 # -----------------------------------------------------------------------------
-conda_paths=(
-  "/opt/anaconda3/bin/conda"   # macOS default
-  "$HOME/anaconda3/bin/conda"  # Linux default
-)
+alias v="nvim"
+alias vi="nvim"
+alias t="tmux attach"
+alias cls="clear"
 
-for conda_bin in "${conda_paths[@]}"; do
-  if [ -x "$conda_bin" ]; then
-    __conda_setup="$("$conda_bin" shell.zsh hook 2> /dev/null)"
-    if [ $? -eq 0 ]; then
-      eval "$__conda_setup"
-    else
-      conda_base="${conda_bin%/bin/conda}"
-      if [ -f "$conda_base/etc/profile.d/conda.sh" ]; then
-        . "$conda_base/etc/profile.d/conda.sh"
-      else
-        export PATH="$conda_base/bin:$PATH"
-      fi
-    fi
-    unset __conda_setup
-    break  # stop after first working conda
-  fi
-done
+# -----------------------------------------------------------------------------
+# Script Aliases
+# -----------------------------------------------------------------------------
+source_if_exists "$HOME/.config/zsh/aliases.zsh"
+
+# -----------------------------------------------------------------------------
+# History Configuration
+# -----------------------------------------------------------------------------
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt SHARE_HISTORY

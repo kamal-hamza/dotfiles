@@ -1,74 +1,14 @@
-packages.json
+# System files
+.DS_Store
+Thumbs.db
 
-# images folder
-img/
-
-# Ignore LaTeX build artifacts
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.fdb_latexmk
-*.fls
-*.bbl
-*.blg
-*.lof
-*.lot
-*.nav
-*.snm
-*.vrb
-*.xdv
-
-# Ignore temp files from editors
+# Editor temp files
 *~
 *.swp
 *.swo
 *.bak
 
-# Ignore any hidden system files
-.DS_Store
-Thumbs.db
 
-# Ignore any latexmk or arara state files
-*.latexmk
-*.arara
 
-# Ignore any temp listing files (for code listings)
-*-temp.listing
-
-# Ignore any other temp/auxiliary files in Resume subfolder
-Resume/*.aux
-Resume/*.log
-Resume/*.out
-Resume/*.toc
-Resume/*.synctex.gz
-Resume/*.fdb_latexmk
-Resume/*.fls
-Resume/*.bbl
-Resume/*.blg
-Resume/*.lof
-Resume/*.lot
-Resume/*.nav
-Resume/*.snm
-Resume/*.vrb
-Resume/*.xdv
-Resume/*-temp.listing
-
-# Ignore any other temp/auxiliary files in dot_config/tex/latex
-dot_config/tex/latex/*.aux
-dot_config/tex/latex/*.log
-dot_config/tex/latex/*.out
-dot_config/tex/latex/*.toc
-dot_config/tex/latex/*.synctex.gz
-dot_config/tex/latex/*.fdb_latexmk
-dot_config/tex/latex/*.fls
-dot_config/tex/latex/*.bbl
-dot_config/tex/latex/*.blg
-dot_config/tex/latex/*.lof
-dot_config/tex/latex/*.lot
-dot_config/tex/latex/*.nav
-dot_config/tex/latex/*.snm
-dot_config/tex/latex/*.vrb
-dot_config/tex/latex/*.xdv
-dot_config/tex/latex/*-temp.listing
+# Theme system (keep in repo, don't sync to home)
+theme-generators/
