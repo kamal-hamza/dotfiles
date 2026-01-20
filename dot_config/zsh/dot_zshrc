@@ -21,6 +21,20 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # -----------------------------------------------------------------------------
+# History Configuration (must be early for proper loading)
+# -----------------------------------------------------------------------------
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=50000              # Lines in memory
+SAVEHIST=50000              # Lines to save to file
+setopt EXTENDED_HISTORY     # Save timestamp and duration
+setopt HIST_IGNORE_ALL_DUPS # Remove older duplicates
+setopt HIST_FIND_NO_DUPS    # Don't show duplicates in search
+setopt HIST_IGNORE_SPACE    # Don't save commands starting with space
+setopt SHARE_HISTORY        # Share history across all sessions
+setopt INC_APPEND_HISTORY   # Append immediately, not on exit
+setopt HIST_REDUCE_BLANKS   # Remove extra blanks
+
+# -----------------------------------------------------------------------------
 # Zsh Completion System
 # -----------------------------------------------------------------------------
 autoload -Uz compinit
@@ -119,13 +133,3 @@ alias cls="clear"
 # Script Aliases
 # -----------------------------------------------------------------------------
 source_if_exists "$HOME/.config/zsh/aliases.zsh"
-
-# -----------------------------------------------------------------------------
-# History Configuration
-# -----------------------------------------------------------------------------
-HISTFILE="$HOME/.zsh_history"
-HISTSIZE=10000
-SAVEHIST=10000
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
-setopt SHARE_HISTORY

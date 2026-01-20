@@ -7,6 +7,7 @@
 # - Project-aware scoring (git repositories)
 # - Syntax highlighting preview with bat
 # - Multi-line command support
+# - Works across all tmux sessions and terminals
 # =============================================================================
 
 # -----------------------------------------------------------------------------
@@ -16,6 +17,9 @@
 HISTORY_LIMIT=5000
 FZF_HEIGHT="50%"
 PREVIEW_LINES=10
+
+# Ensure history is loaded
+HISTFILE="${HISTFILE:-$HOME/.zsh_history}"
 
 # Detect project root (git-aware)
 project_root() {
@@ -29,10 +33,19 @@ PROJECT_KEY=$(project_root)
 # -----------------------------------------------------------------------------
 
 collect_history() {
-  fc -rl 1 \
-  | head -n $HISTORY_LIMIT \
-  | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
-  | awk '!seen[$0]++'
+  # Read directly from history file for cross-session history
+  if [[ -f "$HISTFILE" ]]; then
+    # Parse zsh history file format (handles timestamps and multiline)
+    perl -ne 'if (/^: \d+:\d+;(.*)/) { print "$1\n" } elsif (!/^:/) { print }' "$HISTFILE" \
+    | tail -n $HISTORY_LIMIT \
+    | awk '!seen[$0]++'
+  else
+    # Fallback to fc if history file doesn't exist
+    fc -rl 1 2>/dev/null \
+    | head -n $HISTORY_LIMIT \
+    | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
+    | awk '!seen[$0]++'
+  fi
 }
 
 # -----------------------------------------------------------------------------
@@ -114,7 +127,16 @@ fi
 # -----------------------------------------------------------------------------
 
 fzf_run() {
-  collect_history \
+  local history_output
+  history_output=$(collect_history)
+  
+  # Check if we have any history
+  if [[ -z "$history_output" ]]; then
+    echo "No history found. Run some commands first!" >&2
+    return 1
+  fi
+  
+  echo "$history_output" \
   | rank_history \
   | fzf \
       --height="$FZF_HEIGHT" \
