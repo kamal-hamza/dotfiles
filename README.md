@@ -33,10 +33,10 @@ You can choose between light and dark themes during installation:
 chezmoi apply
 
 # Apply with light theme
-chezmoi apply --promptString theme=light
+chezmoi apply --override-data '{"theme": "light"}'
 
 # Apply with dark theme (explicit)
-chezmoi apply --promptString theme=dark
+chezmoi apply --override-data '{"theme": "dark"}'
 ```
 
 To change the default theme, edit `.chezmoidata/theme.yaml` in your chezmoi source directory:
@@ -171,6 +171,22 @@ cd ~/.local/share/chezmoi
 git pull
 chezmoi apply
 ```
+
+## Advanced Usage
+
+### Applying with custom theme
+
+You can temporarily override the theme without changing the default:
+
+```bash
+# Apply everything with light theme
+chezmoi apply --override-data '{"theme": "light"}'
+```
+
+This is useful for:
+- Testing themes before making them default
+- Using different themes on different machines
+- CI/CD pipelines or automated setups
 
 ## Structure
 
