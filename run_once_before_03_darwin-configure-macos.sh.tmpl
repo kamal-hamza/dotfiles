@@ -107,7 +107,7 @@ print_header "Keyboard"
 
 # Set key repeat rate to maximum (fastest)
 print_info "Setting key repeat to maximum speed..."
-defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain KeyRepeat -int 2
 defaults write NSGlobalDomain InitialKeyRepeat -int 10
 print_success "Key repeat set to maximum speed"
 
@@ -155,11 +155,6 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightC
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 print_success "Secondary click set to bottom right"
-
-# Set the repeat rate to 2 (fast)
-print_info "Setting repeat rate to 2"
-defaults write -g KeyRepeat -int 1
-print_success "Repeate rate set to 2"
 
 # =============================================================================
 # Done
