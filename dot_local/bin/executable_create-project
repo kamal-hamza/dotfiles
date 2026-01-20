@@ -19,7 +19,7 @@ set -e
 
 # --- Configuration ---
 CODE_DIR="${CODE_DIR:-$HOME/Code}"
-MY_EDITOR="${EDITOR:-vim}"
+MY_EDITOR="${EDITOR:-zed}"
 
 # --- GitHub Template List (username/repo format) ---
 github_templates=(
@@ -209,7 +209,7 @@ db.sqlite3
 *.log
 .env
 EOF
-    echo "✅ Django project created. Activate venv: source .venv/bin/activate"
+    echo "Django project created. Activate venv: source .venv/bin/activate"
 }
 
 init_expressjs() {
@@ -267,7 +267,7 @@ EOF
     cat <<'EOF' > requirements.txt
 Flask
 EOF
-    echo "✅ Flask project created. Activate venv: source .venv/bin/activate"
+    echo "Flask project created. Activate venv: source .venv/bin/activate"
 }
 
 init_fastapi() {
@@ -295,7 +295,7 @@ EOF
 fastapi
 uvicorn[standard]
 EOF
-    echo "✅ FastAPI project created. Run with: source .venv/bin/activate && uvicorn main:app --reload"
+    echo "FastAPI project created. Run with: source .venv/bin/activate && uvicorn main:app --reload"
 }
 
 init_generic() {
@@ -310,20 +310,20 @@ get_github_repo() {
         echo "Error: GitHub CLI (gh) not installed." >&2
         exit 1
     fi
-    gh repo list --limit 300 | fzf --height 50% --reverse --prompt="🔍 Clone Repo: " | awk '{print $1}'
+    gh repo list --limit 300 | fzf --height 50% --reverse --prompt="Clone Repo: " | awk '{print $1}'
 }
 
 get_github_template() {
-    printf "%s\n" "${github_templates[@]}" | fzf --height 50% --reverse --prompt="🛠️  GitHub Template: "
+    printf "%s\n" "${github_templates[@]}" | fzf --height 50% --reverse --prompt="GitHub Template: "
 }
 
 get_local_template() {
-    printf "%s\n" "${local_templates[@]}" | fzf --height 50% --reverse --prompt="🛠️  Local Template: "
+    printf "%s\n" "${local_templates[@]}" | fzf --height 50% --reverse --prompt="Local Template: "
 }
 
 # --- Main Logic ---
 
-echo "🚀 Project Creator"
+echo "Project Creator"
 echo ""
 
 # 1. Select Parent Directory
@@ -331,7 +331,7 @@ if [[ ! -d "$CODE_DIR" ]]; then
     mkdir -p "$CODE_DIR"
 fi
 
-TARGET_DIR=$(find "$CODE_DIR" -type d -mindepth 1 -maxdepth 1 2>/dev/null | fzf --height 40% --reverse --prompt="📁 Parent Directory: ")
+TARGET_DIR=$( (echo "$CODE_DIR"; find "$CODE_DIR" -type d -mindepth 1 -maxdepth 1 2>/dev/null) | fzf --height 40% --reverse --prompt="Parent Directory: ")
 if [[ -z "$TARGET_DIR" ]]; then
     echo "No directory selected. Using $CODE_DIR"
     TARGET_DIR="$CODE_DIR"
@@ -339,7 +339,7 @@ fi
 
 # 2. Choose Action
 ACTION=$(printf "Clone Existing Repo\nCreate from GitHub Template\nCreate from Local Template\nCreate Empty Folder" | \
-    fzf --height 40% --reverse --prompt="🚀 Action: ")
+    fzf --height 40% --reverse --prompt="Action: ")
 
 if [[ -z "$ACTION" ]]; then
     echo "No action selected. Exiting."
@@ -351,40 +351,40 @@ case "$ACTION" in
     "Clone Existing Repo")
         REPO=$(get_github_repo)
         [[ -z "$REPO" ]] && exit 1
-        
+
         PROJECT_NAME=$(basename "$REPO")
         PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-        
+
         echo "Cloning $REPO..."
         cd "$TARGET_DIR"
         gh repo clone "$REPO"
         ;;
-        
+
     "Create from GitHub Template")
         if ! command -v gh &>/dev/null; then
             echo "Error: GitHub CLI (gh) not installed." >&2
             exit 1
         fi
-        
+
         TEMPLATE=$(get_github_template)
         [[ -z "$TEMPLATE" ]] && exit 1
-        
+
         read -rp "Project Name: " PROJECT_NAME
         [[ -z "$PROJECT_NAME" ]] && exit 1
-        
+
         PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-        
+
         echo "Creating from template $TEMPLATE..."
         cd "$TARGET_DIR"
         gh repo create "$PROJECT_NAME" --template "$TEMPLATE" --clone --private
         ;;
-        
+
     "Create from Local Template")
         read -rp "Project Name: " PROJECT_NAME
         [[ -z "$PROJECT_NAME" ]] && exit 1
-        
+
         PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
-        
+
         if [[ -d "$PROJECT_PATH" ]]; then
             echo "Warning: Directory '$PROJECT_PATH' already exists."
             read -rp "Continue anyway? (y/N): " CONTINUE
@@ -392,14 +392,14 @@ case "$ACTION" in
         else
             mkdir -p "$PROJECT_PATH"
         fi
-        
+
         cd "$PROJECT_PATH"
-        
+
         TEMPLATE=$(get_local_template)
         [[ -z "$TEMPLATE" ]] && exit 1
-        
-        echo "⚙️  Initializing '$TEMPLATE' project..."
-        
+
+        echo "Initializing '$TEMPLATE' project..."
+
         case "$TEMPLATE" in
             "dotnet-console") init_dotnet_console ;;
             "react-vite")     init_react_vite ;;
@@ -421,17 +421,17 @@ case "$ACTION" in
                 ;;
         esac
         ;;
-        
+
     "Create Empty Folder")
         read -rp "Project Name: " PROJECT_NAME
         [[ -z "$PROJECT_NAME" ]] && exit 1
-        
+
         PROJECT_PATH="$TARGET_DIR/$PROJECT_NAME"
         mkdir -p "$PROJECT_PATH"
         cd "$PROJECT_PATH"
         touch README.md
         ;;
-        
+
     *)
         echo "Invalid action." >&2
         exit 1
@@ -442,7 +442,7 @@ esac
 cd "$PROJECT_PATH"
 
 echo ""
-echo "✅ Project ready at: $PROJECT_PATH"
+echo "Project ready at: $PROJECT_PATH"
 echo ""
 
 # Create or attach to tmux session
@@ -451,13 +451,13 @@ if tmux has-session -t "$PROJECT_NAME" 2>/dev/null; then
 else
     echo "Creating tmux session '$PROJECT_NAME'..."
     tmux new-session -s "$PROJECT_NAME" -c "$PROJECT_PATH" -d
-    
+
     # Open editor in the session
     if [[ -n "$MY_EDITOR" ]]; then
         tmux send-keys -t "$PROJECT_NAME" "$MY_EDITOR ." C-m
     fi
 fi
 
-echo "🎯 Attaching to session: $PROJECT_NAME"
+echo "Attaching to session: $PROJECT_NAME"
 echo ""
 tmux attach-session -t "$PROJECT_NAME"
