@@ -35,14 +35,14 @@ default-timeout=3000
 [urgency=normal]
 background-color=#050505
 text-color=#f5f5f5
-border-color=#67b7f5
+border-color=#448cbb
 default-timeout=5000
 
 # Urgency: critical
 [urgency=critical]
 background-color=#C4284726
 text-color=#f5f5f5
-border-color=#ff4c6a
+border-color=#C42847
 default-timeout=0
 
 # App-specific styles
@@ -53,7 +53,7 @@ border-color=#D4B87B
 border-color=#D4B87B
 
 [app-name="Network"]
-border-color=#67b7f5
+border-color=#448cbb
 
 [app-name="Battery"]
 border-color=#77aa77

@@ -22,6 +22,7 @@ url-prefix(chrome: //),
     /* Accent colors */
     --sf-primary: #448cbb;
     --sf-secondary: #4da6ff;
+    --sf-tertiary: #77d5ff;
 
     /* Semantic colors */
     --sf-success: #558855;

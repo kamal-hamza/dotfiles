@@ -128,6 +128,7 @@ alias_if_exists yy "yazi"
 alias_if_exists gs "git status --short"
 alias_if_exists fman "compgen -c | fzf | xargs man"
 alias_if_exists what "tldr"
+alias_if_exists op "opencode"
 
 # -----------------------------------------------------------------------------
 # Script Aliases (scripts in ~/.config/scripts/)

@@ -22,7 +22,7 @@
   --background-modifier-box-shadow: rgba(0, 0, 0, 0.1);
   --background-modifier-success: #558855;
   --background-modifier-error: #C42847;
-  --background-modifier-error-hover: #C42847;
+  --background-modifier-error-hover: #ff4c6a;
   --background-modifier-cover: rgba(255, 255, 255, 0.8);
 
   /* Text Colors */
@@ -50,13 +50,13 @@
   /* Syntax Highlighting */
   --code-normal: #000000;
   --code-background: #eeeeee;
-  --code-keyword: #C42847;
+  --code-keyword: #448cbb;
   --code-function: #4da6ff;
   --code-string: #558855;
   --code-number: #b8943d;
-  --code-property: #77d5ff;
+  --code-property: #67b7f5;
   --code-comment: #888888;
-  --code-operator: #000000;
+  --code-operator: #666666;
 
   /* UI Elements */
   --titlebar-text-color-focused: #000000;
@@ -75,9 +75,10 @@
   --tag-color-hover: #000000;
 
   /* Links */
-  --link-color: #4da6ff;
-  --link-color-hover: #77d5ff;
-  --link-external-color: #4da6ff;
+  --link-color: #448cbb;
+  --link-color-hover: #4da6ff;
+  --link-external-color: #67b7f5;
+  --link-external-color-hover: #4da6ff;
   --link-unresolved-color: #888888;
 
   /* Graph View */
@@ -104,8 +105,8 @@
 
   /* Callouts */
   --callout-default: #448cbb;
-  --callout-info: #4da6ff;
-  --callout-todo: #77d5ff;
+  --callout-info: #448cbb;
+  --callout-todo: #67b7f5;
   --callout-important: #b8943d;
   --callout-warning: #b8943d;
   --callout-success: #558855;

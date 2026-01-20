@@ -23,7 +23,7 @@ M.colors = {
     -- Syntax colors
     red = "#C42847",       -- base red
     red_bright = "#ff4c6a", -- keyword, error (bright)
-    orange = "#D4B87B",    -- type, warning
+    orange = "#f0d08a",    -- type, warning
     orange_bright = "#f0d08a", -- bright yellow
     cyan = "#67b7f5",      -- function
     cyan_bright = "#77d5ff", -- bright cyan
@@ -46,7 +46,7 @@ M.colors = {
     -- Diagnostic colors
     error = "#ff4c6a",
     warn = "#D4B87B",
-    info = "#77aa77",
+    info = "#67b7f5",
     hint = "#888888",
 
     -- Terminal colors

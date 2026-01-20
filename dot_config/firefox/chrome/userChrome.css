@@ -24,13 +24,13 @@
   /* Accent colors */
   --sf-primary: #448cbb;
   --sf-secondary: #4da6ff;
-  --sf-tertiary: #67b7f5;
+  --sf-tertiary: #77d5ff;
 
   /* Semantic colors */
   --sf-success: #558855;
   --sf-warning: #b8943d;
   --sf-error: #C42847;
-  --sf-info: #448cbb;
+  --sf-info: #4da6ff;
 
   /* UI elements */
   --sf-border: #d0d0d0;

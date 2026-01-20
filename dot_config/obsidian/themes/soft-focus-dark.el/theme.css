@@ -1,119 +1,120 @@
 /*
- * Soft Focus Light Theme for Obsidian
+ * Soft Focus Dark Theme for Obsidian
  * Version: 1.0.0
  * Author: Hamza Kamal
- * Description: A minimalist light theme with blue accents for Obsidian
+ * Description: A minimalist dark theme with blue accents for Obsidian
  * Auto-generated from central color palette
  */
 
-.theme-light {
+.theme-dark {
   /* ========================================
    * Color Palette
    * ======================================== */
 
   /* Base Colors */
-  --background-primary: #ffffff;
-  --background-primary-alt: #f5f5f5;
-  --background-secondary: #ffffff;
-  --background-secondary-alt: #f5f5f5;
-  --background-modifier-border: #d0d0d0;
-  --background-modifier-form-field: #eeeeee;
-  --background-modifier-form-field-highlighted: #eeeeee;
-  --background-modifier-box-shadow: rgba(0, 0, 0, 0.1);
-  --background-modifier-success: #558855;
+  --background-primary: #050505;
+  --background-primary-alt: #0a0a0a;
+  --background-secondary: #050505;
+  --background-secondary-alt: #0a0a0a;
+  --background-modifier-border: #333333;
+  --background-modifier-form-field: #1a1a1a;
+  --background-modifier-form-field-highlighted: #1a1a1a;
+  --background-modifier-box-shadow: rgba(0, 0, 0, 0.3);
+  --background-modifier-success: #77aa77;
   --background-modifier-error: #C42847;
-  --background-modifier-error-hover: #C42847;
-  --background-modifier-cover: rgba(255, 255, 255, 0.8);
+  --background-modifier-error-hover: #ff4c6a;
+  --background-modifier-cover: rgba(5, 5, 5, 0.8);
 
   /* Text Colors */
-  --text-normal: #000000;
-  --text-muted: #666666;
+  --text-normal: #f5f5f5;
+  --text-muted: #bbbbbb;
   --text-faint: #888888;
   --text-error: #C42847;
   --text-accent: #448cbb;
-  --text-accent-hover: #4da6ff;
-  --text-on-accent: #000000;
+  --text-accent-hover: #67b7f5;
+  --text-on-accent: #050505;
   --text-selection: #448cbb4D;
 
   /* Interactive Elements */
-  --interactive-normal: #eeeeee;
-  --interactive-hover: #f5f5f5;
+  --interactive-normal: #1a1a1a;
+  --interactive-hover: #0a0a0a;
   --interactive-accent: #448cbb;
-  --interactive-accent-hover: #4da6ff;
-  --interactive-success: #558855;
+  --interactive-accent-hover: #67b7f5;
+  --interactive-success: #77aa77;
 
   /* Scrollbar */
-  --scrollbar-active-thumb-bg: #66666680;
-  --scrollbar-bg: #66666620;
-  --scrollbar-thumb-bg: #66666640;
+  --scrollbar-active-thumb-bg: #88888850;
+  --scrollbar-bg: #8888880D;
+  --scrollbar-thumb-bg: #88888830;
 
   /* Syntax Highlighting */
-  --code-normal: #000000;
-  --code-background: #eeeeee;
-  --code-keyword: #C42847;
-  --code-function: #4da6ff;
-  --code-string: #558855;
-  --code-number: #b8943d;
-  --code-property: #77d5ff;
+  --code-normal: #f5f5f5;
+  --code-background: #1a1a1a;
+  --code-keyword: #448cbb;
+  --code-function: #67b7f5;
+  --code-string: #77aa77;
+  --code-number: #D4B87B;
+  --code-property: #4da6ff;
   --code-comment: #888888;
-  --code-operator: #000000;
+  --code-operator: #bbbbbb;
 
   /* UI Elements */
-  --titlebar-text-color-focused: #000000;
+  --titlebar-text-color-focused: #f5f5f5;
   --titlebar-text-color-unfocused: #888888;
-  --titlebar-background-focused: #ffffff;
-  --titlebar-background-unfocused: #f5f5f5;
+  --titlebar-background-focused: #050505;
+  --titlebar-background-unfocused: #0a0a0a;
 
   /* Borders */
-  --border-color: #d0d0d0;
+  --border-color: #333333;
   --border-color-hover: #448cbb;
 
   /* Tags */
-  --tag-background: #eeeeee;
+  --tag-background: #1a1a1a;
   --tag-background-hover: #448cbb;
-  --tag-color: #4da6ff;
-  --tag-color-hover: #000000;
+  --tag-color: #67b7f5;
+  --tag-color-hover: #050505;
 
   /* Links */
-  --link-color: #4da6ff;
-  --link-color-hover: #77d5ff;
+  --link-color: #448cbb;
+  --link-color-hover: #67b7f5;
   --link-external-color: #4da6ff;
+  --link-external-color-hover: #67b7f5;
   --link-unresolved-color: #888888;
 
   /* Graph View */
   --graph-node: #448cbb;
   --graph-node-unresolved: #888888;
-  --graph-node-tag: #558855;
-  --graph-node-attachment: #b8943d;
-  --graph-line: #d0d0d0;
+  --graph-node-tag: #77aa77;
+  --graph-node-attachment: #D4B87B;
+  --graph-line: #333333;
   --graph-line-highlight: #448cbb;
 
   /* Checkboxes */
   --checkbox-color: #448cbb;
-  --checkbox-color-hover: #4da6ff;
-  --checkbox-border-color: #d0d0d0;
+  --checkbox-color-hover: #67b7f5;
+  --checkbox-border-color: #333333;
   --checkbox-border-color-hover: #448cbb;
 
   /* Tables */
-  --table-border-color: #d0d0d0;
-  --table-header-background: #eeeeee;
-  --table-header-background-hover: #f5f5f5;
-  --table-row-even-background: #6666660D;
+  --table-border-color: #333333;
+  --table-header-background: #1a1a1a;
+  --table-header-background-hover: #0a0a0a;
+  --table-row-even-background: #88888805;
   --table-row-odd-background: transparent;
   --table-row-hover-background: #448cbb1A;
 
   /* Callouts */
   --callout-default: #448cbb;
-  --callout-info: #4da6ff;
-  --callout-todo: #77d5ff;
-  --callout-important: #b8943d;
-  --callout-warning: #b8943d;
-  --callout-success: #558855;
-  --callout-question: #4da6ff;
+  --callout-info: #67b7f5;
+  --callout-todo: #4da6ff;
+  --callout-important: #D4B87B;
+  --callout-warning: #D4B87B;
+  --callout-success: #77aa77;
+  --callout-question: #67b7f5;
   --callout-failure: #C42847;
   --callout-error: #C42847;
   --callout-bug: #C42847;
-  --callout-example: #9a6e6d;
+  --callout-example: #B88E8D;
   --callout-quote: #888888;
 }
 
@@ -390,7 +391,7 @@ code {
 .callout {
   border-left: 3px solid var(--callout-default);
   border-radius: 6px;
-  background-color: #66666605;
+  background-color: #88888808;
   padding: 1em;
   margin: 1em 0;
 }
@@ -541,7 +542,7 @@ textarea:focus {
   background-color: var(--background-primary);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .modal-title {
@@ -596,7 +597,7 @@ textarea:focus {
 }
 
 .cm-cursor {
-  border-left: 2px solid #000000;
+  border-left: 2px solid #f5f5f5;
 }
 
 /* ========================================
@@ -609,7 +610,7 @@ textarea:focus {
 }
 
 .view-header-icon:hover {
-  color: #000000;
+  color: #f5f5f5;
 }
 
 /* Smooth transitions */

@@ -23,11 +23,22 @@
             "**/Zed/**/*.json",
             "**/.vscode/**/*.json"
         ],
-        "XML": ["*.sln", "*.*proj"],
-        "Shell": ["*.sh.tmpl"],
-        "Lua": ["*.lua.tmpl"],
-        "CSS": ["*.css.tmpl"],
-        "JSON": ["*.json.tmpl"]
+        "XML": [
+            "*.sln",
+            "*.*proj"
+        ],
+        "Shell": [
+            "*.sh.tmpl"
+        ],
+        "Lua": [
+            "*.lua.tmpl"
+        ],
+        "CSS": [
+            "*.css.tmpl"
+        ],
+        "JSON": [
+            "*.json.tmpl"
+        ]
     },
     "icon_theme": "Colored Zed Icons Theme Dark",
     "show_edit_predictions": true,
@@ -58,12 +69,6 @@
     },
     "relative_line_numbers": "enabled",
     "tab_size": 4,
-    "inlay_hints": {
-        "enabled": true,
-        "show_type_hints": true,
-        "show_parameter_hints": true,
-        "show_other_hints": true
-    },
     "file_finder": {
         "modal_max_width": "large"
     },
@@ -109,8 +114,16 @@
             "formatter": "prettier"
         },
         "Python": {
-            "language_servers": ["pyrefly", "!pyright", "!pylsp"]
-        }
+            "language_servers": [
+                "pyrefly",
+                "!pyright",
+                "!pylsp"
+            ],
+            "inlay_hints": {
+                "enabled": true,
+                "show_type_hints": true,
+            }
+        },
     },
     "lsp": {
         "pyrefly": {
@@ -124,7 +137,11 @@
             }
         }
     },
-    "format_on_save": "on",
+    "format_on_save": "off",
+    "which_key": {
+        "enabled": true,
+        "delay_ms": 700
+    },
     "diagnostics": {
         "include_warnings": true
     },

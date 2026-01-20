@@ -20,13 +20,16 @@ syntect_theme = ""
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = { fg = "#333333", bg = "#333333" }
+separator_style = { fg = "#333333", bg = "#050505" }
+
 mode_normal = { fg = "#050505", bg = "#448cbb", bold = true }
 mode_select = { fg = "#050505", bg = "#77aa77", bold = true }
 mode_unset = { fg = "#050505", bg = "#D4B87B", bold = true }
+
 progress_label = { fg = "#f5f5f5", bold = true }
-progress_normal = { fg = "#448cbb", bg = "#0a0a0a" }
-progress_error = { fg = "#C42847", bg = "#0a0a0a" }
+progress_normal = { fg = "#448cbb", bg = "#1a1a1a" }
+progress_error = { fg = "#C42847", bg = "#1a1a1a" }
+
 permissions_t = { fg = "#77aa77" }
 permissions_r = { fg = "#D4B87B" }
 permissions_w = { fg = "#C42847" }
@@ -51,10 +54,10 @@ hovered = { fg = "#f5f5f5", bg = "#1a1a1a" }
 
 [which]
 cols = 3
-mask = { bg = "#050505" }
-cand = { fg = "#f5f5f5" }
+mask = { bg = "#1a1a1a" }
+cand = { fg = "#448cbb" }
 rest = { fg = "#888888" }
-desc = { fg = "#67b7f5" }
+desc = { fg = "#bbbbbb" }
 separator = "  "
 separator_style = { fg = "#333333" }
 
@@ -62,8 +65,8 @@ separator_style = { fg = "#333333" }
 on = { fg = "#77aa77" }
 run = { fg = "#67b7f5" }
 desc = { fg = "#bbbbbb" }
-hovered = { bg = "#1a1a1a" }
-footer = { fg = "#f5f5f5", bg = "#050505" }
+hovered = { bg = "#1a1a1a", bold = true }
+footer = { fg = "#bbbbbb", bg = "#050505" }
 
 [filetype]
 rules = [

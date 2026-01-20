@@ -25,6 +25,59 @@ class ThemeGenerator:
         self.chezmoi_root = chezmoi_root
         self.colors_dir = chezmoi_root / ".chezmoidata" / "colors"
         self.themes_dir = chezmoi_root / "dot_config"
+        self.emacs_dir = chezmoi_root / "dot_emacs.d"
+
+    def validate_palette(self, palette: Dict[str, Any], theme_name: str):
+        """Validate that palette contains all required base colors."""
+        required_base_colors = [
+            "red", "green", "yellow", "blue", "cyan", "magenta",
+            "bright_red", "bright_green", "bright_yellow",
+            "bright_blue", "bright_cyan", "bright_magenta"
+        ]
+
+        required_ui_colors = [
+            "background", "foreground", "background_alt", "background_elevated",
+            "foreground_alt", "foreground_dim", "border"
+        ]
+
+        required_terminal_colors = [
+            "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+            "bright_black", "bright_red", "bright_green", "bright_yellow",
+            "bright_blue", "bright_magenta", "bright_cyan", "bright_white"
+        ]
+
+        if "palette" not in palette:
+            raise ValueError(f"Theme '{theme_name}' missing 'palette' key")
+
+        p = palette["palette"]
+        missing_colors = []
+
+        # Check base colors
+        for color in required_base_colors:
+            if color not in p:
+                missing_colors.append(f"palette.{color}")
+
+        # Check UI colors
+        for color in required_ui_colors:
+            if color not in p:
+                missing_colors.append(f"palette.{color}")
+
+        # Check terminal colors
+        if "terminal" not in p:
+            raise ValueError(f"Theme '{theme_name}' missing 'palette.terminal' key")
+
+        t = p["terminal"]
+        for color in required_terminal_colors:
+            if color not in t:
+                missing_colors.append(f"palette.terminal.{color}")
+
+        if missing_colors:
+            raise ValueError(
+                f"Theme '{theme_name}' is missing required base colors:\n  " +
+                "\n  ".join(missing_colors) +
+                "\n\nPalette files should only contain base colors (red, green, yellow, blue, cyan, magenta, bright_*)" +
+                "\nSemantic colors (keyword, function, string, etc.) are derived by the generator."
+            )
 
     def load_palette(self, theme_name: str) -> Dict[str, Any]:
         """Load color palette from JSON or YAML file."""
@@ -32,7 +85,9 @@ class ThemeGenerator:
         palette_file = self.colors_dir / f"{theme_name}.json"
         if palette_file.exists():
             with open(palette_file, "r") as f:
-                return json.load(f)
+                palette = json.load(f)
+                self.validate_palette(palette, theme_name)
+                return palette
 
         # Fall back to YAML if available
         palette_file = self.colors_dir / f"{theme_name}.yaml"
@@ -40,7 +95,9 @@ class ThemeGenerator:
             try:
                 import yaml
                 with open(palette_file, "r") as f:
-                    return yaml.safe_load(f)
+                    palette = yaml.safe_load(f)
+                    self.validate_palette(palette, theme_name)
+                    return palette
             except ImportError:
                 raise ImportError(
                     f"YAML file found but PyYAML not installed. "
@@ -59,22 +116,27 @@ class ThemeGenerator:
         appearance = palette["appearance"]
         overrides = palette.get("overrides", {}).get("kitty", {})
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        warning_color = p["yellow"]
+
         content = f"""# Soft Focus {appearance.title()} Theme for Kitty
 # Auto-generated from central color palette
 
 foreground              {p["foreground"]}
 background              {p["background"]}
 selection_foreground    {p.get("cursor_text", p["background"])}
-selection_background    {p["primary"]}
+selection_background    {primary}
 
 cursor                  {p.get("cursor", p["foreground"])}
 cursor_text_color       {p.get("cursor_text", p["background"])}
 
-url_color               {p["secondary"]}
+url_color               {secondary}
 
-active_border_color     {p["border_active"]}
+active_border_color     {primary}
 inactive_border_color   {p["border"]}
-bell_border_color       {p["warning"]}
+bell_border_color       {warning_color}
 
 wayland_titlebar_color  {p["background"]}
 macos_titlebar_color    {p["background"]}
@@ -86,11 +148,11 @@ inactive_tab_background {overrides.get("inactive_tab_bg", p["background"])}
 tab_bar_background      {overrides.get("tab_bar_background", p["background"])}
 
 mark1_foreground        {p["background"]}
-mark1_background        {p["secondary"]}
+mark1_background        {secondary}
 mark2_foreground        {p["background"]}
-mark2_background        {p["error"]}
+mark2_background        {p["red"]}
 mark3_foreground        {p["background"]}
-mark3_background        {p["warning"]}
+mark3_background        {warning_color}
 
 color0  {t["black"]}
 color8  {t["bright_black"]}
@@ -121,6 +183,9 @@ color15 {t["bright_white"]}
         appearance = palette["appearance"]
         overrides = palette.get("overrides", {}).get("wezterm", {})
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+
         # Format arrays for TOML
         ansi_colors = [t["black"], t["red"], t["green"], t["yellow"],
                       t["blue"], t["magenta"], t["cyan"], t["white"]]
@@ -140,7 +205,7 @@ cursor_fg = "{p.get('cursor_text', p['background'])}"
 cursor_border = "{p.get('cursor', p['foreground'])}"
 
 selection_fg = "{p.get('cursor_text', p['background'])}"
-selection_bg = "{p['primary']}"
+selection_bg = "{primary}"
 
 scrollbar_thumb = "{p['foreground_dim']}"
 split = "{p['border']}"
@@ -161,7 +226,7 @@ bg_color = "{overrides.get('inactive_tab_bg', p['background'])}"
 fg_color = "{overrides.get('inactive_tab_fg', p['foreground_alt'])}"
 
 [colors.tab_bar.inactive_tab_hover]
-bg_color = "{overrides.get('new_tab_hover_bg', p['primary'])}"
+bg_color = "{overrides.get('new_tab_hover_bg', primary)}"
 fg_color = "{overrides.get('new_tab_hover_fg', p['background'])}"
 italic = true
 
@@ -170,7 +235,7 @@ bg_color = "{p['background']}"
 fg_color = "{p['foreground_alt']}"
 
 [colors.tab_bar.new_tab_hover]
-bg_color = "{overrides.get('new_tab_hover_bg', p['primary'])}"
+bg_color = "{overrides.get('new_tab_hover_bg', primary)}"
 fg_color = "{overrides.get('new_tab_hover_fg', p['background'])}"
 """
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -184,27 +249,34 @@ fg_color = "{overrides.get('new_tab_hover_fg', p['background'])}"
         appearance = palette["appearance"]
         overrides = palette.get("overrides", {}).get("tmux", {})
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+
         content = f"""# Soft Focus {appearance.title()} Theme for tmux
 # Auto-generated from central color palette
 
-set -g status-style "bg={overrides.get("status_bg", p["background"])},fg={overrides.get("status_fg", p["foreground"])}"
-set -g status-left-style "bg={overrides.get("status_bg", p["background"])},fg={p["primary"]},bold"
-set -g status-right-style "bg={overrides.get("status_bg", p["background"])},fg={p["foreground_alt"]}"
+# Status bar colors
+set -g status-style "bg={overrides.get('status_bg', p['background'])},fg={overrides.get('status_fg', p['foreground'])}"
 
-set -g window-status-style "bg={overrides.get("status_bg", p["background"])},fg={p["foreground_alt"]}"
-set -g window-status-current-style "bg={overrides.get("window_status_current_bg", p["background_elevated"])},fg={overrides.get("window_status_current_fg", p["primary"])},bold"
-set -g window-status-activity-style "bg={overrides.get("status_bg", p["background"])},fg={p["warning"]}"
-set -g window-status-bell-style "bg={overrides.get("status_bg", p["background"])},fg={p["error"]}"
+# Window status colors
+set -g window-status-style "bg={overrides.get('status_bg', p['background'])},fg={p['foreground_alt']}"
+set -g window-status-current-style "bg={overrides.get('window_status_current_bg', p['background_elevated'])},fg={overrides.get('window_status_current_fg', primary)}"
+set -g window-status-activity-style "bg={overrides.get('status_bg', p['background'])},fg={p['yellow']}"
+set -g window-status-bell-style "bg={overrides.get('status_bg', p['background'])},fg={p['red']}"
 
-set -g pane-border-style "fg={overrides.get("pane_border", p["border"])}"
-set -g pane-active-border-style "fg={overrides.get("pane_active_border", p["border_active"])}"
+# Pane borders
+set -g pane-border-style "fg={overrides.get('pane_border', p['border'])}"
+set -g pane-active-border-style "fg={overrides.get('pane_active_border', primary)}"
 
-set -g message-style "bg={overrides.get("message_bg", p["background_elevated"])},fg={overrides.get("message_fg", p["primary"])},bold"
-set -g message-command-style "bg={overrides.get("message_bg", p["background_elevated"])},fg={overrides.get("message_fg", p["primary"])}"
+# Messages
+set -g message-style "bg={overrides.get('message_bg', p['background_elevated'])},fg={overrides.get('message_fg', primary)},bold"
+set -g message-command-style "bg={overrides.get('message_bg', p['background_elevated'])},fg={overrides.get('message_fg', primary)}"
 
-set -g mode-style "bg={p["primary"]},fg={p["background"]}"
+# Copy mode
+set -g mode-style "bg={primary},fg={p['background']}"
 
-set -g clock-mode-colour "{p["primary"]}"
+# Clock
+set -g clock-mode-colour "{primary}"
 set -g clock-mode-style 24
 """
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -213,23 +285,30 @@ set -g clock-mode-style 24
         print(f"✓ Generated tmux theme: {output_path}")
 
     def generate_yazi_theme(self, palette: Dict[str, Any], output_path: Path):
-        """Generate Yazi file manager theme."""
+        """Generate Yazi file manager theme (TOML format)."""
         p = palette["palette"]
         appearance = palette["appearance"]
         overrides = palette.get("overrides", {}).get("yazi", {})
+
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
 
         content = f"""# Soft Focus {appearance.title()} Theme for Yazi
 # Auto-generated from central color palette
 
 [manager]
-cwd = {{ fg = "{p["primary"]}", bold = true }}
-hovered = {{ fg = "{p["foreground"]}", bg = "{overrides.get("hovered_bg", p["background_elevated"])}" }}
+cwd = {{ fg = "{primary}", bold = true }}
+hovered = {{ fg = "{p["foreground"]}", bg = "{overrides.get('hovered_bg', p['background_elevated'])}" }}
 preview_hovered = {{ underline = true }}
-find_keyword = {{ fg = "{p["warning"]}", bold = true }}
-find_position = {{ fg = "{p["info"]}", bg = "reset", bold = true }}
-marker_selected = {{ fg = "{p["success"]}", bg = "{overrides.get("selected_bg", p["primary"])}" }}
-marker_copied = {{ fg = "{p["warning"]}", bg = "{p["warning"]}" }}
-marker_cut = {{ fg = "{p["error"]}", bg = "{p["error"]}" }}
+find_keyword = {{ fg = "{warning_color}", bold = true }}
+find_position = {{ fg = "{secondary}", bg = "reset", bold = true }}
+marker_selected = {{ fg = "{success_color}", bg = "{overrides.get('selected_bg', primary)}" }}
+marker_copied = {{ fg = "{warning_color}", bg = "{warning_color}" }}
+marker_cut = {{ fg = "{error_color}", bg = "{error_color}" }}
 tab_active = {{ fg = "{p["foreground"]}", bg = "{p["background_elevated"]}", bold = true }}
 tab_inactive = {{ fg = "{p["foreground_alt"]}", bg = "{p["background"]}" }}
 tab_width = 1
@@ -240,54 +319,57 @@ syntect_theme = ""
 [status]
 separator_open = ""
 separator_close = ""
-separator_style = {{ fg = "{p["border"]}", bg = "{p["border"]}" }}
-mode_normal = {{ fg = "{p["background"]}", bg = "{p["primary"]}", bold = true }}
-mode_select = {{ fg = "{p["background"]}", bg = "{p["success"]}", bold = true }}
-mode_unset = {{ fg = "{p["background"]}", bg = "{p["warning"]}", bold = true }}
+separator_style = {{ fg = "{p["border"]}", bg = "{p["background"]}" }}
+
+mode_normal = {{ fg = "{p["background"]}", bg = "{primary}", bold = true }}
+mode_select = {{ fg = "{p["background"]}", bg = "{success_color}", bold = true }}
+mode_unset = {{ fg = "{p["background"]}", bg = "{warning_color}", bold = true }}
+
 progress_label = {{ fg = "{p["foreground"]}", bold = true }}
-progress_normal = {{ fg = "{p["primary"]}", bg = "{p["background_alt"]}" }}
-progress_error = {{ fg = "{p["error"]}", bg = "{p["background_alt"]}" }}
-permissions_t = {{ fg = "{p["success"]}" }}
-permissions_r = {{ fg = "{p["warning"]}" }}
-permissions_w = {{ fg = "{p["error"]}" }}
-permissions_x = {{ fg = "{p["info"]}" }}
+progress_normal = {{ fg = "{primary}", bg = "{p["background_elevated"]}" }}
+progress_error = {{ fg = "{error_color}", bg = "{p["background_elevated"]}" }}
+
+permissions_t = {{ fg = "{success_color}" }}
+permissions_r = {{ fg = "{warning_color}" }}
+permissions_w = {{ fg = "{error_color}" }}
+permissions_x = {{ fg = "{secondary}" }}
 permissions_s = {{ fg = "{p["foreground_dim"]}" }}
 
 [input]
-border = {{ fg = "{overrides.get("border_active", p["border_active"])}" }}
-title = {{ fg = "{p["primary"]}" }}
+border = {{ fg = "{overrides.get('border_active', primary)}" }}
+title = {{ fg = "{primary}" }}
 value = {{ fg = "{p["foreground"]}" }}
-selected = {{ bg = "{p["primary"]}", fg = "{p["background"]}" }}
+selected = {{ bg = "{primary}", fg = "{p["background"]}" }}
 
 [select]
-border = {{ fg = "{overrides.get("border_active", p["border_active"])}" }}
-active = {{ fg = "{p["primary"]}", bold = true }}
+border = {{ fg = "{overrides.get('border_active', primary)}" }}
+active = {{ fg = "{primary}", bold = true }}
 inactive = {{ fg = "{p["foreground_alt"]}" }}
 
 [tasks]
-border = {{ fg = "{overrides.get("border_active", p["border_active"])}" }}
-title = {{ fg = "{p["primary"]}" }}
+border = {{ fg = "{overrides.get('border_active', primary)}" }}
+title = {{ fg = "{primary}" }}
 hovered = {{ fg = "{p["foreground"]}", bg = "{p["background_elevated"]}" }}
 
 [which]
 cols = 3
-mask = {{ bg = "{p["background"]}" }}
-cand = {{ fg = "{p["foreground"]}" }}
+mask = {{ bg = "{p["background_elevated"]}" }}
+cand = {{ fg = "{primary}" }}
 rest = {{ fg = "{p["foreground_dim"]}" }}
-desc = {{ fg = "{p["info"]}" }}
+desc = {{ fg = "{p["foreground_alt"]}" }}
 separator = "  "
 separator_style = {{ fg = "{p["border"]}" }}
 
 [help]
-on = {{ fg = "{p["success"]}" }}
-run = {{ fg = "{p["info"]}" }}
+on = {{ fg = "{success_color}" }}
+run = {{ fg = "{secondary}" }}
 desc = {{ fg = "{p["foreground_alt"]}" }}
-hovered = {{ bg = "{p["background_elevated"]}" }}
-footer = {{ fg = "{p["foreground"]}", bg = "{p["background"]}" }}
+hovered = {{ bg = "{p["background_elevated"]}", bold = true }}
+footer = {{ fg = "{p["foreground_alt"]}", bg = "{p["background"]}" }}
 
 [filetype]
 rules = [
-  {{ name = "*/", fg = "{p["primary"]}", bold = true }},
+  {{ name = "*/", fg = "{primary}", bold = true }},
   {{ name = "*", fg = "{p["foreground"]}" }},
 ]
 """
@@ -299,46 +381,54 @@ rules = [
     def generate_btop_theme(self, palette: Dict[str, Any], output_path: Path):
         """Generate btop system monitor theme."""
         p = palette["palette"]
-        t = p["terminal"]
         appearance = palette["appearance"]
         overrides = palette.get("overrides", {}).get("btop", {})
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
+
         def to_btop_color(hex_color: str) -> str:
-            return hex_color.lstrip("#")
+            """Convert hex color to btop format (remove #)."""
+            return hex_color.lstrip('#')
 
         content = f"""# Soft Focus {appearance.title()} Theme for btop
 # Auto-generated from central color palette
 
-theme[main_bg]="#{to_btop_color(overrides.get("main_bg", p["background"]))}"
-theme[main_fg]="#{to_btop_color(overrides.get("main_fg", p["foreground"]))}"
-theme[title]="#{to_btop_color(overrides.get("title", p["primary"]))}"
-theme[hi_fg]="#{to_btop_color(overrides.get("selected_fg", p["primary"]))}"
-theme[selected_bg]="#{to_btop_color(overrides.get("selected_bg", p["background_elevated"]))}"
-theme[selected_fg]="#{to_btop_color(overrides.get("selected_fg", p["primary"]))}"
-theme[inactive_fg]="#{to_btop_color(overrides.get("inactive_fg", p["foreground_dim"]))}"
-theme[proc_misc]="#{to_btop_color(overrides.get("proc_misc", p["secondary"]))}"
-theme[cpu_box]="#{to_btop_color(overrides.get("cpu_box", p["primary"]))}"
-theme[cpu_graph_upper]="#{to_btop_color(p["primary"])}"
-theme[cpu_graph_lower]="#{to_btop_color(p["secondary"])}"
-theme[mem_box]="#{to_btop_color(overrides.get("mem_box", p["success"]))}"
-theme[mem_graph_upper]="#{to_btop_color(p["success"])}"
-theme[mem_graph_lower]="#{to_btop_color(t["green"])}"
-theme[net_box]="#{to_btop_color(overrides.get("net_box", p["warning"]))}"
-theme[net_graph_upper]="#{to_btop_color(p["warning"])}"
-theme[net_graph_lower]="#{to_btop_color(t["yellow"])}"
-theme[proc_box]="#{to_btop_color(overrides.get("proc_box", t["magenta"]))}"
-theme[graph_text]="#{to_btop_color(overrides.get("graph_text", p["foreground"]))}"
-theme[meter_bg]="#{to_btop_color(p["background_alt"])}"
-theme[gradient_c0]="#{to_btop_color(t["blue"])}"
-theme[gradient_c1]="#{to_btop_color(p["secondary"])}"
-theme[gradient_c2]="#{to_btop_color(t["cyan"])}"
-theme[gradient_c3]="#{to_btop_color(t["green"])}"
-theme[gradient_c4]="#{to_btop_color(t["yellow"])}"
-theme[gradient_c5]="#{to_btop_color(t["red"])}"
-theme[div_line]="#{to_btop_color(p["border"])}"
-theme[temp_start]="#{to_btop_color(t["green"])}"
-theme[temp_mid]="#{to_btop_color(t["yellow"])}"
-theme[temp_end]="#{to_btop_color(t["red"])}"
+# Main colors
+theme[main_bg]="{to_btop_color(overrides.get('main_bg', p['background']))}"
+theme[main_fg]="{to_btop_color(overrides.get('main_fg', p['foreground']))}"
+theme[title]="{to_btop_color(overrides.get('title', primary))}"
+theme[hi_fg]="{to_btop_color(overrides.get('selected_fg', primary))}"
+theme[selected_bg]="{to_btop_color(overrides.get('selected_bg', p['background_elevated']))}"
+theme[selected_fg]="{to_btop_color(overrides.get('selected_fg', primary))}"
+theme[inactive_fg]="{to_btop_color(overrides.get('inactive_fg', p['foreground_dim']))}"
+theme[proc_misc]="{to_btop_color(overrides.get('proc_misc', secondary))}"
+theme[cpu_box]="{to_btop_color(overrides.get('cpu_box', primary))}"
+theme[cpu_graph_upper]="{to_btop_color(primary)}"
+theme[cpu_graph_lower]="{to_btop_color(secondary)}"
+theme[mem_box]="{to_btop_color(overrides.get('mem_box', success_color))}"
+theme[mem_graph_upper]="{to_btop_color(success_color)}"
+theme[mem_graph_lower]="{to_btop_color(p['green'])}"
+theme[net_box]="{to_btop_color(overrides.get('net_box', warning_color))}"
+theme[net_graph_upper]="{to_btop_color(warning_color)}"
+theme[net_graph_lower]="{to_btop_color(p['yellow'])}"
+theme[proc_box]="{to_btop_color(overrides.get('proc_box', p['magenta']))}"
+theme[graph_text]="{to_btop_color(overrides.get('graph_text', p['foreground']))}"
+theme[meter_bg]="{to_btop_color(p['background_alt'])}"
+theme[gradient_c0]="{to_btop_color(p['blue'])}"
+theme[gradient_c1]="{to_btop_color(secondary)}"
+theme[gradient_c2]="{to_btop_color(p['cyan'])}"
+theme[gradient_c3]="{to_btop_color(p['green'])}"
+theme[gradient_c4]="{to_btop_color(p['yellow'])}"
+theme[gradient_c5]="{to_btop_color(p['red'])}"
+theme[div_line]="{to_btop_color(p['border'])}"
+theme[temp_start]="{to_btop_color(p['green'])}"
+theme[temp_mid]="{to_btop_color(p['yellow'])}"
+theme[temp_end]="{to_btop_color(p['red'])}"
 """
         output_path.parent.mkdir(parents=True, exist_ok=True)
         with open(output_path, "w") as f:
@@ -346,19 +436,23 @@ theme[temp_end]="#{to_btop_color(t["red"])}"
         print(f"✓ Generated btop theme: {output_path}")
 
     def generate_hyprland_theme(self, palette: Dict[str, Any], output_path: Path):
-        """Generate Hyprland window manager colors."""
+        """Generate Hyprland window manager theme."""
         p = palette["palette"]
         appearance = palette["appearance"]
+
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
 
         content = f"""# Soft Focus {appearance.title()} Theme for Hyprland
 # Auto-generated from central color palette
 
 $background = rgb({p["background"].lstrip("#")})
 $foreground = rgb({p["foreground"].lstrip("#")})
-$primary = rgb({p["primary"].lstrip("#")})
-$secondary = rgb({p["secondary"].lstrip("#")})
+$primary = rgb({primary.lstrip("#")})
+$secondary = rgb({secondary.lstrip("#")})
 $border = rgb({p["border"].lstrip("#")})
-$border_active = rgb({p["border_active"].lstrip("#")})
+$border_active = rgb({primary.lstrip("#")})
 $background_elevated = rgb({p["background_elevated"].lstrip("#")})
 
 general {{
@@ -386,44 +480,55 @@ group {{
         print(f"✓ Generated Hyprland theme: {output_path}")
 
     def generate_waybar_theme(self, palette: Dict[str, Any], output_path: Path):
-        """Generate Waybar CSS theme."""
+        """Generate Waybar status bar theme (CSS)."""
         p = palette["palette"]
         appearance = palette["appearance"]
+
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
 
         content = f"""/* Soft Focus {appearance.title()} Theme for Waybar */
 /* Auto-generated from central color palette */
 
 * {{
-    border: none;
-    border-radius: 0;
-    font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 14px;
+    font-family: "FiraCode Nerd Font", monospace;
+    font-size: 13px;
     min-height: 0;
 }}
 
 window#waybar {{
     background: {p["background"]};
     color: {p["foreground"]};
+    border-bottom: 1px solid {p["border"]};
 }}
 
+/* Workspace buttons */
 #workspaces button {{
-    padding: 0 10px;
+    padding: 0 8px;
     color: {p["foreground_alt"]};
     background: transparent;
+    border: none;
+    border-radius: 0;
 }}
 
 #workspaces button.active {{
-    color: {p["primary"]};
+    color: {primary};
     background: {p["background_elevated"]};
+    border-bottom: 2px solid {primary};
 }}
 
 #workspaces button.urgent {{
-    color: {p["error"]};
+    color: {error_color};
+    background: {p["background_elevated"]};
 }}
 
 #workspaces button:hover {{
     background: {p["background_elevated"]};
-    color: {p["foreground"]};
+    color: {secondary};
 }}
 
 #clock, #battery, #cpu, #memory, #network, #pulseaudio, #tray, #mode {{
@@ -431,44 +536,45 @@ window#waybar {{
     margin: 0 5px;
 }}
 
+/* Module colors */
 #clock {{
-    color: {p["primary"]};
+    color: {p["foreground"]};
 }}
 
 #battery {{
-    color: {p["success"]};
+    color: {success_color};
 }}
 
 #battery.charging {{
-    color: {p["info"]};
+    color: {primary};
 }}
 
 #battery.warning:not(.charging) {{
-    color: {p["warning"]};
+    color: {warning_color};
 }}
 
 #battery.critical:not(.charging) {{
-    color: {p["error"]};
+    color: {error_color};
 }}
 
 #cpu {{
-    color: {p["secondary"]};
+    color: {primary};
 }}
 
 #memory {{
-    color: {p["info"]};
+    color: {secondary};
 }}
 
 #network {{
-    color: {p["success"]};
+    color: {success_color};
 }}
 
 #network.disconnected {{
-    color: {p["error"]};
+    color: {error_color};
 }}
 
 #pulseaudio {{
-    color: {p["warning"]};
+    color: {primary};
 }}
 
 #pulseaudio.muted {{
@@ -476,11 +582,15 @@ window#waybar {{
 }}
 
 #tray {{
-    background: transparent;
+    color: {p["foreground"]};
+}}
+
+#custom-notification {{
+    color: {warning_color};
 }}
 
 #mode {{
-    background: {p["primary"]};
+    background: {primary};
     color: {p["background"]};
     padding: 0 15px;
 }}
@@ -495,6 +605,12 @@ window#waybar {{
         p = palette["palette"]
         appearance = palette["appearance"]
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        success_color = p["green"]
+        error_color = p["red"]
+
         content = f"""/* Soft Focus {appearance.title()} Theme for Rofi */
 /* Auto-generated from central color palette */
 
@@ -503,12 +619,12 @@ window#waybar {{
     foreground: {p["foreground"]};
     background-alt: {p["background_elevated"]};
     foreground-alt: {p["foreground_alt"]};
-    primary: {p["primary"]};
-    secondary: {p["secondary"]};
-    urgent: {p["error"]};
-    active: {p["success"]};
+    primary: {primary};
+    secondary: {secondary};
+    urgent: {error_color};
+    active: {success_color};
     border: {p["border"]};
-    border-active: {p["border_active"]};
+    border-active: {primary};
 
     background-color: transparent;
     text-color: @foreground;
@@ -597,10 +713,23 @@ button selected {{
         print(f"✓ Generated Rofi theme: {output_path}")
 
     def generate_vscode_settings(self, palette: Dict[str, Any], output_path: Path):
-        """Generate VS Code workbench color customizations."""
+        """Generate VS Code color theme."""
         p = palette["palette"]
         t = p["terminal"]
         appearance = palette["appearance"]
+
+        # Derive semantic colors from base palette
+        is_dark = appearance == "dark"
+        primary = p["blue"]
+        secondary = p["cyan"]
+        keyword_color = p["bright_red"] if is_dark else p["red"]
+        function_color = p["cyan"]
+        string_color = p["bright_green"] if is_dark else p["green"]
+        type_color = p["bright_blue"] if is_dark else p["blue"]
+        constant_color = p["bright_yellow"] if is_dark else p["yellow"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
 
         # VS Code uses # prefix for colors
         colors = {
@@ -609,51 +738,51 @@ button selected {{
             "editor.foreground": p["foreground"],
             "editorLineNumber.foreground": p["foreground_dim"],
             "editorLineNumber.activeForeground": p["foreground"],
-            "editorCursor.foreground": p["primary"],
+            "editorCursor.foreground": primary,
             "editor.selectionBackground": p["visual"],
             "editor.inactiveSelectionBackground": p["cursor_line"],
             "editor.lineHighlightBackground": p["cursor_line"],
             "editorWhitespace.foreground": p["foreground_dim"],
             "editorIndentGuide.background": p["border"],
-            "editorIndentGuide.activeBackground": p["border_active"],
+            "editorIndentGuide.activeBackground": primary,
             "editorRuler.foreground": p["border"],
             "editorBracketMatch.background": p["visual"],
-            "editorBracketMatch.border": p["primary"],
+            "editorBracketMatch.border": primary,
             "editorGutter.background": p["background"],
-            "editorGutter.modifiedBackground": p["warning"],
-            "editorGutter.addedBackground": p["success"],
-            "editorGutter.deletedBackground": p["error"],
+            "editorGutter.modifiedBackground": warning_color,
+            "editorGutter.addedBackground": success_color,
+            "editorGutter.deletedBackground": error_color,
 
             # Inlay hints - use grey/comment color
-            "editorInlayHint.foreground": p["comment"],
+            "editorInlayHint.foreground": p["foreground_dim"],
             "editorInlayHint.background": p["background"],
-            "editorInlayHint.typeForeground": p["comment"],
+            "editorInlayHint.typeForeground": p["foreground_dim"],
             "editorInlayHint.typeBackground": p["background"],
-            "editorInlayHint.parameterForeground": p["comment"],
+            "editorInlayHint.parameterForeground": p["foreground_dim"],
             "editorInlayHint.parameterBackground": p["background"],
 
             # Sidebar colors
             "sideBar.background": p["background"],
             "sideBar.foreground": p["foreground_alt"],
             "sideBar.border": p["border"],
-            "sideBarTitle.foreground": p["primary"],
+            "sideBarTitle.foreground": primary,
             "sideBarSectionHeader.background": p["background_elevated"],
             "sideBarSectionHeader.foreground": p["foreground"],
             "sideBarSectionHeader.border": p["border"],
 
             # Activity bar
             "activityBar.background": p["background"],
-            "activityBar.foreground": p["primary"],
+            "activityBar.foreground": primary,
             "activityBar.inactiveForeground": p["foreground_dim"],
             "activityBar.border": p["border"],
-            "activityBarBadge.background": p["primary"],
+            "activityBarBadge.background": primary,
             "activityBarBadge.foreground": p["background"],
 
             # Status bar
             "statusBar.background": p["background"],
             "statusBar.foreground": p["foreground_alt"],
             "statusBar.border": p["border"],
-            "statusBar.debuggingBackground": p["warning"],
+            "statusBar.debuggingBackground": warning_color,
             "statusBar.debuggingForeground": p["background"],
             "statusBar.noFolderBackground": p["background"],
             "statusBar.noFolderForeground": p["foreground_alt"],
@@ -661,7 +790,7 @@ button selected {{
             # Tabs
             "tab.activeBackground": p["background"],
             "tab.activeForeground": p["foreground"],
-            "tab.activeBorder": p["primary"],
+            "tab.activeBorder": primary,
             "tab.inactiveBackground": p["background"],
             "tab.inactiveForeground": p["foreground_alt"],
             "tab.border": p["border"],
@@ -678,7 +807,7 @@ button selected {{
             # Panel (terminal, output, etc.)
             "panel.background": p["background"],
             "panel.border": p["border"],
-            "panelTitle.activeBorder": p["primary"],
+            "panelTitle.activeBorder": primary,
             "panelTitle.activeForeground": p["foreground"],
             "panelTitle.inactiveForeground": p["foreground_alt"],
 
@@ -703,16 +832,16 @@ button selected {{
             "terminal.ansiBrightWhite": t["bright_white"],
 
             # Git decorations
-            "gitDecoration.modifiedResourceForeground": p["warning"],
-            "gitDecoration.deletedResourceForeground": p["error"],
-            "gitDecoration.untrackedResourceForeground": p["success"],
+            "gitDecoration.modifiedResourceForeground": warning_color,
+            "gitDecoration.deletedResourceForeground": error_color,
+            "gitDecoration.untrackedResourceForeground": success_color,
             "gitDecoration.ignoredResourceForeground": p["foreground_dim"],
-            "gitDecoration.conflictingResourceForeground": p["error"],
+            "gitDecoration.conflictingResourceForeground": error_color,
 
             # Buttons
-            "button.background": p["primary"],
+            "button.background": primary,
             "button.foreground": p["background"],
-            "button.hoverBackground": p["secondary"],
+            "button.hoverBackground": secondary,
 
             # Lists and trees
             "list.activeSelectionBackground": p["visual"],
@@ -725,7 +854,7 @@ button selected {{
             "list.focusForeground": p["foreground"],
 
             # Peek view
-            "peekView.border": p["primary"],
+            "peekView.border": primary,
             "peekViewEditor.background": p["background"],
             "peekViewEditor.matchHighlightBackground": p["search"],
             "peekViewResult.background": p["background_elevated"],
@@ -759,6 +888,15 @@ button selected {{
         p = palette["palette"]
         appearance = palette["appearance"]
 
+        # Derive semantic colors from base palette
+        is_dark = appearance == "dark"
+        primary = p["blue"]
+        secondary = p["cyan"]
+        keyword_color = p["bright_red"] if is_dark else p["red"]
+        string_color = p["bright_green"] if is_dark else p["green"]
+        warning_color = p["yellow"]
+        success_color = p["green"]
+
         content = f"""# Soft Focus {appearance.title()} Theme for Zsh Syntax Highlighting
 # Auto-generated from central color palette
 
@@ -766,18 +904,18 @@ typeset -A ZSH_HIGHLIGHT_STYLES
 
 ZSH_HIGHLIGHT_STYLES[default]=fg={p["foreground"]}
 ZSH_HIGHLIGHT_STYLES[comment]=fg={p["foreground_dim"]},italic
-ZSH_HIGHLIGHT_STYLES[command]=fg={p["primary"]},bold
-ZSH_HIGHLIGHT_STYLES[alias]=fg={p["primary"]}
-ZSH_HIGHLIGHT_STYLES[builtin]=fg={p["secondary"]}
-ZSH_HIGHLIGHT_STYLES[function]=fg={p["info"]}
-ZSH_HIGHLIGHT_STYLES[keyword]=fg={p["error"]}
-ZSH_HIGHLIGHT_STYLES[reserved-word]=fg={p["error"]}
-ZSH_HIGHLIGHT_STYLES[string]=fg={p["success"]}
+ZSH_HIGHLIGHT_STYLES[command]=fg={primary},bold
+ZSH_HIGHLIGHT_STYLES[alias]=fg={primary}
+ZSH_HIGHLIGHT_STYLES[builtin]=fg={secondary}
+ZSH_HIGHLIGHT_STYLES[function]=fg={secondary}
+ZSH_HIGHLIGHT_STYLES[keyword]=fg={keyword_color}
+ZSH_HIGHLIGHT_STYLES[reserved-word]=fg={keyword_color}
+ZSH_HIGHLIGHT_STYLES[string]=fg={string_color}
 ZSH_HIGHLIGHT_STYLES[param]=fg={p["foreground"]}
-ZSH_HIGHLIGHT_STYLES[command-substitution]=fg={p["info"]}
-ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=fg={p["info"]}
+ZSH_HIGHLIGHT_STYLES[command-substitution]=fg={secondary}
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=fg={secondary}
 ZSH_HIGHLIGHT_STYLES[operator]=fg={p["foreground_alt"]}
-ZSH_HIGHLIGHT_STYLES[history-expansion]=fg={p["warning"]},bold
+ZSH_HIGHLIGHT_STYLES[history-expansion]=fg={warning_color},bold
 ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
 """
         output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -792,6 +930,22 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        tertiary = p["bright_blue"] if is_dark else p["bright_cyan"]
+
+        # Syntax colors mapped from base palette
+        keyword_color = p["bright_red"] if is_dark else p["red"]
+        function_color = p["cyan"]
+        string_color = p["bright_green"] if is_dark else p["green"]
+        type_color = p["bright_blue"] if is_dark else p["blue"]
+        constant_color = p["bright_yellow"] if is_dark else p["yellow"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
+        info_color = p["cyan"]
+
         theme = {
             "$schema": "https://zed.dev/schema/themes/v0.2.0.json",
             "name": "Soft Focus",
@@ -802,40 +956,40 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                     "appearance": appearance,
                     "style": {
                         "accents": [
-                            p.get("accent_mint", p["tertiary"]),
-                            p["primary"],
-                            p["secondary"]
+                            p.get("accent_mint", tertiary),
+                            primary,
+                            secondary
                         ],
                         "background": p["background"],
                         "border": p["border"],
                         "border.variant": "#00000000",
-                        "border.focused": p["primary"],
-                        "border.selected": p["primary"],
+                        "border.focused": primary,
+                        "border.selected": primary,
                         "border.transparent": "transparent",
                         "border.disabled": p["foreground_dim"],
                         "elevated_surface.background": p["background"],
                         "surface.background": p["background"],
                         "element.background": p["background"],
                         "element.hover": p["background_elevated"],
-                        "element.active": p["cursor_line"],
-                        "element.selected": p["cursor_line"],
+                        "element.active": p["background_elevated"],
+                        "element.selected": p["background_elevated"],
                         "element.disabled": p["foreground_dim"],
-                        "drop_target.background": p["secondary"],
+                        "drop_target.background": secondary,
                         "ghost_element.background": p["background"],
                         "ghost_element.hover": p["background_elevated"],
-                        "ghost_element.active": p["cursor_line"],
-                        "ghost_element.selected": p["cursor_line"],
+                        "ghost_element.active": p["background_elevated"],
+                        "ghost_element.selected": p["background_elevated"],
                         "ghost_element.disabled": p["foreground_dim"],
                         "text": p["foreground"],
                         "text.muted": p["foreground_alt"],
                         "text.placeholder": p["foreground_dim"],
                         "text.disabled": p["foreground_dim"],
-                        "text.accent": p["secondary"],
+                        "text.accent": secondary,
                         "icon": p["foreground"],
                         "icon.muted": p["foreground_alt"],
                         "icon.disabled": p["foreground_dim"],
                         "icon.placeholder": p["foreground_dim"],
-                        "icon.accent": p["secondary"],
+                        "icon.accent": secondary,
                         "status_bar.background": p["background"],
                         "title_bar.background": p["background"],
                         "title_bar.inactive_background": p["background"],
@@ -845,34 +999,36 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "tab.inactive_background": p["background"],
                         "search.match_background": p["search"],
                         "panel.background": p["background"],
-                        "panel.focused_border": p["primary"],
+                        "panel.focused_border": primary,
                         "panel.indent_guide": p["indent_guide"],
                         "panel.indent_guide_active": p["indent_guide_active"],
-                        "panel.indent_guide_hover": p["primary"],
+                        "panel.indent_guide_hover": primary,
                         "panel.overlay_background": p["background_alt"],
-                        "pane.focused_border": p["primary"],
+                        "pane.focused_border": primary,
                         "pane_group.border": p["border"],
                         "scrollbar.thumb.background": p["foreground_dim"],
                         "scrollbar.thumb.hover_background": p["foreground_alt"],
-                        "scrollbar.thumb.border": p["primary"],
+                        "scrollbar.thumb.border": primary,
                         "scrollbar.track.background": p["background"],
                         "scrollbar.track.border": "#00000000",
                         "editor.background": p["background"],
                         "editor.foreground": p["foreground"],
                         "editor.gutter.background": p["background"],
                         "editor.subheader.background": p["background_elevated"],
-                        "editor.active_line.background": p["cursor_line"],
-                        "editor.highlighted_line.background": p["background_elevated"],
+                        "editor.active_line.background": "transparent",
+                        "editor.highlighted_line.background": "transparent",
                         "editor.line_number": p["foreground_dim"],
                         "editor.active_line_number": p["foreground"],
                         "editor.invisible": p["foreground_dim"],
                         "editor.wrap_guide": p["border"],
                         "editor.active_wrap_guide": p["foreground_dim"],
                         "editor.document_highlight.bracket_background": p["visual"],
-                        "editor.document_highlight.read_background": p["cursor_line"],
+                        "editor.document_highlight.read_background": p["background_elevated"],
                         "editor.document_highlight.write_background": p["visual"],
                         "editor.indent_guide": p["indent_guide"],
                         "editor.indent_guide_active": p["indent_guide_active"],
+                        "virtual_text": p["foreground_dim"],
+                        "inlay_hint": p["foreground_dim"],
                         "terminal.background": p["background"],
                         "terminal.ansi.background": p["background"],
                         "terminal.foreground": p["foreground"],
@@ -902,7 +1058,7 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "terminal.ansi.dim_magenta": t["magenta"],
                         "terminal.ansi.dim_cyan": t["cyan"],
                         "terminal.ansi.dim_white": t["bright_black"],
-                        "link_text.hover": p["secondary"],
+                        "link_text.hover": secondary,
                         "conflict": t["bright_red"],
                         "conflict.border": t["bright_red"],
                         "conflict.background": p["diff_delete_bg"],
@@ -921,12 +1077,12 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "modified": t["yellow"],
                         "modified.border": t["yellow"],
                         "modified.background": p["diff_change_bg"],
-                        "predictive": p["foreground_dim"],
-                        "predictive.border": p["primary"],
-                        "predictive.background": p["background_alt"],
-                        "renamed": p.get("accent_mint", p["tertiary"]),
-                        "renamed.border": p.get("accent_mint", p["tertiary"]),
-                        "renamed.background": f"{p.get('accent_mint', p['tertiary'])}",
+                        "predictive": p["foreground_alt"],
+                        "predictive.border": p["foreground_dim"],
+                        "predictive.background": p["background_elevated"],
+                        "renamed": p.get("accent_mint", tertiary),
+                        "renamed.border": p.get("accent_mint", tertiary),
+                        "renamed.background": f"{p.get('accent_mint', tertiary)}",
                         "success": t["green"],
                         "success.border": t["green"],
                         "success.background": f"{t['green']}",
@@ -936,7 +1092,7 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "players": [
                             {
                                 "cursor": p["foreground"],
-                                "selection": f"{p['primary']}",
+                                "selection": f"{primary}",
                                 "background": p["background"]
                             }
                         ],
@@ -944,24 +1100,24 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                         "version_control.added_background": f"{t['green']}26",
                         "version_control.deleted": t["red"],
                         "version_control.deleted_background": f"{t['red']}26",
-                        "version_control.modified": t["yellow"],
-                        "version_control.modified_background": f"{t['yellow']}26",
-                        "version_control.renamed": p.get("accent_mint", p["tertiary"]),
+                        "version_control.modified": warning_color,
+                        "version_control.modified_background": f"{warning_color}26",
+                        "version_control.renamed": p.get("accent_mint", tertiary),
                         "version_control.conflict": t["bright_red"],
                         "version_control.conflict_background": f"{t['bright_red']}26",
                         "version_control.ignored": p["foreground_dim"],
                         "error": t["bright_red"],
                         "error.background": p["background"],
                         "error.border": t["bright_red"],
-                        "warning": t["yellow"],
+                        "warning": warning_color,
                         "warning.background": p["background"],
-                        "warning.border": t["yellow"],
-                        "hint": p["comment"],
+                        "warning.border": warning_color,
+                        "hint": p["foreground_dim"],
                         "hint.background": p["background"],
-                        "hint.border": p["comment"],
-                        "info": p["info"],
+                        "hint.border": p["foreground_dim"],
+                        "info": info_color,
                         "info.background": p["background"],
-                        "info.border": p["info"],
+                        "info.border": info_color,
                         "syntax": {
                             "comment": {
                                 "color": p["foreground_dim"],
@@ -969,27 +1125,77 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
                                 "font_weight": None
                             },
                             "keyword": {
-                                "color": t["bright_red"],
+                                "color": keyword_color,
                                 "font_style": None,
                                 "font_weight": None
                             },
                             "function": {
-                                "color": p["secondary"],
+                                "color": function_color,
                                 "font_style": None,
                                 "font_weight": None
                             },
                             "string": {
-                                "color": t["green"],
+                                "color": string_color,
                                 "font_style": None,
                                 "font_weight": None
                             },
                             "variable": {
-                                "color": p["foreground"],
+                                "color": p["foreground"] if is_dark else "#000000",
                                 "font_style": None,
                                 "font_weight": None
                             },
                             "type": {
-                                "color": t["yellow"],
+                                "color": type_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "constant": {
+                                "color": constant_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "operator": {
+                                "color": p["foreground_alt"],
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "number": {
+                                "color": constant_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "boolean": {
+                                "color": constant_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "property": {
+                                "color": function_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "attribute": {
+                                "color": constant_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "tag": {
+                                "color": keyword_color,
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "punctuation": {
+                                "color": p["foreground_alt"],
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "punctuation.bracket": {
+                                "color": p["foreground_alt"],
+                                "font_style": None,
+                                "font_weight": None
+                            },
+                            "punctuation.delimiter": {
+                                "color": p["foreground_alt"],
                                 "font_style": None,
                                 "font_weight": None
                             }
@@ -1009,6 +1215,14 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
         p = palette["palette"]
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
+
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        tertiary = p["bright_blue"] if is_dark else p["bright_cyan"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
 
         # Generate userChrome.css (browser UI)
         userchrome_content = f"""/**
@@ -1035,19 +1249,19 @@ ZSH_HIGHLIGHT_STYLES[path]=fg={p["foreground"]},underline
   --sf-foreground-dim: {p["foreground_dim"]};
 
   /* Accent colors */
-  --sf-primary: {p["primary"]};
-  --sf-secondary: {p["secondary"]};
-  --sf-tertiary: {p["tertiary"]};
+  --sf-primary: {primary};
+  --sf-secondary: {secondary};
+  --sf-tertiary: {tertiary};
 
   /* Semantic colors */
-  --sf-success: {p["success"]};
-  --sf-warning: {p["warning"]};
-  --sf-error: {p["error"]};
-  --sf-info: {p["info"]};
+  --sf-success: {success_color};
+  --sf-warning: {warning_color};
+  --sf-error: {error_color};
+  --sf-info: {secondary};
 
   /* UI elements */
   --sf-border: {p["border"]};
-  --sf-border-active: {p["border_active"]};
+  --sf-border-active: {primary};
 
   /* Override Firefox default variables */
   --toolbar-bgcolor: var(--sf-background) !important;
@@ -1395,13 +1609,14 @@ url-prefix(chrome: //),
     --sf-foreground-dim: {p["foreground_dim"]};
 
     /* Accent colors */
-    --sf-primary: {p["primary"]};
-    --sf-secondary: {p["secondary"]};
+    --sf-primary: {primary};
+    --sf-secondary: {secondary};
+    --sf-tertiary: {tertiary};
 
     /* Semantic colors */
-    --sf-success: {p["success"]};
-    --sf-warning: {p["warning"]};
-    --sf-error: {p["error"]};
+    --sf-success: {success_color};
+    --sf-warning: {warning_color};
+    --sf-error: {error_color};
 
     /* UI elements */
     --sf-border: {p["border"]};
@@ -1688,6 +1903,20 @@ button {{
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        tertiary = p["bright_blue"] if is_dark else p["bright_cyan"]
+        keyword_color = p["bright_red"] if is_dark else p["red"]
+        function_color = p["cyan"]
+        string_color = p["bright_green"] if is_dark else p["green"]
+        constant_color = p["bright_yellow"] if is_dark else p["yellow"]
+        operator_color = p["foreground"]
+        comment_color = p["foreground_dim"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
+
         # Generate manifest.json
         manifest = {
             "name": f"Soft Focus {appearance.title()}",
@@ -1720,27 +1949,27 @@ button {{
   --background-modifier-form-field: {p["background_elevated"]};
   --background-modifier-form-field-highlighted: {p["background_elevated"]};
   --background-modifier-box-shadow: rgba({"0, 0, 0, 0.3" if is_dark else "0, 0, 0, 0.1"});
-  --background-modifier-success: {p["success"]};
-  --background-modifier-error: {p["error"]};
-  --background-modifier-error-hover: {t["bright_red"]};
+  --background-modifier-success: {success_color};
+  --background-modifier-error: {error_color};
+  --background-modifier-error-hover: {keyword_color};
   --background-modifier-cover: rgba({("5, 5, 5, 0.8" if is_dark else "255, 255, 255, 0.8")});
 
   /* Text Colors */
   --text-normal: {p["foreground"]};
   --text-muted: {p["foreground_alt"]};
   --text-faint: {p["foreground_dim"]};
-  --text-error: {p["error"]};
-  --text-accent: {p["primary"]};
-  --text-accent-hover: {p["secondary"]};
+  --text-error: {error_color};
+  --text-accent: {primary};
+  --text-accent-hover: {secondary};
   --text-on-accent: {p["background" if is_dark else "foreground"]};
-  --text-selection: {p["primary"]}4D;
+  --text-selection: {primary}4D;
 
   /* Interactive Elements */
   --interactive-normal: {p["background_elevated"]};
   --interactive-hover: {p["background_alt"]};
-  --interactive-accent: {p["primary"]};
-  --interactive-accent-hover: {p["secondary"]};
-  --interactive-success: {p["success"]};
+  --interactive-accent: {primary};
+  --interactive-accent-hover: {secondary};
+  --interactive-success: {success_color};
 
   /* Scrollbar */
   --scrollbar-active-thumb-bg: {p["foreground_dim" if is_dark else "foreground_alt"]}{"50" if is_dark else "80"};
@@ -1750,13 +1979,13 @@ button {{
   /* Syntax Highlighting */
   --code-normal: {p["foreground"]};
   --code-background: {p["background_elevated"]};
-  --code-keyword: {p["keyword"]};
-  --code-function: {p["function"]};
-  --code-string: {p["string"]};
-  --code-number: {p["constant"]};
-  --code-property: {p["tertiary"]};
-  --code-comment: {p["comment"]};
-  --code-operator: {p["operator"]};
+  --code-keyword: {keyword_color};
+  --code-function: {function_color};
+  --code-string: {string_color};
+  --code-number: {constant_color};
+  --code-property: {tertiary};
+  --code-comment: {comment_color};
+  --code-operator: {operator_color};
 
   /* UI Elements */
   --titlebar-text-color-focused: {p["foreground"]};
@@ -1766,34 +1995,33 @@ button {{
 
   /* Borders */
   --border-color: {p["border"]};
-  --border-color-hover: {p["border_active"]};
+  --border-color-hover: {primary};
 
   /* Tags */
   --tag-background: {p["background_elevated"]};
-  --tag-background-hover: {p["primary"]};
-  --tag-color: {p["secondary"]};
+  --tag-background-hover: {primary};
+  --tag-color: {secondary};
   --tag-color-hover: {p["background" if is_dark else "foreground"]};
 
   /* Links */
-  --link-color: {p["primary"]};
-  --link-color-hover: {p["secondary"]};
-  --link-external-color: {p["tertiary"]};
-  --link-external-color-hover: {p["secondary"]};
+  --link-color: {secondary};
+  --link-color-hover: {tertiary};
+  --link-external-color: {secondary};
   --link-unresolved-color: {p["foreground_dim"]};
 
   /* Graph View */
-  --graph-node: {p["primary"]};
+  --graph-node: {primary};
   --graph-node-unresolved: {p["foreground_dim"]};
-  --graph-node-tag: {p["success"]};
-  --graph-node-attachment: {p["warning"]};
+  --graph-node-tag: {success_color};
+  --graph-node-attachment: {warning_color};
   --graph-line: {p["border"]};
-  --graph-line-highlight: {p["primary"]};
+  --graph-line-highlight: {primary};
 
   /* Checkboxes */
-  --checkbox-color: {p["primary"]};
-  --checkbox-color-hover: {p["secondary"]};
+  --checkbox-color: {primary};
+  --checkbox-color-hover: {secondary};
   --checkbox-border-color: {p["border"]};
-  --checkbox-border-color-hover: {p["border_active"]};
+  --checkbox-border-color-hover: {primary};
 
   /* Tables */
   --table-border-color: {p["border"]};
@@ -1801,20 +2029,20 @@ button {{
   --table-header-background-hover: {p["background_alt"]};
   --table-row-even-background: {p["foreground_dim" if is_dark else "foreground_alt"]}{"05" if is_dark else "0D"};
   --table-row-odd-background: transparent;
-  --table-row-hover-background: {p["primary"]}1A;
+  --table-row-hover-background: {primary}1A;
 
   /* Callouts */
-  --callout-default: {p["primary"]};
-  --callout-info: {p["info"]};
-  --callout-todo: {p["tertiary"]};
-  --callout-important: {p["warning"]};
-  --callout-warning: {p["warning"]};
-  --callout-success: {p["success"]};
-  --callout-question: {p["secondary"]};
-  --callout-failure: {p["error"]};
-  --callout-error: {p["error"]};
-  --callout-bug: {p["error"]};
-  --callout-example: {t["magenta"]};
+  --callout-default: {primary};
+  --callout-info: {secondary};
+  --callout-todo: {tertiary};
+  --callout-important: {warning_color};
+  --callout-warning: {warning_color};
+  --callout-success: {success_color};
+  --callout-question: {secondary};
+  --callout-failure: {error_color};
+  --callout-error: {error_color};
+  --callout-bug: {error_color};
+  --callout-example: {p["magenta"]};
   --callout-quote: {p["foreground_dim"]};
 }}
 
@@ -2044,7 +2272,7 @@ code {{
 
 .markdown-preview-view blockquote {{
   border-left: 3px solid var(--text-accent);
-  background-color: {p["primary"]}0D;
+  background-color: {primary}0D;
   padding: 0.5em 1em;
   margin: 1em 0;
   color: var(--text-muted);
@@ -2201,7 +2429,7 @@ code {{
 }}
 
 .search-result-file-match {{
-  background-color: {p["primary"]}33;
+  background-color: {primary}33;
 }}
 
 /* Buttons */
@@ -2343,6 +2571,19 @@ textarea:focus {{
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        secondary = p["cyan"]
+        tertiary = p["bright_blue"] if is_dark else p["bright_cyan"]
+        keyword_color = p["bright_red"] if is_dark else p["red"]
+        function_color = p["cyan"]
+        string_color = p["bright_green"] if is_dark else p["green"]
+        type_color = p["bright_blue"] if is_dark else p["blue"]
+        constant_color = p["bright_yellow"] if is_dark else p["yellow"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
+
         # Generate Lua theme content
         theme_lua = f"""-- Soft Focus {appearance.title()} Neovim Theme
 -- Auto-generated from central color palette
@@ -2361,39 +2602,39 @@ M.colors = {{
     fg_dim = "{p["foreground_dim"]}",  -- text.placeholder
 
     -- Accent colors
-    blue = "{p["primary"]}",   -- primary accent
-    blue_light = "{p["secondary"]}", -- text.accent, function
-    green = "{p["success"]}",  -- string, success
-    mint = "{p.get("accent_mint", p["tertiary"])}",   -- tertiary accent
+    blue = "{primary}",   -- primary accent
+    blue_light = "{secondary}", -- text.accent, function
+    green = "{success_color}",  -- string, success
+    mint = "{p.get("accent_mint", tertiary)}",   -- tertiary accent
 
     -- Syntax colors
-    red = "{p["error"]}",       -- base red
-    red_bright = "{t["bright_red"]}", -- keyword, error (bright)
-    orange = "{p["constant"]}",    -- type, warning
-    orange_bright = "{t["bright_yellow"]}", -- bright yellow
-    cyan = "{p["secondary"]}",      -- function
-    cyan_bright = "{t["bright_cyan"]}", -- bright cyan
-    purple = "{t["magenta"]}",    -- magenta
-    purple_bright = "{t["bright_magenta"]}", -- bright magenta
+    red = "{error_color}",       -- base red
+    red_bright = "{keyword_color}", -- keyword, error (bright)
+    orange = "{constant_color}",    -- type, warning
+    orange_bright = "{constant_color}", -- bright yellow
+    cyan = "{secondary}",      -- function
+    cyan_bright = "{p["bright_cyan"]}", -- bright cyan
+    purple = "{p["magenta"]}",    -- magenta
+    purple_bright = "{p["bright_magenta"]}", -- bright magenta
 
     -- UI colors
     border = "{p["border"]}",
-    comment = "{p["comment"]}",
+    comment = "{p["foreground_dim"]}",
     line_nr = "{p["foreground_dim"]}",
     cursor_line = "{p["cursor_line"]}",
     visual = "{p["visual"]}",
     search = "{p["search"]}",
 
     -- Git colors
-    git_add = "{p["success"]}",
-    git_change = "{p["warning"]}",
-    git_delete = "{p["error"]}",
+    git_add = "{success_color}",
+    git_change = "{warning_color}",
+    git_delete = "{error_color}",
 
     -- Diagnostic colors
-    error = "{t["bright_red"]}",
-    warn = "{p["warning"]}",
-    info = "{p["success"]}",
-    hint = "{p["comment"]}",
+    error = "{keyword_color}",
+    warn = "{warning_color}",
+    info = "{secondary}",
+    hint = "{p["foreground_dim"]}",
 
     -- Terminal colors
     term_black = "{t["black"]}",
@@ -2468,7 +2709,7 @@ M.setup = function()
     hl("DiffAdd", {{ bg = "{p["diff_add_bg"]}" }})
     hl("DiffChange", {{ bg = "{p["diff_change_bg"]}" }})
     hl("DiffDelete", {{ bg = "{p["diff_delete_bg"]}" }})
-    hl("DiffText", {{ bg = "{p["warning"]}" }})
+    hl("DiffText", {{ bg = "{warning_color}" }})
 
     -- Git signs
     hl("GitSignsAdd", {{ fg = colors.git_add }})
@@ -2757,9 +2998,14 @@ return M
         print(f"✓ Generated Neovim theme: {output_path}")
 
     def generate_ly_theme(self, palette: Dict[str, Any], output_path: Path):
-        """Generate Ly (display manager) theme file."""
+        """Generate Ly display manager theme."""
         p = palette["palette"]
         appearance = palette["appearance"]
+
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        error_color = p["red"]
+        info_color = p["cyan"]
 
         # Generate INI theme content
         theme_ini = f"""# Soft Focus {appearance.title()} Theme for Ly Display Manager
@@ -2771,19 +3017,19 @@ fg = {p["foreground"][1:]}
 
 # Boxes & borders
 box = {p["background_elevated"][1:]}
-border = {p["border_active"][1:]}
+border = {primary[1:]}
 shadow = {p["foreground_dim"][1:]}
 
 # Text roles
 input = {p["foreground"][1:]}
-prompt = {p["primary"][1:]}
-error = {p["error"][1:]}
-info = {p["info"][1:]}
+prompt = {primary[1:]}
+error = {error_color[1:]}
+info = {info_color[1:]}
 
 # UI elements
-high = {p["primary"][1:]}
-cursor = {p["primary"][1:]}
-button = {p["secondary"][1:]}
+high = {primary[1:]}
+cursor = {primary[1:]}
+button = {info_color[1:]}
 """
 
         # Write file
@@ -2799,6 +3045,12 @@ button = {p["secondary"][1:]}
         appearance = palette["appearance"]
         is_dark = appearance == "dark"
 
+        # Derive semantic colors from base palette
+        primary = p["blue"]
+        success_color = p["green"]
+        warning_color = p["yellow"]
+        error_color = p["red"]
+
         # Generate Mako config content
         theme_config = f"""# Soft Focus {appearance.title()} Theme for Mako
 # Auto-generated from central color palette
@@ -2806,7 +3058,7 @@ button = {p["secondary"][1:]}
 # Default style
 background-color={p["background"]}
 text-color={p["foreground"]}
-border-color={p["primary"]}
+border-color={primary}
 border-size=2
 border-radius=8
 padding=12
@@ -2818,7 +3070,7 @@ icon-location=left
 max-icon-size=48
 
 # Progress bar
-progress-color=over {p["primary"]}
+progress-color=over {primary}
 
 # Default timeout
 default-timeout=5000
@@ -2830,35 +3082,35 @@ group-by=app-name
 [urgency=low]
 background-color={p["background_elevated"]}
 text-color={p["foreground_alt"]}
-border-color={p["success"]}
+border-color={success_color}
 default-timeout=3000
 
 # Urgency: normal (uses default colors)
 [urgency=normal]
 background-color={p["background"]}
 text-color={p["foreground"]}
-border-color={p["info"]}
+border-color={primary}
 default-timeout=5000
 
 # Urgency: critical
 [urgency=critical]
-background-color={p["error"]}26
+background-color={error_color}26
 text-color={p["foreground"]}
-border-color={t["bright_red"]}
+border-color={error_color}
 default-timeout=0
 
 # App-specific styles
 [app-name="Volume"]
-border-color={p["warning"]}
+border-color={warning_color}
 
 [app-name="Brightness"]
-border-color={p["warning"]}
+border-color={warning_color}
 
 [app-name="Network"]
-border-color={p["info"]}
+border-color={primary}
 
 [app-name="Battery"]
-border-color={p["success"]}
+border-color={success_color}
 """
 
         # Write file
@@ -2866,6 +3118,352 @@ border-color={p["success"]}
         with open(output_path, "w") as f:
             f.write(theme_config)
         print(f"✓ Generated Mako theme: {output_path}")
+
+    def generate_emacs_theme(self, palette: Dict[str, Any], output_path: Path):
+            """Generate Emacs theme."""
+            p = palette["palette"]
+            t = p["terminal"]
+            appearance = palette["appearance"]
+            theme_name = f"soft-focus-{appearance}"
+            is_dark = appearance == "dark"
+
+            # Derive semantic colors from base palette
+            primary = p["blue"]
+            secondary = p["cyan"]
+            tertiary = p["bright_blue"] if is_dark else p["bright_cyan"]
+            mint = p.get("accent_mint", tertiary)
+
+            # Syntax colors mapped from base palette
+            keyword_color = p["bright_red"] if is_dark else p["red"]
+            function_color = p["cyan"]
+            string_color = p["bright_green"] if is_dark else p["green"]
+            type_color = p["bright_blue"] if is_dark else p["blue"]
+            constant_color = p["bright_yellow"] if is_dark else p["yellow"]
+            success_color = p["green"]
+            warning_color = p["yellow"]
+            error_color = p["red"]
+            info_color = p["cyan"]
+
+            content = f"""(deftheme {theme_name}
+      "Soft Focus {appearance.title()} Theme for Emacs.
+       Auto-generated from central color palette.")
+
+    (let ((class '((class color) (min-colors 89)))
+          ;; Palette Variables
+          (bg      "{p["background"]}")
+          (bg-alt  "{p["background_alt"]}")
+          (bg-hl   "{p["background_elevated"]}")
+          (fg      "{p["foreground"]}")
+          (fg-alt  "{p["foreground_alt"]}")
+          (fg-dim  "{p["foreground_dim"]}")
+          (primary "{primary}")
+          (second  "{secondary}")
+          (third   "{tertiary}")
+          (mint    "{mint}")
+
+          ;; Semantic
+          (success "{success_color}")
+          (warning "{warning_color}")
+          (err     "{error_color}")
+          (info    "{info_color}")
+
+          ;; UI Elements
+          (cursor  "{p.get("cursor", primary)}")
+          (region  "{p["visual"]}")
+          (ln-bg   "{p["cursor_line"]}")
+          (border  "{p["border"]}")
+          (border-active "{primary}")
+          (search  "{p["search"]}")
+
+           ;; Syntax (derived from base palette colors)
+          (comment "{p["foreground_dim"]}")
+          (keyword "{keyword_color}")
+          (func    "{function_color}")
+          (string  "{string_color}")
+          (type    "{type_color}")
+          (const   "{constant_color}")
+          (var     "{p["foreground"] if is_dark else "#000000"}")
+          (operator "{p["foreground_alt"]}")
+          (property "{function_color}")
+          (attribute "{constant_color}")
+          (tag "{keyword_color}")
+          (punctuation "{p["foreground_alt"]}")
+
+          ;; Diff
+          (diff-add-bg "{p["diff_add_bg"]}")
+          (diff-add-fg "{success_color}")
+          (diff-chg-bg "{p["diff_change_bg"]}")
+          (diff-chg-fg "{warning_color}")
+          (diff-del-bg "{p["diff_delete_bg"]}")
+          (diff-del-fg "{error_color}")
+
+          ;; Terminal Colors
+          (ansi-black   "{t["black"]}")
+          (ansi-red     "{t["red"]}")
+          (ansi-green   "{t["green"]}")
+          (ansi-yellow  "{t["yellow"]}")
+          (ansi-blue    "{t["blue"]}")
+          (ansi-magenta "{t["magenta"]}")
+          (ansi-cyan    "{t["cyan"]}")
+          (ansi-white   "{t["white"]}")
+          (ansi-br-black   "{t["bright_black"]}")
+          (ansi-br-red     "{t["bright_red"]}")
+          (ansi-br-green   "{t["bright_green"]}")
+          (ansi-br-yellow  "{t["bright_yellow"]}")
+          (ansi-br-blue    "{t["bright_blue"]}")
+          (ansi-br-magenta "{t["bright_magenta"]}")
+          (ansi-br-cyan    "{t["bright_cyan"]}")
+          (ansi-br-white   "{t["bright_white"]}"))
+
+      (custom-theme-set-faces
+       '{theme_name}
+
+       ;; --- Core UI ---
+       `(default ((,class (:foreground ,fg :background ,bg))))
+       `(cursor ((,class (:background ,cursor))))
+       `(region ((,class (:background ,region :extend t))))
+       `(highlight ((,class (:background ,ln-bg :foreground ,fg))))
+       `(hl-line ((,class (:background ,ln-bg :extend t))))
+       `(fringe ((,class (:background ,bg :foreground ,fg-dim))))
+       `(vertical-border ((,class (:foreground ,border))))
+       `(window-divider ((,class (:foreground ,border))))
+       `(window-divider-first-pixel ((,class (:foreground ,border))))
+       `(window-divider-last-pixel ((,class (:foreground ,border))))
+       `(minibuffer-prompt ((,class (:foreground ,primary :weight bold))))
+       `(link ((,class (:foreground ,second :underline t))))
+       `(link-visited ((,class (:foreground ,third :underline t))))
+       `(error ((,class (:foreground ,err :weight bold))))
+       `(warning ((,class (:foreground ,warning :weight bold))))
+       `(success ((,class (:foreground ,success :weight bold))))
+       `(shadow ((,class (:foreground ,fg-dim))))
+
+       ;; --- Mode Line ---
+       `(mode-line ((,class (:background ,bg-hl :foreground ,fg :box (:line-width 1 :color ,border)))))
+       `(mode-line-inactive ((,class (:background ,bg :foreground ,fg-alt :box (:line-width 1 :color ,border)))))
+       `(mode-line-buffer-id ((,class (:weight bold :foreground ,primary))))
+       `(mode-line-emphasis ((,class (:weight bold :foreground ,second))))
+       `(header-line ((,class (:inherit mode-line-inactive))))
+
+       ;; --- Font Lock (Syntax Highlighting) ---
+       `(font-lock-builtin-face ((,class (:foreground ,func))))
+       `(font-lock-comment-face ((,class (:foreground ,comment :slant italic))))
+       `(font-lock-comment-delimiter-face ((,class (:foreground ,comment))))
+       `(font-lock-constant-face ((,class (:foreground ,const))))
+       `(font-lock-doc-face ((,class (:foreground ,comment :slant italic))))
+       `(font-lock-function-name-face ((,class (:foreground ,func))))
+       `(font-lock-keyword-face ((,class (:foreground ,keyword))))
+       `(font-lock-negation-char-face ((,class (:foreground ,operator))))
+       `(font-lock-preprocessor-face ((,class (:foreground ,keyword))))
+       `(font-lock-string-face ((,class (:foreground ,string))))
+       `(font-lock-type-face ((,class (:foreground ,type))))
+       `(font-lock-variable-name-face ((,class (:foreground ,var))))
+       `(font-lock-warning-face ((,class (:foreground ,warning :weight bold))))
+       `(font-lock-regexp-grouping-backslash ((,class (:foreground ,const))))
+       `(font-lock-regexp-grouping-construct ((,class (:foreground ,const))))
+       `(font-lock-operator-face ((,class (:foreground ,operator))))
+       `(font-lock-property-face ((,class (:foreground ,property))))
+       `(font-lock-punctuation-face ((,class (:foreground ,punctuation))))
+       `(font-lock-bracket-face ((,class (:foreground ,punctuation))))
+       `(font-lock-delimiter-face ((,class (:foreground ,punctuation))))
+
+       ;; --- Line Numbers ---
+       `(line-number ((,class (:foreground ,fg-dim :background ,bg))))
+       `(line-number-current-line ((,class (:foreground ,primary :background ,ln-bg :weight bold))))
+
+       ;; --- Search ---
+       `(isearch ((,class (:background ,search :foreground ,fg :weight bold))))
+       `(isearch-fail ((,class (:background ,err :foreground ,bg))))
+       `(lazy-highlight ((,class (:background ,region :foreground ,fg))))
+       `(match ((,class (:background ,search :foreground ,fg))))
+
+       ;; --- Parens / Smartparens ---
+       `(show-paren-match ((,class (:background ,region :weight bold))))
+       `(show-paren-mismatch ((,class (:background ,err :foreground ,bg :weight bold))))
+       `(sp-show-pair-match-face ((,class (:background ,region))))
+
+       ;; --- Org Mode ---
+       `(org-level-1 ((,class (:foreground ,primary :weight bold :height 1.3))))
+       `(org-level-2 ((,class (:foreground ,second :weight bold :height 1.15))))
+       `(org-level-3 ((,class (:foreground ,mint :weight bold :height 1.05))))
+       `(org-level-4 ((,class (:foreground ,ansi-blue :weight bold))))
+       `(org-level-5 ((,class (:foreground ,ansi-magenta :weight bold))))
+       `(org-level-6 ((,class (:foreground ,ansi-cyan :weight bold))))
+       `(org-level-7 ((,class (:foreground ,ansi-green :weight bold))))
+       `(org-level-8 ((,class (:foreground ,ansi-yellow :weight bold))))
+       `(org-date ((,class (:foreground ,second :underline t))))
+       `(org-footnote ((,class (:foreground ,third :underline t))))
+       `(org-link ((,class (:foreground ,second :underline t))))
+       `(org-special-keyword ((,class (:foreground ,fg-alt))))
+       `(org-block ((,class (:background ,bg-alt :extend t))))
+       `(org-block-begin-line ((,class (:foreground ,fg-dim :background ,bg-alt :extend t))))
+       `(org-block-end-line ((,class (:foreground ,fg-dim :background ,bg-alt :extend t))))
+       `(org-quote ((,class (:inherit org-block :slant italic))))
+       `(org-code ((,class (:foreground ,success :background ,bg-alt))))
+       `(org-verbatim ((,class (:foreground ,success :background ,bg-alt))))
+       `(org-table ((,class (:foreground ,fg))))
+       `(org-formula ((,class (:foreground ,const))))
+       `(org-checkbox ((,class (:foreground ,primary :weight bold))))
+       `(org-todo ((,class (:foreground ,warning :weight bold))))
+       `(org-done ((,class (:foreground ,success :weight bold))))
+       `(org-tag ((,class (:foreground ,fg-alt :weight bold))))
+       `(org-priority ((,class (:foreground ,warning))))
+       `(org-document-title ((,class (:foreground ,primary :weight bold :height 1.5))))
+       `(org-document-info ((,class (:foreground ,fg-alt))))
+       `(org-meta-line ((,class (:foreground ,fg-dim))))
+
+       ;; --- Markdown ---
+       `(markdown-header-face-1 ((,class (:inherit org-level-1))))
+       `(markdown-header-face-2 ((,class (:inherit org-level-2))))
+       `(markdown-header-face-3 ((,class (:inherit org-level-3))))
+       `(markdown-code-face ((,class (:inherit org-code))))
+       `(markdown-markup-face ((,class (:foreground ,fg-dim))))
+       `(markdown-url-face ((,class (:foreground ,second))))
+
+       ;; --- Tree Sitter ---
+       `(tree-sitter-hl-face:attribute ((,class (:foreground ,attribute))))
+       `(tree-sitter-hl-face:method.call ((,class (:foreground ,func))))
+       `(tree-sitter-hl-face:function.call ((,class (:foreground ,func))))
+       `(tree-sitter-hl-face:operator ((,class (:foreground ,operator))))
+       `(tree-sitter-hl-face:type.builtin ((,class (:foreground ,type))))
+       `(tree-sitter-hl-face:number ((,class (:foreground ,const))))
+       `(tree-sitter-hl-face:property ((,class (:foreground ,property))))
+       `(tree-sitter-hl-face:punctuation ((,class (:foreground ,punctuation))))
+       `(tree-sitter-hl-face:punctuation.bracket ((,class (:foreground ,punctuation))))
+       `(tree-sitter-hl-face:punctuation.delimiter ((,class (:foreground ,punctuation))))
+       `(tree-sitter-hl-face:constructor ((,class (:foreground ,type))))
+       `(tree-sitter-hl-face:keyword ((,class (:foreground ,keyword))))
+       `(tree-sitter-hl-face:string ((,class (:foreground ,string))))
+       `(tree-sitter-hl-face:tag ((,class (:foreground ,tag))))
+       `(tree-sitter-hl-face:variable ((,class (:foreground ,var))))
+       `(tree-sitter-hl-face:constant ((,class (:foreground ,const))))
+       `(tree-sitter-hl-face:type ((,class (:foreground ,type))))
+
+       ;; --- LSP Mode / Flycheck ---
+       `(lsp-face-highlight-textual ((,class (:background ,region))))
+       `(lsp-face-highlight-read ((,class (:background ,region))))
+       `(lsp-face-highlight-write ((,class (:background ,region))))
+       `(flycheck-error ((,class (:underline (:style wave :color ,err)))))
+       `(flycheck-warning ((,class (:underline (:style wave :color ,warning)))))
+       `(flycheck-info ((,class (:underline (:style wave :color ,info)))))
+       `(flymake-error ((,class (:underline (:style wave :color ,err)))))
+       `(flymake-warning ((,class (:underline (:style wave :color ,warning)))))
+       `(flymake-note ((,class (:underline (:style wave :color ,info)))))
+
+       ;; --- Magit ---
+       `(magit-section-heading ((,class (:foreground ,primary :weight bold))))
+       `(magit-branch-local ((,class (:foreground ,success))))
+       `(magit-branch-remote ((,class (:foreground ,second))))
+       `(magit-tag ((,class (:foreground ,third))))
+       `(magit-hash ((,class (:foreground ,fg-dim))))
+       `(magit-diff-added ((,class (:background ,diff-add-bg :foreground ,diff-add-fg))))
+       `(magit-diff-added-highlight ((,class (:background ,diff-add-bg :foreground ,diff-add-fg :weight bold))))
+       `(magit-diff-removed ((,class (:background ,diff-del-bg :foreground ,diff-del-fg))))
+       `(magit-diff-removed-highlight ((,class (:background ,diff-del-bg :foreground ,diff-del-fg :weight bold))))
+       `(magit-diff-context ((,class (:foreground ,fg-dim))))
+       `(magit-diff-context-highlight ((,class (:background ,bg-hl :foreground ,fg))))
+       `(magit-diff-hunk-heading ((,class (:background ,bg-hl :foreground ,fg))))
+       `(magit-diff-hunk-heading-highlight ((,class (:background ,ln-bg :foreground ,fg :weight bold))))
+       `(magit-process-ok ((,class (:foreground ,success :weight bold))))
+       `(magit-process-ng ((,class (:foreground ,err :weight bold))))
+
+       ;; --- Git Gutter / Diff-HL ---
+       `(git-gutter:added ((,class (:foreground ,success))))
+       `(git-gutter:deleted ((,class (:foreground ,err))))
+       `(git-gutter:modified ((,class (:foreground ,warning))))
+       `(diff-hl-insert ((,class (:foreground ,success :background ,diff-add-bg))))
+       `(diff-hl-delete ((,class (:foreground ,err :background ,diff-del-bg))))
+       `(diff-hl-change ((,class (:foreground ,warning :background ,diff-chg-bg))))
+
+       ;; --- Vertico / Selectrum / Ivy ---
+       `(vertico-current ((,class (:background ,ln-bg :weight bold))))
+       `(vertico-group-title ((,class (:foreground ,fg-alt :weight bold))))
+       `(vertico-group-separator ((,class (:foreground ,border))))
+       `(ivy-current-match ((,class (:background ,ln-bg :weight bold))))
+       `(ivy-minibuffer-match-face-1 ((,class (:foreground ,fg-dim))))
+       `(ivy-minibuffer-match-face-2 ((,class (:foreground ,success :weight bold))))
+       `(ivy-minibuffer-match-face-3 ((,class (:foreground ,warning :weight bold))))
+       `(ivy-minibuffer-match-face-4 ((,class (:foreground ,err :weight bold))))
+
+       ;; --- Company (Completion) ---
+       `(company-tooltip ((,class (:background ,bg-hl :foreground ,fg))))
+       `(company-tooltip-selection ((,class (:background ,primary :foreground ,bg))))
+       `(company-tooltip-annotation ((,class (:foreground ,fg-alt))))
+       `(company-tooltip-common ((,class (:foreground ,second :weight bold))))
+       `(company-scrollbar-bg ((,class (:background ,bg-alt))))
+       `(company-scrollbar-fg ((,class (:background ,fg-dim))))
+       `(company-preview ((,class (:foreground ,fg-dim))))
+       `(company-preview-common ((,class (:foreground ,fg-dim))))
+
+       ;; --- Corfu ---
+       `(corfu-default ((,class (:background ,bg-hl :foreground ,fg))))
+       `(corfu-current ((,class (:background ,primary :foreground ,bg))))
+       `(corfu-bar ((,class (:background ,fg-dim))))
+       `(corfu-border ((,class (:background ,border))))
+
+       ;; --- Rainbow Delimiters ---
+       `(rainbow-delimiters-depth-1-face ((,class (:foreground ,primary))))
+       `(rainbow-delimiters-depth-2-face ((,class (:foreground ,second))))
+       `(rainbow-delimiters-depth-3-face ((,class (:foreground ,third))))
+       `(rainbow-delimiters-depth-4-face ((,class (:foreground ,success))))
+       `(rainbow-delimiters-depth-5-face ((,class (:foreground ,warning))))
+       `(rainbow-delimiters-depth-6-face ((,class (:foreground ,info))))
+       `(rainbow-delimiters-depth-7-face ((,class (:foreground ,fg-alt))))
+       `(rainbow-delimiters-depth-8-face ((,class (:foreground ,fg-dim))))
+       `(rainbow-delimiters-unmatched-face ((,class (:foreground ,err :weight bold))))
+
+       ;; --- NeoTree / Treemacs ---
+       `(neo-root-dir-face ((,class (:foreground ,primary :weight bold))))
+       `(neo-file-link-face ((,class (:foreground ,fg))))
+       `(neo-dir-link-face ((,class (:foreground ,second))))
+       `(treemacs-root-face ((,class (:foreground ,primary :weight bold :height 1.2))))
+       `(treemacs-file-face ((,class (:foreground ,fg))))
+       `(treemacs-directory-face ((,class (:foreground ,second))))
+       `(treemacs-git-modified-face ((,class (:foreground ,warning))))
+       `(treemacs-git-added-face ((,class (:foreground ,success))))
+       `(treemacs-git-untracked-face ((,class (:foreground ,success))))
+       `(treemacs-git-conflict-face ((,class (:foreground ,err :weight bold))))
+
+       ;; --- Terminal (vterm) ---
+       `(vterm-color-default ((,class (:foreground ,fg :background ,bg))))
+       `(vterm-color-black ((,class (:foreground ,ansi-black :background ,ansi-black))))
+       `(vterm-color-red ((,class (:foreground ,ansi-red :background ,ansi-red))))
+       `(vterm-color-green ((,class (:foreground ,ansi-green :background ,ansi-green))))
+       `(vterm-color-yellow ((,class (:foreground ,ansi-yellow :background ,ansi-yellow))))
+       `(vterm-color-blue ((,class (:foreground ,ansi-blue :background ,ansi-blue))))
+       `(vterm-color-magenta ((,class (:foreground ,ansi-magenta :background ,ansi-magenta))))
+       `(vterm-color-cyan ((,class (:foreground ,ansi-cyan :background ,ansi-cyan))))
+       `(vterm-color-white ((,class (:foreground ,ansi-white :background ,ansi-white))))
+
+       ;; --- Web Mode ---
+       `(web-mode-html-tag-face ((,class (:foreground ,primary))))
+       `(web-mode-html-attr-name-face ((,class (:foreground ,second))))
+       `(web-mode-html-attr-value-face ((,class (:foreground ,string))))
+       `(web-mode-doctype-face ((,class (:foreground ,fg-dim))))
+       `(web-mode-keyword-face ((,class (:foreground ,keyword))))
+       `(web-mode-function-name-face ((,class (:foreground ,func))))
+
+       ;; --- Dired ---
+       `(dired-directory ((,class (:foreground ,second :weight bold))))
+       `(dired-symlink ((,class (:foreground ,third :slant italic))))
+       `(dired-ignored ((,class (:foreground ,fg-dim))))
+       `(dired-header ((,class (:foreground ,primary :weight bold))))
+      ))
+
+    ;;;###autoload
+    (and load-file-name
+        (boundp 'custom-theme-load-path)
+        (add-to-list 'custom-theme-load-path
+                     (file-name-as-directory
+                      (file-name-directory load-file-name))))
+
+    (provide-theme '{theme_name})
+
+    ;;; {theme_name}-theme.el ends here
+    """
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, "w") as f:
+                f.write(content)
+            print(f"✓ Generated Emacs theme: {output_path}")
 
     def generate_all_themes(self, theme_name: str):
         """Generate all application themes for a given palette."""
@@ -2931,6 +3529,10 @@ border-color={p["success"]}
         # Note-taking app
         obsidian_output = self.themes_dir / "obsidian" / "themes" / theme_name
         self.generate_obsidian_theme(palette, obsidian_output)
+
+        # Emacs
+        emacs_output = self.emacs_dir / "themes" / f"{theme_name}-theme.el"
+        self.generate_emacs_theme(palette, emacs_output)
 
         print("=" * 60)
         print(f"✨ All themes generated successfully for {theme_name}!\n")

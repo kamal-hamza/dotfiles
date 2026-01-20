@@ -22,11 +22,11 @@ M.colors = {
 
     -- Syntax colors
     red = "#C42847",       -- base red
-    red_bright = "#ff4c6a", -- keyword, error (bright)
+    red_bright = "#C42847", -- keyword, error (bright)
     orange = "#b8943d",    -- type, warning
-    orange_bright = "#D4B87B", -- bright yellow
+    orange_bright = "#b8943d", -- bright yellow
     cyan = "#4da6ff",      -- function
-    cyan_bright = "#67b7f5", -- bright cyan
+    cyan_bright = "#77d5ff", -- bright cyan
     purple = "#9a6e6d",    -- magenta
     purple_bright = "#B88E8D", -- bright magenta
 
@@ -44,9 +44,9 @@ M.colors = {
     git_delete = "#C42847",
 
     -- Diagnostic colors
-    error = "#ff4c6a",
+    error = "#C42847",
     warn = "#b8943d",
-    info = "#558855",
+    info = "#4da6ff",
     hint = "#888888",
 
     -- Terminal colors
@@ -56,15 +56,15 @@ M.colors = {
     term_yellow = "#b8943d",
     term_blue = "#448cbb",
     term_magenta = "#9a6e6d",
-    term_cyan = "#448cbb",
+    term_cyan = "#4da6ff",
     term_white = "#f5f5f5",
     term_bright_black = "#666666",
     term_bright_red = "#ff4c6a",
     term_bright_green = "#77aa77",
     term_bright_yellow = "#D4B87B",
-    term_bright_blue = "#4da6ff",
+    term_bright_blue = "#67b7f5",
     term_bright_magenta = "#B88E8D",
-    term_bright_cyan = "#67b7f5",
+    term_bright_cyan = "#77d5ff",
     term_bright_white = "#ffffff",
 }
 

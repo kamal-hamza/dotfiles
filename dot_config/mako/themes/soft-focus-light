@@ -42,7 +42,7 @@ default-timeout=5000
 [urgency=critical]
 background-color=#C4284726
 text-color=#000000
-border-color=#ff4c6a
+border-color=#C42847
 default-timeout=0
 
 # App-specific styles

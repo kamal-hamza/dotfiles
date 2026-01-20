@@ -50,13 +50,13 @@
   /* Syntax Highlighting */
   --code-normal: #f5f5f5;
   --code-background: #1a1a1a;
-  --code-keyword: #448cbb;
+  --code-keyword: #ff4c6a;
   --code-function: #67b7f5;
-  --code-string: #77aa77;
-  --code-number: #D4B87B;
+  --code-string: #99cc99;
+  --code-number: #f0d08a;
   --code-property: #4da6ff;
   --code-comment: #888888;
-  --code-operator: #bbbbbb;
+  --code-operator: #f5f5f5;
 
   /* UI Elements */
   --titlebar-text-color-focused: #f5f5f5;
@@ -75,10 +75,9 @@
   --tag-color-hover: #050505;
 
   /* Links */
-  --link-color: #448cbb;
-  --link-color-hover: #67b7f5;
-  --link-external-color: #4da6ff;
-  --link-external-color-hover: #67b7f5;
+  --link-color: #67b7f5;
+  --link-color-hover: #4da6ff;
+  --link-external-color: #67b7f5;
   --link-unresolved-color: #888888;
 
   /* Graph View */
