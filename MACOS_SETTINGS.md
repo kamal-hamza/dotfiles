@@ -1,6 +1,6 @@
 # macOS Settings Configuration
 
-This document explains all the macOS system settings that are automatically configured by the `run_once_before_03_darwin-configure-macos.sh.tmpl` script.
+This document explains the macOS system settings that are automatically configured by the `run_once_before_03_darwin-configure-macos.sh.tmpl` script.
 
 ## How It Works
 
@@ -35,122 +35,119 @@ bash run_once_before_03_darwin-configure-macos.sh.tmpl
 
 ## Settings Configured
 
-### General UI/UX
+### Appearance
 
 | Setting | Value | Command |
 |---------|-------|---------|
-| Boot sound | Disabled | `sudo nvram SystemAudioVolume=" "` |
-| Save panel | Expanded by default | `defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true` |
-| Print panel | Expanded by default | `defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true` |
-| Default save location | Disk (not iCloud) | `defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false` |
-| Automatic app termination | Disabled | `defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true` |
-| Login window clock | Shows system info | `sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName` |
+| System theme | Dark | `defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"` |
+| Accent color | Pink | `defaults write NSGlobalDomain AppleAccentColor -int 6` |
+| Icon theme | Dark | `defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool false` |
 
-### Keyboard & Input
+**Accent Color Values:**
+- `-1` = Graphite
+- `0` = Red
+- `1` = Orange
+- `2` = Yellow
+- `3` = Green
+- `4` = Blue
+- `5` = Purple
+- `6` = Pink
+
+### Dock
 
 | Setting | Value | Command |
 |---------|-------|---------|
-| Key repeat rate | Very fast (2) | `defaults write NSGlobalDomain KeyRepeat -int 2` |
-| Initial key repeat | Fast (15) | `defaults write NSGlobalDomain InitialKeyRepeat -int 15` |
-| Auto-correct | Disabled | `defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false` |
-| Auto-capitalization | Disabled | `defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false` |
-| Smart dashes | Disabled | `defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false` |
-| Auto period (double-space) | Disabled | `defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false` |
-| Smart quotes | Disabled | `defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false` |
+| Icon size | 30% (~36px) | `defaults write com.apple.dock tilesize -int 36` |
+| Position | Right | `defaults write com.apple.dock orientation -string "right"` |
+| Recent apps | Hidden | `defaults write com.apple.dock show-recents -bool false` |
+| Auto-hide | Enabled | `defaults write com.apple.dock autohide -bool true` |
+| Auto-hide delay | Instant | `defaults write com.apple.dock autohide-delay -float 0.0` |
+| Auto-hide animation | Fast (0.4s) | `defaults write com.apple.dock autohide-time-modifier -float 0.4` |
+
+**Dock Position Values:**
+- `"left"` = Left side
+- `"bottom"` = Bottom (default)
+- `"right"` = Right side
+
+**Dock Size:**
+- Small: 16-32px
+- Medium: 48-64px
+- Large: 80-128px
+
+### Keyboard
+
+| Setting | Value | Command |
+|---------|-------|---------|
+| Key repeat rate | Maximum (1) | `defaults write NSGlobalDomain KeyRepeat -int 1` |
+| Initial delay | Very fast (10) | `defaults write NSGlobalDomain InitialKeyRepeat -int 10` |
+
+**Key Repeat Values:**
+- `1` = Fastest
+- `2` = Very fast
+- `6` = Normal
+- `12` = Slow
+
+### Finder
+
+| Setting | Value | Command |
+|---------|-------|---------|
+| Path bar | Visible | `defaults write com.apple.finder ShowPathbar -bool true` |
+| Full path in title | Enabled | `defaults write com.apple.finder _FXShowPosixPathInTitle -bool true` |
+| Default view | List | `defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"` |
+
+**Finder View Styles:**
+- `"icnv"` = Icon view
+- `"clmv"` = Column view
+- `"Flwv"` = Gallery view
+- `"Nlsv"` = List view
 
 ### Trackpad
 
 | Setting | Value | Command |
 |---------|-------|---------|
 | Tap to click | Enabled | `defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true` |
-| Tracking speed | 1.5 | `defaults write NSGlobalDomain com.apple.trackpad.scaling -float 1.5` |
+| Secondary click | Bottom right corner | `defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2` |
 
-### Finder
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Hidden files | Visible | `defaults write com.apple.finder AppleShowAllFiles -bool true` |
-| File extensions | All visible | `defaults write NSGlobalDomain AppleShowAllExtensions -bool true` |
-| Status bar | Visible | `defaults write com.apple.finder ShowStatusBar -bool true` |
-| Path bar | Visible | `defaults write com.apple.finder ShowPathbar -bool true` |
-| Full path in title | Enabled | `defaults write com.apple.finder _FXShowPosixPathInTitle -bool true` |
-| Folders on top | Enabled | `defaults write com.apple.finder _FXSortFoldersFirst -bool true` |
-| Search scope | Current folder | `defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"` |
-| Extension change warning | Disabled | `defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false` |
-| .DS_Store on network | Disabled | `defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true` |
-| .DS_Store on USB | Disabled | `defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true` |
-| Default view | List view | `defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"` |
-| ~/Library folder | Visible | `chflags nohidden ~/Library` |
-| /Volumes folder | Visible | `sudo chflags nohidden /Volumes` |
-
-### Dock
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Icon size | 48px | `defaults write com.apple.dock tilesize -int 48` |
-| Magnification | Enabled (64px) | `defaults write com.apple.dock magnification -bool true` |
-| Window effect | Scale | `defaults write com.apple.dock mineffect -string "scale"` |
-| Minimize to app icon | Enabled | `defaults write com.apple.dock minimize-to-application -bool true` |
-| App indicators | Visible | `defaults write com.apple.dock show-process-indicators -bool true` |
-| Auto-rearrange Spaces | Disabled | `defaults write com.apple.dock mru-spaces -bool false` |
-| Auto-hide | Enabled | `defaults write com.apple.dock autohide -bool true` |
-| Hidden apps translucent | Enabled | `defaults write com.apple.dock showhidden -bool true` |
-| Recent applications | Hidden | `defaults write com.apple.dock show-recents -bool false` |
-| Position | Bottom | `defaults write com.apple.dock orientation -string "bottom"` |
-
-### Screenshots
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Save location | Desktop | `defaults write com.apple.screencapture location -string "${HOME}/Desktop"` |
-| Format | PNG | `defaults write com.apple.screencapture type -string "png"` |
-| Shadow | Disabled | `defaults write com.apple.screencapture disable-shadow -bool true` |
-
-### Menu Bar
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Battery percentage | Visible | `defaults write com.apple.menuextra.battery ShowPercent -string "YES"` |
-
-### Activity Monitor
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Open main window | On launch | `defaults write com.apple.ActivityMonitor OpenMainWindow -bool true` |
-| Dock icon | CPU history | `defaults write com.apple.ActivityMonitor IconType -int 5` |
-| Show processes | All | `defaults write com.apple.ActivityMonitor ShowCategory -int 0` |
-| Sort by | CPU usage | `defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"` |
-
-### TextEdit
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| New document format | Plain text | `defaults write com.apple.TextEdit RichText -int 0` |
-| Encoding | UTF-8 | `defaults write com.apple.TextEdit PlainTextEncoding -int 4` |
-
-### Terminal
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Character encoding | UTF-8 only | `defaults write com.apple.terminal StringEncodings -array 4` |
-
-### Time Machine
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| New disk prompts | Disabled | `defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true` |
-
-### Safari & WebKit
-
-| Setting | Value | Command |
-|---------|-------|---------|
-| Search suggestions | Disabled | `defaults write com.apple.Safari UniversalSearchEnabled -bool false` |
-| Full URL | Visible | `defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true` |
-| Developer menu | Enabled | `defaults write com.apple.Safari IncludeDevelopMenu -bool true` |
-| Web Inspector | Enabled | `defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true` |
-| Do Not Track | Enabled | `defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true` |
+**Secondary Click Values:**
+- `0` = Off
+- `1` = Bottom left corner
+- `2` = Bottom right corner
 
 ## Customization
+
+### To Change a Setting
+
+Edit `run_once_before_03_darwin-configure-macos.sh.tmpl` and modify the value:
+
+**Example - Change Dock size:**
+```bash
+# Current (30% = 36px)
+defaults write com.apple.dock tilesize -int 36
+
+# Larger (50% = 60px)
+defaults write com.apple.dock tilesize -int 60
+
+# Smaller (20% = 24px)
+defaults write com.apple.dock tilesize -int 24
+```
+
+**Example - Change accent color to blue:**
+```bash
+# Current (pink)
+defaults write NSGlobalDomain AppleAccentColor -int 6
+
+# Blue
+defaults write NSGlobalDomain AppleAccentColor -int 4
+```
+
+**Example - Move Dock to bottom:**
+```bash
+# Current (right)
+defaults write com.apple.dock orientation -string "right"
+
+# Bottom
+defaults write com.apple.dock orientation -string "bottom"
+```
 
 ### To Add New Settings
 
@@ -170,30 +167,18 @@ bash run_once_before_03_darwin-configure-macos.sh.tmpl
    print_success "Setting applied"
    ```
 
-3. Apply the changes:
+3. Re-run:
    ```bash
+   chezmoi state delete-bucket --bucket=scriptState
    chezmoi apply
    ```
 
-### To Modify Existing Settings
+### To Disable a Setting
 
-Edit `run_once_before_03_darwin-configure-macos.sh.tmpl` and change the values:
-
-**Example - Change Dock icon size from 48 to 36:**
-```bash
-# Before:
-defaults write com.apple.dock tilesize -int 48
-
-# After:
-defaults write com.apple.dock tilesize -int 36
-```
-
-### To Disable Specific Settings
-
-Comment out the lines you don't want:
+Comment it out:
 
 ```bash
-# Don't auto-hide the Dock
+# Don't want auto-hide Dock?
 # print_info "Enabling Dock auto-hide..."
 # defaults write com.apple.dock autohide -bool true
 # print_success "Dock auto-hide enabled"
@@ -207,40 +192,86 @@ Comment out the lines you don't want:
 - **String**: `-string "value"`
 - **Array**: `-array 1 2 3`
 
-## Useful Resources
-
-- [defaults command documentation](https://ss64.com/osx/defaults.html)
-- [macOS defaults list](https://macos-defaults.com/)
-- [Mathias Bynens' dotfiles](https://github.com/mathiasbynens/dotfiles/blob/main/.macos) - Comprehensive example
-
 ## Reverting Changes
 
 To revert a specific setting:
 
 ```bash
 # Delete the setting (restores default)
-defaults delete com.apple.finder ShowPathbar
+defaults delete com.apple.dock autohide
 
 # Or set it back to the original value
-defaults write com.apple.finder ShowPathbar -bool false
+defaults write com.apple.dock autohide -bool false
+
+# Restart the affected app
+killall Dock
 ```
 
-To see what changed:
+To see current values:
 
 ```bash
-# Before running the script
-defaults read com.apple.finder > before.txt
+# Read specific setting
+defaults read com.apple.dock autohide
 
-# After running the script
-defaults read com.apple.finder > after.txt
-
-# Compare
-diff before.txt after.txt
+# Read all Dock settings
+defaults read com.apple.dock
 ```
+
+## Useful Resources
+
+- [defaults command documentation](https://ss64.com/osx/defaults.html)
+- [macOS defaults list](https://macos-defaults.com/)
+- [Apple's User Defaults documentation](https://developer.apple.com/documentation/foundation/userdefaults)
 
 ## Notes
 
 - Most changes take effect immediately or after restarting the affected application
-- Some settings require logging out or restarting your Mac
 - The script automatically restarts Dock, Finder, and SystemUIServer
-- You may need to restart other applications manually for changes to take effect
+- Some settings may require logging out or restarting your Mac
+- Settings are stored in `.plist` files in `~/Library/Preferences/`
+
+## Troubleshooting
+
+### Setting didn't apply
+
+1. Manually restart the affected application:
+   ```bash
+   killall Dock
+   killall Finder
+   killall SystemUIServer
+   ```
+
+2. Log out and log back in
+
+3. Restart your Mac (if needed)
+
+### Check if setting was applied
+
+```bash
+# Read the current value
+defaults read com.apple.dock autohide
+
+# Should output: 1 (for true) or 0 (for false)
+```
+
+### Reset to defaults
+
+```bash
+# Delete custom setting to restore default
+defaults delete com.apple.dock autohide
+
+# Restart the app
+killall Dock
+```
+
+## Testing Before Applying
+
+To see what the script will change without running it:
+
+```bash
+# View the script
+cat ~/.local/share/chezmoi/run_once_before_03_darwin-configure-macos.sh.tmpl
+
+# See all defaults commands
+grep "defaults write" ~/.local/share/chezmoi/run_once_before_03_darwin-configure-macos.sh.tmpl
+```

@@ -43,87 +43,98 @@ print_warning() {
 print_header "macOS System Configuration"
 
 print_warning "This will modify your macOS system preferences"
-print_info "Some changes require logging out or restarting"
+print_info "Some changes may require logging out or restarting"
 echo ""
 
-# Ask for the administrator password upfront
-sudo -v
+# =============================================================================
+# Appearance
+# =============================================================================
+print_header "Appearance"
 
-# Keep-alive: update existing sudo time stamp until script has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+# Set dark mode
+print_info "Setting dark mode..."
+osascript -e 'tell application "System Events" to tell appearance preferences to set dark mode to true' 2>/dev/null || \
+defaults write NSGlobalDomain AppleInterfaceStyle -string "Dark"
+print_success "Dark mode enabled"
+
+# Set accent color to pink
+print_info "Setting accent color to pink..."
+defaults write NSGlobalDomain AppleAccentColor -int 6
+print_success "Accent color set to pink"
+
+# Set icon theme to dark (multicolor in dark mode)
+print_info "Setting icon theme..."
+defaults write NSGlobalDomain AppleInterfaceStyleSwitchesAutomatically -bool false
+print_success "Icon theme set to dark"
 
 # =============================================================================
-# General UI/UX
+# Dock
 # =============================================================================
-print_header "General UI/UX"
+print_header "Dock"
 
-# Disable the sound effects on boot
-print_info "Disabling boot sound..."
-sudo nvram SystemAudioVolume=" "
-print_success "Boot sound disabled"
+# Set Dock size to 30% (roughly 36 pixels on standard display)
+print_info "Setting Dock size to 30%..."
+defaults write com.apple.dock tilesize -int 36
+print_success "Dock size set to 30%"
 
-# Expand save panel by default
-print_info "Expanding save panel..."
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-print_success "Save panel expanded by default"
+# Set Dock position to right
+print_info "Setting Dock position to right..."
+defaults write com.apple.dock orientation -string "right"
+print_success "Dock positioned on right"
 
-# Expand print panel by default
-print_info "Expanding print panel..."
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
-print_success "Print panel expanded by default"
+# Hide recent applications in Dock
+print_info "Hiding recent applications..."
+defaults write com.apple.dock show-recents -bool false
+print_success "Recent applications hidden"
 
-# Save to disk (not to iCloud) by default
-print_info "Setting save location to disk..."
-defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-print_success "Documents save to disk by default"
+# Note: "Suggested apps" in Dock is controlled by show-recents
 
-# Disable automatic termination of inactive apps
-print_info "Disabling automatic app termination..."
-defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
-print_success "Automatic termination disabled"
+# Enable Dock auto-hide
+print_info "Enabling Dock auto-hide..."
+defaults write com.apple.dock autohide -bool true
+print_success "Dock auto-hide enabled"
 
-# Reveal IP address, hostname, OS version when clicking the clock in login window
-print_info "Enabling clock details in login window..."
-sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
-print_success "Login window shows system info"
+# Reduce Dock auto-hide delay for faster response
+print_info "Setting fast auto-hide delay..."
+defaults write com.apple.dock autohide-delay -float 0.0
+defaults write com.apple.dock autohide-time-modifier -float 0.4
+print_success "Fast auto-hide configured"
 
 # =============================================================================
-# Keyboard & Input
+# Keyboard
 # =============================================================================
-print_header "Keyboard & Input"
+print_header "Keyboard"
 
-# Set a blazingly fast keyboard repeat rate
-print_info "Setting fast key repeat rate..."
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-print_success "Key repeat rate set to fast"
+# Set key repeat rate to maximum (fastest)
+print_info "Setting key repeat to maximum speed..."
+defaults write NSGlobalDomain KeyRepeat -int 1
+defaults write NSGlobalDomain InitialKeyRepeat -int 10
+print_success "Key repeat set to maximum speed"
 
-# Disable auto-correct
-print_info "Disabling auto-correct..."
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-print_success "Auto-correct disabled"
+# =============================================================================
+# Finder
+# =============================================================================
+print_header "Finder"
 
-# Disable automatic capitalization
-print_info "Disabling automatic capitalization..."
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-print_success "Automatic capitalization disabled"
+# Show path bar in Finder
+print_info "Showing path bar..."
+defaults write com.apple.finder ShowPathbar -bool true
+print_success "Path bar visible"
 
-# Disable smart dashes
-print_info "Disabling smart dashes..."
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-print_success "Smart dashes disabled"
+# Show full path in Finder title bar
+print_info "Showing full path in title bar..."
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+print_success "Full path in title bar enabled"
 
-# Disable automatic period substitution
-print_info "Disabling automatic period substitution..."
-defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
-print_success "Automatic period substitution disabled"
+# Set Finder to display files/folders as list
+print_info "Setting default view to list..."
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+print_success "List view set as default"
 
-# Disable smart quotes
-print_info "Disabling smart quotes..."
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-print_success "Smart quotes disabled"
+# Apply list view to all windows
+print_info "Applying list view to all Finder windows..."
+/usr/bin/find ~/Library/Preferences -name "com.apple.finder.plist" -exec defaults write {} FXPreferredViewStyle -string "Nlsv" \; 2>/dev/null || true
+print_success "List view applied to all windows"
 
 # =============================================================================
 # Trackpad
@@ -137,252 +148,13 @@ defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 print_success "Tap to click enabled"
 
-# Set tracking speed
-print_info "Setting trackpad tracking speed..."
-defaults write NSGlobalDomain com.apple.trackpad.scaling -float 1.5
-print_success "Trackpad tracking speed set"
-
-# =============================================================================
-# Finder
-# =============================================================================
-print_header "Finder"
-
-# Show hidden files by default
-print_info "Showing hidden files..."
-defaults write com.apple.finder AppleShowAllFiles -bool true
-print_success "Hidden files visible"
-
-# Show all filename extensions
-print_info "Showing all file extensions..."
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-print_success "All extensions visible"
-
-# Show status bar
-print_info "Showing status bar..."
-defaults write com.apple.finder ShowStatusBar -bool true
-print_success "Status bar visible"
-
-# Show path bar
-print_info "Showing path bar..."
-defaults write com.apple.finder ShowPathbar -bool true
-print_success "Path bar visible"
-
-# Display full POSIX path as Finder window title
-print_info "Showing full path in title..."
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-print_success "Full path in title enabled"
-
-# Keep folders on top when sorting by name
-print_info "Keeping folders on top..."
-defaults write com.apple.finder _FXSortFoldersFirst -bool true
-print_success "Folders on top enabled"
-
-# When performing a search, search the current folder by default
-print_info "Setting search scope to current folder..."
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
-print_success "Search scope set to current folder"
-
-# Disable warning when changing a file extension
-print_info "Disabling extension change warning..."
-defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-print_success "Extension change warning disabled"
-
-# Avoid creating .DS_Store files on network or USB volumes
-print_info "Preventing .DS_Store on network/USB volumes..."
-defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
-print_success ".DS_Store prevention enabled"
-
-# Use list view in all Finder windows by default
-print_info "Setting default view to list..."
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-print_success "List view set as default"
-
-# Show the ~/Library folder
-print_info "Showing Library folder..."
-chflags nohidden ~/Library
-print_success "Library folder visible"
-
-# Show the /Volumes folder
-print_info "Showing Volumes folder..."
-sudo chflags nohidden /Volumes
-print_success "Volumes folder visible"
-
-# =============================================================================
-# Dock
-# =============================================================================
-print_header "Dock"
-
-# Set the icon size of Dock items
-print_info "Setting Dock icon size..."
-defaults write com.apple.dock tilesize -int 48
-print_success "Dock icon size set to 48px"
-
-# Enable magnification
-print_info "Enabling Dock magnification..."
-defaults write com.apple.dock magnification -bool true
-defaults write com.apple.dock largesize -int 64
-print_success "Dock magnification enabled"
-
-# Change minimize/maximize window effect
-print_info "Setting window effect to scale..."
-defaults write com.apple.dock mineffect -string "scale"
-print_success "Window effect set to scale"
-
-# Minimize windows into their application's icon
-print_info "Enabling minimize to app icon..."
-defaults write com.apple.dock minimize-to-application -bool true
-print_success "Minimize to app icon enabled"
-
-# Show indicator lights for open applications
-print_info "Showing app indicators..."
-defaults write com.apple.dock show-process-indicators -bool true
-print_success "App indicators visible"
-
-# Don't automatically rearrange Spaces based on most recent use
-print_info "Disabling automatic Space rearrangement..."
-defaults write com.apple.dock mru-spaces -bool false
-print_success "Automatic Space rearrangement disabled"
-
-# Automatically hide and show the Dock
-print_info "Enabling Dock auto-hide..."
-defaults write com.apple.dock autohide -bool true
-print_success "Dock auto-hide enabled"
-
-# Make Dock icons of hidden applications translucent
-print_info "Making hidden app icons translucent..."
-defaults write com.apple.dock showhidden -bool true
-print_success "Hidden app translucency enabled"
-
-# Don't show recent applications in Dock
-print_info "Hiding recent applications..."
-defaults write com.apple.dock show-recents -bool false
-print_success "Recent applications hidden"
-
-# Set Dock position (left, bottom, right)
-print_info "Setting Dock position to bottom..."
-defaults write com.apple.dock orientation -string "bottom"
-print_success "Dock positioned at bottom"
-
-# =============================================================================
-# Screenshots
-# =============================================================================
-print_header "Screenshots"
-
-# Save screenshots to the desktop
-print_info "Setting screenshot location..."
-defaults write com.apple.screencapture location -string "${HOME}/Desktop"
-print_success "Screenshots save to Desktop"
-
-# Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
-print_info "Setting screenshot format to PNG..."
-defaults write com.apple.screencapture type -string "png"
-print_success "Screenshot format set to PNG"
-
-# Disable shadow in screenshots
-print_info "Disabling shadows in screenshots..."
-defaults write com.apple.screencapture disable-shadow -bool true
-print_success "Screenshot shadows disabled"
-
-# =============================================================================
-# Menu Bar
-# =============================================================================
-print_header "Menu Bar"
-
-# Show battery percentage
-print_info "Showing battery percentage..."
-defaults write com.apple.menuextra.battery ShowPercent -string "YES"
-print_success "Battery percentage visible"
-
-# =============================================================================
-# Activity Monitor
-# =============================================================================
-print_header "Activity Monitor"
-
-# Show the main window when launching Activity Monitor
-print_info "Configuring Activity Monitor..."
-defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
-print_success "Activity Monitor opens main window"
-
-# Visualize CPU usage in the Dock icon
-print_info "Enabling CPU history in Dock..."
-defaults write com.apple.ActivityMonitor IconType -int 5
-print_success "CPU history in Dock enabled"
-
-# Show all processes
-print_info "Showing all processes..."
-defaults write com.apple.ActivityMonitor ShowCategory -int 0
-print_success "All processes visible"
-
-# Sort by CPU usage
-print_info "Sorting by CPU usage..."
-defaults write com.apple.ActivityMonitor SortColumn -string "CPUUsage"
-defaults write com.apple.ActivityMonitor SortDirection -int 0
-print_success "Activity Monitor sorted by CPU"
-
-# =============================================================================
-# TextEdit
-# =============================================================================
-print_header "TextEdit"
-
-# Use plain text mode for new documents
-print_info "Setting TextEdit to plain text..."
-defaults write com.apple.TextEdit RichText -int 0
-print_success "TextEdit uses plain text"
-
-# Open and save files as UTF-8
-print_info "Setting UTF-8 encoding..."
-defaults write com.apple.TextEdit PlainTextEncoding -int 4
-defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
-print_success "TextEdit uses UTF-8"
-
-# =============================================================================
-# Terminal
-# =============================================================================
-print_header "Terminal"
-
-# Only use UTF-8 in Terminal.app
-print_info "Setting Terminal to UTF-8..."
-defaults write com.apple.terminal StringEncodings -array 4
-print_success "Terminal uses UTF-8"
-
-# =============================================================================
-# Time Machine
-# =============================================================================
-print_header "Time Machine"
-
-# Prevent Time Machine from prompting to use new hard drives as backup volume
-print_info "Disabling Time Machine prompts..."
-defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
-print_success "Time Machine prompts disabled"
-
-# =============================================================================
-# Safari & WebKit
-# =============================================================================
-print_header "Safari & WebKit"
-
-# Privacy: don't send search queries to Apple
-print_info "Disabling search suggestions..."
-defaults write com.apple.Safari UniversalSearchEnabled -bool false
-defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-print_success "Search suggestions disabled"
-
-# Show the full URL in the address bar
-print_info "Showing full URL..."
-defaults write com.apple.Safari ShowFullURLInSmartSearchField -bool true
-print_success "Full URL visible"
-
-# Enable the Develop menu and Web Inspector
-print_info "Enabling Safari developer tools..."
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-print_success "Developer tools enabled"
-
-# Enable "Do Not Track"
-print_info "Enabling Do Not Track..."
-defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
-print_success "Do Not Track enabled"
+# Set secondary click to bottom right corner
+print_info "Setting secondary click to bottom right..."
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
+defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
+defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
+print_success "Secondary click set to bottom right"
 
 # =============================================================================
 # Done
@@ -391,9 +163,7 @@ print_header "Configuration Complete!"
 
 echo -e "${GREEN}All macOS settings have been applied!${NC}"
 echo ""
-echo -e "${YELLOW}Note: Some changes require logging out or restarting${NC}"
-echo ""
-echo "Affected applications will be restarted automatically..."
+echo -e "${YELLOW}Restarting affected applications...${NC}"
 echo ""
 
 # Restart affected applications
@@ -405,6 +175,8 @@ done
 print_success "Applications restarted"
 echo ""
 print_success "macOS configuration complete!"
+echo ""
+print_warning "Note: Some settings may require logging out or restarting your Mac to take full effect"
 echo ""
 
 {{ end -}}
