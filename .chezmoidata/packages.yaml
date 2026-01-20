@@ -24,6 +24,7 @@ packages:
 
     # CLI Tools - Command-line utilities and development tools
     brews:
+      - bat                  # Cat with syntax highlighting
       - chezmoi              # Dotfiles manager
       - fzf                  # Fuzzy finder for terminal
       - neovim               # Modern vim-based text editor
@@ -49,6 +50,7 @@ packages:
   arch:
     # Official Repository Packages
     pacman:
+      - bat                  # Cat with syntax highlighting
       - chezmoi              # Dotfiles manager
       - fzf                  # Fuzzy finder for terminal
       - git                  # Version control system

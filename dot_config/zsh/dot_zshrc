@@ -75,6 +75,11 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # -----------------------------------------------------------------------------
+# FZF History Pro (Advanced history search with Ctrl-R)
+# -----------------------------------------------------------------------------
+source_if_exists "$HOME/.config/zsh/fzf-history-pro.zsh"
+
+# -----------------------------------------------------------------------------
 # Zoxide Integration (smarter cd)
 # -----------------------------------------------------------------------------
 if command -v zoxide >/dev/null 2>&1; then

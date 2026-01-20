@@ -1,0 +1,170 @@
+#!/usr/bin/env zsh
+# =============================================================================
+# FZF History Pro - Advanced fuzzy history search with smart ranking
+# =============================================================================
+# Features:
+# - Smart ranking based on frequency and recency
+# - Project-aware scoring (git repositories)
+# - Syntax highlighting preview with bat
+# - Multi-line command support
+# - Keybindings:
+#   - Ctrl-R: Open history search
+#   - Ctrl-Y: Copy selected command to clipboard
+#   - Ctrl-D: Preview half page down
+#   - Ctrl-U: Preview half page up
+#   - Enter: Execute command
+# =============================================================================
+
+setopt extendedglob
+setopt localoptions no_shwordsplit
+
+# -----------------------------------------------------------------------------
+# Configuration
+# -----------------------------------------------------------------------------
+
+HISTORY_LIMIT=5000
+FZF_HEIGHT="50%"
+PREVIEW_LINES=10
+
+# Detect project root (git-aware)
+project_root() {
+  git rev-parse --show-toplevel 2>/dev/null || pwd
+}
+
+PROJECT_KEY=$(project_root)
+
+# -----------------------------------------------------------------------------
+# Collect History
+# -----------------------------------------------------------------------------
+
+collect_history() {
+  fc -rl 1 \
+  | head -n $HISTORY_LIMIT \
+  | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
+  | awk '!seen[$0]++'
+}
+
+# -----------------------------------------------------------------------------
+# Smart Ranking Algorithm
+# -----------------------------------------------------------------------------
+# Scoring factors:
+# - Frequency: How often the command is used (weight: 10)
+# - Project relevance: Commands used in current project (weight: 5)
+# - Recency: More recent commands ranked higher (weight: -0.01)
+# -----------------------------------------------------------------------------
+
+rank_history() {
+  awk -v proj="$PROJECT_KEY" '
+    {
+      cmd=$0
+      freq[cmd]++
+      last_seen[cmd]=NR
+      
+      # Boost score if command contains project path
+      if (index(cmd, proj)) {
+        proj_score[cmd]+=5
+      }
+      
+      # Boost score for common development commands
+      if (match(cmd, /^(git|npm|yarn|docker|kubectl|cargo|go|python|make)/)) {
+        dev_score[cmd]+=2
+      }
+    }
+    END {
+      for (c in freq) {
+        # Calculate final score
+        score = (freq[c] * 10) + proj_score[c] + dev_score[c] - (last_seen[c] * 0.01)
+        printf "%08.2f\t%s\n", score, c
+      }
+    }
+  ' \
+  | sort -nr \
+  | cut -f2-
+}
+
+# -----------------------------------------------------------------------------
+# Preview Command
+# -----------------------------------------------------------------------------
+
+preview_cmd='
+#!/usr/bin/env bash
+cmd="{}"
+
+# Header
+echo -e "\033[1;34m┌─ Command\033[0m"
+echo "│"
+
+# Show command with line numbers if multiline
+if [[ $(echo "$cmd" | wc -l) -gt 1 ]]; then
+  echo "$cmd" | nl -w2 -s"│ " | sed "s/^/│/"
+else
+  echo "│  $cmd"
+fi
+
+echo "│"
+echo -e "\033[1;34m└─ Syntax Preview\033[0m"
+echo
+
+# Try to use bat for syntax highlighting, fallback to cat
+if command -v bat &>/dev/null; then
+  echo "$cmd" | bat \
+    --language=bash \
+    --style=plain \
+    --color=always \
+    --theme="Monokai Extended" \
+    2>/dev/null
+else
+  echo "$cmd"
+fi
+'
+
+# -----------------------------------------------------------------------------
+# FZF Interface
+# -----------------------------------------------------------------------------
+
+fzf_run() {
+  collect_history \
+  | rank_history \
+  | fzf \
+      --height="$FZF_HEIGHT" \
+      --reverse \
+      --prompt="❯ " \
+      --info=inline \
+      --border=rounded \
+      --ansi \
+      --no-sort \
+      --exact \
+      --preview="$preview_cmd" \
+      --preview-window="right:50%:wrap" \
+      --header="^R: Search | ^Y: Copy | ^D/U: Scroll | Enter: Execute" \
+      --bind='ctrl-y:execute-silent(echo -n {} | pbcopy)+abort' \
+      --bind='ctrl-d:preview-half-page-down' \
+      --bind='ctrl-u:preview-half-page-up' \
+      --bind='ctrl-/:toggle-preview' \
+      --color='border:#448cbb,header:#888888,prompt:#67b7f5,pointer:#ff4c6a'
+}
+
+# -----------------------------------------------------------------------------
+# ZLE Widget
+# -----------------------------------------------------------------------------
+
+fzf-history-pro-widget() {
+  local selected
+  selected="$(fzf_run)"
+
+  # Return if nothing selected
+  [[ -z "$selected" ]] && return
+
+  # Clear current buffer and insert selected command
+  BUFFER="$selected"
+  CURSOR=$#BUFFER
+  
+  # Redraw prompt
+  zle reset-prompt
+}
+
+# Register ZLE widget
+zle -N fzf-history-pro-widget
+
+# Bind to Ctrl-R
+bindkey '^R' fzf-history-pro-widget
