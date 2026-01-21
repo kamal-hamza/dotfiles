@@ -68,6 +68,7 @@ packages:
             - zsh-syntax-highlighting # Syntax highlighting for zsh
             - zoxide # Smarter cd command
             - gh # Github CLI
+            - yq # YAML file handling
 
         # AUR (Arch User Repository) Packages
         aur:

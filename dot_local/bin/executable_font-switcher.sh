@@ -39,10 +39,15 @@ fi
 # Function to get system fonts (macOS)
 get_system_fonts() {
     if [[ "$OSTYPE" == "darwin"* ]]; then
-        # Get monospace fonts from system
-        system_profiler SPFontsDataType 2>/dev/null | grep "Full Name:" | sed 's/.*Full Name: //' | sort -u
+        # Get font families from system and filter to likely monospace fonts
+        # Look for common monospace font keywords
+        system_profiler SPFontsDataType 2>/dev/null | \
+            grep "Family:" | \
+            sed 's/.*Family: //' | \
+            grep -iE "mono|consolas|courier|menlo|monaco|inconsolata|source.*code|fira.*code|jetbrains|hack|SF.*Mono|liga|meslo|cascadia|roboto.*mono|ubuntu.*mono|droid.*sans.*mono|liberation.*mono|nerd.*font|iosevka|victor.*mono|fantasque|comic.*mono|commit.*mono|input.*mono|operator.*mono|dank.*mono|anonymous.*pro|pt.*mono" | \
+            sort -u
     else
-        # Linux - use fc-list
+        # Linux - use fc-list with monospace filter
         fc-list :mono family | cut -d, -f1 | sort -u
     fi
 }
@@ -103,6 +108,7 @@ Commit Mono
 Comic Mono
 Operator Mono
 Dank Mono
+Liga SFMono Nerd Font
 EOF
 }
 
@@ -162,14 +168,14 @@ main() {
     # Build font list
     echo -e "${YELLOW}Loading available fonts...${NC}"
     
-    # Combine popular fonts and system fonts, remove duplicates
-    all_fonts=$(
-        {
-            get_popular_fonts
-            # Uncomment to include all system fonts (can be slow)
-            # get_system_fonts
-        } | sort -u
-    )
+    # Get only actually installed system fonts (more reliable)
+    all_fonts=$(get_system_fonts)
+    
+    # If no fonts found, fall back to popular list
+    if [[ -z "$all_fonts" ]]; then
+        echo -e "${YELLOW}Could not detect system fonts, using popular list...${NC}"
+        all_fonts=$(get_popular_fonts | sort -u)
+    fi
     
     # Use fzf to select a font
     selected_font=$(echo "$all_fonts" | fzf \
@@ -193,6 +199,20 @@ main() {
     if [[ "$selected_font" == "$current_font" ]]; then
         echo -e "${YELLOW}Selected font is already the current font. No changes made.${NC}"
         exit 0
+    fi
+    
+    # Verify the font exists on the system (macOS)
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        if ! system_profiler SPFontsDataType 2>/dev/null | grep -q "Family: $selected_font"; then
+            echo -e "${YELLOW}Warning: Font '$selected_font' may not be installed on your system.${NC}"
+            echo -e "${YELLOW}WezTerm may fall back to another font.${NC}"
+            read -p "Continue anyway? (y/N) " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+                echo -e "${YELLOW}Font change cancelled.${NC}"
+                exit 0
+            fi
+        fi
     fi
     
     echo ""
@@ -241,7 +261,12 @@ case "${1:-}" in
         ;;
     --list|-l)
         echo "Available fonts:"
-        get_popular_fonts
+        fonts=$(get_system_fonts)
+        if [[ -z "$fonts" ]]; then
+            get_popular_fonts
+        else
+            echo "$fonts"
+        fi
         exit 0
         ;;
     --current|-c)
