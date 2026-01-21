@@ -1,145 +1,123 @@
 #!/usr/bin/env bash
 
-# ==============================================================================
-#
-#          Project Creator & Tmux Session Manager
-#
-#  Features:
-#  - Clone existing GitHub repositories
-#  - Create empty projects
-#  - Auto-open in tmux session with editor
-#
-#  Dependencies: fzf, tmux, gh (GitHub CLI)
-#
-# ==============================================================================
-
-set -e
+set -euo pipefail
 
 # --- Configuration ---
 CODE_DIR="${CODE_DIR:-$HOME/Code}"
 MY_EDITOR="${EDITOR:-zed}"
+TEMPLATES_ORG="kamal-hamza-templates"
 
-# --- Helper Functions ---
+# --- UI Helpers (Redirect to stderr) ---
+info() { echo -e "\033[0;34mℹ\033[0m $1" >&2; }
+success() { echo -e "\033[0;32m✓\033[0m $1" >&2; }
+error() { echo -e "\033[0;31m✘\033[0m $1" >&2; exit 1; }
 
-get_github_repo() {
-    if ! command -v gh &>/dev/null; then
-        echo "Error: GitHub CLI (gh) not installed." >&2
-        exit 1
-    fi
-    gh repo list --limit 300 | fzf --height 50% --reverse --prompt="Clone Repo: " | awk '{print $1}'
-}
+# --- Core Functions ---
 
 get_github_template() {
-    echo ""
-    echo "Enter template repository (username/repo format)"
-    echo "Examples:"
-    echo "  - vercel/next.js"
-    echo "  - tiangolo/full-stack-fastapi-template"
-    echo "  - your-org/your-template"
-    echo ""
-    read -rp "Template repo: " TEMPLATE
-    echo "$TEMPLATE"
+    info "Fetching templates from $TEMPLATES_ORG..."
+
+    local selected
+    selected=$(gh repo list "$TEMPLATES_ORG" --limit 100 --json name,description \
+        | jq -r '.[] | "\(.name)\t\(.description // "No description")"' \
+        | column -t -s $'\t' \
+        | fzf --height 50% --reverse --prompt="Select Template: " --header="Templates from $TEMPLATES_ORG" \
+        | awk '{print $1}' | tr -d '[:space:]')
+
+    echo "$selected"
 }
-</text>
+
+transform_template() {
+    local project_name="$1"
+    local project_path="$2"
+
+    cd "$project_path"
+
+    # 1. Custom Hook (.template/init.sh)
+    if [[ -f ".template/init.sh" ]]; then
+        info "Running custom template initialization..."
+        chmod +x .template/init.sh
+        ./.template/init.sh "$project_name"
+        rm -rf .template
+
+    # 2. .NET Detection (Fallback)
+    elif [[ -d ".template.config" ]]; then
+        info "Applying .NET template transformation..."
+        local short_name
+        short_name=$(grep -o '"shortName": "[^"]*' .template.config/template.json | cut -d'"' -f4)
+        dotnet new install . > /dev/null
+        dotnet new "$short_name" -n "$project_name" --force > /dev/null
+        success ".NET Project '$project_name' initialized."
+    fi
+
+    # Commit transformations if git exists
+    if [[ -d ".git" ]]; then
+        git add .
+        git commit -m "Apply template transformations" || true
+        git push origin main || info "Push skipped (check permissions)."
+    fi
+}
 
 # --- Main Logic ---
 
-echo "Project Creator"
-echo ""
+[[ ! -d "$CODE_DIR" ]] && mkdir -p "$CODE_DIR"
 
-# Ensure CODE_DIR exists
-if [[ ! -d "$CODE_DIR" ]]; then
-    mkdir -p "$CODE_DIR"
-fi
+echo -e "\n\033[1mProject Creator\033[0m"
+echo -e "Choose: [\033[32mt\033[0m]emplate, [\033[32mc\033[0m]lone, [\033[32me\033[0m]mpty, [\033[31mq\033[0m]uit"
+read -n 1 -s ACTION_KEY
 
-# Choose Action
-ACTION=$(printf "Clone Existing Repo\nCreate from GitHub Template\nCreate Empty Folder" | \
-    fzf --height 40% --reverse --prompt="Action: ")
+case "$ACTION_KEY" in
+    t)
+        T_NAME=$(get_github_template)
+        [[ -z "$T_NAME" ]] && exit 0
 
-if [[ -z "$ACTION" ]]; then
-    echo "No action selected. Exiting."
-    exit 1
-fi
+        printf "\nProject Name: "
+        read -r PROJECT_NAME
+        PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
 
-# Execute Action
-case "$ACTION" in
-    "Clone Existing Repo")
-        REPO=$(get_github_repo)
-        [[ -z "$REPO" ]] && exit 1
+        info "Creating $PROJECT_NAME from $TEMPLATES_ORG/$T_NAME..."
 
+        # FIX: Move to the parent directory first, then clone
+        cd "$CODE_DIR"
+        gh repo create "$PROJECT_NAME" --template "$TEMPLATES_ORG/$T_NAME" --private --clone
+
+        transform_template "$PROJECT_NAME" "$PROJECT_PATH"
+        ;;
+
+    c)
+        info "Fetching your repositories..."
+        REPO=$(gh repo list --limit 100 | fzf --height 50% --reverse | awk '{print $1}' | tr -d '[:space:]')
+        [[ -z "$REPO" ]] && exit 0
         PROJECT_NAME=$(basename "$REPO")
         PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
 
-        echo "Cloning $REPO into $CODE_DIR..."
         cd "$CODE_DIR"
         gh repo clone "$REPO"
         ;;
 
-    "Create from GitHub Template")
-        if ! command -v gh &>/dev/null; then
-            echo "Error: GitHub CLI (gh) not installed." >&2
-            exit 1
-        fi
-
-        TEMPLATE=$(get_github_template)
-        [[ -z "$TEMPLATE" ]] && exit 1
-
-        read -rp "Project Name: " PROJECT_NAME
-        [[ -z "$PROJECT_NAME" ]] && exit 1
-
+    e)
+        printf "\nProject Name: "
+        read -r PROJECT_NAME
         PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
-
-        echo "Creating from template $TEMPLATE..."
-        cd "$CODE_DIR"
-        gh repo create "$PROJECT_NAME" --template "$TEMPLATE" --clone --private
+        mkdir -p "$PROJECT_PATH"
+        cd "$PROJECT_PATH" && git init && touch README.md
+        success "Empty project created."
         ;;
 
-    "Create Empty Folder")
-</text>
-
-        read -rp "Project Name: " PROJECT_NAME
-        [[ -z "$PROJECT_NAME" ]] && exit 1
-
-        PROJECT_PATH="$CODE_DIR/$PROJECT_NAME"
-        
-        if [[ -d "$PROJECT_PATH" ]]; then
-            echo "Warning: Directory '$PROJECT_PATH' already exists."
-            read -rp "Continue anyway? (y/N): " CONTINUE
-            [[ ! "$CONTINUE" =~ ^[Yy]$ ]] && exit 1
-        else
-            mkdir -p "$PROJECT_PATH"
-        fi
-        
-        cd "$PROJECT_PATH"
-        touch README.md
-        ;;
-
-    *)
-        echo "Invalid action." >&2
-        exit 1
-        ;;
+    q) exit 0 ;;
+    *) error "Invalid key '$ACTION_KEY'." ;;
 esac
 
-# Tmux and Editor Integration
+# --- Tmux & Editor Integration ---
 cd "$PROJECT_PATH"
 
-echo ""
-echo "Project ready at: $PROJECT_PATH"
-echo ""
-
-# Create or attach to tmux session
-if tmux has-session -t "$PROJECT_NAME" 2>/dev/null; then
-    echo "Tmux session '$PROJECT_NAME' already exists."
+if [[ -n "${TMUX:-}" ]]; then
+    $MY_EDITOR .
+    success "Opened in $MY_EDITOR."
 else
-    echo "Creating tmux session '$PROJECT_NAME'..."
-    tmux new-session -s "$PROJECT_NAME" -c "$PROJECT_PATH" -d
-
-    # Open editor in the session
-    if [[ -n "$MY_EDITOR" ]]; then
+    if ! tmux has-session -t "$PROJECT_NAME" 2>/dev/null; then
+        tmux new-session -s "$PROJECT_NAME" -c "$PROJECT_PATH" -d
         tmux send-keys -t "$PROJECT_NAME" "$MY_EDITOR ." C-m
     fi
+    tmux attach-session -t "$PROJECT_NAME"
 fi
-
-echo "Attaching to session: $PROJECT_NAME"
-echo ""
-tmux attach-session -t "$PROJECT_NAME"

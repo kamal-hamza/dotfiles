@@ -6,7 +6,7 @@ if not vim.g.neovide then
 end
 
 -- Font Configuration
-vim.opt.guifont = { "Liga SFMono Nerd Font", ":h12" }
+vim.opt.guifont = { "Menlo", ":h12" }
 vim.g.neovide_scale_factor = 1.0
 
 -- Cursor Configuration

@@ -14,63 +14,66 @@
 # =============================================================================
 
 packages:
-  # ===========================================================================
-  # macOS Packages (Homebrew)
-  # ===========================================================================
-  darwin:
-    # Homebrew Taps - Third-party repositories
-    taps:
-      - shaunsingh/SFMono-Nerd-Font-Ligaturized  # SFMono Nerd Font with ligatures
+    # ===========================================================================
+    # macOS Packages (Homebrew)
+    # ===========================================================================
+    darwin:
+        # Homebrew Taps - Third-party repositories
+        taps:
+            - shaunsingh/SFMono-Nerd-Font-Ligaturized # SFMono Nerd Font with ligatures
 
-    # CLI Tools - Command-line utilities and development tools
-    brews:
-      - bat                  # Cat with syntax highlighting
-      - chezmoi              # Dotfiles manager
-      - fzf                  # Fuzzy finder for terminal
-      - neovim               # Modern vim-based text editor
-      - tldr                 # Simplified man pages
-      - tmux                 # Terminal multiplexer
-      - zsh-autopair         # Auto-close brackets in zsh
-      - zsh-autosuggestions  # Fish-like autosuggestions
-      - zsh-syntax-highlighting  # Syntax highlighting for zsh
-      - git                  # Version control system
-      - zoxide               # Smarter cd command
-      - gh                   # Github CLI
+        # CLI Tools - Command-line utilities and development tools
+        brews:
+            - bat # Cat with syntax highlighting
+            - chezmoi # Dotfiles manager
+            - fzf # Fuzzy finder for terminal
+            - neovim # Modern vim-based text editor
+            - tldr # Simplified man pages
+            - tmux # Terminal multiplexer
+            - zsh-autopair # Auto-close brackets in zsh
+            - zsh-autosuggestions # Fish-like autosuggestions
+            - zsh-syntax-highlighting # Syntax highlighting for zsh
+            - git # Version control system
+            - zoxide # Smarter cd command
+            - gh # Github CLI
 
-    # GUI Applications - Desktop applications
-    casks:
-      - chatgpt              # ChatGPT desktop app
-      - obsidian             # Knowledge management app
-      - wezterm              # GPU-accelerated terminal
-      - zed                  # Modern code editor
-      - font-sf-mono-nerd-font-ligaturized  # SFMono Nerd Font with ligatures
+        # GUI Applications - Desktop applications
+        casks:
+            - chatgpt # ChatGPT desktop app
+            - obsidian # Knowledge management app
+            - wezterm # GPU-accelerated terminal
+            - zed # Modern code editor
+            - font-sf-mono-nerd-font-ligaturized # SFMono Nerd Font with ligatures
+            - whatsapp # WhatsApp
+            - beekeeper-studio # SQL DBMS
 
-  # ===========================================================================
-  # Arch Linux Packages
-  # ===========================================================================
-  arch:
-    # Official Repository Packages
-    pacman:
-      - bat                  # Cat with syntax highlighting
-      - chezmoi              # Dotfiles manager
-      - fzf                  # Fuzzy finder for terminal
-      - git                  # Version control system
-      - neovim               # Modern vim-based text editor
-      - obsidian             # Knowledge management app
-      - tldr                 # Simplified man pages
-      - tmux                 # Terminal multiplexer
-      - wezterm              # GPU-accelerated terminal
-      - zed                  # Modern code editor
-      - zsh                  # Z shell
-      - zsh-autosuggestions  # Fish-like autosuggestions
-      - zsh-syntax-highlighting  # Syntax highlighting for zsh
-      - zoxide               # Smarter cd command
-      - gh                   # Github CLI
+    # ===========================================================================
+    # Arch Linux Packages
+    # ===========================================================================
+    arch:
+        # Official Repository Packages
+        pacman:
+            - bat # Cat with syntax highlighting
+            - chezmoi # Dotfiles manager
+            - fzf # Fuzzy finder for terminal
+            - git # Version control system
+            - neovim # Modern vim-based text editor
+            - obsidian # Knowledge management app
+            - tldr # Simplified man pages
+            - tmux # Terminal multiplexer
+            - wezterm # GPU-accelerated terminal
+            - zed # Modern code editor
+            - zsh # Z shell
+            - zsh-autosuggestions # Fish-like autosuggestions
+            - zsh-syntax-highlighting # Syntax highlighting for zsh
+            - zoxide # Smarter cd command
+            - gh # Github CLI
 
-    # AUR (Arch User Repository) Packages
-    aur:
-      - chatgpt-desktop-bin  # ChatGPT desktop app
-      - zsh-autopair-git     # Auto-close brackets in zsh
+        # AUR (Arch User Repository) Packages
+        aur:
+            - chatgpt-desktop-bin # ChatGPT desktop app
+            - zsh-autopair-git # Auto-close brackets in zsh
+
 
 # =============================================================================
 # How to Add New Packages

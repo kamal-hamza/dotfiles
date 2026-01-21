@@ -121,10 +121,10 @@ print_info "Showing path bar..."
 defaults write com.apple.finder ShowPathbar -bool true
 print_success "Path bar visible"
 
-# Show full path in Finder title bar
+# Show folder name in Finder title bar
 print_info "Showing full path in title bar..."
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-print_success "Full path in title bar enabled"
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool false
+print_success "Folder name in title bar enabled"
 
 # Set Finder to display files/folders as list
 print_info "Setting default view to list..."
@@ -155,6 +155,25 @@ defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightC
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 print_success "Secondary click set to bottom right"
+
+# =============================================================================
+# Battery
+# =============================================================================
+print_header "Battery"
+print_info "Enabling battery percentage in top bar..."
+defaults write com.apple.controlcenter BatteryShowPercentage -bool true
+print_success "Successfully enabled battery percentage in top bar"
+
+# =============================================================================
+# Hot Corners
+# =============================================================================
+print_header "Hot Corners"
+print_info "Disabling hot corners..."
+defaults write com.apple.dock wvous-tl-corner -int 0
+defaults write com.apple.dock wvous-tr-corner -int 0
+defaults write com.apple.dock wvous-bl-corner -int 0
+defaults write com.apple.dock wvous-br-corner -int 0
+print_success "Disabled hot corners"
 
 # =============================================================================
 # Done
