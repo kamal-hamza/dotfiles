@@ -1,0 +1,65 @@
+# =============================================================================
+# Font Configuration
+# =============================================================================
+# Central font configuration for all applications
+# Can be changed with the font-switcher.sh script
+# After changing, run: chezmoi apply
+# =============================================================================
+
+# Current font family (monospace font used across all apps)
+font_family: "Menlo"
+
+# Font sizes for different applications
+font_sizes:
+  # Terminal and editor fonts
+  wezterm: 13
+  zed_buffer: 13
+  zed_ui: 13
+  zed_terminal: 13
+  neovide: 12
+  
+  # Other UI fonts
+  alacritty: 13
+  kitty: 13
+
+# Font features/options
+font_features:
+  # Disable ligatures by default (can be overridden per app)
+  ligatures: false
+  
+  # Font weight (normal, light, medium, semibold, bold)
+  weight: "normal"
+  
+  # Additional font features (OpenType)
+  # Example: calt (contextual alternates)
+  opentype:
+    calt: false
+
+# =============================================================================
+# Available Fonts
+# =============================================================================
+# List of known monospace fonts on the system
+# The font-switcher.sh script will show these options
+# Add your installed fonts here for easy switching
+#
+# Popular monospace fonts:
+# - Menlo
+# - Monaco
+# - JetBrains Mono
+# - Fira Code
+# - Hack
+# - Source Code Pro
+# - IBM Plex Mono
+# - Cascadia Code
+# - SF Mono
+# - Inconsolata
+# - Consolas
+# - Courier New
+# - DejaVu Sans Mono
+# - Ubuntu Mono
+# - Roboto Mono
+# - Anonymous Pro
+# - Meslo LG
+# - Fantasque Sans Mono
+# - Victor Mono
+# =============================================================================

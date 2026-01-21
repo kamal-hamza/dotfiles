@@ -100,3 +100,6 @@ alias m="man-tldr"           # Interactive man page search with tldr
 
 # History search
 alias h="fzf-history"        # Advanced fuzzy history search
+
+# Font management
+alias font="font-switcher.sh"  # Interactive font selector with fzf

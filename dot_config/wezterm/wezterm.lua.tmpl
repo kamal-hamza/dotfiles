@@ -24,9 +24,9 @@ config.colors = lightTheme.scheme["Soft Focus Light"]
 {{ else -}}
 config.colors = darkTheme.scheme["Soft Focus Dark"]
 {{ end -}}
-config.font = wezterm.font("Menlo")
+config.font = wezterm.font("{{ .font_family }}")
 
-config.font_size = 13
+config.font_size = {{ .font_sizes.wezterm }}
 config.enable_wayland = false
 
 -- Cursor configuration
