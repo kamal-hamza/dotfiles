@@ -76,6 +76,12 @@ fi
 # Create output directories
 mkdir -p "$CONFIG_DIR/wezterm/colors"
 mkdir -p "$CONFIG_DIR/zed/themes"
+mkdir -p "$CONFIG_DIR/nvim/colors"
+mkdir -p "$CONFIG_DIR/tmux"
+mkdir -p "$CONFIG_DIR/bat/themes"
+mkdir -p "$CONFIG_DIR/delta"
+mkdir -p "$CONFIG_DIR/fzf"
+mkdir -p "$HOME/.config/obsidian/snippets"
 
 # Generate WezTerm theme
 print_info "Generating WezTerm theme..."
@@ -107,7 +113,113 @@ else
     print_warning "Zed template not found: $ZED_TEMPLATE"
 fi
 
+# Generate Neovim theme
+print_info "Generating Neovim theme..."
+NEOVIM_TEMPLATE="$TEMPLATES_DIR/neovim/templates/default.mustache"
+NEOVIM_OUTPUT="$CONFIG_DIR/nvim/colors/base16-${SCHEME}.lua"
+
+if [ -f "$NEOVIM_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$NEOVIM_TEMPLATE" > "$NEOVIM_OUTPUT" 2>/dev/null; then
+        print_success "Neovim theme generated: base16-${SCHEME}.lua"
+    else
+        print_error "Failed to generate Neovim theme"
+    fi
+else
+    print_warning "Neovim template not found: $NEOVIM_TEMPLATE"
+fi
+
+# Generate Tmux theme
+print_info "Generating Tmux theme..."
+TMUX_TEMPLATE="$TEMPLATES_DIR/tmux/templates/default.mustache"
+TMUX_OUTPUT="$CONFIG_DIR/tmux/base16-${SCHEME}.conf"
+
+if [ -f "$TMUX_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$TMUX_TEMPLATE" > "$TMUX_OUTPUT" 2>/dev/null; then
+        print_success "Tmux theme generated: base16-${SCHEME}.conf"
+    else
+        print_error "Failed to generate Tmux theme"
+    fi
+else
+    print_warning "Tmux template not found: $TMUX_TEMPLATE"
+fi
+
+# Generate FZF theme
+print_info "Generating FZF theme..."
+FZF_TEMPLATE="$TEMPLATES_DIR/fzf/templates/default.mustache"
+FZF_OUTPUT="$CONFIG_DIR/fzf/base16-${SCHEME}.sh"
+
+if [ -f "$FZF_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$FZF_TEMPLATE" > "$FZF_OUTPUT" 2>/dev/null; then
+        print_success "FZF theme generated: base16-${SCHEME}.sh"
+    else
+        print_error "Failed to generate FZF theme"
+    fi
+else
+    print_warning "FZF template not found: $FZF_TEMPLATE"
+fi
+
+# Generate Bat theme
+print_info "Generating Bat theme..."
+BAT_TEMPLATE="$TEMPLATES_DIR/bat/templates/default.mustache"
+BAT_OUTPUT="$CONFIG_DIR/bat/themes/base16-${SCHEME}.tmTheme"
+
+if [ -f "$BAT_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$BAT_TEMPLATE" > "$BAT_OUTPUT" 2>/dev/null; then
+        print_success "Bat theme generated: base16-${SCHEME}.tmTheme"
+        # Rebuild bat cache
+        if command -v bat &> /dev/null; then
+            bat cache --build &> /dev/null
+            print_success "Bat cache rebuilt"
+        fi
+    else
+        print_error "Failed to generate Bat theme"
+    fi
+else
+    print_warning "Bat template not found: $BAT_TEMPLATE"
+fi
+
+# Generate Git Delta theme
+print_info "Generating Git Delta theme..."
+DELTA_TEMPLATE="$TEMPLATES_DIR/delta/templates/default.mustache"
+DELTA_OUTPUT="$CONFIG_DIR/delta/base16-${SCHEME}.gitconfig"
+
+if [ -f "$DELTA_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$DELTA_TEMPLATE" > "$DELTA_OUTPUT" 2>/dev/null; then
+        print_success "Git Delta theme generated: base16-${SCHEME}.gitconfig"
+    else
+        print_error "Failed to generate Git Delta theme"
+    fi
+else
+    print_warning "Git Delta template not found: $DELTA_TEMPLATE"
+fi
+
+# Generate Obsidian theme snippet
+print_info "Generating Obsidian theme..."
+OBSIDIAN_TEMPLATE="$TEMPLATES_DIR/obsidian/templates/default.mustache"
+OBSIDIAN_OUTPUT="$HOME/.config/obsidian/snippets/base16-${SCHEME}.css"
+
+if [ -f "$OBSIDIAN_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$OBSIDIAN_TEMPLATE" > "$OBSIDIAN_OUTPUT" 2>/dev/null; then
+        print_success "Obsidian theme generated: base16-${SCHEME}.css"
+    else
+        print_error "Failed to generate Obsidian theme"
+    fi
+else
+    print_warning "Obsidian template not found: $OBSIDIAN_TEMPLATE"
+fi
+
 print_success "Base16 theme generation complete!"
 print_info "Theme files:"
 echo "  • WezTerm: $WEZTERM_OUTPUT"
 echo "  • Zed: $ZED_OUTPUT"
+echo "  • Neovim: $NEOVIM_OUTPUT"
+echo "  • Tmux: $TMUX_OUTPUT"
+echo "  • FZF: $FZF_OUTPUT"
+echo "  • Bat: $BAT_OUTPUT"
+echo "  • Delta: $DELTA_OUTPUT"
+echo "  • Obsidian: $OBSIDIAN_OUTPUT"
+print_info "Additional steps:"
+echo "  • Tmux: Add 'source-file $TMUX_OUTPUT' to ~/.tmux.conf"
+echo "  • FZF: Source $FZF_OUTPUT in your shell rc file"
+echo "  • Delta: Include $DELTA_OUTPUT in your ~/.gitconfig"
+echo "  • Obsidian: Enable the snippet in Obsidian settings"
