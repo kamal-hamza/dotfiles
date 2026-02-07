@@ -28,6 +28,7 @@ packages:
             - chezmoi # Dotfiles manager
             - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
+            - git-delta # Syntax-highlighting pager for git
             - neovim # Modern vim-based text editor
             - tldr # Simplified man pages
             - tmux # Terminal multiplexer
@@ -60,6 +61,7 @@ packages:
             - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
             - git # Version control system
+            - git-delta # Syntax-highlighting pager for git
             - neovim # Modern vim-based text editor
             - obsidian # Knowledge management app
             - tldr # Simplified man pages

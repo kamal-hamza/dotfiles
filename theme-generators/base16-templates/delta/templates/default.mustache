@@ -1,0 +1,69 @@
+# Base16 {{scheme-name}}
+# Scheme author: {{scheme-author}}
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-{{scheme-slug}}
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#{{base03-hex}}"
+    line-numbers-right-style = "#{{base03-hex}}"
+    line-numbers-minus-style = "#{{base08-hex}}"
+    line-numbers-plus-style = "#{{base0B-hex}}"
+    line-numbers-zero-style = "#{{base03-hex}}"
+    
+    # File headers
+    file-style = "#{{base0D-hex}} bold"
+    file-decoration-style = "#{{base0D-hex}} ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#{{base03-hex}}"
+    
+    # Commit decoration
+    commit-decoration-style = "#{{base0E-hex}} box"
+    commit-style = "#{{base0E-hex}} bold"
+    
+    # Diff colors
+    minus-style = "syntax #{{base01-hex}}"
+    minus-emph-style = "syntax #{{base08-hex-r}} #{{base08-hex-g}} #{{base08-hex-b}} 40"
+    minus-non-emph-style = "syntax #{{base01-hex}}"
+    
+    plus-style = "syntax #{{base01-hex}}"
+    plus-emph-style = "syntax #{{base0B-hex-r}} #{{base0B-hex-g}} #{{base0B-hex-b}} 40"
+    plus-non-emph-style = "syntax #{{base01-hex}}"
+    
+    # Whitespace
+    whitespace-error-style = "#{{base08-hex}} reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#{{base0A-hex}} bold"
+    merge-conflict-theirs-diff-header-style = "#{{base0D-hex}} bold"
+    
+    # Blame
+    blame-palette = "#{{base00-hex}} #{{base01-hex}} #{{base02-hex}}"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#{{base0D-hex}} bold"
+    grep-line-number-style = "#{{base0A-hex}}"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#{{base08-hex}} bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true
