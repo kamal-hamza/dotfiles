@@ -1,0 +1,69 @@
+# Base16 Shinjuku Veridian
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-shinjuku-veridian-dark
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#4a6360"
+    line-numbers-right-style = "#4a6360"
+    line-numbers-minus-style = "#e68a8a"
+    line-numbers-plus-style = "#2d8c7d"
+    line-numbers-zero-style = "#4a6360"
+    
+    # File headers
+    file-style = "#4a86a3 bold"
+    file-decoration-style = "#4a86a3 ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#4a6360"
+    
+    # Commit decoration
+    commit-decoration-style = "#717ea3 box"
+    commit-style = "#717ea3 bold"
+    
+    # Diff colors
+    minus-style = "syntax #151c1b"
+    minus-emph-style = "syntax #e6 #8a #8a 40"
+    minus-non-emph-style = "syntax #151c1b"
+    
+    plus-style = "syntax #151c1b"
+    plus-emph-style = "syntax #2d #8c #7d 40"
+    plus-non-emph-style = "syntax #151c1b"
+    
+    # Whitespace
+    whitespace-error-style = "#e68a8a reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#9ec481 bold"
+    merge-conflict-theirs-diff-header-style = "#4a86a3 bold"
+    
+    # Blame
+    blame-palette = "#0d1211 #151c1b #1f2b29"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#4a86a3 bold"
+    grep-line-number-style = "#9ec481"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#e68a8a bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true

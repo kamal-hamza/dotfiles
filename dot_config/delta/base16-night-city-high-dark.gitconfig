@@ -1,0 +1,69 @@
+# Base16 Night City High
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-night-city-high-dark
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#404040"
+    line-numbers-right-style = "#404040"
+    line-numbers-minus-style = "#ff003c"
+    line-numbers-plus-style = "#39ff14"
+    line-numbers-zero-style = "#404040"
+    
+    # File headers
+    file-style = "#4deeea bold"
+    file-decoration-style = "#4deeea ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#404040"
+    
+    # Commit decoration
+    commit-decoration-style = "#7400ff box"
+    commit-style = "#7400ff bold"
+    
+    # Diff colors
+    minus-style = "syntax #121212"
+    minus-emph-style = "syntax #ff #00 #3c 40"
+    minus-non-emph-style = "syntax #121212"
+    
+    plus-style = "syntax #121212"
+    plus-emph-style = "syntax #39 #ff #14 40"
+    plus-non-emph-style = "syntax #121212"
+    
+    # Whitespace
+    whitespace-error-style = "#ff003c reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#00ff9f bold"
+    merge-conflict-theirs-diff-header-style = "#4deeea bold"
+    
+    # Blame
+    blame-palette = "#050505 #121212 #1a1a1a"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#4deeea bold"
+    grep-line-number-style = "#00ff9f"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#ff003c bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true

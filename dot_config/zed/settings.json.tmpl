@@ -40,11 +40,7 @@
             "*.json.tmpl"
         ]
     },
-    "icon_theme": "Colored Zed Icons Theme Dark",
     "show_edit_predictions": true,
-    "features": {
-        "edit_prediction_provider": "copilot"
-    },
     "vim_mode": true,
 {{- $scheme := .active_scheme | default "soft-focus-dark" }}
 {{- $schemePath := joinPath .chezmoi.sourceDir "theme-generators/base16-schemes" (printf "%s.yaml" $scheme) }}

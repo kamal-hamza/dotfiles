@@ -1,0 +1,99 @@
+# Base16 Hearth
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-hearth-dark"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#e6ddd8"
+background = "#120f0d"
+
+[syntax]
+# Comments
+"comment" = "#5c524d"
+"comment.documentation" = "#a89991"
+
+# Constants
+"constant" = "#e8a87c"
+"constant.builtin" = "#e8a87c"
+"constant.character" = "#d46a55"
+"constant.character.escape" = "#7d9ba1"
+
+# Functions
+"function" = "#6b8da1"
+"function.builtin" = "#6b8da1"
+"function.method" = "#6b8da1"
+
+# Keywords
+"keyword" = "#a1869e"
+"keyword.control" = "#a1869e"
+"keyword.directive" = "#a1869e"
+"keyword.function" = "#a1869e"
+"keyword.operator" = "#a1869e"
+
+# Operators
+"operator" = "#e6ddd8"
+
+# Punctuation
+"punctuation" = "#e6ddd8"
+"punctuation.bracket" = "#e6ddd8"
+"punctuation.delimiter" = "#8c6b5d"
+"punctuation.special" = "#d46a55"
+
+# Strings
+"string" = "#8e9e78"
+"string.escape" = "#7d9ba1"
+"string.regex" = "#7d9ba1"
+"string.special" = "#7d9ba1"
+
+# Types
+"type" = "#c29b61"
+"type.builtin" = "#c29b61"
+
+# Variables
+"variable" = "#e6ddd8"
+"variable.builtin" = "#e8a87c"
+"variable.member" = "#d46a55"
+"variable.parameter" = "#d46a55"
+
+# Tags (HTML/XML)
+"tag" = "#c29b61"
+"attribute" = "#c29b61"
+
+# Markup
+"markup.heading" = "#6b8da1"
+"markup.bold" = { foreground = "#c29b61", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#a1869e", modifiers = ["italic"] }
+"markup.link" = "#6b8da1"
+"markup.link.url" = { foreground = "#7d9ba1", modifiers = ["underline"] }
+"markup.raw" = "#8e9e78"
+"markup.list" = "#d46a55"
+"markup.quote" = "#7d9ba1"
+
+# Diff
+"diff.plus" = "#8e9e78"
+"diff.minus" = "#d46a55"
+"diff.delta" = "#6b8da1"
+
+# Git
+"git.added" = "#8e9e78"
+"git.deleted" = "#d46a55"
+"git.modified" = "#6b8da1"
+
+# UI elements
+"ui.background" = "#120f0d"
+"ui.foreground" = "#e6ddd8"
+"ui.cursor" = "#e6ddd8"
+"ui.cursor.match" = "#c29b61"
+"ui.selection" = "#2a2421"
+"ui.linenr" = "#5c524d"
+"ui.linenr.selected" = "#a89991"
+"ui.statusline" = "#a89991"
+
+# Errors and warnings
+"error" = "#d46a55"
+"warning" = "#c29b61"
+"info" = "#6b8da1"
+"hint" = "#7d9ba1"

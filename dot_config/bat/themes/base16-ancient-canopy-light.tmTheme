@@ -1,0 +1,99 @@
+# Base16 Ancient Canopy Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-ancient-canopy-light"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#222920"
+background = "#f1f5ee"
+
+[syntax]
+# Comments
+"comment" = "#848e7f"
+"comment.documentation" = "#4b5448"
+
+# Constants
+"constant" = "#8e5c36"
+"constant.builtin" = "#8e5c36"
+"constant.character" = "#7a4444"
+"constant.character.escape" = "#3e524e"
+
+# Functions
+"function" = "#324651"
+"function.builtin" = "#324651"
+"function.method" = "#324651"
+
+# Keywords
+"keyword" = "#523e52"
+"keyword.control" = "#523e52"
+"keyword.directive" = "#523e52"
+"keyword.function" = "#523e52"
+"keyword.operator" = "#523e52"
+
+# Operators
+"operator" = "#222920"
+
+# Punctuation
+"punctuation" = "#222920"
+"punctuation.bracket" = "#222920"
+"punctuation.delimiter" = "#46392d"
+"punctuation.special" = "#7a4444"
+
+# Strings
+"string" = "#3e5238"
+"string.escape" = "#3e524e"
+"string.regex" = "#3e524e"
+"string.special" = "#3e524e"
+
+# Types
+"type" = "#7a783e"
+"type.builtin" = "#7a783e"
+
+# Variables
+"variable" = "#222920"
+"variable.builtin" = "#8e5c36"
+"variable.member" = "#7a4444"
+"variable.parameter" = "#7a4444"
+
+# Tags (HTML/XML)
+"tag" = "#7a783e"
+"attribute" = "#7a783e"
+
+# Markup
+"markup.heading" = "#324651"
+"markup.bold" = { foreground = "#7a783e", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#523e52", modifiers = ["italic"] }
+"markup.link" = "#324651"
+"markup.link.url" = { foreground = "#3e524e", modifiers = ["underline"] }
+"markup.raw" = "#3e5238"
+"markup.list" = "#7a4444"
+"markup.quote" = "#3e524e"
+
+# Diff
+"diff.plus" = "#3e5238"
+"diff.minus" = "#7a4444"
+"diff.delta" = "#324651"
+
+# Git
+"git.added" = "#3e5238"
+"git.deleted" = "#7a4444"
+"git.modified" = "#324651"
+
+# UI elements
+"ui.background" = "#f1f5ee"
+"ui.foreground" = "#222920"
+"ui.cursor" = "#222920"
+"ui.cursor.match" = "#7a783e"
+"ui.selection" = "#d0d6cc"
+"ui.linenr" = "#848e7f"
+"ui.linenr.selected" = "#4b5448"
+"ui.statusline" = "#4b5448"
+
+# Errors and warnings
+"error" = "#7a4444"
+"warning" = "#7a783e"
+"info" = "#324651"
+"hint" = "#3e524e"

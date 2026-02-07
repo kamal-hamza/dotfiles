@@ -1,0 +1,99 @@
+# Base16 Shinjuku Veridian
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-shinjuku-veridian-dark"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#dbe6e4"
+background = "#0d1211"
+
+[syntax]
+# Comments
+"comment" = "#4a6360"
+"comment.documentation" = "#8ca6a2"
+
+# Constants
+"constant" = "#81c4c2"
+"constant.builtin" = "#81c4c2"
+"constant.character" = "#e68a8a"
+"constant.character.escape" = "#52a399"
+
+# Functions
+"function" = "#4a86a3"
+"function.builtin" = "#4a86a3"
+"function.method" = "#4a86a3"
+
+# Keywords
+"keyword" = "#717ea3"
+"keyword.control" = "#717ea3"
+"keyword.directive" = "#717ea3"
+"keyword.function" = "#717ea3"
+"keyword.operator" = "#717ea3"
+
+# Operators
+"operator" = "#dbe6e4"
+
+# Punctuation
+"punctuation" = "#dbe6e4"
+"punctuation.bracket" = "#dbe6e4"
+"punctuation.delimiter" = "#435c59"
+"punctuation.special" = "#e68a8a"
+
+# Strings
+"string" = "#2d8c7d"
+"string.escape" = "#52a399"
+"string.regex" = "#52a399"
+"string.special" = "#52a399"
+
+# Types
+"type" = "#9ec481"
+"type.builtin" = "#9ec481"
+
+# Variables
+"variable" = "#dbe6e4"
+"variable.builtin" = "#81c4c2"
+"variable.member" = "#e68a8a"
+"variable.parameter" = "#e68a8a"
+
+# Tags (HTML/XML)
+"tag" = "#9ec481"
+"attribute" = "#9ec481"
+
+# Markup
+"markup.heading" = "#4a86a3"
+"markup.bold" = { foreground = "#9ec481", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#717ea3", modifiers = ["italic"] }
+"markup.link" = "#4a86a3"
+"markup.link.url" = { foreground = "#52a399", modifiers = ["underline"] }
+"markup.raw" = "#2d8c7d"
+"markup.list" = "#e68a8a"
+"markup.quote" = "#52a399"
+
+# Diff
+"diff.plus" = "#2d8c7d"
+"diff.minus" = "#e68a8a"
+"diff.delta" = "#4a86a3"
+
+# Git
+"git.added" = "#2d8c7d"
+"git.deleted" = "#e68a8a"
+"git.modified" = "#4a86a3"
+
+# UI elements
+"ui.background" = "#0d1211"
+"ui.foreground" = "#dbe6e4"
+"ui.cursor" = "#dbe6e4"
+"ui.cursor.match" = "#9ec481"
+"ui.selection" = "#1f2b29"
+"ui.linenr" = "#4a6360"
+"ui.linenr.selected" = "#8ca6a2"
+"ui.statusline" = "#8ca6a2"
+
+# Errors and warnings
+"error" = "#e68a8a"
+"warning" = "#9ec481"
+"info" = "#4a86a3"
+"hint" = "#52a399"
