@@ -69,8 +69,8 @@ set -g status-interval 1
 set -g status-left-length 100
 set -g status-right-length 100
 
-# Colors - Using Soft Focus {{ .theme | default "dark" }} theme
-{{ if eq (.theme | default "dark") "light" -}}
+# Colors - Using Soft Focus {{ .theme_mode | default "dark" }} theme
+{{ if eq (.theme_mode | default "dark") "light" -}}
 # Light theme colors
 set -g status-style "bg=#ffffff,fg=#000000"
 set -g message-style "bg=#ffffff,fg=#4da6ff"

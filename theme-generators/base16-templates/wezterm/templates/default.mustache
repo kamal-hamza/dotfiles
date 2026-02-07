@@ -1,0 +1,43 @@
+-- Base16 {{scheme-name}}
+-- Scheme author: {{scheme-author}}
+-- Template author: Hamza Kamal
+
+local M = {}
+
+M.scheme = {
+    ["{{scheme-name}}"] = {
+        foreground = "#{{base05-hex}}",
+        background = "#{{base00-hex}}",
+        cursor_bg = "#{{base05-hex}}",
+        cursor_border = "#{{base05-hex}}",
+        cursor_fg = "#{{base00-hex}}",
+        selection_bg = "#{{base02-hex}}",
+        selection_fg = "#{{base05-hex}}",
+        
+        -- Normal ANSI colors
+        ansi = {
+            "#{{base00-hex}}", -- black
+            "#{{base08-hex}}", -- red
+            "#{{base0B-hex}}", -- green
+            "#{{base0A-hex}}", -- yellow
+            "#{{base0D-hex}}", -- blue
+            "#{{base0E-hex}}", -- magenta
+            "#{{base0C-hex}}", -- cyan
+            "#{{base05-hex}}", -- white
+        },
+        
+        -- Bright ANSI colors
+        brights = {
+            "#{{base03-hex}}", -- bright black
+            "#{{base08-hex}}", -- bright red
+            "#{{base0B-hex}}", -- bright green
+            "#{{base0A-hex}}", -- bright yellow
+            "#{{base0D-hex}}", -- bright blue
+            "#{{base0E-hex}}", -- bright magenta
+            "#{{base0C-hex}}", -- bright cyan
+            "#{{base07-hex}}", -- bright white
+        },
+    }
+}
+
+return M

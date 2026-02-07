@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Auto-generate Base16 Themes
+# =============================================================================
+# This script automatically generates Base16 themes using flavours whenever
+# the active scheme changes.
+#
+# Runs automatically when:
+# - The active_scheme in .chezmoidata/theme.yaml changes
+# - This script itself is modified
+#
+# Hash: {{ .active_scheme }}
+# =============================================================================
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+print_info() {
+    echo -e "${BLUE}[Base16]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[Base16]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[Base16]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[Base16]${NC} $1"
+}
+
+# Configuration
+SCHEME="{{ .active_scheme | default "soft-focus-dark" }}"
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+SCHEMES_DIR="{{ .chezmoi.sourceDir }}/theme-generators/base16-schemes"
+TEMPLATES_DIR="{{ .chezmoi.sourceDir }}/theme-generators/base16-templates"
+
+print_info "Generating Base16 themes for: $SCHEME"
+
+# Check if flavours is installed
+if ! command -v flavours &> /dev/null; then
+    print_warning "flavours not found - skipping theme generation"
+    print_info "Install flavours to enable automatic theme generation:"
+    {{- if eq .chezmoi.os "darwin" }}
+    echo "  brew install flavours"
+    {{- else if eq .chezmoi.os "linux" }}
+    {{- if eq .chezmoi.osRelease.id "arch" }}
+    echo "  yay -S flavours"
+    {{- else }}
+    echo "  cargo install flavours"
+    {{- end }}
+    {{- end }}
+    exit 0
+fi
+
+# Verify scheme exists
+SCHEME_FILE="$SCHEMES_DIR/${SCHEME}.yaml"
+if [ ! -f "$SCHEME_FILE" ]; then
+    print_error "Scheme not found: $SCHEME"
+    print_info "Available schemes:"
+    for scheme in "$SCHEMES_DIR"/*.yaml; do
+        [ -f "$scheme" ] && echo "  - $(basename "$scheme" .yaml)"
+    done
+    exit 1
+fi
+
+# Create output directories
+mkdir -p "$CONFIG_DIR/wezterm/colors"
+mkdir -p "$CONFIG_DIR/zed/themes"
+
+# Generate WezTerm theme
+print_info "Generating WezTerm theme..."
+WEZTERM_TEMPLATE="$TEMPLATES_DIR/wezterm/templates/default.mustache"
+WEZTERM_OUTPUT="$CONFIG_DIR/wezterm/colors/base-16-${SCHEME}.lua"
+
+if [ -f "$WEZTERM_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$WEZTERM_TEMPLATE" > "$WEZTERM_OUTPUT" 2>/dev/null; then
+        print_success "WezTerm theme generated: base-16-${SCHEME}.lua"
+    else
+        print_error "Failed to generate WezTerm theme"
+    fi
+else
+    print_warning "WezTerm template not found: $WEZTERM_TEMPLATE"
+fi
+
+# Generate Zed theme
+print_info "Generating Zed theme..."
+ZED_TEMPLATE="$TEMPLATES_DIR/zed/templates/default.mustache"
+ZED_OUTPUT="$CONFIG_DIR/zed/themes/base-16-${SCHEME}.json"
+
+if [ -f "$ZED_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$ZED_TEMPLATE" > "$ZED_OUTPUT" 2>/dev/null; then
+        print_success "Zed theme generated: base-16-${SCHEME}.json"
+    else
+        print_error "Failed to generate Zed theme"
+    fi
+else
+    print_warning "Zed template not found: $ZED_TEMPLATE"
+fi
+
+print_success "Base16 theme generation complete!"
+print_info "Theme files:"
+echo "  • WezTerm: $WEZTERM_OUTPUT"
+echo "  • Zed: $ZED_OUTPUT"

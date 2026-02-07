@@ -1,9 +1,74 @@
 # =============================================================================
-# Theme Configuration
+# Base16 Theme Configuration
 # =============================================================================
-# Default theme to use when running `chezmoi apply`
-# Can be overridden with: chezmoi apply --promptString theme=light
-# Valid values: "dark" or "light"
+# This file controls which Base16 theme is active across all applications.
+#
+# To switch themes:
+# 1. Change the 'active_scheme' value below
+# 2. Run the theme generation script or flavours apply
+# 3. Run: chezmoi apply
+#
+# Theme schemes are defined in: theme-generators/base16-schemes/
+# Custom templates are in: theme-generators/base16-templates/
 # =============================================================================
 
-theme: "dark"
+# Active Base16 scheme
+# This should match a .yaml file in theme-generators/base16-schemes/ (without extension)
+# Examples: "soft-focus-dark", "soft-focus-light", "gruvbox-dark", "nord"
+active_scheme: "soft-focus-dark"
+
+# Theme mode (for backward compatibility with existing templates)
+# Options: "dark" or "light"
+theme_mode: "dark"
+
+# =============================================================================
+# Base16 CLI Usage
+# =============================================================================
+#
+# Using flavours (recommended):
+# --------------------------------
+# Generate all themes for all applications:
+#   $ flavours build
+#
+# Apply a specific theme:
+#   $ flavours apply soft-focus-dark
+#
+# List available schemes:
+#   $ flavours list
+#
+# The generated theme files will be placed in their respective directories:
+# - WezTerm themes: ~/.config/wezterm/colors/
+# - Zed themes: ~/.config/zed/themes/
+#
+# =============================================================================
+# Adding New Themes
+# =============================================================================
+#
+# 1. Add a new Base16 scheme YAML file to theme-generators/base16-schemes/
+#    Example: theme-generators/base16-schemes/gruvbox-dark.yaml
+#
+# 2. Follow the Base16 specification format:
+#    scheme: "Theme Name"
+#    author: "Your Name"
+#    base00: "hex" # Background
+#    base01: "hex" # Lighter Background
+#    base02: "hex" # Selection Background
+#    base03: "hex" # Comments
+#    base04: "hex" # Dark Foreground
+#    base05: "hex" # Default Foreground
+#    base06: "hex" # Light Foreground
+#    base07: "hex" # Light Background
+#    base08: "hex" # Red (Variables)
+#    base09: "hex" # Orange (Constants)
+#    base0A: "hex" # Yellow (Classes)
+#    base0B: "hex" # Green (Strings)
+#    base0C: "hex" # Cyan (Support)
+#    base0D: "hex" # Blue (Functions)
+#    base0E: "hex" # Magenta (Keywords)
+#    base0F: "hex" # Brown (Deprecated)
+#
+# 3. Generate themes: flavours build
+# 4. Update 'active_scheme' above to your new theme name
+# 5. Apply changes: chezmoi apply
+#
+# =============================================================================

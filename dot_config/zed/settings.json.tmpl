@@ -46,11 +46,10 @@
         "edit_prediction_provider": "copilot"
     },
     "vim_mode": true,
-{{ if eq (.theme | default "dark") "light" -}}
-    "theme": "Soft Focus Light",
-{{ else -}}
-    "theme": "Soft Focus Dark",
-{{ end -}}
+{{- $scheme := .active_scheme | default "soft-focus-dark" }}
+{{- $schemePath := joinPath .chezmoi.sourceDir "theme-generators/base16-schemes" (printf "%s.yaml" $scheme) }}
+{{- $schemeData := include $schemePath | fromYaml }}
+    "theme": "Base16 {{ $schemeData.scheme }}",
     "ui_font_family": "{{ .font_family }}",
     "buffer_font_family": "{{ .font_family }}",
     "ui_font_size": {{ .font_sizes.zed_ui }},
@@ -163,7 +162,7 @@
         "dock": "left"
     },
     "project_panel": {
-        "dock": null
+        "dock": "right" 
     },
     "collaboration_panel": {
         "dock": null
@@ -174,5 +173,19 @@
     },
     "notification_panel": {
         "dock": null
-    }
+    },
+    "ssh_connections": [
+        {
+            "host": "dais10.uwb.edu",
+            "username": "hkamal",
+            "args": [],
+            "projects": [
+                {
+                    "paths": [
+                        "/data/hkamal/deeptracer-env/Deep-Tracer-3.0/"
+                    ],
+                }
+            ]
+        }
+    ]
 }

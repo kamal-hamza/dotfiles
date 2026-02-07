@@ -26,6 +26,7 @@ packages:
         brews:
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
+            - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
             - neovim # Modern vim-based text editor
             - tldr # Simplified man pages
@@ -36,6 +37,7 @@ packages:
             - git # Version control system
             - zoxide # Smarter cd command
             - gh # Github CLI
+            - skim # PDF viewer
 
         # GUI Applications - Desktop applications
         casks:
@@ -55,6 +57,7 @@ packages:
         pacman:
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
+            - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
             - git # Version control system
             - neovim # Modern vim-based text editor

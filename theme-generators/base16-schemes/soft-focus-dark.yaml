@@ -1,0 +1,18 @@
+scheme: "Soft Focus Dark"
+author: "Hamza Kamal"
+base00: "050505" # Default Background
+base01: "1a1a1a" # Lighter Background (Used for status bars)
+base02: "2a2a2a" # Selection Background
+base03: "3a3a3a" # Comments, Invisibles, Line Highlighting
+base04: "888888" # Dark Foreground (Used for status bars)
+base05: "f5f5f5" # Default Foreground, Caret, Delimiters, Operators
+base06: "fcfcfc" # Light Foreground
+base07: "ffffff" # Light Background
+base08: "ff4c6a" # Red - Variables, XML Tags, Markup Link Text, Diff Deleted
+base09: "f0d08a" # Orange - Integers, Boolean, Constants, Markup Link Url
+base0A: "D4B87B" # Yellow - Classes, Markup Bold, Search Text Background
+base0B: "99cc99" # Green - Strings, Inherited Class, Markup Code, Diff Inserted
+base0C: "67b7f5" # Cyan - Support, Regular Expressions, Escape Characters
+base0D: "448cbb" # Blue - Functions, Methods, Attribute IDs, Headings
+base0E: "B88E8D" # Purple - Keywords, Storage, Selector, Markup Italic, Diff Changed
+base0F: "C42847" # Brown - Deprecated, Opening/Closing Embedded Language Tags
