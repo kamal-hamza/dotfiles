@@ -40,9 +40,9 @@ print_error() {
 
 # Configuration
 SCHEME="{{ .active_scheme | default "soft-focus-dark" }}"
-CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
-SCHEMES_DIR="{{ .chezmoi.sourceDir }}/theme-generators/base16-schemes"
-TEMPLATES_DIR="{{ .chezmoi.sourceDir }}/theme-generators/base16-templates"
+CHEZMOI_SOURCE="{{ .chezmoi.sourceDir }}"
+SCHEMES_DIR="$CHEZMOI_SOURCE/theme-generators/base16-schemes"
+TEMPLATES_DIR="$CHEZMOI_SOURCE/theme-generators/base16-templates"
 
 print_info "Generating Base16 themes for: $SCHEME"
 
@@ -73,20 +73,20 @@ if [ ! -f "$SCHEME_FILE" ]; then
     exit 1
 fi
 
-# Create output directories
-mkdir -p "$CONFIG_DIR/wezterm/colors"
-mkdir -p "$CONFIG_DIR/zed/themes"
-mkdir -p "$CONFIG_DIR/nvim/colors"
-mkdir -p "$CONFIG_DIR/tmux"
-mkdir -p "$CONFIG_DIR/bat/themes"
-mkdir -p "$CONFIG_DIR/delta"
-mkdir -p "$CONFIG_DIR/fzf"
-mkdir -p "$HOME/.config/obsidian/snippets"
+# Create output directories in chezmoi source
+mkdir -p "$CHEZMOI_SOURCE/dot_config/wezterm/colors"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/zed/themes"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/nvim/colors"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/tmux"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/bat/themes"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/delta"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/fzf"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/obsidian/snippets"
 
 # Generate WezTerm theme
 print_info "Generating WezTerm theme..."
 WEZTERM_TEMPLATE="$TEMPLATES_DIR/wezterm/templates/default.mustache"
-WEZTERM_OUTPUT="$CONFIG_DIR/wezterm/colors/base-16-${SCHEME}.lua"
+WEZTERM_OUTPUT="$CHEZMOI_SOURCE/dot_config/wezterm/colors/base-16-${SCHEME}.lua"
 
 if [ -f "$WEZTERM_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$WEZTERM_TEMPLATE" > "$WEZTERM_OUTPUT" 2>/dev/null; then
@@ -101,7 +101,7 @@ fi
 # Generate Zed theme
 print_info "Generating Zed theme..."
 ZED_TEMPLATE="$TEMPLATES_DIR/zed/templates/default.mustache"
-ZED_OUTPUT="$CONFIG_DIR/zed/themes/base-16-${SCHEME}.json"
+ZED_OUTPUT="$CHEZMOI_SOURCE/dot_config/zed/themes/base-16-${SCHEME}.json"
 
 if [ -f "$ZED_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$ZED_TEMPLATE" > "$ZED_OUTPUT" 2>/dev/null; then
@@ -116,7 +116,7 @@ fi
 # Generate Neovim theme
 print_info "Generating Neovim theme..."
 NEOVIM_TEMPLATE="$TEMPLATES_DIR/neovim/templates/default.mustache"
-NEOVIM_OUTPUT="$CONFIG_DIR/nvim/colors/base16-${SCHEME}.lua"
+NEOVIM_OUTPUT="$CHEZMOI_SOURCE/dot_config/nvim/colors/base16-${SCHEME}.lua"
 
 if [ -f "$NEOVIM_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$NEOVIM_TEMPLATE" > "$NEOVIM_OUTPUT" 2>/dev/null; then
@@ -131,7 +131,7 @@ fi
 # Generate Tmux theme
 print_info "Generating Tmux theme..."
 TMUX_TEMPLATE="$TEMPLATES_DIR/tmux/templates/default.mustache"
-TMUX_OUTPUT="$CONFIG_DIR/tmux/base16-${SCHEME}.conf"
+TMUX_OUTPUT="$CHEZMOI_SOURCE/dot_config/tmux/base16-${SCHEME}.conf"
 
 if [ -f "$TMUX_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$TMUX_TEMPLATE" > "$TMUX_OUTPUT" 2>/dev/null; then
@@ -146,7 +146,7 @@ fi
 # Generate FZF theme
 print_info "Generating FZF theme..."
 FZF_TEMPLATE="$TEMPLATES_DIR/fzf/templates/default.mustache"
-FZF_OUTPUT="$CONFIG_DIR/fzf/base16-${SCHEME}.sh"
+FZF_OUTPUT="$CHEZMOI_SOURCE/dot_config/fzf/base16-${SCHEME}.sh"
 
 if [ -f "$FZF_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$FZF_TEMPLATE" > "$FZF_OUTPUT" 2>/dev/null; then
@@ -161,7 +161,7 @@ fi
 # Generate Bat theme
 print_info "Generating Bat theme..."
 BAT_TEMPLATE="$TEMPLATES_DIR/bat/templates/default.mustache"
-BAT_OUTPUT="$CONFIG_DIR/bat/themes/base16-${SCHEME}.tmTheme"
+BAT_OUTPUT="$CHEZMOI_SOURCE/dot_config/bat/themes/base16-${SCHEME}.tmTheme"
 
 if [ -f "$BAT_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$BAT_TEMPLATE" > "$BAT_OUTPUT" 2>/dev/null; then
@@ -181,7 +181,7 @@ fi
 # Generate Git Delta theme
 print_info "Generating Git Delta theme..."
 DELTA_TEMPLATE="$TEMPLATES_DIR/delta/templates/default.mustache"
-DELTA_OUTPUT="$CONFIG_DIR/delta/base16-${SCHEME}.gitconfig"
+DELTA_OUTPUT="$CHEZMOI_SOURCE/dot_config/delta/base16-${SCHEME}.gitconfig"
 
 if [ -f "$DELTA_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$DELTA_TEMPLATE" > "$DELTA_OUTPUT" 2>/dev/null; then
@@ -196,7 +196,7 @@ fi
 # Generate Obsidian theme snippet
 print_info "Generating Obsidian theme..."
 OBSIDIAN_TEMPLATE="$TEMPLATES_DIR/obsidian/templates/default.mustache"
-OBSIDIAN_OUTPUT="$HOME/.config/obsidian/snippets/base16-${SCHEME}.css"
+OBSIDIAN_OUTPUT="$CHEZMOI_SOURCE/dot_config/obsidian/snippets/base16-${SCHEME}.css"
 
 if [ -f "$OBSIDIAN_TEMPLATE" ]; then
     if flavours build "$SCHEME_FILE" "$OBSIDIAN_TEMPLATE" > "$OBSIDIAN_OUTPUT" 2>/dev/null; then
@@ -218,8 +218,10 @@ echo "  • FZF: $FZF_OUTPUT"
 echo "  • Bat: $BAT_OUTPUT"
 echo "  • Delta: $DELTA_OUTPUT"
 echo "  • Obsidian: $OBSIDIAN_OUTPUT"
-print_info "Additional steps:"
-echo "  • Tmux: Add 'source-file $TMUX_OUTPUT' to ~/.tmux.conf"
-echo "  • FZF: Source $FZF_OUTPUT in your shell rc file"
-echo "  • Delta: Include $DELTA_OUTPUT in your ~/.gitconfig"
+print_info "Themes generated in chezmoi source directory"
+print_info "Run 'chezmoi apply' to copy them to their destinations"
+print_info "Additional configuration needed:"
+echo "  • Tmux: Add 'source-file ~/.config/tmux/base16-${SCHEME}.conf' to ~/.tmux.conf"
+echo "  • FZF: Source ~/.config/fzf/base16-${SCHEME}.sh in your shell rc file"
+echo "  • Delta: Include ~/.config/delta/base16-${SCHEME}.gitconfig in your ~/.gitconfig"
 echo "  • Obsidian: Enable the snippet in Obsidian settings"
