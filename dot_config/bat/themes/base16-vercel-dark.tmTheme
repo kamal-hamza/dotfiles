@@ -1,0 +1,99 @@
+# Base16 Vercel Dark
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-vercel-dark"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#ededed"
+background = "#000000"
+
+[syntax]
+# Comments
+"comment" = "#666666"
+"comment.documentation" = "#888888"
+
+# Constants
+"constant" = "#ff9907"
+"constant.builtin" = "#ff9907"
+"constant.character" = "#f75f8f"
+"constant.character.escape" = "#1da9b0"
+
+# Functions
+"function" = "#52a8ff"
+"function.builtin" = "#52a8ff"
+"function.method" = "#52a8ff"
+
+# Keywords
+"keyword" = "#c472fb"
+"keyword.control" = "#c472fb"
+"keyword.directive" = "#c472fb"
+"keyword.function" = "#c472fb"
+"keyword.operator" = "#c472fb"
+
+# Operators
+"operator" = "#ededed"
+
+# Punctuation
+"punctuation" = "#ededed"
+"punctuation.bracket" = "#ededed"
+"punctuation.delimiter" = "#f87171"
+"punctuation.special" = "#f75f8f"
+
+# Strings
+"string" = "#62c073"
+"string.escape" = "#1da9b0"
+"string.regex" = "#1da9b0"
+"string.special" = "#1da9b0"
+
+# Types
+"type" = "#fcee0a"
+"type.builtin" = "#fcee0a"
+
+# Variables
+"variable" = "#ededed"
+"variable.builtin" = "#ff9907"
+"variable.member" = "#f75f8f"
+"variable.parameter" = "#f75f8f"
+
+# Tags (HTML/XML)
+"tag" = "#fcee0a"
+"attribute" = "#fcee0a"
+
+# Markup
+"markup.heading" = "#52a8ff"
+"markup.bold" = { foreground = "#fcee0a", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#c472fb", modifiers = ["italic"] }
+"markup.link" = "#52a8ff"
+"markup.link.url" = { foreground = "#1da9b0", modifiers = ["underline"] }
+"markup.raw" = "#62c073"
+"markup.list" = "#f75f8f"
+"markup.quote" = "#1da9b0"
+
+# Diff
+"diff.plus" = "#62c073"
+"diff.minus" = "#f75f8f"
+"diff.delta" = "#52a8ff"
+
+# Git
+"git.added" = "#62c073"
+"git.deleted" = "#f75f8f"
+"git.modified" = "#52a8ff"
+
+# UI elements
+"ui.background" = "#000000"
+"ui.foreground" = "#ededed"
+"ui.cursor" = "#ededed"
+"ui.cursor.match" = "#fcee0a"
+"ui.selection" = "#333333"
+"ui.linenr" = "#666666"
+"ui.linenr.selected" = "#888888"
+"ui.statusline" = "#888888"
+
+# Errors and warnings
+"error" = "#f75f8f"
+"warning" = "#fcee0a"
+"info" = "#52a8ff"
+"hint" = "#1da9b0"

@@ -1,0 +1,69 @@
+# Base16 Vercel Dark
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-vercel-dark
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#666666"
+    line-numbers-right-style = "#666666"
+    line-numbers-minus-style = "#f75f8f"
+    line-numbers-plus-style = "#62c073"
+    line-numbers-zero-style = "#666666"
+    
+    # File headers
+    file-style = "#52a8ff bold"
+    file-decoration-style = "#52a8ff ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#666666"
+    
+    # Commit decoration
+    commit-decoration-style = "#c472fb box"
+    commit-style = "#c472fb bold"
+    
+    # Diff colors
+    minus-style = "syntax #111111"
+    minus-emph-style = "syntax #f7 #5f #8f 40"
+    minus-non-emph-style = "syntax #111111"
+    
+    plus-style = "syntax #111111"
+    plus-emph-style = "syntax #62 #c0 #73 40"
+    plus-non-emph-style = "syntax #111111"
+    
+    # Whitespace
+    whitespace-error-style = "#f75f8f reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#fcee0a bold"
+    merge-conflict-theirs-diff-header-style = "#52a8ff bold"
+    
+    # Blame
+    blame-palette = "#000000 #111111 #333333"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#52a8ff bold"
+    grep-line-number-style = "#fcee0a"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#f75f8f bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true
