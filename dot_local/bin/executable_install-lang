@@ -1,0 +1,669 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Try multiple paths for tools.yaml (prioritize chezmoi source directory)
+if [[ -f "${HOME}/.local/share/chezmoi/.chezmoidata/tools.yaml" ]]; then
+    TOOLS_YAML="${HOME}/.local/share/chezmoi/.chezmoidata/tools.yaml"
+elif [[ -f "$(chezmoi source-path 2>/dev/null)/.chezmoidata/tools.yaml" ]]; then
+    TOOLS_YAML="$(chezmoi source-path)/.chezmoidata/tools.yaml"
+elif [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/chezmoi/.chezmoidata/tools.yaml" ]]; then
+    TOOLS_YAML="${XDG_DATA_HOME:-$HOME/.local/share}/chezmoi/.chezmoidata/tools.yaml"
+else
+    print_error "Could not find tools.yaml in any expected location"
+    exit 1
+fi
+
+# Function to print colored output
+print_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to check if a command exists
+command_exists() {
+    command -v "$1" >/dev/null 2>&1
+}
+
+# Function to detect OS
+detect_os() {
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        if command_exists apt; then
+            echo "debian"
+        elif command_exists pacman; then
+            echo "arch"
+        elif command_exists dnf; then
+            echo "fedora"
+        else
+            echo "linux"
+        fi
+    else
+        echo "unknown"
+    fi
+}
+
+# Function to install package based on OS
+install_package() {
+    local package="$1"
+    local os=$(detect_os)
+    
+    print_info "Installing $package..."
+    
+    case "$os" in
+        macos)
+            if command_exists brew; then
+                brew install "$package" 2>/dev/null || brew install --cask "$package" 2>/dev/null || {
+                    print_warning "Could not install $package via brew"
+                    return 1
+                }
+            else
+                print_error "Homebrew not found. Please install Homebrew first."
+                return 1
+            fi
+            ;;
+        arch)
+            if command_exists paru; then
+                paru -S --noconfirm "$package" 2>/dev/null || {
+                    print_warning "Could not install $package via paru"
+                    return 1
+                }
+            elif command_exists yay; then
+                yay -S --noconfirm "$package" 2>/dev/null || {
+                    print_warning "Could not install $package via yay"
+                    return 1
+                }
+            else
+                sudo pacman -S --noconfirm "$package" 2>/dev/null || {
+                    print_warning "Could not install $package via pacman"
+                    return 1
+                }
+            fi
+            ;;
+        debian)
+            sudo apt-get update -qq
+            sudo apt-get install -y "$package" 2>/dev/null || {
+                print_warning "Could not install $package via apt"
+                return 1
+            }
+            ;;
+        fedora)
+            sudo dnf install -y "$package" 2>/dev/null || {
+                print_warning "Could not install $package via dnf"
+                return 1
+            }
+            ;;
+        *)
+            print_error "Unsupported OS: $os"
+            return 1
+            ;;
+    esac
+    
+    print_success "Installed $package"
+    return 0
+}
+
+# Function to ensure asdf is installed
+ensure_asdf() {
+    if ! command_exists asdf; then
+        print_error "asdf is not installed. Please install it first:"
+        print_info "  Run: chezmoi apply (to install from packages.yaml)"
+        print_info "  Or: brew install asdf (macOS) / pacman -S asdf-vm (Arch)"
+        return 1
+    fi
+    return 0
+}
+
+# Function to install asdf plugin
+install_asdf_plugin() {
+    local plugin="$1"
+    
+    if ! asdf plugin list | grep -q "^${plugin}$"; then
+        print_info "Adding asdf plugin: $plugin"
+        asdf plugin add "$plugin" || {
+            print_warning "Could not add asdf plugin: $plugin"
+            return 1
+        }
+        print_success "Added asdf plugin: $plugin"
+    else
+        print_success "asdf plugin '$plugin' already installed"
+    fi
+    return 0
+}
+
+# Function to install language via asdf
+install_via_asdf() {
+    local plugin="$1"
+    local version="${2:-latest}"
+    
+    ensure_asdf || return 1
+    
+    # Install plugin if not present
+    install_asdf_plugin "$plugin" || return 1
+    
+    # Check if any version is already installed
+    if asdf list "$plugin" 2>/dev/null | grep -q .; then
+        print_success "$plugin is already installed via asdf"
+        return 0
+    fi
+    
+    # Install the language
+    print_info "Installing $plugin $version via asdf..."
+    asdf install "$plugin" "$version" || {
+        print_warning "Could not install $plugin via asdf"
+        return 1
+    }
+    
+    # Set as global default
+    asdf global "$plugin" "$version" || {
+        print_warning "Could not set $plugin as global default"
+        return 1
+    }
+    
+    # Reshim to update PATH
+    asdf reshim "$plugin"
+    
+    print_success "Installed $plugin $version via asdf"
+    return 0
+}
+
+# Function to install package via language package manager
+install_via_package_manager() {
+    local package="$1"
+    local package_manager="$2"
+    
+    print_info "Installing $package via $package_manager..."
+    
+    case "$package_manager" in
+        uv)
+            uv pip install "$package" || {
+                print_warning "Could not install $package via uv"
+                return 1
+            }
+            ;;
+        pip)
+            pip install "$package" || {
+                print_warning "Could not install $package via pip"
+                return 1
+            }
+            ;;
+        pnpm)
+            pnpm add -g "$package" || {
+                print_warning "Could not install $package via pnpm"
+                return 1
+            }
+            ;;
+        npm)
+            npm install -g "$package" || {
+                print_warning "Could not install $package via npm"
+                return 1
+            }
+            ;;
+        bun)
+            bun add -g "$package" || {
+                print_warning "Could not install $package via bun"
+                return 1
+            }
+            ;;
+        bundler|gem)
+            gem install "$package" || {
+                print_warning "Could not install $package via gem"
+                return 1
+            }
+            ;;
+        composer)
+            composer global require "$package" || {
+                print_warning "Could not install $package via composer"
+                return 1
+            }
+            ;;
+        cargo)
+            cargo install "$package" || {
+                print_warning "Could not install $package via cargo"
+                return 1
+            }
+            ;;
+        go)
+            go install "$package@latest" || {
+                print_warning "Could not install $package via go install"
+                return 1
+            }
+            ;;
+        *)
+            print_warning "Unknown package manager: $package_manager"
+            return 1
+            ;;
+    esac
+    
+    print_success "Installed $package via $package_manager"
+    return 0
+}
+
+# Function to parse YAML section (languages or frameworks)
+parse_yaml_section() {
+    local yaml_file="$1"
+    local section="$2"      # "languages" or "frameworks"
+    local item="$3"         # e.g., "python" or "django"
+    local in_section=false
+    local in_item=false
+    local current_key=""
+    
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines and comments
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        
+        # Check if we're entering the main section (languages: or frameworks:)
+        if [[ "$line" =~ ^([a-z_]+):$ ]]; then
+            local found_section="${BASH_REMATCH[1]}"
+            if [[ "$found_section" == "$section" ]]; then
+                in_section=true
+            else
+                in_section=false
+                in_item=false
+            fi
+            continue
+        fi
+        
+        # If we're in the right section, check for the item
+        if [[ "$in_section" == true ]]; then
+            # Check for item name (e.g., "  python:" or "  django:")
+            if [[ "$line" =~ ^[[:space:]]{2}([a-z_]+):$ ]]; then
+                local found_item="${BASH_REMATCH[1]}"
+                if [[ "$found_item" == "$item" ]]; then
+                    in_item=true
+                else
+                    in_item=false
+                fi
+                continue
+            fi
+            
+            # If we're in the right item, parse the key-value pairs
+            if [[ "$in_item" == true ]]; then
+                # Check for key with value (e.g., "    lsp: pyright")
+                if [[ "$line" =~ ^[[:space:]]{4}([a-z_]+):[[:space:]]*(.+)$ ]]; then
+                    current_key="${BASH_REMATCH[1]}"
+                    local value="${BASH_REMATCH[2]}"
+                    echo "${current_key}=${value}"
+                # Check for list items (e.g., "      - pytest")
+                elif [[ "$line" =~ ^[[:space:]]{6}-[[:space:]]*(.+)$ ]]; then
+                    local value="${BASH_REMATCH[1]}"
+                    echo "${current_key}_item=${value}"
+                # Check for nested sections (e.g., "    packages:")
+                elif [[ "$line" =~ ^[[:space:]]{4}([a-z_]+):$ ]]; then
+                    current_key="${BASH_REMATCH[1]}"
+                fi
+            fi
+        fi
+    done < "$yaml_file"
+}
+
+# Function to install language tools
+install_language() {
+    local language="$1"
+    local version="${2:-latest}"
+    
+    print_info "Installing language: $language ${version}"
+    echo ""
+    
+    # Parse the YAML and get tools for the language
+    local tools_data=$(parse_yaml_section "$TOOLS_YAML" "languages" "$language")
+    
+    if [[ -z "$tools_data" ]]; then
+        print_error "Language '$language' not found in tools.yaml"
+        return 1
+    fi
+    
+    # Track what we're installing
+    local tools_to_install=()
+    local package_manager=""
+    local asdf_plugin=""
+    
+    # Parse the data
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^([a-z_]+)=(.+)$ ]]; then
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            
+            case "$key" in
+                asdf_plugin)
+                    asdf_plugin="$value"
+                    ;;
+                runtime|compiler|sdk|toolchain|cli|interpreter)
+                    # Skip these if using asdf
+                    if [[ -z "$asdf_plugin" ]]; then
+                        tools_to_install+=("$value")
+                    fi
+                    ;;
+                package_manager)
+                    package_manager="$value"
+                    tools_to_install+=("$value")
+                    ;;
+                lsp|formatter|linter|build_tool|debugger)
+                    tools_to_install+=("$value")
+                    ;;
+                tools_item)
+                    tools_to_install+=("$value")
+                    ;;
+            esac
+        fi
+    done <<< "$tools_data"
+    
+    # Install via asdf if plugin is specified
+    if [[ -n "$asdf_plugin" ]]; then
+        install_via_asdf "$asdf_plugin" "$version" || {
+            print_warning "Failed to install $language via asdf, continuing with other tools..."
+        }
+    fi
+    
+    # Install all tools
+    local failed_tools=()
+    local installed_count=0
+    
+    for tool in "${tools_to_install[@]}"; do
+        if command_exists "$tool"; then
+            print_success "$tool is already installed"
+            ((installed_count++))
+        else
+            if install_package "$tool"; then
+                ((installed_count++))
+            else
+                failed_tools+=("$tool")
+            fi
+        fi
+    done
+    
+    echo ""
+    print_info "Installation Summary for $language:"
+    print_success "Successfully installed/verified: $installed_count tools"
+    
+    if [[ ${#failed_tools[@]} -gt 0 ]]; then
+        print_warning "Failed to install: ${failed_tools[*]}"
+        echo ""
+        print_info "You may need to install these tools manually"
+    fi
+    
+    # Return the package manager for framework installation
+    echo "$package_manager"
+}
+
+# Function to install framework
+install_framework() {
+    local framework="$1"
+    
+    print_info "Installing framework: $framework"
+    echo ""
+    
+    # Parse the YAML and get framework info
+    local framework_data=$(parse_yaml_section "$TOOLS_YAML" "frameworks" "$framework")
+    
+    if [[ -z "$framework_data" ]]; then
+        print_error "Framework '$framework' not found in tools.yaml"
+        return 1
+    fi
+    
+    # Parse framework requirements
+    local required_language=""
+    local packages=()
+    local tools=()
+    
+    while IFS= read -r line; do
+        if [[ "$line" =~ ^([a-z_]+)=(.+)$ ]]; then
+            local key="${BASH_REMATCH[1]}"
+            local value="${BASH_REMATCH[2]}"
+            
+            case "$key" in
+                requires)
+                    required_language="$value"
+                    ;;
+                packages_item)
+                    packages+=("$value")
+                    ;;
+                tools_item)
+                    tools+=("$value")
+                    ;;
+            esac
+        fi
+    done <<< "$framework_data"
+    
+    # Install required language if not already installed
+    local package_manager=""
+    if [[ -n "$required_language" ]]; then
+        print_info "Framework requires language: $required_language"
+        
+        # Check if language is already installed
+        local lang_data=$(parse_yaml_section "$TOOLS_YAML" "languages" "$required_language")
+        local lang_asdf_plugin=""
+        local lang_main_tool=""
+        
+        # Check for asdf plugin first
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^asdf_plugin=(.+)$ ]]; then
+                lang_asdf_plugin="${BASH_REMATCH[1]}"
+                break
+            fi
+        done <<< "$lang_data"
+        
+        # Check if installed via asdf
+        if [[ -n "$lang_asdf_plugin" ]] && command_exists asdf; then
+            if asdf list "$lang_asdf_plugin" 2>/dev/null | grep -q .; then
+                print_success "$required_language is already installed (via asdf)"
+            else
+                print_info "Installing required language: $required_language"
+                install_language "$required_language" > /dev/null
+                echo ""
+            fi
+        else
+            # Fallback: check for main tool
+            while IFS= read -r line; do
+                if [[ "$line" =~ ^(runtime|compiler|sdk|toolchain)=(.+)$ ]]; then
+                    lang_main_tool="${BASH_REMATCH[2]}"
+                    break
+                fi
+            done <<< "$lang_data"
+            
+            if [[ -n "$lang_main_tool" ]] && command_exists "$lang_main_tool"; then
+                print_success "$required_language is already installed"
+            else
+                print_info "Installing required language: $required_language"
+                install_language "$required_language" > /dev/null
+                echo ""
+            fi
+        fi
+        
+        # Get package manager
+        while IFS= read -r line; do
+            if [[ "$line" =~ ^package_manager=(.+)$ ]]; then
+                package_manager="${BASH_REMATCH[1]}"
+                break
+            fi
+        done <<< "$lang_data"
+    fi
+    
+    # Install framework packages
+    local failed_packages=()
+    local installed_count=0
+    
+    if [[ ${#packages[@]} -gt 0 ]]; then
+        print_info "Installing framework packages..."
+        for package in "${packages[@]}"; do
+            if [[ -n "$package_manager" ]]; then
+                if install_via_package_manager "$package" "$package_manager"; then
+                    ((installed_count++))
+                else
+                    failed_packages+=("$package")
+                fi
+            else
+                if install_package "$package"; then
+                    ((installed_count++))
+                else
+                    failed_packages+=("$package")
+                fi
+            fi
+        done
+    fi
+    
+    # Install framework tools
+    if [[ ${#tools[@]} -gt 0 ]]; then
+        print_info "Installing framework tools..."
+        for tool in "${tools[@]}"; do
+            if command_exists "$tool"; then
+                print_success "$tool is already installed"
+                ((installed_count++))
+            else
+                if install_package "$tool"; then
+                    ((installed_count++))
+                else
+                    failed_packages+=("$tool")
+                fi
+            fi
+        done
+    fi
+    
+    echo ""
+    print_info "Installation Summary for $framework:"
+    print_success "Successfully installed: $installed_count items"
+    
+    if [[ ${#failed_packages[@]} -gt 0 ]]; then
+        print_warning "Failed to install: ${failed_packages[*]}"
+    fi
+}
+
+# Function to list available items
+list_items() {
+    if [[ ! -f "$TOOLS_YAML" ]]; then
+        print_error "Tools configuration file not found: $TOOLS_YAML"
+        exit 1
+    fi
+    
+    local section="${1:-all}"
+    
+    if [[ "$section" == "all" || "$section" == "languages" ]]; then
+        print_info "Available Languages:"
+        echo ""
+        grep -A 1000 "^languages:" "$TOOLS_YAML" | grep -B 1000 "^frameworks:" | grep "^  [a-z_]*:$" | sed 's/://;s/^  /  - /' || true
+        echo ""
+    fi
+    
+    if [[ "$section" == "all" || "$section" == "frameworks" ]]; then
+        print_info "Available Frameworks:"
+        echo ""
+        grep -A 1000 "^frameworks:" "$TOOLS_YAML" | grep "^  [a-z_]*:$" | sed 's/://;s/^  /  - /' || true
+        echo ""
+    fi
+}
+
+# Function to determine if item is language or framework
+get_item_type() {
+    local item="$1"
+    
+    # Check if it's in languages
+    if grep -A 1000 "^languages:" "$TOOLS_YAML" | grep -B 1000 "^frameworks:" | grep -q "^  ${item}:$"; then
+        echo "language"
+        return
+    fi
+    
+    # Check if it's in frameworks
+    if grep -A 1000 "^frameworks:" "$TOOLS_YAML" | grep -q "^  ${item}:$"; then
+        echo "framework"
+        return
+    fi
+    
+    echo "unknown"
+}
+
+# Main script
+main() {
+    if [[ ! -f "$TOOLS_YAML" ]]; then
+        print_error "Tools configuration file not found: $TOOLS_YAML"
+        exit 1
+    fi
+    
+    if [[ $# -eq 0 ]]; then
+        echo "Usage: $0 <language|framework> [version] [language|framework2 ...]"
+        echo "       $0 --list [languages|frameworks]"
+        echo ""
+        echo "Examples:"
+        echo "  $0 python              # Install latest Python"
+        echo "  $0 python 3.9.18       # Install Python 3.9.18"
+        echo "  $0 golang 1.21.5       # Install Go 1.21.5"
+        echo "  $0 django              # Install Django (and Python if needed)"
+        echo "  $0 python react        # Install Python and React"
+        echo "  $0 --list              # List all languages and frameworks"
+        echo "  $0 --list languages    # List only languages"
+        echo "  $0 --list frameworks   # List only frameworks"
+        exit 1
+    fi
+    
+    # Check for --list flag
+    if [[ "$1" == "--list" || "$1" == "-l" ]]; then
+        local filter="${2:-all}"
+        list_items "$filter"
+        exit 0
+    fi
+    
+    # Install items for each specified argument
+    local i=1
+    while [[ $i -le $# ]]; do
+        local item="${!i}"
+        local item_type=$(get_item_type "$item")
+        
+        case "$item_type" in
+            language)
+                # Check if next argument is a version number
+                local next_idx=$((i+1))
+                local next_arg=""
+                if [[ $next_idx -le $# ]]; then
+                    next_arg="${!next_idx}"
+                fi
+                
+                # If next arg looks like a version (starts with digit or contains dots), use it
+                if [[ "$next_arg" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+                    install_language "$item" "$next_arg" > /dev/null
+                    i=$((i+1))  # Skip the version arg in next iteration
+                else
+                    install_language "$item" > /dev/null
+                fi
+                ;;
+            framework)
+                install_framework "$item"
+                ;;
+            unknown)
+                # Check if this might be a version number (skip error if previous was a language)
+                if [[ ! "$item" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
+                    print_error "Unknown language or framework: $item"
+                    print_info "Run '$0 --list' to see available options"
+                    exit 1
+                fi
+                ;;
+        esac
+        
+        echo ""
+        echo "=========================================="
+        echo ""
+        
+        i=$((i+1))
+    done
+    
+    print_success "All done!"
+}
+
+main "$@"

@@ -1,0 +1,363 @@
+# Development Tools by Language/Framework
+# Single preferred tool per category for clean installations
+
+languages:
+  python:
+    asdf_plugin: python
+    package_manager: uv
+    lsp: pyrefly
+    formatter: ruff
+    linter: ruff
+    debugger: debugpy
+    tools:
+      - pytest
+      - ipython
+
+  javascript:
+    asdf_plugin: bun
+    runtime: bun
+    package_manager: bun
+    lsp: typescript-language-server
+    formatter: prettier
+    linter: eslint
+    debugger: bun
+
+  typescript:
+    asdf_plugin: bun
+    runtime: bun
+    compiler: typescript
+    package_manager: bun
+    lsp: typescript-language-server
+    formatter: prettier
+    linter: eslint
+    debugger: bun
+
+  golang:
+    asdf_plugin: golang
+    lsp: gopls
+    formatter: goimports
+    linter: golangci-lint
+    debugger: delve
+
+  rust:
+    asdf_plugin: rust
+    lsp: rust-analyzer
+    formatter: rustfmt
+    linter: clippy
+    debugger: lldb
+    tools:
+      - cargo-watch
+
+  zig:
+    asdf_plugin: zig
+    lsp: zls
+    debugger: lldb
+
+  cpp:
+    asdf_plugin: clang
+    lsp: clangd
+    formatter: clang-format
+    linter: clang-tidy
+    build_tool: cmake
+    debugger: lldb
+
+  c:
+    asdf_plugin: clang
+    lsp: clangd
+    formatter: clang-format
+    linter: clang-tidy
+    build_tool: cmake
+    debugger: lldb
+
+  dotnet:
+    asdf_plugin: dotnet
+    lsp: omnisharp
+    formatter: dotnet-format
+    debugger: netcoredbg
+    tools:
+      - dotnet-ef
+
+  java:
+    asdf_plugin: java
+    build_tool: gradle
+    lsp: jdtls
+    formatter: google-java-format
+    debugger: jdb
+
+  kotlin:
+    asdf_plugin: kotlin
+    build_tool: gradle
+    lsp: kotlin-language-server
+    formatter: ktlint
+    debugger: jdb
+
+  ruby:
+    asdf_plugin: ruby
+    package_manager: bundler
+    lsp: ruby-lsp
+    formatter: rubocop
+    linter: rubocop
+    debugger: ruby-debug-ide
+
+  php:
+    asdf_plugin: php
+    package_manager: composer
+    lsp: intelephense
+    formatter: php-cs-fixer
+    linter: phpstan
+    debugger: php-debug
+
+  elixir:
+    asdf_plugin: elixir
+    lsp: elixir-ls
+    formatter: mix
+    debugger: elixir-ls
+
+  lua:
+    asdf_plugin: lua
+    package_manager: luarocks
+    lsp: lua-language-server
+    formatter: stylua
+    linter: luacheck
+    debugger: mobdebug
+
+  dart:
+    asdf_plugin: dart
+    lsp: dart
+    formatter: dart
+    debugger: dart
+
+  swift:
+    asdf_plugin: swift
+    lsp: sourcekit-lsp
+    formatter: swift-format
+    linter: swiftlint
+    debugger: lldb
+
+  shell:
+    interpreter: bash
+    lsp: bash-language-server
+    formatter: shfmt
+    linter: shellcheck
+
+  bun:
+    asdf_plugin: bun
+    formatter: prettier
+    linter: eslint
+
+  deno:
+    asdf_plugin: deno
+
+  sql:
+    lsp: sqls
+    formatter: sql-formatter
+
+  yaml:
+    lsp: yaml-language-server
+    formatter: prettier
+    linter: yamllint
+
+  toml:
+    lsp: taplo
+    formatter: taplo
+
+  markdown:
+    lsp: marksman
+    formatter: prettier
+    linter: markdownlint
+
+  terraform:
+    cli: terraform
+    lsp: terraform-ls
+    linter: tflint
+
+  ansible:
+    cli: ansible
+    lsp: ansible-language-server
+    linter: ansible-lint
+
+  docker:
+    cli: docker
+    lsp: dockerfile-language-server
+    linter: hadolint
+
+  kubernetes:
+    cli: kubectl
+    tools:
+      - helm
+      - k9s
+
+  protobuf:
+    compiler: protoc
+    lsp: bufls
+    formatter: buf
+
+  graphql:
+    lsp: graphql-language-service-cli
+    formatter: prettier
+
+  nix:
+    cli: nix
+    lsp: nil
+    formatter: nixpkgs-fmt
+
+frameworks:
+  # Python Frameworks
+  django:
+    requires: python
+    packages:
+      - django
+      - django-stubs
+    tools:
+      - django-admin
+
+  flask:
+    requires: python
+    packages:
+      - flask
+      - flask-cors
+
+  fastapi:
+    requires: python
+    packages:
+      - fastapi
+      - uvicorn
+      - pydantic
+
+  # JavaScript/TypeScript Frameworks
+  react:
+    requires: typescript
+    packages:
+      - react
+      - react-dom
+      - "@types/react"
+      - "@types/react-dom"
+
+  nextjs:
+    requires: typescript
+    packages:
+      - next
+      - react
+      - react-dom
+
+  vue:
+    requires: typescript
+    packages:
+      - vue
+      - "@vitejs/plugin-vue"
+
+  nuxt:
+    requires: typescript
+    packages:
+      - nuxt
+
+  angular:
+    requires: typescript
+    packages:
+      - "@angular/cli"
+      - "@angular/core"
+
+  svelte:
+    requires: typescript
+    packages:
+      - svelte
+      - "@sveltejs/kit"
+
+  express:
+    requires: typescript
+    packages:
+      - express
+      - "@types/express"
+
+  nestjs:
+    requires: typescript
+    packages:
+      - "@nestjs/cli"
+      - "@nestjs/core"
+
+  # Go Frameworks
+  gin:
+    requires: golang
+    packages:
+      - github.com/gin-gonic/gin
+
+  echo:
+    requires: golang
+    packages:
+      - github.com/labstack/echo/v4
+
+  fiber:
+    requires: golang
+    packages:
+      - github.com/gofiber/fiber/v2
+
+  # Rust Frameworks
+  actix:
+    requires: rust
+    packages:
+      - actix-web
+
+  rocket:
+    requires: rust
+    packages:
+      - rocket
+
+  axum:
+    requires: rust
+    packages:
+      - axum
+      - tokio
+
+  # Ruby Frameworks
+  rails:
+    requires: ruby
+    packages:
+      - rails
+    tools:
+      - rails
+
+  sinatra:
+    requires: ruby
+    packages:
+      - sinatra
+
+  # PHP Frameworks
+  laravel:
+    requires: php
+    packages:
+      - laravel/installer
+    tools:
+      - laravel
+
+  symfony:
+    requires: php
+    packages:
+      - symfony/skeleton
+
+  # Java/Kotlin Frameworks
+  spring:
+    requires: java
+    packages:
+      - spring-boot-cli
+
+  quarkus:
+    requires: java
+    packages:
+      - quarkus-cli
+
+  # .NET Frameworks
+  aspnet:
+    requires: dotnet
+    packages:
+      - Microsoft.AspNetCore.App
+
+  blazor:
+    requires: dotnet
+    packages:
+      - Microsoft.AspNetCore.Components.WebAssembly
+
+  # Dart/Flutter already covered in languages
+  flutter:
+    requires: dart
+    packages:
+      - flutter

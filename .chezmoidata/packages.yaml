@@ -24,6 +24,7 @@ packages:
 
         # CLI Tools - Command-line utilities and development tools
         brews:
+            - asdf # Universal version manager for languages
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
             - flavours # Base16 theme manager
@@ -56,6 +57,7 @@ packages:
     arch:
         # Official Repository Packages
         pacman:
+            - asdf-vm # Universal version manager for languages
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
             - flavours # Base16 theme manager

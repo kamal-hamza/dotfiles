@@ -15,7 +15,7 @@
 # Active Base16 scheme
 # This should match a .yaml file in theme-generators/base16-schemes/ (without extension)
 # Examples: "soft-focus-dark", "soft-focus-light", "gruvbox-dark", "nord"
-active_scheme: "vercel-dark"
+active_scheme: "soft-focus-dark"
 
 # Theme mode (for backward compatibility with existing templates)
 # Options: "dark" or "light"

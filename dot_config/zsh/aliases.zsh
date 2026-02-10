@@ -80,6 +80,9 @@ alias free="free -h"
 # Script Aliases
 # =============================================================================
 
+# Language tools installation
+alias itool="install-lang"
+
 # Project management
 alias ccp="create-project"   # Create a new project with template
 alias dcp="delete-project"   # Delete a project and its tmux session
@@ -102,4 +105,4 @@ alias m="man-tldr"           # Interactive man page search with tldr
 alias h="fzf-history"        # Advanced fuzzy history search
 
 # Font management
-alias font="font-switcher.sh"  # Interactive font selector with fzf
+alias font="font-switcher"  # Interactive font selector with fzf

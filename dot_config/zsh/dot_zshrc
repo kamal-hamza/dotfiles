@@ -21,6 +21,19 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # -----------------------------------------------------------------------------
+# asdf Version Manager
+# -----------------------------------------------------------------------------
+# macOS (Homebrew)
+if [[ "$OSTYPE" == "darwin"* ]] && [[ -f "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/asdf/libexec/asdf.sh" ]]; then
+  . "${HOMEBREW_PREFIX:-/opt/homebrew}/opt/asdf/libexec/asdf.sh"
+fi
+
+# Arch Linux
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  source_if_exists "/opt/asdf-vm/asdf.sh"
+fi
+
+# -----------------------------------------------------------------------------
 # History Configuration (must be early for proper loading)
 # -----------------------------------------------------------------------------
 HISTFILE="$HOME/.zsh_history"
