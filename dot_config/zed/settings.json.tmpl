@@ -1,6 +1,8 @@
 {
     "agent": {
-        "always_allow_tool_actions": true,
+        "tool_permissions": {
+            "default": "allow"
+        },
         "default_profile": "write",
         "default_model": {
             "provider": "copilot_chat",
@@ -12,9 +14,6 @@
         },
         "dock": "right",
         "default_width": 150
-    },
-    "edit_predictions": {
-        "mode": "subtle"
     },
     "file_types": {
         "JSONC": [
@@ -41,10 +40,14 @@
         ]
     },
     "show_edit_predictions": true,
+    "edit_predictions": {
+            "provider": "copilot",
+            "mode": "subtle"
+        },
     "vim_mode": true,
-{{- $scheme := .active_scheme | default "soft-focus-dark" }}
-{{- $schemePath := joinPath .chezmoi.sourceDir "theme-generators/base16-schemes" (printf "%s.yaml" $scheme) }}
-{{- $schemeData := include $schemePath | fromYaml }}
+    {{- $scheme := .active_scheme | default "soft-focus-dark" }}
+    {{- $schemePath := joinPath .chezmoi.sourceDir "theme-generators/base16-schemes" (printf "%s.yaml" $scheme) }}
+    {{- $schemeData := include $schemePath | fromYaml }}
     "theme": "Base16 {{ $schemeData.scheme }}",
     "ui_font_family": "{{ .font_family }}",
     "buffer_font_family": "{{ .font_family }}",
@@ -54,7 +57,7 @@
     "buffer_font_features": {
         "calt": {{ .font_features.opentype.calt }}
     },
-    "cursor_blink": false,
+   "cursor_blink": false,
     "scrollbar": {
         "show": "never"
     },
@@ -134,6 +137,12 @@
                     "python_interpreter": ".venv/bin/python"
                 }
             }
+        },
+        "tinymist": {
+            "settings": {
+                "exportPdf": "onSave",
+                "outputPath": "$root/$name"
+            }
         }
     },
     "format_on_save": "off",
@@ -165,7 +174,7 @@
     },
     "terminal": {
         "dock": "bottom",
-        "font_family": "{{ .font_family }}"
+        "font_family": "Menlo"
     },
     "notification_panel": {
         "dock": null

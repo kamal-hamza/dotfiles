@@ -1,0 +1,19 @@
+{
+    "$schema": "https://opencode.ai/config.json",
+    "theme": "system",
+    "provider": {
+        "github-copilot":{
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Github Copilot",
+            "options": {
+                "baseURL": "https://api.githubcopilot.com/v1"
+            },
+            "models": {
+                "claude-sonnet-4.5":{
+                    "name": "Claude Sonnet 4.5"
+                }
+            }
+        }
+    },
+    "enabled_providers": ["github-copilot"]
+}

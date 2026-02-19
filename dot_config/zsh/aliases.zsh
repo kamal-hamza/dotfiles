@@ -77,6 +77,49 @@ alias du="du -h"
 alias free="free -h"
 
 # =============================================================================
+# Play Aliases
+# =============================================================================
+
+# base
+alias p="play"
+
+# transport
+alias pp="play pause"
+alias pr="play resume"
+alias pn="play skip"
+alias pP="play prev"
+alias prs="play restart"
+alias ps="play stop"
+
+# info
+alias pi="play status"
+alias pl="play list"
+alias pql="play qlist"
+
+# search / index
+alias pf="play search"
+alias px="play index"
+
+# queue management
+alias pqa="play queue add"
+alias pqr="play queue remove"
+alias pqc="play queue clear"
+alias pqls="play queue list"
+
+# repeat
+alias prt="play repeat track"
+alias prp="play repeat playlist"
+alias pro="play repeat off"
+
+# seek
+alias pseek="play seek"
+alias pfw="play seek +30"
+alias pbw="play seek -10"
+
+# shuffle
+alias psh="play --shuffle"
+
+# =============================================================================
 # Script Aliases
 # =============================================================================
 

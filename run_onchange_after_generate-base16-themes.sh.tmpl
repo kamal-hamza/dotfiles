@@ -80,6 +80,7 @@ mkdir -p "$CHEZMOI_SOURCE/dot_config/nvim/colors"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/tmux"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/bat/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/delta"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/opencode/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/fzf"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/obsidian/snippets"
 
@@ -208,6 +209,21 @@ else
     print_warning "Obsidian template not found: $OBSIDIAN_TEMPLATE"
 fi
 
+# Generate OpenCode theme
+print_info "Generating OpenCode theme..."
+OPENCODE_TEMPLATE="$TEMPLATES_DIR/opencode/templates/default.mustache"
+OPENCODE_OUTPUT="$CHEZMOI_SOURCE/dot_config/opencode/themes/base16-${SCHEME}.json"
+
+if [ -f "$OPENCODE_TEMPLATE" ]; then
+    if flavours build "$SCHEME_FILE" "$OPENCODE_TEMPLATE" > "$OPENCODE_OUTPUT" 2>/dev/null; then
+        print_success "OpenCode theme generated: base16-${SCHEME}.json"
+    else
+        print_error "Failed to generate OpenCode theme"
+    fi
+else
+    print_warning "OpenCode template not found: $OPENCODE_TEMPLATE"
+fi
+
 print_success "Base16 theme generation complete!"
 print_info "Theme files:"
 echo "  • WezTerm: $WEZTERM_OUTPUT"
@@ -218,6 +234,7 @@ echo "  • FZF: $FZF_OUTPUT"
 echo "  • Bat: $BAT_OUTPUT"
 echo "  • Delta: $DELTA_OUTPUT"
 echo "  • Obsidian: $OBSIDIAN_OUTPUT"
+echo "  • OpenCode: $OPENCODE_OUTPUT"
 print_info "Themes generated in chezmoi source directory"
 print_info "Run 'chezmoi apply' to copy them to their destinations"
 print_info "Additional configuration needed:"

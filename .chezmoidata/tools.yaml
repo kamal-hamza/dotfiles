@@ -69,14 +69,12 @@ languages:
     build_tool: cmake
     debugger: lldb
 
-  dotnet:
+  csharp:
     asdf_plugin: dotnet
     lsp: omnisharp
     formatter: dotnet-format
     debugger: netcoredbg
-    tools:
-      - dotnet-ef
-
+    
   java:
     asdf_plugin: java
     build_tool: gradle
@@ -201,6 +199,11 @@ languages:
     lsp: nil
     formatter: nixpkgs-fmt
 
+  typst:
+    cli: typst
+    lsp: tinymist
+    formatter: typst
+
 frameworks:
   # Python Frameworks
   django:
@@ -307,6 +310,12 @@ frameworks:
     packages:
       - axum
       - tokio
+
+  dotnet:
+    requires: csharp 
+    tools:
+      - dotnet-ef
+
 
   # Ruby Frameworks
   rails:
