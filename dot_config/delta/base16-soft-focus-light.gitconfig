@@ -1,0 +1,69 @@
+# Base16 Soft Focus Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-soft-focus-light
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#d0d0d0"
+    line-numbers-right-style = "#d0d0d0"
+    line-numbers-minus-style = "#d63864"
+    line-numbers-plus-style = "#5a8e5a"
+    line-numbers-zero-style = "#d0d0d0"
+    
+    # File headers
+    file-style = "#2b7ab8 bold"
+    file-decoration-style = "#2b7ab8 ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#d0d0d0"
+    
+    # Commit decoration
+    commit-decoration-style = "#9b6a9b box"
+    commit-style = "#9b6a9b bold"
+    
+    # Diff colors
+    minus-style = "syntax #f0f0f0"
+    minus-emph-style = "syntax #d6 #38 #64 40"
+    minus-non-emph-style = "syntax #f0f0f0"
+    
+    plus-style = "syntax #f0f0f0"
+    plus-emph-style = "syntax #5a #8e #5a 40"
+    plus-non-emph-style = "syntax #f0f0f0"
+    
+    # Whitespace
+    whitespace-error-style = "#d63864 reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#c9972f bold"
+    merge-conflict-theirs-diff-header-style = "#2b7ab8 bold"
+    
+    # Blame
+    blame-palette = "#fafafa #f0f0f0 #e0e0e0"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#2b7ab8 bold"
+    grep-line-number-style = "#c9972f"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#d63864 bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true

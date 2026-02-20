@@ -1,0 +1,246 @@
+/* Base16 Soft Focus Light */
+/* Scheme author: Hamza Kamal */
+/* Template author: Hamza Kamal */
+
+.theme-dark,
+.theme-light {
+    /* Base16 Color Variables */
+    --base00: #fafafa;
+    --base01: #f0f0f0;
+    --base02: #e0e0e0;
+    --base03: #d0d0d0;
+    --base04: #999999;
+    --base05: #2a2a2a;
+    --base06: #1a1a1a;
+    --base07: #050505;
+    --base08: #d63864;
+    --base09: #d4822f;
+    --base0A: #c9972f;
+    --base0B: #5a8e5a;
+    --base0C: #2b8c9e;
+    --base0D: #2b7ab8;
+    --base0E: #9b6a9b;
+    --base0F: #9b5a4a;
+
+    /* Background Colors */
+    --background-primary: var(--base00);
+    --background-primary-alt: var(--base00);
+    --background-secondary: var(--base01);
+    --background-secondary-alt: var(--base01);
+    --background-modifier-border: var(--base02);
+    --background-modifier-form-field: var(--base01);
+    --background-modifier-form-field-highlighted: var(--base02);
+    --background-modifier-box-shadow: rgba(0, 0, 0, 0.3);
+    --background-modifier-success: var(--base0B);
+    --background-modifier-error: var(--base08);
+    --background-modifier-error-hover: var(--base08);
+    --background-modifier-cover: rgba(0, 0, 0, 0.8);
+    
+    /* Text Colors */
+    --text-normal: var(--base05);
+    --text-muted: var(--base04);
+    --text-faint: var(--base03);
+    --text-error: var(--base08);
+    --text-accent: var(--base0D);
+    --text-accent-hover: var(--base0D);
+    --text-on-accent: var(--base00);
+    --text-success: var(--base0B);
+    --text-warning: var(--base0A);
+    
+    /* Interactive Colors */
+    --interactive-normal: var(--base02);
+    --interactive-hover: var(--base03);
+    --interactive-accent: var(--base0D);
+    --interactive-accent-hover: var(--base0D);
+    --interactive-success: var(--base0B);
+    
+    /* Scrollbar */
+    --scrollbar-active-thumb-bg: var(--base03);
+    --scrollbar-bg: var(--base01);
+    --scrollbar-thumb-bg: var(--base02);
+    
+    /* Code */
+    --code-normal: var(--base0B);
+    --code-background: var(--base01);
+    --code-comment: var(--base03);
+    --code-function: var(--base0D);
+    --code-keyword: var(--base0E);
+    --code-operator: var(--base05);
+    --code-property: var(--base08);
+    --code-punctuation: var(--base0F);
+    --code-string: var(--base0B);
+    --code-tag: var(--base0A);
+    --code-value: var(--base09);
+    
+    /* Links */
+    --link-color: var(--base0D);
+    --link-color-hover: var(--base0D);
+    --link-unresolved-color: var(--base08);
+    --link-external-color: var(--base0C);
+    
+    /* Tags */
+    --tag-background: var(--base02);
+    --tag-color: var(--base0A);
+    
+    /* Tables */
+    --table-header-background: var(--base01);
+    --table-row-even-background: var(--base01);
+    --table-row-odd-background: var(--base00);
+    
+    /* File explorer */
+    --nav-item-color: var(--base05);
+    --nav-item-color-hover: var(--base06);
+    --nav-item-background-hover: var(--base02);
+    --nav-item-background-active: var(--base02);
+    
+    /* Graphs */
+    --graph-line: var(--base03);
+    --graph-node: var(--base0D);
+    --graph-node-unresolved: var(--base08);
+    --graph-node-tag: var(--base0A);
+    --graph-node-attachment: var(--base0C);
+}
+
+/* Syntax Highlighting for Code Blocks */
+.theme-dark code[class*="language-"],
+.theme-light code[class*="language-"],
+.theme-dark pre[class*="language-"],
+.theme-light pre[class*="language-"] {
+    color: var(--base05);
+    background: var(--base00);
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: var(--base03);
+}
+
+.token.punctuation {
+    color: var(--base0F);
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: var(--base09);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: var(--base0B);
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+    color: var(--base05);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: var(--base0E);
+}
+
+.token.function,
+.token.class-name {
+    color: var(--base0D);
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: var(--base0C);
+}
+
+/* Markdown Specific */
+.cm-header,
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+    color: var(--base0D);
+    font-weight: bold;
+}
+
+.cm-quote {
+    color: var(--base0C);
+    font-style: italic;
+}
+
+.cm-link {
+    color: var(--base0D);
+}
+
+.cm-url {
+    color: var(--base0C);
+}
+
+.cm-strong {
+    color: var(--base0A);
+    font-weight: bold;
+}
+
+.cm-em {
+    color: var(--base0E);
+    font-style: italic;
+}
+
+.cm-formatting-list {
+    color: var(--base08);
+}
+
+.cm-formatting-task {
+    color: var(--base0A);
+}
+
+/* Math/LaTeX */
+.math,
+.math-block {
+    color: var(--base0E);
+}
+
+/* Callouts */
+.callout {
+    background-color: var(--base01);
+    border-color: var(--base0D);
+}
+
+.callout[data-callout="note"] {
+    border-color: var(--base0D);
+}
+
+.callout[data-callout="warning"],
+.callout[data-callout="caution"] {
+    border-color: var(--base0A);
+}
+
+.callout[data-callout="error"],
+.callout[data-callout="danger"] {
+    border-color: var(--base08);
+}
+
+.callout[data-callout="success"],
+.callout[data-callout="check"] {
+    border-color: var(--base0B);
+}
+
+.callout[data-callout="info"] {
+    border-color: var(--base0C);
+}
+
+.callout[data-callout="tip"] {
+    border-color: var(--base0E);
+}

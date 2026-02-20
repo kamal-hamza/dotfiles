@@ -1,0 +1,99 @@
+# Base16 Shinjuku Veridian Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-shinjuku-veridian-light"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#1f2b29"
+background = "#f7faf9"
+
+[syntax]
+# Comments
+"comment" = "#8ca6a2"
+"comment.documentation" = "#4a6360"
+
+# Constants
+"constant" = "#3d7a78"
+"constant.builtin" = "#3d7a78"
+"constant.character" = "#a33e3e"
+"constant.character.escape" = "#32635d"
+
+# Functions
+"function" = "#2d5c73"
+"function.builtin" = "#2d5c73"
+"function.method" = "#2d5c73"
+
+# Keywords
+"keyword" = "#424a63"
+"keyword.control" = "#424a63"
+"keyword.directive" = "#424a63"
+"keyword.function" = "#424a63"
+"keyword.operator" = "#424a63"
+
+# Operators
+"operator" = "#1f2b29"
+
+# Punctuation
+"punctuation" = "#1f2b29"
+"punctuation.bracket" = "#1f2b29"
+"punctuation.delimiter" = "#293836"
+"punctuation.special" = "#a33e3e"
+
+# Strings
+"string" = "#1f5e54"
+"string.escape" = "#32635d"
+"string.regex" = "#32635d"
+"string.special" = "#32635d"
+
+# Types
+"type" = "#5c7a3d"
+"type.builtin" = "#5c7a3d"
+
+# Variables
+"variable" = "#1f2b29"
+"variable.builtin" = "#3d7a78"
+"variable.member" = "#a33e3e"
+"variable.parameter" = "#a33e3e"
+
+# Tags (HTML/XML)
+"tag" = "#5c7a3d"
+"attribute" = "#5c7a3d"
+
+# Markup
+"markup.heading" = "#2d5c73"
+"markup.bold" = { foreground = "#5c7a3d", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#424a63", modifiers = ["italic"] }
+"markup.link" = "#2d5c73"
+"markup.link.url" = { foreground = "#32635d", modifiers = ["underline"] }
+"markup.raw" = "#1f5e54"
+"markup.list" = "#a33e3e"
+"markup.quote" = "#32635d"
+
+# Diff
+"diff.plus" = "#1f5e54"
+"diff.minus" = "#a33e3e"
+"diff.delta" = "#2d5c73"
+
+# Git
+"git.added" = "#1f5e54"
+"git.deleted" = "#a33e3e"
+"git.modified" = "#2d5c73"
+
+# UI elements
+"ui.background" = "#f7faf9"
+"ui.foreground" = "#1f2b29"
+"ui.cursor" = "#1f2b29"
+"ui.cursor.match" = "#5c7a3d"
+"ui.selection" = "#dbe6e4"
+"ui.linenr" = "#8ca6a2"
+"ui.linenr.selected" = "#4a6360"
+"ui.statusline" = "#4a6360"
+
+# Errors and warnings
+"error" = "#a33e3e"
+"warning" = "#5c7a3d"
+"info" = "#2d5c73"
+"hint" = "#32635d"

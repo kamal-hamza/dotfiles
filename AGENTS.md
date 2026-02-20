@@ -35,18 +35,40 @@ zsh -c "source ~/.zshrc && echo 'Shell config OK'"
 
 # Validate YAML syntax
 yamllint .chezmoidata/*.yaml
+
+# Sync local changes back to chezmoi source
+./scripts/sync-to-chezmoi.sh
 ```
 
 ### Theme Management
 
 ```bash
-# Switch themes
+# Switch themes (via theme-switch script)
 theme dark          # Switch to dark theme
 theme light         # Switch to light theme
 theme toggle        # Toggle between themes
+theme status        # Show current theme
 
-# Regenerate theme files
-chezmoi apply       # Triggers automatic theme generation
+# Regenerate theme files (via theme-gen script)
+theme-gen all       # Generate both dark and light themes
+theme-gen dark      # Generate dark theme only
+theme-gen light     # Generate light theme only
+
+# Apply changes (triggers automatic theme generation)
+chezmoi apply
+```
+
+### Project Management
+
+```bash
+# Create new project from GitHub template
+ccp <template-repo> <project-name>
+
+# Delete project (removes from filesystem and optionally GitHub)
+dcp <project-name>
+
+# Quick tmux session
+tt <session-name>
 ```
 
 ### No Traditional Build/Test Framework
@@ -230,6 +252,7 @@ SCHEME="{{ $scheme }}"
 6. **Conditional Loading**: Use lazy loading in Neovim plugins
 7. **Theme Consistency**: All new applications should support Base16 theming
 8. **State Management**: Use config files for persistent state (e.g., `~/.config/.current-theme`)
+9. **Script Aliases**: Add new scripts to `dot_config/zsh/aliases.zsh` for user convenience
 
 ## Common Patterns
 
@@ -271,3 +294,50 @@ fi
 1. Add mustache template to `theme-generators/base16-templates/app-name/`
 2. Update `run_onchange_after_generate-base16-themes.sh.tmpl`
 3. Run `chezmoi apply`
+
+## Key Script Inventory
+
+**Location:** `dot_local/bin/` (installed to `~/.local/bin/` in PATH)
+
+**Core Scripts:**
+- `theme-switch` - Central theme manager for all applications (Zed, WezTerm, Tmux, Zsh, Neovim)
+- `create-project` - Scaffold projects from GitHub templates with automatic tmux/editor setup
+- `dev-tool` - Manage machine-specific language tool configs (uses `.example` pattern)
+- `install-lang` - Cross-platform language toolchain installer (uses `tools.yaml`)
+- `theme-gen` - Base16 theme generator (wrapper for flavours)
+- `font-switcher` - Interactive font selection with fzf
+- `delete-project` - Project cleanup (filesystem and GitHub)
+- `tmux-new` - Quick tmux session management
+- `man-tldr` - Man page search with tldr fallback
+
+**Aliases (defined in `dot_config/zsh/aliases.zsh`):**
+- `ccp` → `create-project`
+- `dcp` → `delete-project`
+- `tt` → `tmux-new`
+- `m` → `man-tldr`
+- `theme` → `theme-switch`
+
+## Dev Tools System
+
+**Purpose:** Machine-specific environment configuration for language tools without version control
+
+**Pattern:**
+1. Template files: `~/.config/zsh/dev-tools/*.zsh.example`
+2. Active configs: `~/.config/zsh/dev-tools/*.zsh` (gitignored)
+3. Sourced automatically by `.zshrc`
+
+**Available Templates:**
+- `node.zsh.example` - Node.js/npm/pnpm/bun paths
+- `python.zsh.example` - Python/pip/virtualenv
+- `dotnet.zsh.example` - .NET SDK paths
+- `go.zsh.example` - GOPATH configuration
+- `bun.zsh.example` - Bun runtime
+
+**Management:**
+```bash
+dev-tool list              # List available templates
+dev-tool add node          # Activate node template
+dev-tool edit node         # Edit active config
+dev-tool remove node       # Deactivate config
+dev-tool show node         # Display config contents
+```

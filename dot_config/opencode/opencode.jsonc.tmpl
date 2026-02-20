@@ -2,19 +2,4 @@
     "$schema": "https://opencode.ai/config.json",
     {{- $scheme := .active_scheme | default "soft-focus-dark" }}
     "theme": "base16-{{ $scheme }}",
-    "provider": {
-        "github-copilot":{
-            "npm": "@ai-sdk/openai-compatible",
-            "name": "Github Copilot",
-            "options": {
-                "baseURL": "https://api.githubcopilot.com/v1"
-            },
-            "models": {
-                "claude-sonnet-4.5":{
-                    "name": "Claude Sonnet 4.5"
-                }
-            }
-        }
-    },
-    "enabled_providers": ["github-copilot"]
 }

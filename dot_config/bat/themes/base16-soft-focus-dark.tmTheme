@@ -12,26 +12,26 @@ background = "#050505"
 
 [syntax]
 # Comments
-"comment" = "#3a3a3a"
-"comment.documentation" = "#888888"
+"comment" = "#888888"
+"comment.documentation" = "#bbbbbb"
 
 # Constants
 "constant" = "#f0d08a"
 "constant.builtin" = "#f0d08a"
 "constant.character" = "#ff4c6a"
-"constant.character.escape" = "#67b7f5"
+"constant.character.escape" = "#4da6ff"
 
 # Functions
-"function" = "#448cbb"
-"function.builtin" = "#448cbb"
-"function.method" = "#448cbb"
+"function" = "#67b7f5"
+"function.builtin" = "#67b7f5"
+"function.method" = "#67b7f5"
 
 # Keywords
-"keyword" = "#b88e8d"
-"keyword.control" = "#b88e8d"
-"keyword.directive" = "#b88e8d"
-"keyword.function" = "#b88e8d"
-"keyword.operator" = "#b88e8d"
+"keyword" = "#d4a6a6"
+"keyword.control" = "#d4a6a6"
+"keyword.directive" = "#d4a6a6"
+"keyword.function" = "#d4a6a6"
+"keyword.operator" = "#d4a6a6"
 
 # Operators
 "operator" = "#f5f5f5"
@@ -44,9 +44,9 @@ background = "#050505"
 
 # Strings
 "string" = "#99cc99"
-"string.escape" = "#67b7f5"
-"string.regex" = "#67b7f5"
-"string.special" = "#67b7f5"
+"string.escape" = "#4da6ff"
+"string.regex" = "#4da6ff"
+"string.special" = "#4da6ff"
 
 # Types
 "type" = "#d4b87b"
@@ -63,37 +63,37 @@ background = "#050505"
 "attribute" = "#d4b87b"
 
 # Markup
-"markup.heading" = "#448cbb"
+"markup.heading" = "#67b7f5"
 "markup.bold" = { foreground = "#d4b87b", modifiers = ["bold"] }
-"markup.italic" = { foreground = "#b88e8d", modifiers = ["italic"] }
-"markup.link" = "#448cbb"
-"markup.link.url" = { foreground = "#67b7f5", modifiers = ["underline"] }
+"markup.italic" = { foreground = "#d4a6a6", modifiers = ["italic"] }
+"markup.link" = "#67b7f5"
+"markup.link.url" = { foreground = "#4da6ff", modifiers = ["underline"] }
 "markup.raw" = "#99cc99"
 "markup.list" = "#ff4c6a"
-"markup.quote" = "#67b7f5"
+"markup.quote" = "#4da6ff"
 
 # Diff
 "diff.plus" = "#99cc99"
 "diff.minus" = "#ff4c6a"
-"diff.delta" = "#448cbb"
+"diff.delta" = "#67b7f5"
 
 # Git
 "git.added" = "#99cc99"
 "git.deleted" = "#ff4c6a"
-"git.modified" = "#448cbb"
+"git.modified" = "#67b7f5"
 
 # UI elements
 "ui.background" = "#050505"
 "ui.foreground" = "#f5f5f5"
 "ui.cursor" = "#f5f5f5"
 "ui.cursor.match" = "#d4b87b"
-"ui.selection" = "#2a2a2a"
-"ui.linenr" = "#3a3a3a"
-"ui.linenr.selected" = "#888888"
-"ui.statusline" = "#888888"
+"ui.selection" = "#1a1a1a"
+"ui.linenr" = "#888888"
+"ui.linenr.selected" = "#bbbbbb"
+"ui.statusline" = "#bbbbbb"
 
 # Errors and warnings
 "error" = "#ff4c6a"
 "warning" = "#d4b87b"
-"info" = "#448cbb"
-"hint" = "#67b7f5"
+"info" = "#67b7f5"
+"hint" = "#4da6ff"

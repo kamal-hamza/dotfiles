@@ -34,11 +34,11 @@
                 "vim.visual_block.background": "#7c3aed",
                 "vim.replace.background": "#e11d48",
                 "background.appearance": "opaque",
-                "border": "#f7fbff",
-                "border.variant": "#7c3aed",
+                "border": "#ecf4f7",
+                "border.variant": "#d9e8f0",
                 "border.focused": "#0284c7",
-                "border.selected": "#7c3aed",
-                "border.transparent": "#0891b2",
+                "border.selected": "#8baec2",
+                "border.transparent": "#ecf4f7",
                 "border.disabled": "#8baec2",
                 "elevated_surface.background": "#f7fbff",
                 "surface.background": "#f7fbff",
@@ -58,12 +58,12 @@
                 "text.muted": "#4a6b7d",
                 "text.placeholder": "#8baec2",
                 "text.disabled": "#d9e8f0",
-                "text.accent": "#7c3aed",
+                "text.accent": "#1c2f38",
                 "icon": "#1c2f38",
                 "icon.muted": "#4a6b7d",
                 "icon.disabled": "#8baec2",
                 "icon.placeholder": "#8baec2",
-                "icon.accent": "#7c3aed",
+                "icon.accent": "#1c2f38",
                 "status_bar.background": "#f7fbff",
                 "title_bar.background": "#f7fbff",
                 "title_bar.inactive_background": "#f7fbff",
@@ -77,7 +77,7 @@
                 "panel.focused_border": "#1c2f38",
                 "panel.indent_guide": "#d9e8f099",
                 "panel.indent_guide_active": "#8baec2",
-                "panel.indent_guide_hover": "#7c3aed",
+                "panel.indent_guide_hover": "#8baec2",
                 "panel.overlay_background": "#f7fbff",
                 "pane.focused_border": "#1c2f38",
                 "pane_group.border": "#f7fbff",
@@ -87,9 +87,9 @@
                 "scrollbar.thumb.border": null,
                 "scrollbar.track.background": "#f7fbff",
                 "scrollbar.track.border": "#1c2f3812",
-                "minimap.thumb.background": "#7c3aed33",
-                "minimap.thumb.hover_background": "#7c3aed66",
-                "minimap.thumb.active_background": "#7c3aed99",
+                "minimap.thumb.background": "#8baec233",
+                "minimap.thumb.hover_background": "#8baec266",
+                "minimap.thumb.active_background": "#8baec299",
                 "minimap.thumb.border": null,
                 "editor.foreground": "#1c2f38",
                 "editor.background": "#f7fbff",
@@ -244,7 +244,7 @@
                     },
                     "variable.parameter": {
                         "color": "#e11d48",
-                        "font_style": null,
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "variable.member": {
@@ -425,7 +425,7 @@
                     "function": {
                         "color": "#0284c7",
                         "font_style": null,
-                        "font_weight": null
+                        "font_weight": 700
                     },
                     "function.builtin": {
                         "color": "#ea580c",
@@ -435,7 +435,7 @@
                     "function.call": {
                         "color": "#0284c7",
                         "font_style": null,
-                        "font_weight": null
+                        "font_weight": 700
                     },
                     "function.macro": {
                         "color": "#06b6d4",
@@ -445,12 +445,12 @@
                     "function.method": {
                         "color": "#0284c7",
                         "font_style": null,
-                        "font_weight": null
+                        "font_weight": 700
                     },
                     "function.method.call": {
                         "color": "#0284c7",
                         "font_style": null,
-                        "font_weight": null
+                        "font_weight": 700
                     },
                     "function.decorator": {
                         "color": "#ea580c",
@@ -468,97 +468,97 @@
                         "font_weight": null
                     },
                     "keyword": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.modifier": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.type": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.coroutine": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.function": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.operator": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.import": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.repeat": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.return": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.debug": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.exception": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.conditional": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.conditional.ternary": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.directive": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.directive.define": {
-                        "color": "#7c3aed",
-                        "font_style": null,
+                        "color": "#e11d48",
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "keyword.export": {
                         "color": "#06b6d4",
-                        "font_style": null,
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "punctuation": {
-                        "color": "#8baec2",
+                        "color": "#4a6b7d",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.delimiter": {
-                        "color": "#8baec2",
+                        "color": "#4a6b7d",
                         "font_style": null,
                         "font_weight": null
                     },
                     "punctuation.bracket": {
-                        "color": "#8baec2",
+                        "color": "#4a6b7d",
                         "font_style": null,
                         "font_weight": null
                     },
@@ -639,7 +639,7 @@
                     },
                     "parameter": {
                         "color": "#e11d48",
-                        "font_style": null,
+                        "font_style": "italic",
                         "font_weight": null
                     },
                     "field": {

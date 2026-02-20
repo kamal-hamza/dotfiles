@@ -5,11 +5,11 @@
 .theme-dark,
 .theme-light {
     /* Base16 Color Variables */
-    --base00: #000000;
+    --base00: #0a0a0a;
     --base01: #111111;
-    --base02: #333333;
-    --base03: #666666;
-    --base04: #888888;
+    --base02: #1a1a1a;
+    --base03: #2e2e2e;
+    --base04: #a1a1a1;
     --base05: #ededed;
     --base06: #f5f5f5;
     --base07: #ffffff;
@@ -20,7 +20,7 @@
     --base0C: #1da9b0;
     --base0D: #52a8ff;
     --base0E: #c472fb;
-    --base0F: #f87171;
+    --base0F: #f75f8f;
 
     /* Background Colors */
     --background-primary: var(--base00);

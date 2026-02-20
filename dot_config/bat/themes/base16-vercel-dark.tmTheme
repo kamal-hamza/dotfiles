@@ -8,12 +8,12 @@ author = "Hamza Kamal"
 
 [colors]
 foreground = "#ededed"
-background = "#000000"
+background = "#0a0a0a"
 
 [syntax]
 # Comments
-"comment" = "#666666"
-"comment.documentation" = "#888888"
+"comment" = "#2e2e2e"
+"comment.documentation" = "#a1a1a1"
 
 # Constants
 "constant" = "#ff9907"
@@ -39,7 +39,7 @@ background = "#000000"
 # Punctuation
 "punctuation" = "#ededed"
 "punctuation.bracket" = "#ededed"
-"punctuation.delimiter" = "#f87171"
+"punctuation.delimiter" = "#f75f8f"
 "punctuation.special" = "#f75f8f"
 
 # Strings
@@ -83,14 +83,14 @@ background = "#000000"
 "git.modified" = "#52a8ff"
 
 # UI elements
-"ui.background" = "#000000"
+"ui.background" = "#0a0a0a"
 "ui.foreground" = "#ededed"
 "ui.cursor" = "#ededed"
 "ui.cursor.match" = "#fcee0a"
-"ui.selection" = "#333333"
-"ui.linenr" = "#666666"
-"ui.linenr.selected" = "#888888"
-"ui.statusline" = "#888888"
+"ui.selection" = "#1a1a1a"
+"ui.linenr" = "#2e2e2e"
+"ui.linenr.selected" = "#a1a1a1"
+"ui.statusline" = "#a1a1a1"
 
 # Errors and warnings
 "error" = "#f75f8f"

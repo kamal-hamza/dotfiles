@@ -4,40 +4,84 @@
 
 local M = {}
 
-M.scheme = {
-    ["Pacific Umbra Dark"] = {
-        foreground = "#9da6a8",
-        background = "#0a0e0f",
-        cursor_bg = "#9da6a8",
-        cursor_border = "#9da6a8",
-        cursor_fg = "#0a0e0f",
-        selection_bg = "#232a2c",
-        selection_fg = "#9da6a8",
-        
-        -- Normal ANSI colors
+local palette = {
+    base00 = '#0a0e0f',
+    base01 = '#141a1b',
+    base02 = '#232a2c',
+    base03 = '#3f4a4c',
+    base04 = '#5a6668',
+    base05 = '#9da6a8',
+    base06 = '#c1c8c9',
+    base07 = '#e0e5e6',
+    base08 = '#889b94',
+    base09 = '#72898b',
+    base0A = '#8fa099',
+    base0B = '#4b5d56',
+    base0C = '#6a8082',
+    base0D = '#526a76',
+    base0E = '#7a7d84',
+    base0F = '#3e4440',
+}
+
+local active_tab = {
+    bg_color = palette.base01,
+    fg_color = palette.base05,
+}
+
+local inactive_tab = {
+    bg_color = palette.base00,
+    fg_color = palette.base03,
+}
+
+function M.colors()
+    return {
+        foreground = palette.base05,
+        background = palette.base00,
+        cursor_bg = palette.base05,
+        cursor_border = palette.base05,
+        cursor_fg = palette.base00,
+        selection_bg = palette.base02,
+        selection_fg = palette.base05,
+
         ansi = {
-            "#0a0e0f", -- black
-            "#889b94", -- red
-            "#4b5d56", -- green
-            "#8fa099", -- yellow
-            "#526a76", -- blue
-            "#7a7d84", -- magenta
-            "#6a8082", -- cyan
-            "#9da6a8", -- white
+            palette.base00,
+            palette.base08,
+            palette.base0B,
+            palette.base0A,
+            palette.base0D,
+            palette.base0E,
+            palette.base0C,
+            palette.base05,
         },
-        
-        -- Bright ANSI colors
+
         brights = {
-            "#3f4a4c", -- bright black
-            "#889b94", -- bright red
-            "#4b5d56", -- bright green
-            "#8fa099", -- bright yellow
-            "#526a76", -- bright blue
-            "#7a7d84", -- bright magenta
-            "#6a8082", -- bright cyan
-            "#e0e5e6", -- bright white
+            palette.base03,
+            palette.base08,
+            palette.base0B,
+            palette.base0A,
+            palette.base0D,
+            palette.base0E,
+            palette.base0C,
+            palette.base07,
+        },
+
+        tab_bar = {
+            background = palette.base00,
+            active_tab = active_tab,
+            inactive_tab = inactive_tab,
+            inactive_tab_hover = active_tab,
+            new_tab = inactive_tab,
+            new_tab_hover = active_tab,
+            inactive_tab_edge = palette.base03,
         },
     }
-}
+end
+
+function M.window_frame()
+    return {
+        active_titlebar_bg = palette.base00,
+        inactive_titlebar_bg = palette.base00,
+    }
+end
 
 return M

@@ -9,32 +9,32 @@
     line-numbers = true
     line-numbers-left-format = "{nm:>4}┊"
     line-numbers-right-format = "{np:>4}│"
-    line-numbers-left-style = "#3a3a3a"
-    line-numbers-right-style = "#3a3a3a"
+    line-numbers-left-style = "#888888"
+    line-numbers-right-style = "#888888"
     line-numbers-minus-style = "#ff4c6a"
     line-numbers-plus-style = "#99cc99"
-    line-numbers-zero-style = "#3a3a3a"
+    line-numbers-zero-style = "#888888"
     
     # File headers
-    file-style = "#448cbb bold"
-    file-decoration-style = "#448cbb ul"
+    file-style = "#67b7f5 bold"
+    file-decoration-style = "#67b7f5 ul"
     
     # Hunk headers
     hunk-header-style = "file line-number syntax"
-    hunk-header-decoration-style = "#3a3a3a"
+    hunk-header-decoration-style = "#888888"
     
     # Commit decoration
-    commit-decoration-style = "#b88e8d box"
-    commit-style = "#b88e8d bold"
+    commit-decoration-style = "#d4a6a6 box"
+    commit-style = "#d4a6a6 bold"
     
     # Diff colors
-    minus-style = "syntax #1a1a1a"
+    minus-style = "syntax #0a0a0a"
     minus-emph-style = "syntax #ff #4c #6a 40"
-    minus-non-emph-style = "syntax #1a1a1a"
+    minus-non-emph-style = "syntax #0a0a0a"
     
-    plus-style = "syntax #1a1a1a"
+    plus-style = "syntax #0a0a0a"
     plus-emph-style = "syntax #99 #cc #99 40"
-    plus-non-emph-style = "syntax #1a1a1a"
+    plus-non-emph-style = "syntax #0a0a0a"
     
     # Whitespace
     whitespace-error-style = "#ff4c6a reverse"
@@ -43,14 +43,14 @@
     merge-conflict-begin-symbol = "▼"
     merge-conflict-end-symbol = "▲"
     merge-conflict-ours-diff-header-style = "#d4b87b bold"
-    merge-conflict-theirs-diff-header-style = "#448cbb bold"
+    merge-conflict-theirs-diff-header-style = "#67b7f5 bold"
     
     # Blame
-    blame-palette = "#050505 #1a1a1a #2a2a2a"
+    blame-palette = "#050505 #0a0a0a #1a1a1a"
     blame-code-style = "syntax"
     
     # Grep
-    grep-file-style = "#448cbb bold"
+    grep-file-style = "#67b7f5 bold"
     grep-line-number-style = "#d4b87b"
     grep-match-line-style = "syntax"
     grep-match-word-style = "#ff4c6a bold"

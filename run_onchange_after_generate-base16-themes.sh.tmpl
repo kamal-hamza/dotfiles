@@ -39,12 +39,12 @@ print_error() {
 }
 
 # Configuration
-SCHEME="{{ .active_scheme | default "soft-focus-dark" }}"
+ACTIVE_SCHEME="{{ .active_scheme | default "soft-focus-dark" }}"
 CHEZMOI_SOURCE="{{ .chezmoi.sourceDir }}"
 SCHEMES_DIR="$CHEZMOI_SOURCE/theme-generators/base16-schemes"
 TEMPLATES_DIR="$CHEZMOI_SOURCE/theme-generators/base16-templates"
 
-print_info "Generating Base16 themes for: $SCHEME"
+print_info "Generating Base16 themes for all schemes..."
 
 # Check if flavours is installed
 if ! command -v flavours &> /dev/null; then
@@ -62,183 +62,192 @@ if ! command -v flavours &> /dev/null; then
     exit 0
 fi
 
-# Verify scheme exists
-SCHEME_FILE="$SCHEMES_DIR/${SCHEME}.yaml"
-if [ ! -f "$SCHEME_FILE" ]; then
-    print_error "Scheme not found: $SCHEME"
-    print_info "Available schemes:"
-    for scheme in "$SCHEMES_DIR"/*.yaml; do
-        [ -f "$scheme" ] && echo "  - $(basename "$scheme" .yaml)"
-    done
+# Get all available schemes
+SCHEMES=()
+for scheme_file in "$SCHEMES_DIR"/*.yaml; do
+    if [ -f "$scheme_file" ]; then
+        SCHEMES+=("$(basename "$scheme_file" .yaml)")
+    fi
+done
+
+if [ ${#SCHEMES[@]} -eq 0 ]; then
+    print_error "No schemes found in $SCHEMES_DIR"
     exit 1
 fi
+
+print_info "Found ${#SCHEMES[@]} scheme(s) to generate"
 
 # Create output directories in chezmoi source
 mkdir -p "$CHEZMOI_SOURCE/dot_config/wezterm/colors"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/zed/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/nvim/colors"
-mkdir -p "$CHEZMOI_SOURCE/dot_config/tmux"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/tmux/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/bat/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/delta"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/opencode/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/fzf"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/obsidian/snippets"
 
-# Generate WezTerm theme
-print_info "Generating WezTerm theme..."
-WEZTERM_TEMPLATE="$TEMPLATES_DIR/wezterm/templates/default.mustache"
-WEZTERM_OUTPUT="$CHEZMOI_SOURCE/dot_config/wezterm/colors/base-16-${SCHEME}.lua"
+# Loop through all schemes and generate themes
+GENERATED_COUNT=0
+FAILED_COUNT=0
 
-if [ -f "$WEZTERM_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$WEZTERM_TEMPLATE" > "$WEZTERM_OUTPUT" 2>/dev/null; then
-        print_success "WezTerm theme generated: base-16-${SCHEME}.lua"
-    else
-        print_error "Failed to generate WezTerm theme"
-    fi
-else
-    print_warning "WezTerm template not found: $WEZTERM_TEMPLATE"
-fi
-
-# Generate Zed theme
-print_info "Generating Zed theme..."
-ZED_TEMPLATE="$TEMPLATES_DIR/zed/templates/default.mustache"
-ZED_OUTPUT="$CHEZMOI_SOURCE/dot_config/zed/themes/base-16-${SCHEME}.json"
-
-if [ -f "$ZED_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$ZED_TEMPLATE" > "$ZED_OUTPUT" 2>/dev/null; then
-        print_success "Zed theme generated: base-16-${SCHEME}.json"
-    else
-        print_error "Failed to generate Zed theme"
-    fi
-else
-    print_warning "Zed template not found: $ZED_TEMPLATE"
-fi
-
-# Generate Neovim theme
-print_info "Generating Neovim theme..."
-NEOVIM_TEMPLATE="$TEMPLATES_DIR/neovim/templates/default.mustache"
-NEOVIM_OUTPUT="$CHEZMOI_SOURCE/dot_config/nvim/colors/base16-${SCHEME}.lua"
-
-if [ -f "$NEOVIM_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$NEOVIM_TEMPLATE" > "$NEOVIM_OUTPUT" 2>/dev/null; then
-        print_success "Neovim theme generated: base16-${SCHEME}.lua"
-    else
-        print_error "Failed to generate Neovim theme"
-    fi
-else
-    print_warning "Neovim template not found: $NEOVIM_TEMPLATE"
-fi
-
-# Generate Tmux theme
-print_info "Generating Tmux theme..."
-TMUX_TEMPLATE="$TEMPLATES_DIR/tmux/templates/default.mustache"
-TMUX_OUTPUT="$CHEZMOI_SOURCE/dot_config/tmux/base16-${SCHEME}.conf"
-
-if [ -f "$TMUX_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$TMUX_TEMPLATE" > "$TMUX_OUTPUT" 2>/dev/null; then
-        print_success "Tmux theme generated: base16-${SCHEME}.conf"
-    else
-        print_error "Failed to generate Tmux theme"
-    fi
-else
-    print_warning "Tmux template not found: $TMUX_TEMPLATE"
-fi
-
-# Generate FZF theme
-print_info "Generating FZF theme..."
-FZF_TEMPLATE="$TEMPLATES_DIR/fzf/templates/default.mustache"
-FZF_OUTPUT="$CHEZMOI_SOURCE/dot_config/fzf/base16-${SCHEME}.sh"
-
-if [ -f "$FZF_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$FZF_TEMPLATE" > "$FZF_OUTPUT" 2>/dev/null; then
-        print_success "FZF theme generated: base16-${SCHEME}.sh"
-    else
-        print_error "Failed to generate FZF theme"
-    fi
-else
-    print_warning "FZF template not found: $FZF_TEMPLATE"
-fi
-
-# Generate Bat theme
-print_info "Generating Bat theme..."
-BAT_TEMPLATE="$TEMPLATES_DIR/bat/templates/default.mustache"
-BAT_OUTPUT="$CHEZMOI_SOURCE/dot_config/bat/themes/base16-${SCHEME}.tmTheme"
-
-if [ -f "$BAT_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$BAT_TEMPLATE" > "$BAT_OUTPUT" 2>/dev/null; then
-        print_success "Bat theme generated: base16-${SCHEME}.tmTheme"
-        # Rebuild bat cache
-        if command -v bat &> /dev/null; then
-            bat cache --build &> /dev/null
-            print_success "Bat cache rebuilt"
+for SCHEME in "${SCHEMES[@]}"; do
+    print_info "Processing scheme: $SCHEME"
+    SCHEME_FILE="$SCHEMES_DIR/${SCHEME}.yaml"
+    
+    # Generate WezTerm theme
+    WEZTERM_TEMPLATE="$TEMPLATES_DIR/wezterm/templates/default.mustache"
+    WEZTERM_OUTPUT="$CHEZMOI_SOURCE/dot_config/wezterm/colors/base-16-${SCHEME}.lua"
+    
+    if [ -f "$WEZTERM_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$WEZTERM_TEMPLATE" > "$WEZTERM_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
         fi
-    else
-        print_error "Failed to generate Bat theme"
     fi
-else
-    print_warning "Bat template not found: $BAT_TEMPLATE"
+    
+    # Generate Zed theme
+    ZED_TEMPLATE="$TEMPLATES_DIR/zed/templates/default.mustache"
+    ZED_OUTPUT="$CHEZMOI_SOURCE/dot_config/zed/themes/base-16-${SCHEME}.json"
+    
+    if [ -f "$ZED_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$ZED_TEMPLATE" > "$ZED_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Neovim theme
+    NEOVIM_TEMPLATE="$TEMPLATES_DIR/neovim/templates/default.mustache"
+    NEOVIM_OUTPUT="$CHEZMOI_SOURCE/dot_config/nvim/colors/base16-${SCHEME}.lua"
+    
+    if [ -f "$NEOVIM_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$NEOVIM_TEMPLATE" > "$NEOVIM_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Tmux theme
+    TMUX_TEMPLATE="$TEMPLATES_DIR/tmux/templates/default.mustache"
+    TMUX_OUTPUT="$CHEZMOI_SOURCE/dot_config/tmux/themes/base16-${SCHEME}.tmux"
+    
+    if [ -f "$TMUX_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$TMUX_TEMPLATE" > "$TMUX_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate FZF theme
+    FZF_TEMPLATE="$TEMPLATES_DIR/fzf/templates/default.mustache"
+    FZF_OUTPUT="$CHEZMOI_SOURCE/dot_config/fzf/base16-${SCHEME}.sh"
+    
+    if [ -f "$FZF_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$FZF_TEMPLATE" > "$FZF_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Bat theme
+    BAT_TEMPLATE="$TEMPLATES_DIR/bat/templates/default.mustache"
+    BAT_OUTPUT="$CHEZMOI_SOURCE/dot_config/bat/themes/base16-${SCHEME}.tmTheme"
+    
+    if [ -f "$BAT_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$BAT_TEMPLATE" > "$BAT_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Git Delta theme
+    DELTA_TEMPLATE="$TEMPLATES_DIR/delta/templates/default.mustache"
+    DELTA_OUTPUT="$CHEZMOI_SOURCE/dot_config/delta/base16-${SCHEME}.gitconfig"
+    
+    if [ -f "$DELTA_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$DELTA_TEMPLATE" > "$DELTA_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Obsidian theme snippet
+    OBSIDIAN_TEMPLATE="$TEMPLATES_DIR/obsidian/templates/default.mustache"
+    OBSIDIAN_OUTPUT="$CHEZMOI_SOURCE/dot_config/obsidian/snippets/base16-${SCHEME}.css"
+    
+    if [ -f "$OBSIDIAN_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$OBSIDIAN_TEMPLATE" > "$OBSIDIAN_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate OpenCode theme
+    OPENCODE_TEMPLATE="$TEMPLATES_DIR/opencode/templates/default.mustache"
+    OPENCODE_OUTPUT="$CHEZMOI_SOURCE/dot_config/opencode/themes/base16-${SCHEME}.json"
+    
+    if [ -f "$OPENCODE_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$OPENCODE_TEMPLATE" > "$OPENCODE_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    print_success "Completed: $SCHEME"
+done
+
+# Rebuild bat cache once after all themes are generated
+if command -v bat &> /dev/null; then
+    print_info "Rebuilding bat cache..."
+    if bat cache --build &> /dev/null; then
+        print_success "Bat cache rebuilt"
+    fi
 fi
 
-# Generate Git Delta theme
-print_info "Generating Git Delta theme..."
-DELTA_TEMPLATE="$TEMPLATES_DIR/delta/templates/default.mustache"
-DELTA_OUTPUT="$CHEZMOI_SOURCE/dot_config/delta/base16-${SCHEME}.gitconfig"
-
-if [ -f "$DELTA_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$DELTA_TEMPLATE" > "$DELTA_OUTPUT" 2>/dev/null; then
-        print_success "Git Delta theme generated: base16-${SCHEME}.gitconfig"
+# Reload tmux if it's running
+if command -v tmux &> /dev/null && tmux info &> /dev/null 2>&1; then
+    print_info "Reloading tmux configuration..."
+    if tmux source-file ~/.tmux.conf &> /dev/null; then
+        print_success "Tmux configuration reloaded"
     else
-        print_error "Failed to generate Git Delta theme"
+        print_warning "Failed to reload tmux configuration"
     fi
 else
-    print_warning "Git Delta template not found: $DELTA_TEMPLATE"
+    print_info "Tmux not running, will apply on next start"
 fi
 
-# Generate Obsidian theme snippet
-print_info "Generating Obsidian theme..."
-OBSIDIAN_TEMPLATE="$TEMPLATES_DIR/obsidian/templates/default.mustache"
-OBSIDIAN_OUTPUT="$CHEZMOI_SOURCE/dot_config/obsidian/snippets/base16-${SCHEME}.css"
-
-if [ -f "$OBSIDIAN_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$OBSIDIAN_TEMPLATE" > "$OBSIDIAN_OUTPUT" 2>/dev/null; then
-        print_success "Obsidian theme generated: base16-${SCHEME}.css"
-    else
-        print_error "Failed to generate Obsidian theme"
-    fi
-else
-    print_warning "Obsidian template not found: $OBSIDIAN_TEMPLATE"
-fi
-
-# Generate OpenCode theme
-print_info "Generating OpenCode theme..."
-OPENCODE_TEMPLATE="$TEMPLATES_DIR/opencode/templates/default.mustache"
-OPENCODE_OUTPUT="$CHEZMOI_SOURCE/dot_config/opencode/themes/base16-${SCHEME}.json"
-
-if [ -f "$OPENCODE_TEMPLATE" ]; then
-    if flavours build "$SCHEME_FILE" "$OPENCODE_TEMPLATE" > "$OPENCODE_OUTPUT" 2>/dev/null; then
-        print_success "OpenCode theme generated: base16-${SCHEME}.json"
-    else
-        print_error "Failed to generate OpenCode theme"
-    fi
-else
-    print_warning "OpenCode template not found: $OPENCODE_TEMPLATE"
-fi
+# Reload FZF theme in current shell and all zsh processes
+print_info "Updating FZF theme for active shells..."
+# The theme file is already updated by chezmoi apply
+# New shells will automatically source it from .zprofile
+# For running shells, they'll need to restart or manually source
+print_success "FZF theme updated (restart shells to apply)"
 
 print_success "Base16 theme generation complete!"
-print_info "Theme files:"
-echo "  • WezTerm: $WEZTERM_OUTPUT"
-echo "  • Zed: $ZED_OUTPUT"
-echo "  • Neovim: $NEOVIM_OUTPUT"
-echo "  • Tmux: $TMUX_OUTPUT"
-echo "  • FZF: $FZF_OUTPUT"
-echo "  • Bat: $BAT_OUTPUT"
-echo "  • Delta: $DELTA_OUTPUT"
-echo "  • Obsidian: $OBSIDIAN_OUTPUT"
-echo "  • OpenCode: $OPENCODE_OUTPUT"
+print_info "Generated $GENERATED_COUNT theme file(s) for ${#SCHEMES[@]} scheme(s)"
+if [ $FAILED_COUNT -gt 0 ]; then
+    print_warning "$FAILED_COUNT theme file(s) failed to generate"
+fi
+print_info "Active scheme: $ACTIVE_SCHEME"
 print_info "Themes generated in chezmoi source directory"
-print_info "Run 'chezmoi apply' to copy them to their destinations"
-print_info "Additional configuration needed:"
-echo "  • Tmux: Add 'source-file ~/.config/tmux/base16-${SCHEME}.conf' to ~/.tmux.conf"
-echo "  • FZF: Source ~/.config/fzf/base16-${SCHEME}.sh in your shell rc file"
-echo "  • Delta: Include ~/.config/delta/base16-${SCHEME}.gitconfig in your ~/.gitconfig"
-echo "  • Obsidian: Enable the snippet in Obsidian settings"
+echo ""
+print_info "Theme locations:"
+echo "  • Tmux: ~/.config/tmux/themes/theme.tmux (auto-applied)"
+echo "  • FZF: ~/.config/fzf/theme.sh (auto-applied, restart shell)"
+echo "  • WezTerm: ~/.config/wezterm/colors/base-16-*.lua (restart WezTerm)"
+echo "  • Neovim: ~/.config/nvim/colors/base16-*.lua (:colorscheme base16-<scheme>)"
+echo "  • Zed: ~/.config/zed/themes/base-16-*.json (auto-loaded)"
+echo "  • Delta: ~/.config/delta/base16-*.gitconfig (include in ~/.gitconfig)"
+echo "  • Bat: ~/.config/bat/themes/base16-*.tmTheme (bat cache --build)"
+echo "  • Obsidian: ~/.config/obsidian/snippets/base16-*.css (enable in settings)"

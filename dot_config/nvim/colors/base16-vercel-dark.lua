@@ -4,11 +4,11 @@
 
 local M = {}
 
-M.base00 = "#000000"
+M.base00 = "#0a0a0a"
 M.base01 = "#111111"
-M.base02 = "#333333"
-M.base03 = "#666666"
-M.base04 = "#888888"
+M.base02 = "#1a1a1a"
+M.base03 = "#2e2e2e"
+M.base04 = "#a1a1a1"
 M.base05 = "#ededed"
 M.base06 = "#f5f5f5"
 M.base07 = "#ffffff"
@@ -19,7 +19,7 @@ M.base0B = "#62c073"
 M.base0C = "#1da9b0"
 M.base0D = "#52a8ff"
 M.base0E = "#c472fb"
-M.base0F = "#f87171"
+M.base0F = "#f75f8f"
 
 function M.setup()
     -- Remove existing highlights

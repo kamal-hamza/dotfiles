@@ -1,0 +1,99 @@
+# Base16 Hearth Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-hearth-light"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#2a2421"
+background = "#fffaf7"
+
+[syntax]
+# Comments
+"comment" = "#a89991"
+"comment.documentation" = "#5c524d"
+
+# Constants
+"constant" = "#c27441"
+"constant.builtin" = "#c27441"
+"constant.character" = "#a6422f"
+"constant.character.escape" = "#41646b"
+
+# Functions
+"function" = "#3b5d70"
+"function.builtin" = "#3b5d70"
+"function.method" = "#3b5d70"
+
+# Keywords
+"keyword" = "#6e4f6b"
+"keyword.control" = "#6e4f6b"
+"keyword.directive" = "#6e4f6b"
+"keyword.function" = "#6e4f6b"
+"keyword.operator" = "#6e4f6b"
+
+# Operators
+"operator" = "#2a2421"
+
+# Punctuation
+"punctuation" = "#2a2421"
+"punctuation.bracket" = "#2a2421"
+"punctuation.delimiter" = "#593d32"
+"punctuation.special" = "#a6422f"
+
+# Strings
+"string" = "#5b6b44"
+"string.escape" = "#41646b"
+"string.regex" = "#41646b"
+"string.special" = "#41646b"
+
+# Types
+"type" = "#8c662d"
+"type.builtin" = "#8c662d"
+
+# Variables
+"variable" = "#2a2421"
+"variable.builtin" = "#c27441"
+"variable.member" = "#a6422f"
+"variable.parameter" = "#a6422f"
+
+# Tags (HTML/XML)
+"tag" = "#8c662d"
+"attribute" = "#8c662d"
+
+# Markup
+"markup.heading" = "#3b5d70"
+"markup.bold" = { foreground = "#8c662d", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#6e4f6b", modifiers = ["italic"] }
+"markup.link" = "#3b5d70"
+"markup.link.url" = { foreground = "#41646b", modifiers = ["underline"] }
+"markup.raw" = "#5b6b44"
+"markup.list" = "#a6422f"
+"markup.quote" = "#41646b"
+
+# Diff
+"diff.plus" = "#5b6b44"
+"diff.minus" = "#a6422f"
+"diff.delta" = "#3b5d70"
+
+# Git
+"git.added" = "#5b6b44"
+"git.deleted" = "#a6422f"
+"git.modified" = "#3b5d70"
+
+# UI elements
+"ui.background" = "#fffaf7"
+"ui.foreground" = "#2a2421"
+"ui.cursor" = "#2a2421"
+"ui.cursor.match" = "#8c662d"
+"ui.selection" = "#e6ddd8"
+"ui.linenr" = "#a89991"
+"ui.linenr.selected" = "#5c524d"
+"ui.statusline" = "#5c524d"
+
+# Errors and warnings
+"error" = "#a6422f"
+"warning" = "#8c662d"
+"info" = "#3b5d70"
+"hint" = "#41646b"

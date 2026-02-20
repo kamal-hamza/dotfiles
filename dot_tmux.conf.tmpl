@@ -69,37 +69,17 @@ set -g status-interval 1
 set -g status-left-length 100
 set -g status-right-length 100
 
-# Colors - Using Soft Focus {{ .theme_mode | default "dark" }} theme
-{{ if eq (.theme_mode | default "dark") "light" -}}
-# Light theme colors
-set -g status-style "bg=#ffffff,fg=#000000"
-set -g message-style "bg=#ffffff,fg=#4da6ff"
-set -g pane-border-style "fg=#d0d0d0"
-set -g pane-active-border-style "fg=#448cbb"
-set -g window-status-style "fg=#666666,bg=#ffffff"
-set -g window-status-current-style "fg=#ffffff,bg=#4da6ff,bold"
-set -g mode-style "bg=#448cbb,fg=#ffffff"
-set -g clock-mode-colour "#448cbb"
+# Source theme file
+if-shell '[ -f ~/.config/tmux/themes/theme.tmux ]' \
+    "source-file ~/.config/tmux/themes/theme.tmux"
 
 # Status left: session name
+{{ if eq (.theme_mode | default "dark") "light" -}}
 set -g status-left "#[fg=#ffffff,bg=#4da6ff,bold] #S #[default] "
-
 # Status right: current path and time
 set -g status-right "#[fg=#4da6ff]#{=/-32/...:#{b:pane_current_path}} #[fg=#d0d0d0]│#[fg=#666666] %H:%M "
 {{ else -}}
-# Dark theme colors
-set -g status-style "bg=#050505,fg=#f5f5f5"
-set -g message-style "bg=#050505,fg=#67b7f5"
-set -g pane-border-style "fg=#333333"
-set -g pane-active-border-style "fg=#448cbb"
-set -g window-status-style "fg=#bbbbbb,bg=#050505"
-set -g window-status-current-style "fg=#050505,bg=#67b7f5,bold"
-set -g mode-style "bg=#448cbb,fg=#050505"
-set -g clock-mode-colour "#448cbb"
-
-# Status left: session name
 set -g status-left "#[fg=#050505,bg=#67b7f5,bold] #S #[default] "
-
 # Status right: current path and time
 set -g status-right "#[fg=#67b7f5]#{=/-32/...:#{b:pane_current_path}} #[fg=#333333]│#[fg=#888888] %H:%M "
 {{ end -}}

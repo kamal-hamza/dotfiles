@@ -9,11 +9,11 @@
     line-numbers = true
     line-numbers-left-format = "{nm:>4}┊"
     line-numbers-right-format = "{np:>4}│"
-    line-numbers-left-style = "#666666"
-    line-numbers-right-style = "#666666"
+    line-numbers-left-style = "#2e2e2e"
+    line-numbers-right-style = "#2e2e2e"
     line-numbers-minus-style = "#f75f8f"
     line-numbers-plus-style = "#62c073"
-    line-numbers-zero-style = "#666666"
+    line-numbers-zero-style = "#2e2e2e"
     
     # File headers
     file-style = "#52a8ff bold"
@@ -21,7 +21,7 @@
     
     # Hunk headers
     hunk-header-style = "file line-number syntax"
-    hunk-header-decoration-style = "#666666"
+    hunk-header-decoration-style = "#2e2e2e"
     
     # Commit decoration
     commit-decoration-style = "#c472fb box"
@@ -46,7 +46,7 @@
     merge-conflict-theirs-diff-header-style = "#52a8ff bold"
     
     # Blame
-    blame-palette = "#000000 #111111 #333333"
+    blame-palette = "#0a0a0a #111111 #1a1a1a"
     blame-code-style = "syntax"
     
     # Grep

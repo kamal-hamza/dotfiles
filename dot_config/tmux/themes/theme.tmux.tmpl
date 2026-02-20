@@ -1,0 +1,5 @@
+{{- if eq (.theme_mode | default "dark") "light" -}}
+{{- include "dot_config/tmux/themes/base16-soft-focus-light.tmux" -}}
+{{- else -}}
+{{- include "dot_config/tmux/themes/base16-soft-focus-dark.tmux" -}}
+{{- end -}}

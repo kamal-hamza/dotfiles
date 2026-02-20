@@ -1,0 +1,99 @@
+# Base16 Pacific Umbra Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-pacific-umbra-light"
+author = "Hamza Kamal"
+
+[colors]
+foreground = "#232a2c"
+background = "#e0e5e6"
+
+[syntax]
+# Comments
+"comment" = "#9da6a8"
+"comment.documentation" = "#5a6668"
+
+# Constants
+"constant" = "#4a5e60"
+"constant.builtin" = "#4a5e60"
+"constant.character" = "#5f736b"
+"constant.character.escape" = "#4a6062"
+
+# Functions
+"function" = "#324a56"
+"function.builtin" = "#324a56"
+"function.method" = "#324a56"
+
+# Keywords
+"keyword" = "#5a5d64"
+"keyword.control" = "#5a5d64"
+"keyword.directive" = "#5a5d64"
+"keyword.function" = "#5a5d64"
+"keyword.operator" = "#5a5d64"
+
+# Operators
+"operator" = "#232a2c"
+
+# Punctuation
+"punctuation" = "#232a2c"
+"punctuation.bracket" = "#232a2c"
+"punctuation.delimiter" = "#2e3430"
+"punctuation.special" = "#5f736b"
+
+# Strings
+"string" = "#3b4d46"
+"string.escape" = "#4a6062"
+"string.regex" = "#4a6062"
+"string.special" = "#4a6062"
+
+# Types
+"type" = "#6b7d75"
+"type.builtin" = "#6b7d75"
+
+# Variables
+"variable" = "#232a2c"
+"variable.builtin" = "#4a5e60"
+"variable.member" = "#5f736b"
+"variable.parameter" = "#5f736b"
+
+# Tags (HTML/XML)
+"tag" = "#6b7d75"
+"attribute" = "#6b7d75"
+
+# Markup
+"markup.heading" = "#324a56"
+"markup.bold" = { foreground = "#6b7d75", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#5a5d64", modifiers = ["italic"] }
+"markup.link" = "#324a56"
+"markup.link.url" = { foreground = "#4a6062", modifiers = ["underline"] }
+"markup.raw" = "#3b4d46"
+"markup.list" = "#5f736b"
+"markup.quote" = "#4a6062"
+
+# Diff
+"diff.plus" = "#3b4d46"
+"diff.minus" = "#5f736b"
+"diff.delta" = "#324a56"
+
+# Git
+"git.added" = "#3b4d46"
+"git.deleted" = "#5f736b"
+"git.modified" = "#324a56"
+
+# UI elements
+"ui.background" = "#e0e5e6"
+"ui.foreground" = "#232a2c"
+"ui.cursor" = "#232a2c"
+"ui.cursor.match" = "#6b7d75"
+"ui.selection" = "#c1c8c9"
+"ui.linenr" = "#9da6a8"
+"ui.linenr.selected" = "#5a6668"
+"ui.statusline" = "#5a6668"
+
+# Errors and warnings
+"error" = "#5f736b"
+"warning" = "#6b7d75"
+"info" = "#324a56"
+"hint" = "#4a6062"

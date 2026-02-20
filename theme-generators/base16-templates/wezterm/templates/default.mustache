@@ -4,40 +4,84 @@
 
 local M = {}
 
-M.scheme = {
-    ["{{scheme-name}}"] = {
-        foreground = "#{{base05-hex}}",
-        background = "#{{base00-hex}}",
-        cursor_bg = "#{{base05-hex}}",
-        cursor_border = "#{{base05-hex}}",
-        cursor_fg = "#{{base00-hex}}",
-        selection_bg = "#{{base02-hex}}",
-        selection_fg = "#{{base05-hex}}",
-        
-        -- Normal ANSI colors
+local palette = {
+    base00 = '#{{base00-hex}}',
+    base01 = '#{{base01-hex}}',
+    base02 = '#{{base02-hex}}',
+    base03 = '#{{base03-hex}}',
+    base04 = '#{{base04-hex}}',
+    base05 = '#{{base05-hex}}',
+    base06 = '#{{base06-hex}}',
+    base07 = '#{{base07-hex}}',
+    base08 = '#{{base08-hex}}',
+    base09 = '#{{base09-hex}}',
+    base0A = '#{{base0A-hex}}',
+    base0B = '#{{base0B-hex}}',
+    base0C = '#{{base0C-hex}}',
+    base0D = '#{{base0D-hex}}',
+    base0E = '#{{base0E-hex}}',
+    base0F = '#{{base0F-hex}}',
+}
+
+local active_tab = {
+    bg_color = palette.base01,
+    fg_color = palette.base05,
+}
+
+local inactive_tab = {
+    bg_color = palette.base00,
+    fg_color = palette.base03,
+}
+
+function M.colors()
+    return {
+        foreground = palette.base05,
+        background = palette.base00,
+        cursor_bg = palette.base05,
+        cursor_border = palette.base05,
+        cursor_fg = palette.base00,
+        selection_bg = palette.base02,
+        selection_fg = palette.base05,
+
         ansi = {
-            "#{{base00-hex}}", -- black
-            "#{{base08-hex}}", -- red
-            "#{{base0B-hex}}", -- green
-            "#{{base0A-hex}}", -- yellow
-            "#{{base0D-hex}}", -- blue
-            "#{{base0E-hex}}", -- magenta
-            "#{{base0C-hex}}", -- cyan
-            "#{{base05-hex}}", -- white
+            palette.base00,
+            palette.base08,
+            palette.base0B,
+            palette.base0A,
+            palette.base0D,
+            palette.base0E,
+            palette.base0C,
+            palette.base05,
         },
-        
-        -- Bright ANSI colors
+
         brights = {
-            "#{{base03-hex}}", -- bright black
-            "#{{base08-hex}}", -- bright red
-            "#{{base0B-hex}}", -- bright green
-            "#{{base0A-hex}}", -- bright yellow
-            "#{{base0D-hex}}", -- bright blue
-            "#{{base0E-hex}}", -- bright magenta
-            "#{{base0C-hex}}", -- bright cyan
-            "#{{base07-hex}}", -- bright white
+            palette.base03,
+            palette.base08,
+            palette.base0B,
+            palette.base0A,
+            palette.base0D,
+            palette.base0E,
+            palette.base0C,
+            palette.base07,
+        },
+
+        tab_bar = {
+            background = palette.base00,
+            active_tab = active_tab,
+            inactive_tab = inactive_tab,
+            inactive_tab_hover = active_tab,
+            new_tab = inactive_tab,
+            new_tab_hover = active_tab,
+            inactive_tab_edge = palette.base03,
         },
     }
-}
+end
+
+function M.window_frame()
+    return {
+        active_titlebar_bg = palette.base00,
+        inactive_titlebar_bg = palette.base00,
+    }
+end
 
 return M

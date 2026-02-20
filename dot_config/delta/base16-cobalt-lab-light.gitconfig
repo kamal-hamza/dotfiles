@@ -1,0 +1,69 @@
+# Base16 Cobalt Lab Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+[delta]
+    syntax-theme = base16-cobalt-lab-light
+    
+    # Line numbers
+    line-numbers = true
+    line-numbers-left-format = "{nm:>4}┊"
+    line-numbers-right-format = "{np:>4}│"
+    line-numbers-left-style = "#9ca3af"
+    line-numbers-right-style = "#9ca3af"
+    line-numbers-minus-style = "#dc2626"
+    line-numbers-plus-style = "#059669"
+    line-numbers-zero-style = "#9ca3af"
+    
+    # File headers
+    file-style = "#2563eb bold"
+    file-decoration-style = "#2563eb ul"
+    
+    # Hunk headers
+    hunk-header-style = "file line-number syntax"
+    hunk-header-decoration-style = "#9ca3af"
+    
+    # Commit decoration
+    commit-decoration-style = "#4f46e5 box"
+    commit-style = "#4f46e5 bold"
+    
+    # Diff colors
+    minus-style = "syntax #f3f4f6"
+    minus-emph-style = "syntax #dc #26 #26 40"
+    minus-non-emph-style = "syntax #f3f4f6"
+    
+    plus-style = "syntax #f3f4f6"
+    plus-emph-style = "syntax #05 #96 #69 40"
+    plus-non-emph-style = "syntax #f3f4f6"
+    
+    # Whitespace
+    whitespace-error-style = "#dc2626 reverse"
+    
+    # Merge conflicts
+    merge-conflict-begin-symbol = "▼"
+    merge-conflict-end-symbol = "▲"
+    merge-conflict-ours-diff-header-style = "#d97706 bold"
+    merge-conflict-theirs-diff-header-style = "#2563eb bold"
+    
+    # Blame
+    blame-palette = "#f9fafb #f3f4f6 #e5e7eb"
+    blame-code-style = "syntax"
+    
+    # Grep
+    grep-file-style = "#2563eb bold"
+    grep-line-number-style = "#d97706"
+    grep-match-line-style = "syntax"
+    grep-match-word-style = "#dc2626 bold"
+    grep-context-line-style = "syntax"
+    
+    # Colors for various elements
+    true-color = always
+    
+[delta "interactive"]
+    keep-plus-minus-markers = false
+
+[delta "side-by-side"]
+    side-by-side = true
+    
+[delta "line-numbers"]
+    line-numbers = true

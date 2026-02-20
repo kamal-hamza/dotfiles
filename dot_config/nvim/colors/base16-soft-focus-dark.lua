@@ -5,20 +5,20 @@
 local M = {}
 
 M.base00 = "#050505"
-M.base01 = "#1a1a1a"
-M.base02 = "#2a2a2a"
-M.base03 = "#3a3a3a"
-M.base04 = "#888888"
+M.base01 = "#0a0a0a"
+M.base02 = "#1a1a1a"
+M.base03 = "#888888"
+M.base04 = "#bbbbbb"
 M.base05 = "#f5f5f5"
-M.base06 = "#fcfcfc"
+M.base06 = "#ffffff"
 M.base07 = "#ffffff"
 M.base08 = "#ff4c6a"
 M.base09 = "#f0d08a"
 M.base0A = "#d4b87b"
 M.base0B = "#99cc99"
-M.base0C = "#67b7f5"
-M.base0D = "#448cbb"
-M.base0E = "#b88e8d"
+M.base0C = "#4da6ff"
+M.base0D = "#67b7f5"
+M.base0E = "#d4a6a6"
 M.base0F = "#c42847"
 
 function M.setup()

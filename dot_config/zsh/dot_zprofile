@@ -24,14 +24,15 @@ path_if_exists "$HOME/.cargo/bin"
 # -----------------------------------------------------------------------------
 # FZF Configuration
 # -----------------------------------------------------------------------------
-export FZF_DEFAULT_OPTS='
---color=fg:#ffffff,bg:#000000,hl:#5fd7ff
---color=fg+:#ffffff,bg+:#262626,hl+:#5fd7ff
---color=info:#afaf87,prompt:#d7005f,pointer:#af5fff
---color=marker:#87ff00,spinner:#af5fff,header:#87afaf
---border=rounded --height=40% --reverse --cycle
---bind="tab:down,shift-tab:up"
-'
+# Source Base16 theme for FZF
+if [[ -f "$HOME/.config/fzf/theme.sh" ]]; then
+  source "$HOME/.config/fzf/theme.sh"
+fi
+
+# FZF default options
+export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
+--border=rounded --height=40% --reverse --cycle \
+--bind='tab:down,shift-tab:up'"
 
 # Enable better command matching
 if command -v fzf >/dev/null 2>&1; then
