@@ -1,0 +1,27 @@
+# Base16 Pacific Umbra Dark
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#0a0e0f
+palette = 1=#889b94
+palette = 2=#4b5d56
+palette = 3=#8fa099
+palette = 4=#526a76
+palette = 5=#7a7d84
+palette = 6=#6a8082
+palette = 7=#9da6a8
+palette = 8=#3f4a4c
+palette = 9=#889b94
+palette = 10=#4b5d56
+palette = 11=#8fa099
+palette = 12=#526a76
+palette = 13=#7a7d84
+palette = 14=#6a8082
+palette = 15=#e0e5e6
+
+background = #0a0e0f
+foreground = #9da6a8
+cursor-color = #9da6a8
+cursor-text = #0a0e0f
+selection-background = #232a2c
+selection-foreground = #9da6a8

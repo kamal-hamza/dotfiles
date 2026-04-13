@@ -1,0 +1,27 @@
+# Base16 Shinjuku Veridian
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#0d1211
+palette = 1=#e68a8a
+palette = 2=#2d8c7d
+palette = 3=#9ec481
+palette = 4=#4a86a3
+palette = 5=#717ea3
+palette = 6=#52a399
+palette = 7=#dbe6e4
+palette = 8=#4a6360
+palette = 9=#e68a8a
+palette = 10=#2d8c7d
+palette = 11=#9ec481
+palette = 12=#4a86a3
+palette = 13=#717ea3
+palette = 14=#52a399
+palette = 15=#f7faf9
+
+background = #0d1211
+foreground = #dbe6e4
+cursor-color = #dbe6e4
+cursor-text = #0d1211
+selection-background = #1f2b29
+selection-foreground = #dbe6e4

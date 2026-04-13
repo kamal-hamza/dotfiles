@@ -1,372 +1,594 @@
-# Development Tools by Language/Framework
-# Single preferred tool per category for clean installations
+# =============================================================================
+# Development Tools Installation Configuration
+# =============================================================================
+# This file defines language tools and frameworks using a step-based approach
+# that supports multiple package managers (mise, brew, yay, cargo, go, npm, etc.)
+#
+# Structure:
+#   - Each language/framework has a list of "steps" executed in order
+#   - Steps can use different installers: mise, yay, brew, cargo, go_install, etc.
+#   - Dependencies are resolved automatically via "depends_on"
+#
+# Usage:
+#   install-lang python         # Install Python and its tools
+#   install-lang typescript     # Install TypeScript and Node.js
+#   install-lang go rust        # Install multiple languages
+# =============================================================================
 
 languages:
+  # =============================================================================
+  # Python
+  # =============================================================================
   python:
-    asdf_plugin: python
-    package_manager: uv
-    lsp: pyrefly
-    formatter: ruff
-    linter: ruff
-    debugger: debugpy
-    tools:
-      - pytest
-      - ipython
+    steps:
+      - mise:
+          - python@latest
+      - system:
+          - uv
+      - uv_tool:
+          - ruff
+          - pyrefly
+          - debugpy
+          - pytest
+          - ipython
 
+  # =============================================================================
+  # JavaScript/TypeScript (via Bun)
+  # =============================================================================
   javascript:
-    asdf_plugin: bun
-    runtime: bun
-    package_manager: bun
-    lsp: typescript-language-server
-    formatter: prettier
-    linter: eslint
-    debugger: bun
+    depends_on:
+      - bun
+    steps:
+      - bun_global:
+          - prettier
+          - eslint
 
   typescript:
-    asdf_plugin: bun
-    runtime: bun
-    compiler: typescript
-    package_manager: bun
-    lsp: typescript-language-server
-    formatter: prettier
-    linter: eslint
-    debugger: bun
-
-  golang:
-    asdf_plugin: golang
-    lsp: gopls
-    formatter: goimports
-    linter: golangci-lint
-    debugger: delve
-
-  rust:
-    asdf_plugin: rust
-    lsp: rust-analyzer
-    formatter: rustfmt
-    linter: clippy
-    debugger: lldb
-    tools:
-      - cargo-watch
-
-  zig:
-    asdf_plugin: zig
-    lsp: zls
-    debugger: lldb
-
-  cpp:
-    asdf_plugin: clang
-    lsp: clangd
-    formatter: clang-format
-    linter: clang-tidy
-    build_tool: cmake
-    debugger: lldb
-
-  c:
-    asdf_plugin: clang
-    lsp: clangd
-    formatter: clang-format
-    linter: clang-tidy
-    build_tool: cmake
-    debugger: lldb
-
-  csharp:
-    asdf_plugin: dotnet
-    lsp: omnisharp
-    formatter: dotnet-format
-    debugger: netcoredbg
-    
-  java:
-    asdf_plugin: java
-    build_tool: gradle
-    lsp: jdtls
-    formatter: google-java-format
-    debugger: jdb
-
-  kotlin:
-    asdf_plugin: kotlin
-    build_tool: gradle
-    lsp: kotlin-language-server
-    formatter: ktlint
-    debugger: jdb
-
-  ruby:
-    asdf_plugin: ruby
-    package_manager: bundler
-    lsp: ruby-lsp
-    formatter: rubocop
-    linter: rubocop
-    debugger: ruby-debug-ide
-
-  php:
-    asdf_plugin: php
-    package_manager: composer
-    lsp: intelephense
-    formatter: php-cs-fixer
-    linter: phpstan
-    debugger: php-debug
-
-  elixir:
-    asdf_plugin: elixir
-    lsp: elixir-ls
-    formatter: mix
-    debugger: elixir-ls
-
-  lua:
-    asdf_plugin: lua
-    package_manager: luarocks
-    lsp: lua-language-server
-    formatter: stylua
-    linter: luacheck
-    debugger: mobdebug
-
-  dart:
-    asdf_plugin: dart
-    lsp: dart
-    formatter: dart
-    debugger: dart
-
-  swift:
-    asdf_plugin: swift
-    lsp: sourcekit-lsp
-    formatter: swift-format
-    linter: swiftlint
-    debugger: lldb
-
-  shell:
-    interpreter: bash
-    lsp: bash-language-server
-    formatter: shfmt
-    linter: shellcheck
+    depends_on:
+      - bun
+    steps:
+      - bun_global:
+          - typescript
+          - typescript-language-server
+          - prettier
+          - eslint
 
   bun:
-    asdf_plugin: bun
-    formatter: prettier
-    linter: eslint
+    steps:
+      - mise:
+          - bun@latest
 
+  # =============================================================================
+  # Node.js (alternative to Bun)
+  # =============================================================================
+  node:
+    steps:
+      - mise:
+          - node@lts
+      - npm_global:
+          - typescript
+          - typescript-language-server
+          - prettier
+          - eslint
+
+  # =============================================================================
+  # Deno
+  # =============================================================================
   deno:
-    asdf_plugin: deno
+    steps:
+      - mise:
+          - deno@latest
 
-  sql:
-    lsp: sqls
-    formatter: sql-formatter
+  # =============================================================================
+  # Go
+  # =============================================================================
+  golang:
+    steps:
+      - mise:
+          - go@latest
+      - go_install:
+          - golang.org/x/tools/gopls@latest
+          - mvdan.cc/gofumpt@latest
+          - github.com/go-delve/delve/cmd/dlv@latest
+      - system:
+          - golangci-lint
 
-  yaml:
-    lsp: yaml-language-server
-    formatter: prettier
-    linter: yamllint
+  # =============================================================================
+  # Rust
+  # =============================================================================
+  rust:
+    steps:
+      - system:
+          - rustup
+      - custom_cmd:
+          - rustup default stable
+          - rustup component add rust-analyzer rustfmt clippy
+      - cargo:
+          - cargo-watch
 
-  toml:
-    lsp: taplo
-    formatter: taplo
+  # =============================================================================
+  # Zig
+  # =============================================================================
+  zig:
+    steps:
+      - mise:
+          - zig@latest
+      - system:
+          - zls
 
-  markdown:
-    lsp: marksman
-    formatter: prettier
-    linter: markdownlint
+  # =============================================================================
+  # C/C++
+  # =============================================================================
+  cpp:
+    steps:
+      - system:
+          - clang
+          - llvm
+          - cmake
+      - mise:
+          - clang-format@latest
 
-  terraform:
-    cli: terraform
-    lsp: terraform-ls
-    linter: tflint
+  c:
+    depends_on:
+      - cpp
 
-  ansible:
-    cli: ansible
-    lsp: ansible-language-server
-    linter: ansible-lint
-
-  docker:
-    cli: docker
-    lsp: dockerfile-language-server
-    linter: hadolint
-
-  kubernetes:
-    cli: kubectl
-    tools:
-      - helm
-      - k9s
-
-  protobuf:
-    compiler: protoc
-    lsp: bufls
-    formatter: buf
-
-  graphql:
-    lsp: graphql-language-service-cli
-    formatter: prettier
-
-  nix:
-    cli: nix
-    lsp: nil
-    formatter: nixpkgs-fmt
-
-  typst:
-    cli: typst
-    lsp: tinymist
-    formatter: typst
-
-frameworks:
-  # Python Frameworks
-  django:
-    requires: python
-    packages:
-      - django
-      - django-stubs
-    tools:
-      - django-admin
-
-  flask:
-    requires: python
-    packages:
-      - flask
-      - flask-cors
-
-  fastapi:
-    requires: python
-    packages:
-      - fastapi
-      - uvicorn
-      - pydantic
-
-  # JavaScript/TypeScript Frameworks
-  react:
-    requires: typescript
-    packages:
-      - react
-      - react-dom
-      - "@types/react"
-      - "@types/react-dom"
-
-  nextjs:
-    requires: typescript
-    packages:
-      - next
-      - react
-      - react-dom
-
-  vue:
-    requires: typescript
-    packages:
-      - vue
-      - "@vitejs/plugin-vue"
-
-  nuxt:
-    requires: typescript
-    packages:
-      - nuxt
-
-  angular:
-    requires: typescript
-    packages:
-      - "@angular/cli"
-      - "@angular/core"
-
-  svelte:
-    requires: typescript
-    packages:
-      - svelte
-      - "@sveltejs/kit"
-
-  express:
-    requires: typescript
-    packages:
-      - express
-      - "@types/express"
-
-  nestjs:
-    requires: typescript
-    packages:
-      - "@nestjs/cli"
-      - "@nestjs/core"
-
-  # Go Frameworks
-  gin:
-    requires: golang
-    packages:
-      - github.com/gin-gonic/gin
-
-  echo:
-    requires: golang
-    packages:
-      - github.com/labstack/echo/v4
-
-  fiber:
-    requires: golang
-    packages:
-      - github.com/gofiber/fiber/v2
-
-  # Rust Frameworks
-  actix:
-    requires: rust
-    packages:
-      - actix-web
-
-  rocket:
-    requires: rust
-    packages:
-      - rocket
-
-  axum:
-    requires: rust
-    packages:
-      - axum
-      - tokio
+  # =============================================================================
+  # C# / .NET
+  # =============================================================================
+  csharp:
+    steps:
+      - system:
+          - dotnet-sdk
+          - dotnet-runtime
+      - dotnet_tool:
+          - csharp-ls
+          - fantomas
+      - system:
+          - netcoredbg
 
   dotnet:
-    requires: csharp 
-    tools:
-      - dotnet-ef
+    depends_on:
+      - csharp
 
+  # =============================================================================
+  # Java
+  # =============================================================================
+  java:
+    steps:
+      - mise:
+          - java@latest
+      - system:
+          - gradle
+          - maven
+      - custom_cmd:
+          - mkdir -p ~/.local/share/eclipse.jdt.ls
 
-  # Ruby Frameworks
-  rails:
-    requires: ruby
-    packages:
-      - rails
-    tools:
-      - rails
+  # =============================================================================
+  # Kotlin
+  # =============================================================================
+  kotlin:
+    depends_on:
+      - java
+    steps:
+      - mise:
+          - kotlin@latest
+      - system:
+          - gradle
+          - ktlint
 
-  sinatra:
-    requires: ruby
-    packages:
-      - sinatra
+  # =============================================================================
+  # Ruby
+  # =============================================================================
+  ruby:
+    steps:
+      - mise:
+          - ruby@latest
+      - gem:
+          - bundler
+          - ruby-lsp
+          - rubocop
+          - debug
 
-  # PHP Frameworks
-  laravel:
-    requires: php
-    packages:
-      - laravel/installer
-    tools:
-      - laravel
+  # =============================================================================
+  # PHP
+  # =============================================================================
+  php:
+    steps:
+      - mise:
+          - php@latest
+          - composer@latest
+      - composer_global:
+          - phpstan/phpstan
+          - friendsofphp/php-cs-fixer
+      - system:
+          - php-debug
 
-  symfony:
-    requires: php
-    packages:
-      - symfony/skeleton
+  # =============================================================================
+  # Elixir
+  # =============================================================================
+  elixir:
+    steps:
+      - mise:
+          - erlang@latest
+          - elixir@latest
+      - custom_cmd:
+          - mix local.hex --force
+          - mix local.rebar --force
+      - mix:
+          - elixir_ls
 
-  # Java/Kotlin Frameworks
-  spring:
-    requires: java
-    packages:
-      - spring-boot-cli
+  # =============================================================================
+  # Lua
+  # =============================================================================
+  lua:
+    steps:
+      - mise:
+          - lua@latest
+      - system:
+          - luarocks
+          - lua-language-server
+          - stylua
+          - luacheck
 
-  quarkus:
-    requires: java
-    packages:
-      - quarkus-cli
+  # =============================================================================
+  # Dart
+  # =============================================================================
+  dart:
+    steps:
+      - mise:
+          - dart@latest
+      - system:
+          - flutter
 
+  # =============================================================================
+  # Swift
+  # =============================================================================
+  swift:
+    steps:
+      - system:
+          - swift
+          - swift-format
+          - swiftlint
+
+  # =============================================================================
+  # Shell Scripting
+  # =============================================================================
+  shell:
+    steps:
+      - system:
+          - bash
+          - shellcheck
+          - shfmt
+      - npm_global:
+          - bash-language-server
+
+  # =============================================================================
+  # Configuration Languages
+  # =============================================================================
+  sql:
+    steps:
+      - system:
+          - sqls
+          - sql-formatter
+
+  yaml:
+    steps:
+      - npm_global:
+          - yaml-language-server
+          - prettier
+      - system:
+          - yamllint
+
+  toml:
+    steps:
+      - system:
+          - taplo
+
+  markdown:
+    steps:
+      - system:
+          - marksman
+      - npm_global:
+          - markdownlint-cli
+          - prettier
+
+  json:
+    steps:
+      - npm_global:
+          - vscode-langservers-extracted
+
+  # =============================================================================
+  # Infrastructure & DevOps
+  # =============================================================================
+  terraform:
+    steps:
+      - mise:
+          - terraform@latest
+          - tflint@latest
+
+  ansible:
+    steps:
+      - system:
+          - ansible
+      - uv_tool:
+          - ansible-lint
+
+  docker:
+    steps:
+      - system:
+          - docker
+          - hadolint
+      - npm_global:
+          - dockerfile-language-server-nodejs
+
+  kubernetes:
+    steps:
+      - system:
+          - kubectl
+          - helm
+          - k9s
+
+  # =============================================================================
+  # Protocol Buffers & GraphQL
+  # =============================================================================
+  protobuf:
+    steps:
+      - system:
+          - protobuf
+          - buf
+
+  graphql:
+    steps:
+      - npm_global:
+          - graphql-language-service-cli
+          - prettier
+
+  # =============================================================================
+  # Nix
+  # =============================================================================
+  nix:
+    steps:
+      - system:
+          - nix
+          - nil
+          - nixpkgs-fmt
+
+  # =============================================================================
+  # Typst
+  # =============================================================================
+  typst:
+    steps:
+      - system:
+          - typst
+          - tinymist
+
+  # =============================================================================
+  # R
+  # =============================================================================
+  r:
+    steps:
+      - custom_cmd:
+          - "bash -c 'if ! command -v R >/dev/null 2>&1; then brew install r; fi'"
+      - custom_cmd:
+          - R -e 'if (!requireNamespace("languageserver", quietly = TRUE)) install.packages("languageserver", repos = "https://cloud.r-project.org")'
+          - R -e 'if (!requireNamespace("lintr", quietly = TRUE)) install.packages("lintr", repos = "https://cloud.r-project.org")'
+          - R -e 'if (!requireNamespace("styler", quietly = TRUE)) install.packages("styler", repos = "https://cloud.r-project.org")'
+
+# =============================================================================
+# Frameworks
+# =============================================================================
+frameworks:
+  # =============================================================================
+  # Python Frameworks
+  # =============================================================================
+  django:
+    depends_on:
+      - python
+    steps:
+      - uv_tool:
+          - django
+          - django-stubs
+
+  flask:
+    depends_on:
+      - python
+    steps:
+      - uv_tool:
+          - flask
+          - flask-cors
+
+  fastapi:
+    depends_on:
+      - python
+    steps:
+      - uv_tool:
+          - fastapi
+          - uvicorn
+          - pydantic
+
+  # =============================================================================
+  # JavaScript/TypeScript Frameworks
+  # =============================================================================
+  react:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - create-react-app
+
+  nextjs:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - create-next-app
+
+  vue:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - "@vue/cli"
+
+  nuxt:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - nuxi
+
+  angular:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - "@angular/cli"
+
+  svelte:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - "@sveltejs/kit"
+
+  express:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - express-generator
+
+  nestjs:
+    depends_on:
+      - typescript
+    steps:
+      - bun_global:
+          - "@nestjs/cli"
+
+  # =============================================================================
+  # Go Frameworks
+  # =============================================================================
+  gin:
+    depends_on:
+      - golang
+    steps:
+      - go_install:
+          - github.com/gin-gonic/gin@latest
+
+  echo:
+    depends_on:
+      - golang
+    steps:
+      - go_install:
+          - github.com/labstack/echo/v4@latest
+
+  fiber:
+    depends_on:
+      - golang
+    steps:
+      - go_install:
+          - github.com/gofiber/fiber/v2@latest
+
+  # =============================================================================
+  # Rust Frameworks
+  # =============================================================================
+  actix:
+    depends_on:
+      - rust
+    steps:
+      - cargo:
+          - cargo-generate
+      - custom_cmd:
+          - echo "Use 'cargo new myapp && cd myapp && cargo add actix-web' to start"
+
+  rocket:
+    depends_on:
+      - rust
+    steps:
+      - custom_cmd:
+          - echo "Use 'cargo new myapp && cd myapp && cargo add rocket' to start"
+
+  axum:
+    depends_on:
+      - rust
+    steps:
+      - custom_cmd:
+          - echo "Use 'cargo new myapp && cd myapp && cargo add axum tokio' to start"
+
+  # =============================================================================
   # .NET Frameworks
+  # =============================================================================
   aspnet:
-    requires: dotnet
-    packages:
-      - Microsoft.AspNetCore.App
+    depends_on:
+      - csharp
+    steps:
+      - dotnet_tool:
+          - dotnet-ef
 
   blazor:
-    requires: dotnet
-    packages:
-      - Microsoft.AspNetCore.Components.WebAssembly
+    depends_on:
+      - csharp
+    steps:
+      - custom_cmd:
+          - echo "Blazor is included with dotnet-sdk"
 
-  # Dart/Flutter already covered in languages
+  # =============================================================================
+  # Ruby Frameworks
+  # =============================================================================
+  rails:
+    depends_on:
+      - ruby
+    steps:
+      - gem:
+          - rails
+
+  sinatra:
+    depends_on:
+      - ruby
+    steps:
+      - gem:
+          - sinatra
+
+  # =============================================================================
+  # PHP Frameworks
+  # =============================================================================
+  laravel:
+    depends_on:
+      - php
+    steps:
+      - composer_global:
+          - laravel/installer
+
+  symfony:
+    depends_on:
+      - php
+    steps:
+      - composer_global:
+          - symfony/cli
+
+  # =============================================================================
+  # Java/Kotlin Frameworks
+  # =============================================================================
+  spring:
+    depends_on:
+      - java
+    steps:
+      - system:
+          - spring-boot-cli
+
+  quarkus:
+    depends_on:
+      - java
+    steps:
+      - system:
+          - quarkus-cli
+
+  # =============================================================================
+  # Dart/Flutter
+  # =============================================================================
   flutter:
-    requires: dart
-    packages:
-      - flutter
+    depends_on:
+      - dart
+    steps:
+      - custom_cmd:
+          - flutter doctor

@@ -1,0 +1,27 @@
+# Base16 Cobalt Lab Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#f9fafb
+palette = 1=#dc2626
+palette = 2=#059669
+palette = 3=#d97706
+palette = 4=#2563eb
+palette = 5=#4f46e5
+palette = 6=#0891b2
+palette = 7=#1f2937
+palette = 8=#9ca3af
+palette = 9=#dc2626
+palette = 10=#059669
+palette = 11=#d97706
+palette = 12=#2563eb
+palette = 13=#4f46e5
+palette = 14=#0891b2
+palette = 15=#0b101a
+
+background = #f9fafb
+foreground = #1f2937
+cursor-color = #1f2937
+cursor-text = #f9fafb
+selection-background = #e5e7eb
+selection-foreground = #1f2937

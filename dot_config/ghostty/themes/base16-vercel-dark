@@ -1,0 +1,27 @@
+# Base16 Vercel Dark
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#0a0a0a
+palette = 1=#f75f8f
+palette = 2=#62c073
+palette = 3=#fcee0a
+palette = 4=#52a8ff
+palette = 5=#c472fb
+palette = 6=#1da9b0
+palette = 7=#ededed
+palette = 8=#2e2e2e
+palette = 9=#f75f8f
+palette = 10=#62c073
+palette = 11=#fcee0a
+palette = 12=#52a8ff
+palette = 13=#c472fb
+palette = 14=#1da9b0
+palette = 15=#ffffff
+
+background = #0a0a0a
+foreground = #ededed
+cursor-color = #ededed
+cursor-text = #0a0a0a
+selection-background = #1a1a1a
+selection-foreground = #ededed

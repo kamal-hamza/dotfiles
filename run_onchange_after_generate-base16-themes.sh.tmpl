@@ -85,6 +85,7 @@ mkdir -p "$CHEZMOI_SOURCE/dot_config/tmux/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/bat/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/delta"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/opencode/themes"
+mkdir -p "$CHEZMOI_SOURCE/dot_config/ghostty/themes"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/fzf"
 mkdir -p "$CHEZMOI_SOURCE/dot_config/obsidian/snippets"
 
@@ -102,6 +103,18 @@ for SCHEME in "${SCHEMES[@]}"; do
     
     if [ -f "$WEZTERM_TEMPLATE" ]; then
         if flavours build "$SCHEME_FILE" "$WEZTERM_TEMPLATE" > "$WEZTERM_OUTPUT" 2>/dev/null; then
+            ((GENERATED_COUNT++))
+        else
+            ((FAILED_COUNT++))
+        fi
+    fi
+    
+    # Generate Ghostty theme
+    GHOSTTY_TEMPLATE="$TEMPLATES_DIR/ghostty/templates/default.mustache"
+    GHOSTTY_OUTPUT="$CHEZMOI_SOURCE/dot_config/ghostty/themes/base16-${SCHEME}"
+    
+    if [ -f "$GHOSTTY_TEMPLATE" ]; then
+        if flavours build "$SCHEME_FILE" "$GHOSTTY_TEMPLATE" > "$GHOSTTY_OUTPUT" 2>/dev/null; then
             ((GENERATED_COUNT++))
         else
             ((FAILED_COUNT++))
@@ -246,6 +259,7 @@ print_info "Theme locations:"
 echo "  • Tmux: ~/.config/tmux/themes/theme.tmux (auto-applied)"
 echo "  • FZF: ~/.config/fzf/theme.sh (auto-applied, restart shell)"
 echo "  • WezTerm: ~/.config/wezterm/colors/base-16-*.lua (restart WezTerm)"
+echo "  • Ghostty: ~/.config/ghostty/themes/base16-* (restart Ghostty)"
 echo "  • Neovim: ~/.config/nvim/colors/base16-*.lua (:colorscheme base16-<scheme>)"
 echo "  • Zed: ~/.config/zed/themes/base-16-*.json (auto-loaded)"
 echo "  • Delta: ~/.config/delta/base16-*.gitconfig (include in ~/.gitconfig)"

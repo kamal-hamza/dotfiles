@@ -120,6 +120,69 @@ alias pbw="play seek -10"
 alias psh="play --shuffle"
 
 # =============================================================================
+# Taskwarrior Aliases
+# =============================================================================
+
+# Core task commands (base)
+alias tT="task"
+alias ta="task add"
+
+# Views and reports (no ID required)
+alias tls="task list"
+alias tnx="task next"
+alias trd="task ready"
+alias tov="task overdue"
+alias tact="task active"
+alias tall="task all"
+alias trec="task recurring"
+alias twait="task waiting"
+alias tblk="task blocked"
+alias tblkg="task blocking"
+alias tcmp="task completed"
+
+# Context switching
+alias tcon="task context"
+alias tconn="task context none"
+
+# Project and tag management
+alias tprj="task projects"
+alias ttag="task tags"
+
+# Reporting
+alias tsum="task summary"
+alias tstat="task stats"
+alias tcal="task calendar"
+alias tburn="task burndown"
+alias tinf="task information"
+
+# Filters (combine with other commands)
+alias tw="task +work"
+alias tper="task +personal"
+alias ttdy="task +today"
+
+# Functions for ID-based operations
+# Usage: td 1  OR  td 1-3  OR  td 1,2,3
+td() { task "$@" done; }           # Mark done
+ts() { task "$@" start; }          # Start task
+tsp() { task "$@" stop; }          # Stop task
+tm() { task "$@" modify; }         # Modify task
+tx() { task "$@" delete; }         # Delete task
+tdup() { task "$@" duplicate; }    # Duplicate task
+te() { task "$@" edit; }           # Edit in editor
+tapp() { task "$@" append; }       # Append to description
+tprep() { task "$@" prepend; }     # Prepend to description
+
+# Annotation functions
+tann() { task "$@" annotate; }     # Add annotation
+tden() { task "$@" denotate; }     # Remove annotation
+
+# Priority functions (usage: tph 1 OR tm 1 pri:H)
+tph() { task "$@" modify priority:H; }   # High priority
+tpm() { task "$@" modify priority:M; }   # Medium priority
+tpl() { task "$@" modify priority:L; }   # Low priority
+tpn() { task "$@" modify priority:; }    # No priority
+
+# =============================================================================
 # Script Aliases
 # =============================================================================
 
@@ -132,6 +195,7 @@ alias dcp="delete-project"   # Delete a project and its tmux session
 
 # Tmux session management
 alias tt="tmux-new"          # Quick tmux session switcher
+alias t="tmux a"
 
 # Docker management
 alias dr="docker-run"        # Run Docker container interactively

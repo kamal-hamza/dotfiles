@@ -1,0 +1,27 @@
+# Base16 Ancient Canopy
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#0f120e
+palette = 1=#9b6a6a
+palette = 2=#5d7a54
+palette = 3=#a3a164
+palette = 4=#4b6a7a
+palette = 5=#7a647a
+palette = 6=#5d7a74
+palette = 7=#d0d6cc
+palette = 8=#4b5448
+palette = 9=#9b6a6a
+palette = 10=#5d7a54
+palette = 11=#a3a164
+palette = 12=#4b6a7a
+palette = 13=#7a647a
+palette = 14=#5d7a74
+palette = 15=#f1f5ee
+
+background = #0f120e
+foreground = #d0d6cc
+cursor-color = #d0d6cc
+cursor-text = #0f120e
+selection-background = #222920
+selection-foreground = #d0d6cc

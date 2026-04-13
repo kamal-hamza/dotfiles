@@ -181,7 +181,7 @@
                 "unreachable.background": "#ff4c6a1f",
                 "players": [
                     {
-                        "cursor": "#ffffff",
+                        "cursor": "#ffffff80",
                         "selection": "#88888840",
                         "background": "#ffffff"
                     },

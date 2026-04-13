@@ -1,0 +1,27 @@
+# Base16 White Sands Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#f7fbff
+palette = 1=#e11d48
+palette = 2=#0891b2
+palette = 3=#ca8a04
+palette = 4=#0284c7
+palette = 5=#7c3aed
+palette = 6=#06b6d4
+palette = 7=#1c2f38
+palette = 8=#8baec2
+palette = 9=#e11d48
+palette = 10=#0891b2
+palette = 11=#ca8a04
+palette = 12=#0284c7
+palette = 13=#7c3aed
+palette = 14=#06b6d4
+palette = 15=#0a141a
+
+background = #f7fbff
+foreground = #1c2f38
+cursor-color = #1c2f38
+cursor-text = #f7fbff
+selection-background = #d9e8f0
+selection-foreground = #1c2f38

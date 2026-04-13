@@ -1,669 +1,623 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
+import shlex
 
-set -euo pipefail
 
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# =============================================================================
+# install-lang - Cross-platform Language and Framework Installer
+# =============================================================================
+# Installs development tools using mise and various package managers.
+# Supports: mise, brew, yay, pacman, cargo, go install, npm, bun, pip, etc.
+#
+# Usage:
+#   install-lang python                    # Install Python and tools
+#   install-lang go rust                   # Install multiple languages
+#   install-lang --framework django        # Install framework
+#   install-lang --list                    # List available languages
+# =============================================================================
 
-# Try multiple paths for tools.yaml (prioritize chezmoi source directory)
-if [[ -f "${HOME}/.local/share/chezmoi/.chezmoidata/tools.yaml" ]]; then
-    TOOLS_YAML="${HOME}/.local/share/chezmoi/.chezmoidata/tools.yaml"
-elif [[ -f "$(chezmoi source-path 2>/dev/null)/.chezmoidata/tools.yaml" ]]; then
-    TOOLS_YAML="$(chezmoi source-path)/.chezmoidata/tools.yaml"
-elif [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/chezmoi/.chezmoidata/tools.yaml" ]]; then
-    TOOLS_YAML="${XDG_DATA_HOME:-$HOME/.local/share}/chezmoi/.chezmoidata/tools.yaml"
-else
-    print_error "Could not find tools.yaml in any expected location"
-    exit 1
-fi
+import sys
+import subprocess
+import os
+from pathlib import Path
+from typing import Dict, List, Set, Any
 
-# Function to print colored output
-print_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
-}
+# Try to setup PYTHONPATH for PyYAML from brew's python-yq if available
+if sys.platform == "darwin":
+    try:
+        result = subprocess.run(
+            ["brew", "--prefix", "python-yq"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            python_yq_prefix = result.stdout.strip()
+            # Try to find the site-packages directory
+            libexec_path = Path(python_yq_prefix) / "libexec" / "lib"
+            if libexec_path.exists():
+                for python_dir in libexec_path.glob("python*"):
+                    site_packages = python_dir / "site-packages"
+                    if site_packages.exists():
+                        # Add to sys.path directly
+                        sys.path.insert(0, str(site_packages))
+                        break
+    except:
+        pass
 
-print_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
+# Check for PyYAML and provide helpful error if missing
+try:
+    import yaml
+except ImportError:
+    print("Error: PyYAML is not installed.", file=sys.stderr)
+    print("\nThis script requires PyYAML. To install it:", file=sys.stderr)
+    print("\n  Option 1 - Install via system package manager (recommended):", file=sys.stderr)
+    print("    macOS:  brew install python-yq", file=sys.stderr)
+    print("    Arch:   sudo pacman -S python-pyaml", file=sys.stderr)
+    print("    Then run: chezmoi apply", file=sys.stderr)
+    print("\n  Option 2 - Install Python with mise:", file=sys.stderr)
+    print("    mise use -g python@latest", file=sys.stderr)
+    print("    eval \"$(mise activate bash)\"", file=sys.stderr)
+    print("    python -m pip install pyyaml", file=sys.stderr)
+    sys.exit(1)
 
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
+# =============================================================================
+# Configuration
+# =============================================================================
 
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
+# ANSI color codes
+class Colors:
+    RED = '\033[0;31m'
+    GREEN = '\033[0;32m'
+    YELLOW = '\033[1;33m'
+    BLUE = '\033[0;34m'
+    CYAN = '\033[0;36m'
+    NC = '\033[0m'  # No Color
 
-# Function to check if a command exists
-command_exists() {
-    command -v "$1" >/dev/null 2>&1
-}
+# Find tools.yaml
+def find_tools_yaml() -> Path:
+    """Locate tools.yaml in expected locations."""
+    candidates = [
+        Path.home() / ".local/share/chezmoi/.chezmoidata/tools.yaml",
+        Path(os.getenv("XDG_DATA_HOME", Path.home() / ".local/share")) / "chezmoi/.chezmoidata/tools.yaml",
+    ]
+    
+    # Try chezmoi source-path
+    try:
+        result = subprocess.run(
+            ["chezmoi", "source-path"],
+            capture_output=True,
+            text=True,
+            check=False
+        )
+        if result.returncode == 0:
+            candidates.insert(0, Path(result.stdout.strip()) / ".chezmoidata/tools.yaml")
+    except FileNotFoundError:
+        pass
+    
+    for path in candidates:
+        if path.exists():
+            return path
+    
+    print_error("Could not find tools.yaml in any expected location")
+    sys.exit(1)
 
-# Function to detect OS
-detect_os() {
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "macos"
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        if command_exists apt; then
-            echo "debian"
-        elif command_exists pacman; then
-            echo "arch"
-        elif command_exists dnf; then
-            echo "fedora"
-        else
-            echo "linux"
-        fi
-    else
-        echo "unknown"
-    fi
-}
+CONFIG_FILE = find_tools_yaml()
 
-# Function to install package based on OS
-install_package() {
-    local package="$1"
-    local os=$(detect_os)
-    
-    print_info "Installing $package..."
-    
-    case "$os" in
-        macos)
-            if command_exists brew; then
-                brew install "$package" 2>/dev/null || brew install --cask "$package" 2>/dev/null || {
-                    print_warning "Could not install $package via brew"
-                    return 1
-                }
-            else
-                print_error "Homebrew not found. Please install Homebrew first."
-                return 1
-            fi
-            ;;
-        arch)
-            if command_exists paru; then
-                paru -S --noconfirm "$package" 2>/dev/null || {
-                    print_warning "Could not install $package via paru"
-                    return 1
-                }
-            elif command_exists yay; then
-                yay -S --noconfirm "$package" 2>/dev/null || {
-                    print_warning "Could not install $package via yay"
-                    return 1
-                }
-            else
-                sudo pacman -S --noconfirm "$package" 2>/dev/null || {
-                    print_warning "Could not install $package via pacman"
-                    return 1
-                }
-            fi
-            ;;
-        debian)
-            sudo apt-get update -qq
-            sudo apt-get install -y "$package" 2>/dev/null || {
-                print_warning "Could not install $package via apt"
-                return 1
-            }
-            ;;
-        fedora)
-            sudo dnf install -y "$package" 2>/dev/null || {
-                print_warning "Could not install $package via dnf"
-                return 1
-            }
-            ;;
-        *)
-            print_error "Unsupported OS: $os"
-            return 1
-            ;;
-    esac
-    
-    print_success "Installed $package"
-    return 0
-}
+# =============================================================================
+# Output Functions
+# =============================================================================
 
-# Function to ensure asdf is installed
-ensure_asdf() {
-    if ! command_exists asdf; then
-        print_error "asdf is not installed. Please install it first:"
-        print_info "  Run: chezmoi apply (to install from packages.yaml)"
-        print_info "  Or: brew install asdf (macOS) / pacman -S asdf-vm (Arch)"
-        return 1
-    fi
-    return 0
-}
+def print_info(message: str):
+    """Print informational message."""
+    print(f"{Colors.BLUE}→{Colors.NC} {message}")
 
-# Function to install asdf plugin
-install_asdf_plugin() {
-    local plugin="$1"
-    
-    if ! asdf plugin list | grep -q "^${plugin}$"; then
-        print_info "Adding asdf plugin: $plugin"
-        asdf plugin add "$plugin" || {
-            print_warning "Could not add asdf plugin: $plugin"
-            return 1
-        }
-        print_success "Added asdf plugin: $plugin"
-    else
-        print_success "asdf plugin '$plugin' already installed"
-    fi
-    return 0
-}
+def print_success(message: str):
+    """Print success message."""
+    print(f"{Colors.GREEN}✓{Colors.NC} {message}")
 
-# Function to install language via asdf
-install_via_asdf() {
-    local plugin="$1"
-    local version="${2:-latest}"
-    
-    ensure_asdf || return 1
-    
-    # Install plugin if not present
-    install_asdf_plugin "$plugin" || return 1
-    
-    # Check if any version is already installed
-    if asdf list "$plugin" 2>/dev/null | grep -q .; then
-        print_success "$plugin is already installed via asdf"
-        return 0
-    fi
-    
-    # Install the language
-    print_info "Installing $plugin $version via asdf..."
-    asdf install "$plugin" "$version" || {
-        print_warning "Could not install $plugin via asdf"
-        return 1
-    }
-    
-    # Set as global default
-    asdf global "$plugin" "$version" || {
-        print_warning "Could not set $plugin as global default"
-        return 1
-    }
-    
-    # Reshim to update PATH
-    asdf reshim "$plugin"
-    
-    print_success "Installed $plugin $version via asdf"
-    return 0
-}
+def print_warning(message: str):
+    """Print warning message."""
+    print(f"{Colors.YELLOW}⚠{Colors.NC} {message}")
 
-# Function to install package via language package manager
-install_via_package_manager() {
-    local package="$1"
-    local package_manager="$2"
-    
-    print_info "Installing $package via $package_manager..."
-    
-    case "$package_manager" in
-        uv)
-            uv pip install "$package" || {
-                print_warning "Could not install $package via uv"
-                return 1
-            }
-            ;;
-        pip)
-            pip install "$package" || {
-                print_warning "Could not install $package via pip"
-                return 1
-            }
-            ;;
-        pnpm)
-            pnpm add -g "$package" || {
-                print_warning "Could not install $package via pnpm"
-                return 1
-            }
-            ;;
-        npm)
-            npm install -g "$package" || {
-                print_warning "Could not install $package via npm"
-                return 1
-            }
-            ;;
-        bun)
-            bun add -g "$package" || {
-                print_warning "Could not install $package via bun"
-                return 1
-            }
-            ;;
-        bundler|gem)
-            gem install "$package" || {
-                print_warning "Could not install $package via gem"
-                return 1
-            }
-            ;;
-        composer)
-            composer global require "$package" || {
-                print_warning "Could not install $package via composer"
-                return 1
-            }
-            ;;
-        cargo)
-            cargo install "$package" || {
-                print_warning "Could not install $package via cargo"
-                return 1
-            }
-            ;;
-        go)
-            go install "$package@latest" || {
-                print_warning "Could not install $package via go install"
-                return 1
-            }
-            ;;
-        *)
-            print_warning "Unknown package manager: $package_manager"
-            return 1
-            ;;
-    esac
-    
-    print_success "Installed $package via $package_manager"
-    return 0
-}
+def print_error(message: str):
+    """Print error message."""
+    print(f"{Colors.RED}✗{Colors.NC} {message}", file=sys.stderr)
 
-# Function to parse YAML section (languages or frameworks)
-parse_yaml_section() {
-    local yaml_file="$1"
-    local section="$2"      # "languages" or "frameworks"
-    local item="$3"         # e.g., "python" or "django"
-    local in_section=false
-    local in_item=false
-    local current_key=""
+def print_section(message: str):
+    """Print section header."""
+    print(f"\n{Colors.CYAN}{'=' * 60}{Colors.NC}")
+    print(f"{Colors.CYAN}{message}{Colors.NC}")
+    print(f"{Colors.CYAN}{'=' * 60}{Colors.NC}\n")
+
+# =============================================================================
+# Utility Functions
+# =============================================================================
+
+def command_exists(cmd: str) -> bool:
+    """Check if a command exists in PATH."""
+    return subprocess.run(
+        ["command", "-v", cmd],
+        shell=True,
+        capture_output=True,
+        check=False
+    ).returncode == 0
+
+def run_command(cmd_list: List[str], check: bool = True, quiet: bool = False) -> bool:
+    """Run a shell command and return success status."""
+    if not quiet:
+        print(f"  Running: {' '.join(cmd_list)}")
     
-    while IFS= read -r line || [[ -n "$line" ]]; do
-        # Skip empty lines and comments
-        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
-        
-        # Check if we're entering the main section (languages: or frameworks:)
-        if [[ "$line" =~ ^([a-z_]+):$ ]]; then
-            local found_section="${BASH_REMATCH[1]}"
-            if [[ "$found_section" == "$section" ]]; then
-                in_section=true
-            else
-                in_section=false
-                in_item=false
-            fi
+    try:
+        result = subprocess.run(
+            cmd_list,
+            check=check,
+            capture_output=quiet,
+            text=True
+        )
+        return result.returncode == 0
+    except subprocess.CalledProcessError as e:
+        if not quiet:
+            print_error(f"Failed executing: {' '.join(cmd_list)}")
+        return False
+    except FileNotFoundError:
+        if not quiet:
+            print_error(f"Command not found: {cmd_list[0]}")
+        return False
+
+def detect_os() -> str:
+    """Detect the operating system."""
+    if sys.platform == "darwin":
+        return "macos"
+    elif sys.platform.startswith("linux"):
+        if command_exists("pacman"):
+            return "arch"
+        elif command_exists("apt"):
+            return "debian"
+        elif command_exists("dnf"):
+            return "fedora"
+        return "linux"
+    return "unknown"
+
+# =============================================================================
+# Package Manager Installers
+# =============================================================================
+
+def install_system(packages: List[str]) -> bool:
+    """Install packages using system package manager (brew, yay, pacman, apt)."""
+    os_type = detect_os()
+    success = True
+    
+    for package in packages:
+        # Skip if already installed
+        if command_exists(package):
+            print_success(f"{package} is already installed")
             continue
-        fi
         
-        # If we're in the right section, check for the item
-        if [[ "$in_section" == true ]]; then
-            # Check for item name (e.g., "  python:" or "  django:")
-            if [[ "$line" =~ ^[[:space:]]{2}([a-z_]+):$ ]]; then
-                local found_item="${BASH_REMATCH[1]}"
-                if [[ "$found_item" == "$item" ]]; then
-                    in_item=true
-                else
-                    in_item=false
-                fi
+        print_info(f"Installing {package} via system package manager...")
+        
+        if os_type == "macos":
+            if not command_exists("brew"):
+                print_error("Homebrew not found. Please install Homebrew first.")
+                success = False
                 continue
-            fi
             
-            # If we're in the right item, parse the key-value pairs
-            if [[ "$in_item" == true ]]; then
-                # Check for key with value (e.g., "    lsp: pyright")
-                if [[ "$line" =~ ^[[:space:]]{4}([a-z_]+):[[:space:]]*(.+)$ ]]; then
-                    current_key="${BASH_REMATCH[1]}"
-                    local value="${BASH_REMATCH[2]}"
-                    echo "${current_key}=${value}"
-                # Check for list items (e.g., "      - pytest")
-                elif [[ "$line" =~ ^[[:space:]]{6}-[[:space:]]*(.+)$ ]]; then
-                    local value="${BASH_REMATCH[1]}"
-                    echo "${current_key}_item=${value}"
-                # Check for nested sections (e.g., "    packages:")
-                elif [[ "$line" =~ ^[[:space:]]{4}([a-z_]+):$ ]]; then
-                    current_key="${BASH_REMATCH[1]}"
-                fi
-            fi
-        fi
-    done < "$yaml_file"
+            # Try regular package first, then cask
+            if not run_command(["brew", "install", package], check=False, quiet=True):
+                if not run_command(["brew", "install", "--cask", package], check=False, quiet=True):
+                    print_warning(f"Could not install {package} via brew")
+                    success = False
+                else:
+                    print_success(f"Installed {package} (cask)")
+            else:
+                print_success(f"Installed {package}")
+        
+        elif os_type == "arch":
+            # Try yay first, then pacman
+            if command_exists("yay"):
+                if run_command(["yay", "-S", "--needed", "--noconfirm", package], check=False):
+                    print_success(f"Installed {package}")
+                else:
+                    print_warning(f"Could not install {package} via yay")
+                    success = False
+            else:
+                if run_command(["sudo", "pacman", "-S", "--needed", "--noconfirm", package], check=False):
+                    print_success(f"Installed {package}")
+                else:
+                    print_warning(f"Could not install {package} via pacman")
+                    success = False
+        
+        elif os_type == "debian":
+            run_command(["sudo", "apt-get", "update", "-qq"], quiet=True)
+            if run_command(["sudo", "apt-get", "install", "-y", package], check=False):
+                print_success(f"Installed {package}")
+            else:
+                print_warning(f"Could not install {package} via apt")
+                success = False
+        
+        elif os_type == "fedora":
+            if run_command(["sudo", "dnf", "install", "-y", package], check=False):
+                print_success(f"Installed {package}")
+            else:
+                print_warning(f"Could not install {package} via dnf")
+                success = False
+        
+        else:
+            print_error(f"Unsupported OS: {os_type}")
+            success = False
+    
+    return success
+
+def install_mise(packages: List[str]) -> bool:
+    """Install packages using mise (replaces asdf)."""
+    if not command_exists("mise"):
+        print_error("mise is not installed. Please install it first:")
+        print_info("  curl https://mise.run | sh")
+        print_info("  Or: brew install mise (macOS) / yay -S mise (Arch)")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via mise...")
+        if run_command(["mise", "use", "-g", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via mise")
+            success = False
+    
+    return success
+
+def install_go_install(packages: List[str]) -> bool:
+    """Install packages using 'go install'."""
+    if not command_exists("go"):
+        print_error("Go is not installed. Install it first with: install-lang golang")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via go install...")
+        # Ensure package has version suffix
+        if "@" not in package:
+            package = f"{package}@latest"
+        
+        if run_command(["go", "install", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via go install")
+            success = False
+    
+    return success
+
+def install_cargo(packages: List[str]) -> bool:
+    """Install packages using cargo."""
+    if not command_exists("cargo"):
+        print_error("Cargo is not installed. Install it first with: install-lang rust")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via cargo...")
+        if run_command(["cargo", "install", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via cargo")
+            success = False
+    
+    return success
+
+def install_npm_global(packages: List[str]) -> bool:
+    """Install packages using npm globally."""
+    if not command_exists("npm"):
+        print_error("npm is not installed. Install it first with: install-lang node")
+        return False
+    
+    success = True
+    cmd = ["npm", "install", "-g"] + packages
+    print_info(f"Installing {len(packages)} package(s) via npm...")
+    if run_command(cmd, check=False):
+        print_success(f"Installed {len(packages)} npm package(s)")
+    else:
+        print_warning("Some npm packages failed to install")
+        success = False
+    
+    return success
+
+def install_bun_global(packages: List[str]) -> bool:
+    """Install packages using bun globally."""
+    if not command_exists("bun"):
+        print_error("Bun is not installed. Install it first with: install-lang bun")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via bun...")
+        if run_command(["bun", "add", "-g", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via bun")
+            success = False
+    
+    return success
+
+def install_uv_tool(packages: List[str]) -> bool:
+    """Install Python tools using uv."""
+    if not command_exists("uv"):
+        print_error("uv is not installed. Installing it now...")
+        if detect_os() == "macos":
+            run_command(["brew", "install", "uv"])
+        elif detect_os() == "arch":
+            run_command(["yay", "-S", "uv"])
+        else:
+            run_command(["curl", "-LsSf", "https://astral.sh/uv/install.sh", "|", "sh"])
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via uv tool...")
+        if run_command(["uv", "tool", "install", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via uv")
+            success = False
+    
+    return success
+
+def install_gem(packages: List[str]) -> bool:
+    """Install Ruby gems."""
+    if not command_exists("gem"):
+        print_error("gem is not installed. Install it first with: install-lang ruby")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via gem...")
+        if run_command(["gem", "install", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via gem")
+            success = False
+    
+    return success
+
+def install_composer_global(packages: List[str]) -> bool:
+    """Install PHP packages using composer globally."""
+    if not command_exists("composer"):
+        print_error("Composer is not installed. Install it first with: install-lang php")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via composer...")
+        if run_command(["composer", "global", "require", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via composer")
+            success = False
+    
+    return success
+
+def install_dotnet_tool(packages: List[str]) -> bool:
+    """Install .NET tools."""
+    if not command_exists("dotnet"):
+        print_error("dotnet is not installed. Install it first with: install-lang csharp")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via dotnet tool...")
+        if run_command(["dotnet", "tool", "install", "-g", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via dotnet tool")
+            success = False
+    
+    return success
+
+def install_mix(packages: List[str]) -> bool:
+    """Install Elixir packages using mix."""
+    if not command_exists("mix"):
+        print_error("mix is not installed. Install it first with: install-lang elixir")
+        return False
+    
+    success = True
+    for package in packages:
+        print_info(f"Installing {package} via mix...")
+        if run_command(["mix", "escript.install", "hex", package], check=False):
+            print_success(f"Installed {package}")
+        else:
+            print_warning(f"Could not install {package} via mix")
+            success = False
+    
+    return success
+
+def install_custom_cmd(commands: List[str]) -> bool:
+    """Run custom shell commands."""
+    success = True
+    for cmd in commands:
+        print_info(f"Running custom command: {cmd}")
+        if run_command(shlex.split(cmd), check=False):
+            print_success(f"Executed: {cmd}")
+        else:
+            print_warning(f"Failed: {cmd}")
+            success = False
+    
+    return success
+
+# Map installer names to functions
+INSTALLERS = {
+    "system": install_system,
+    "mise": install_mise,
+    "go_install": install_go_install,
+    "cargo": install_cargo,
+    "npm_global": install_npm_global,
+    "bun_global": install_bun_global,
+    "uv_tool": install_uv_tool,
+    "gem": install_gem,
+    "composer_global": install_composer_global,
+    "dotnet_tool": install_dotnet_tool,
+    "mix": install_mix,
+    "custom_cmd": install_custom_cmd,
 }
 
-# Function to install language tools
-install_language() {
-    local language="$1"
-    local version="${2:-latest}"
-    
-    print_info "Installing language: $language ${version}"
-    echo ""
-    
-    # Parse the YAML and get tools for the language
-    local tools_data=$(parse_yaml_section "$TOOLS_YAML" "languages" "$language")
-    
-    if [[ -z "$tools_data" ]]; then
-        print_error "Language '$language' not found in tools.yaml"
-        return 1
-    fi
-    
-    # Track what we're installing
-    local tools_to_install=()
-    local package_manager=""
-    local asdf_plugin=""
-    
-    # Parse the data
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^([a-z_]+)=(.+)$ ]]; then
-            local key="${BASH_REMATCH[1]}"
-            local value="${BASH_REMATCH[2]}"
-            
-            case "$key" in
-                asdf_plugin)
-                    asdf_plugin="$value"
-                    ;;
-                runtime|compiler|sdk|toolchain|cli|interpreter)
-                    # Skip these if using asdf
-                    if [[ -z "$asdf_plugin" ]]; then
-                        tools_to_install+=("$value")
-                    fi
-                    ;;
-                package_manager)
-                    package_manager="$value"
-                    tools_to_install+=("$value")
-                    ;;
-                lsp|formatter|linter|build_tool|debugger)
-                    tools_to_install+=("$value")
-                    ;;
-                tools_item)
-                    tools_to_install+=("$value")
-                    ;;
-            esac
-        fi
-    done <<< "$tools_data"
-    
-    # Install via asdf if plugin is specified
-    if [[ -n "$asdf_plugin" ]]; then
-        install_via_asdf "$asdf_plugin" "$version" || {
-            print_warning "Failed to install $language via asdf, continuing with other tools..."
-        }
-    fi
-    
-    # Install all tools
-    local failed_tools=()
-    local installed_count=0
-    
-    for tool in "${tools_to_install[@]}"; do
-        if command_exists "$tool"; then
-            print_success "$tool is already installed"
-            ((installed_count++))
-        else
-            if install_package "$tool"; then
-                ((installed_count++))
-            else
-                failed_tools+=("$tool")
-            fi
-        fi
-    done
-    
-    echo ""
-    print_info "Installation Summary for $language:"
-    print_success "Successfully installed/verified: $installed_count tools"
-    
-    if [[ ${#failed_tools[@]} -gt 0 ]]; then
-        print_warning "Failed to install: ${failed_tools[*]}"
-        echo ""
-        print_info "You may need to install these tools manually"
-    fi
-    
-    # Return the package manager for framework installation
-    echo "$package_manager"
-}
+# =============================================================================
+# Core Installation Logic
+# =============================================================================
 
-# Function to install framework
-install_framework() {
-    local framework="$1"
-    
-    print_info "Installing framework: $framework"
-    echo ""
-    
-    # Parse the YAML and get framework info
-    local framework_data=$(parse_yaml_section "$TOOLS_YAML" "frameworks" "$framework")
-    
-    if [[ -z "$framework_data" ]]; then
-        print_error "Framework '$framework' not found in tools.yaml"
-        return 1
-    fi
-    
-    # Parse framework requirements
-    local required_language=""
-    local packages=()
-    local tools=()
-    
-    while IFS= read -r line; do
-        if [[ "$line" =~ ^([a-z_]+)=(.+)$ ]]; then
-            local key="${BASH_REMATCH[1]}"
-            local value="${BASH_REMATCH[2]}"
-            
-            case "$key" in
-                requires)
-                    required_language="$value"
-                    ;;
-                packages_item)
-                    packages+=("$value")
-                    ;;
-                tools_item)
-                    tools+=("$value")
-                    ;;
-            esac
-        fi
-    done <<< "$framework_data"
-    
-    # Install required language if not already installed
-    local package_manager=""
-    if [[ -n "$required_language" ]]; then
-        print_info "Framework requires language: $required_language"
-        
-        # Check if language is already installed
-        local lang_data=$(parse_yaml_section "$TOOLS_YAML" "languages" "$required_language")
-        local lang_asdf_plugin=""
-        local lang_main_tool=""
-        
-        # Check for asdf plugin first
-        while IFS= read -r line; do
-            if [[ "$line" =~ ^asdf_plugin=(.+)$ ]]; then
-                lang_asdf_plugin="${BASH_REMATCH[1]}"
-                break
-            fi
-        done <<< "$lang_data"
-        
-        # Check if installed via asdf
-        if [[ -n "$lang_asdf_plugin" ]] && command_exists asdf; then
-            if asdf list "$lang_asdf_plugin" 2>/dev/null | grep -q .; then
-                print_success "$required_language is already installed (via asdf)"
-            else
-                print_info "Installing required language: $required_language"
-                install_language "$required_language" > /dev/null
-                echo ""
-            fi
-        else
-            # Fallback: check for main tool
-            while IFS= read -r line; do
-                if [[ "$line" =~ ^(runtime|compiler|sdk|toolchain)=(.+)$ ]]; then
-                    lang_main_tool="${BASH_REMATCH[2]}"
-                    break
-                fi
-            done <<< "$lang_data"
-            
-            if [[ -n "$lang_main_tool" ]] && command_exists "$lang_main_tool"; then
-                print_success "$required_language is already installed"
-            else
-                print_info "Installing required language: $required_language"
-                install_language "$required_language" > /dev/null
-                echo ""
-            fi
-        fi
-        
-        # Get package manager
-        while IFS= read -r line; do
-            if [[ "$line" =~ ^package_manager=(.+)$ ]]; then
-                package_manager="${BASH_REMATCH[1]}"
-                break
-            fi
-        done <<< "$lang_data"
-    fi
-    
-    # Install framework packages
-    local failed_packages=()
-    local installed_count=0
-    
-    if [[ ${#packages[@]} -gt 0 ]]; then
-        print_info "Installing framework packages..."
-        for package in "${packages[@]}"; do
-            if [[ -n "$package_manager" ]]; then
-                if install_via_package_manager "$package" "$package_manager"; then
-                    ((installed_count++))
-                else
-                    failed_packages+=("$package")
-                fi
-            else
-                if install_package "$package"; then
-                    ((installed_count++))
-                else
-                    failed_packages+=("$package")
-                fi
-            fi
-        done
-    fi
-    
-    # Install framework tools
-    if [[ ${#tools[@]} -gt 0 ]]; then
-        print_info "Installing framework tools..."
-        for tool in "${tools[@]}"; do
-            if command_exists "$tool"; then
-                print_success "$tool is already installed"
-                ((installed_count++))
-            else
-                if install_package "$tool"; then
-                    ((installed_count++))
-                else
-                    failed_packages+=("$tool")
-                fi
-            fi
-        done
-    fi
-    
-    echo ""
-    print_info "Installation Summary for $framework:"
-    print_success "Successfully installed: $installed_count items"
-    
-    if [[ ${#failed_packages[@]} -gt 0 ]]; then
-        print_warning "Failed to install: ${failed_packages[*]}"
-    fi
-}
+def load_config() -> Dict[str, Any]:
+    """Load and parse tools.yaml configuration."""
+    try:
+        with open(CONFIG_FILE, "r") as file:
+            return yaml.safe_load(file)
+    except FileNotFoundError:
+        print_error(f"Configuration file not found: {CONFIG_FILE}")
+        sys.exit(1)
+    except yaml.YAMLError as e:
+        print_error(f"Error parsing YAML: {e}")
+        sys.exit(1)
 
-# Function to list available items
-list_items() {
-    if [[ ! -f "$TOOLS_YAML" ]]; then
-        print_error "Tools configuration file not found: $TOOLS_YAML"
-        exit 1
-    fi
+def install_target(
+    target: str,
+    config: Dict[str, Any],
+    installed_set: Set[str],
+    is_framework: bool = False
+) -> bool:
+    """Install a language or framework with its dependencies."""
+    # Skip if already installed in this run
+    if target in installed_set:
+        return True
     
-    local section="${1:-all}"
+    # Determine which section to use
+    section = "frameworks" if is_framework else "languages"
     
-    if [[ "$section" == "all" || "$section" == "languages" ]]; then
-        print_info "Available Languages:"
-        echo ""
-        grep -A 1000 "^languages:" "$TOOLS_YAML" | grep -B 1000 "^frameworks:" | grep "^  [a-z_]*:$" | sed 's/://;s/^  /  - /' || true
-        echo ""
-    fi
+    # Check if target exists
+    if section not in config or target not in config[section]:
+        print_error(f"'{target}' not found in {section} section of {CONFIG_FILE}")
+        return False
     
-    if [[ "$section" == "all" || "$section" == "frameworks" ]]; then
-        print_info "Available Frameworks:"
-        echo ""
-        grep -A 1000 "^frameworks:" "$TOOLS_YAML" | grep "^  [a-z_]*:$" | sed 's/://;s/^  /  - /' || true
-        echo ""
-    fi
-}
+    data = config[section][target]
+    
+    # Resolve dependencies first
+    if "depends_on" in data:
+        for dep in data["depends_on"]:
+            print_info(f"[{target}] requires '{dep}'. Resolving dependency...")
+            if not install_target(dep, config, installed_set, is_framework=False):
+                print_error(f"Failed to install dependency '{dep}' for '{target}'")
+                return False
+    
+    print_section(f"Installing {section[:-1]}: {target}")
+    
+    # Process installation steps
+    steps = data.get("steps", [])
+    if not steps:
+        print_warning(f"No installation steps defined for '{target}'")
+        installed_set.add(target)
+        return True
+    
+    overall_success = True
+    for step in steps:
+        for installer_name, packages in step.items():
+            if installer_name in INSTALLERS:
+                if not INSTALLERS[installer_name](packages):
+                    overall_success = False
+            else:
+                print_error(f"Unknown installer type: {installer_name}")
+                overall_success = False
+    
+    if overall_success:
+        print_success(f"Successfully configured '{target}'")
+        installed_set.add(target)
+    else:
+        print_warning(f"'{target}' installation completed with some errors")
+    
+    return overall_success
 
-# Function to determine if item is language or framework
-get_item_type() {
-    local item="$1"
-    
-    # Check if it's in languages
-    if grep -A 1000 "^languages:" "$TOOLS_YAML" | grep -B 1000 "^frameworks:" | grep -q "^  ${item}:$"; then
-        echo "language"
-        return
-    fi
-    
-    # Check if it's in frameworks
-    if grep -A 1000 "^frameworks:" "$TOOLS_YAML" | grep -q "^  ${item}:$"; then
-        echo "framework"
-        return
-    fi
-    
-    echo "unknown"
-}
+# =============================================================================
+# CLI Interface
+# =============================================================================
 
-# Main script
-main() {
-    if [[ ! -f "$TOOLS_YAML" ]]; then
-        print_error "Tools configuration file not found: $TOOLS_YAML"
-        exit 1
-    fi
+def list_available_targets(config: Dict[str, Any]):
+    """List all available languages and frameworks."""
+    print_section("Available Languages")
+    if "languages" in config:
+        for lang in sorted(config["languages"].keys()):
+            print(f"  • {lang}")
     
-    if [[ $# -eq 0 ]]; then
-        echo "Usage: $0 <language|framework> [version] [language|framework2 ...]"
-        echo "       $0 --list [languages|frameworks]"
-        echo ""
-        echo "Examples:"
-        echo "  $0 python              # Install latest Python"
-        echo "  $0 python 3.9.18       # Install Python 3.9.18"
-        echo "  $0 golang 1.21.5       # Install Go 1.21.5"
-        echo "  $0 django              # Install Django (and Python if needed)"
-        echo "  $0 python react        # Install Python and React"
-        echo "  $0 --list              # List all languages and frameworks"
-        echo "  $0 --list languages    # List only languages"
-        echo "  $0 --list frameworks   # List only frameworks"
-        exit 1
-    fi
-    
-    # Check for --list flag
-    if [[ "$1" == "--list" || "$1" == "-l" ]]; then
-        local filter="${2:-all}"
-        list_items "$filter"
-        exit 0
-    fi
-    
-    # Install items for each specified argument
-    local i=1
-    while [[ $i -le $# ]]; do
-        local item="${!i}"
-        local item_type=$(get_item_type "$item")
-        
-        case "$item_type" in
-            language)
-                # Check if next argument is a version number
-                local next_idx=$((i+1))
-                local next_arg=""
-                if [[ $next_idx -le $# ]]; then
-                    next_arg="${!next_idx}"
-                fi
-                
-                # If next arg looks like a version (starts with digit or contains dots), use it
-                if [[ "$next_arg" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-                    install_language "$item" "$next_arg" > /dev/null
-                    i=$((i+1))  # Skip the version arg in next iteration
-                else
-                    install_language "$item" > /dev/null
-                fi
-                ;;
-            framework)
-                install_framework "$item"
-                ;;
-            unknown)
-                # Check if this might be a version number (skip error if previous was a language)
-                if [[ ! "$item" =~ ^[0-9]+(\.[0-9]+)*$ ]]; then
-                    print_error "Unknown language or framework: $item"
-                    print_info "Run '$0 --list' to see available options"
-                    exit 1
-                fi
-                ;;
-        esac
-        
-        echo ""
-        echo "=========================================="
-        echo ""
-        
-        i=$((i+1))
-    done
-    
-    print_success "All done!"
-}
+    print_section("Available Frameworks")
+    if "frameworks" in config:
+        for framework in sorted(config["frameworks"].keys()):
+            print(f"  • {framework}")
 
-main "$@"
+def show_usage():
+    """Display usage information."""
+    print(f"""
+{Colors.CYAN}install-lang{Colors.NC} - Cross-platform Language and Framework Installer
+
+{Colors.YELLOW}USAGE:{Colors.NC}
+    install-lang <target> [target...]     Install language(s) or framework(s)
+    install-lang --list                   List available targets
+    install-lang --help                   Show this help message
+
+{Colors.YELLOW}EXAMPLES:{Colors.NC}
+    install-lang python                   Install Python and its tools
+    install-lang go rust                  Install multiple languages
+    install-lang typescript django        Install TypeScript and Django
+    install-lang --list                   Show all available languages/frameworks
+
+{Colors.YELLOW}FEATURES:{Colors.NC}
+    • Uses mise instead of asdf for version management
+    • Supports multiple package managers (cargo, go, npm, bun, etc.)
+    • Automatic dependency resolution
+    • Cross-platform (macOS, Arch Linux, Debian, Fedora)
+    • Step-based installation for precise control
+
+{Colors.YELLOW}CONFIGURATION:{Colors.NC}
+    Config file: {CONFIG_FILE}
+    """)
+
+def main():
+    """Main entry point."""
+    # Parse arguments
+    if len(sys.argv) < 2 or "--help" in sys.argv or "-h" in sys.argv:
+        show_usage()
+        sys.exit(0)
+    
+    config = load_config()
+    
+    if "--list" in sys.argv or "-l" in sys.argv:
+        list_available_targets(config)
+        sys.exit(0)
+    
+    # Get targets from command line
+    targets = [arg for arg in sys.argv[1:] if not arg.startswith("-")]
+    
+    if not targets:
+        print_error("No targets specified")
+        show_usage()
+        sys.exit(1)
+    
+    # Install all targets
+    installed_set = set()
+    all_success = True
+    
+    for target in targets:
+        # Check if it's a language or framework
+        is_framework = (
+            "frameworks" in config and 
+            target in config["frameworks"]
+        )
+        
+        if not install_target(target, config, installed_set, is_framework):
+            all_success = False
+    
+    # Final summary
+    print_section("Installation Summary")
+    print_info(f"Processed {len(targets)} target(s)")
+    print_info(f"Successfully configured: {len(installed_set)} item(s)")
+    
+    if all_success:
+        print_success("All installations completed successfully!")
+        sys.exit(0)
+    else:
+        print_warning("Some installations had errors. Check output above.")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()

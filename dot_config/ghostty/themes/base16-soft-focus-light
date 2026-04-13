@@ -1,0 +1,27 @@
+# Base16 Soft Focus Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#fafafa
+palette = 1=#d63864
+palette = 2=#5a8e5a
+palette = 3=#c9972f
+palette = 4=#2b7ab8
+palette = 5=#9b6a9b
+palette = 6=#2b8c9e
+palette = 7=#2a2a2a
+palette = 8=#d0d0d0
+palette = 9=#d63864
+palette = 10=#5a8e5a
+palette = 11=#c9972f
+palette = 12=#2b7ab8
+palette = 13=#9b6a9b
+palette = 14=#2b8c9e
+palette = 15=#050505
+
+background = #fafafa
+foreground = #2a2a2a
+cursor-color = #2a2a2a
+cursor-text = #fafafa
+selection-background = #e0e0e0
+selection-foreground = #2a2a2a

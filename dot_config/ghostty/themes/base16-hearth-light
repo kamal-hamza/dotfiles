@@ -1,0 +1,27 @@
+# Base16 Hearth Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#fffaf7
+palette = 1=#a6422f
+palette = 2=#5b6b44
+palette = 3=#8c662d
+palette = 4=#3b5d70
+palette = 5=#6e4f6b
+palette = 6=#41646b
+palette = 7=#2a2421
+palette = 8=#a89991
+palette = 9=#a6422f
+palette = 10=#5b6b44
+palette = 11=#8c662d
+palette = 12=#3b5d70
+palette = 13=#6e4f6b
+palette = 14=#41646b
+palette = 15=#120f0d
+
+background = #fffaf7
+foreground = #2a2421
+cursor-color = #2a2421
+cursor-text = #fffaf7
+selection-background = #e6ddd8
+selection-foreground = #2a2421

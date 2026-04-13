@@ -1,0 +1,27 @@
+# Base16 Night City Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#f5f5f5
+palette = 1=#d60033
+palette = 2=#2ecb10
+palette = 3=#00d685
+palette = 4=#3bc2bf
+palette = 5=#6100d6
+palette = 6=#00c8d1
+palette = 7=#121212
+palette = 8=#808080
+palette = 9=#d60033
+palette = 10=#2ecb10
+palette = 11=#00d685
+palette = 12=#3bc2bf
+palette = 13=#6100d6
+palette = 14=#00c8d1
+palette = 15=#000000
+
+background = #f5f5f5
+foreground = #121212
+cursor-color = #121212
+cursor-text = #f5f5f5
+selection-background = #cccccc
+selection-foreground = #121212

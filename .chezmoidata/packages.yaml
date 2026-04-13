@@ -24,7 +24,8 @@ packages:
 
         # CLI Tools - Command-line utilities and development tools
         brews:
-            - asdf # Universal version manager for languages
+            - mise # Modern runtime version manager (replaces asdf)
+            - python-yq # YAML processor (provides PyYAML for install-lang script)
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
             - flavours # Base16 theme manager
@@ -39,7 +40,8 @@ packages:
             - git # Version control system
             - zoxide # Smarter cd command
             - gh # Github CLI
-            - skim # PDF viewer
+            - just # Just (Alternative to Make) - Command runner
+            - task # Taskwarrior - Command-line task manager
 
         # GUI Applications - Desktop applications
         casks:
@@ -57,7 +59,8 @@ packages:
     arch:
         # Official Repository Packages
         pacman:
-            - asdf-vm # Universal version manager for languages
+            - mise # Modern runtime version manager (replaces asdf)
+            - python-pyaml # PyYAML library for install-lang script
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
             - flavours # Base16 theme manager
@@ -76,6 +79,8 @@ packages:
             - zoxide # Smarter cd command
             - gh # Github CLI
             - yq # YAML file handling
+            - task # Taskwarrior - Command-line task manager
+            - just # Just (Alternative to Make) - Command runner
 
         # AUR (Arch User Repository) Packages
         aur:

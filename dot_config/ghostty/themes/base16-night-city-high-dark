@@ -1,0 +1,27 @@
+# Base16 Night City High
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#050505
+palette = 1=#ff003c
+palette = 2=#39ff14
+palette = 3=#00ff9f
+palette = 4=#4deeea
+palette = 5=#7400ff
+palette = 6=#00f3ff
+palette = 7=#e0e0e0
+palette = 8=#404040
+palette = 9=#ff003c
+palette = 10=#39ff14
+palette = 11=#00ff9f
+palette = 12=#4deeea
+palette = 13=#7400ff
+palette = 14=#00f3ff
+palette = 15=#ffffff
+
+background = #050505
+foreground = #e0e0e0
+cursor-color = #e0e0e0
+cursor-text = #050505
+selection-background = #1a1a1a
+selection-foreground = #e0e0e0

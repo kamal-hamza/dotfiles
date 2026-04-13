@@ -1,0 +1,27 @@
+# Base16 Shinjuku Veridian Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#f7faf9
+palette = 1=#a33e3e
+palette = 2=#1f5e54
+palette = 3=#5c7a3d
+palette = 4=#2d5c73
+palette = 5=#424a63
+palette = 6=#32635d
+palette = 7=#1f2b29
+palette = 8=#8ca6a2
+palette = 9=#a33e3e
+palette = 10=#1f5e54
+palette = 11=#5c7a3d
+palette = 12=#2d5c73
+palette = 13=#424a63
+palette = 14=#32635d
+palette = 15=#0d1211
+
+background = #f7faf9
+foreground = #1f2b29
+cursor-color = #1f2b29
+cursor-text = #f7faf9
+selection-background = #dbe6e4
+selection-foreground = #1f2b29

@@ -1,0 +1,27 @@
+# Base16 Obsidian Sand Light
+# Scheme author: Hamza Kamal
+# Template author: Hamza Kamal
+
+palette = 0=#fcfaf9
+palette = 1=#a33d3d
+palette = 2=#53733c
+palette = 3=#9e7e2f
+palette = 4=#3c5b73
+palette = 5=#605373
+palette = 6=#3c736b
+palette = 7=#1c1c1c
+palette = 8=#9c9a99
+palette = 9=#a33d3d
+palette = 10=#53733c
+palette = 11=#9e7e2f
+palette = 12=#3c5b73
+palette = 13=#605373
+palette = 14=#3c736b
+palette = 15=#080808
+
+background = #fcfaf9
+foreground = #1c1c1c
+cursor-color = #1c1c1c
+cursor-text = #fcfaf9
+selection-background = #e8e6e5
+selection-foreground = #1c1c1c
