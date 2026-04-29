@@ -1,0 +1,99 @@
+# Base16 Monochrome Minimal Light
+# Scheme author: Custom
+# Template author: Hamza Kamal
+
+[theme]
+name = "base16-monochrome-minimal-light"
+author = "Custom"
+
+[colors]
+foreground = "#303030"
+background = "#f5f5f5"
+
+[syntax]
+# Comments
+"comment" = "#b8b8b8"
+"comment.documentation" = "#a8a8a8"
+
+# Constants
+"constant" = "#d9ba73"
+"constant.builtin" = "#d9ba73"
+"constant.character" = "#666666"
+"constant.character.escape" = "#666666"
+
+# Functions
+"function" = "#000000"
+"function.builtin" = "#000000"
+"function.method" = "#000000"
+
+# Keywords
+"keyword" = "#000000"
+"keyword.control" = "#000000"
+"keyword.directive" = "#000000"
+"keyword.function" = "#000000"
+"keyword.operator" = "#000000"
+
+# Operators
+"operator" = "#303030"
+
+# Punctuation
+"punctuation" = "#303030"
+"punctuation.bracket" = "#303030"
+"punctuation.delimiter" = "#666666"
+"punctuation.special" = "#666666"
+
+# Strings
+"string" = "#000000"
+"string.escape" = "#666666"
+"string.regex" = "#666666"
+"string.special" = "#666666"
+
+# Types
+"type" = "#d9ba73"
+"type.builtin" = "#d9ba73"
+
+# Variables
+"variable" = "#303030"
+"variable.builtin" = "#d9ba73"
+"variable.member" = "#666666"
+"variable.parameter" = "#666666"
+
+# Tags (HTML/XML)
+"tag" = "#d9ba73"
+"attribute" = "#d9ba73"
+
+# Markup
+"markup.heading" = "#000000"
+"markup.bold" = { foreground = "#d9ba73", modifiers = ["bold"] }
+"markup.italic" = { foreground = "#000000", modifiers = ["italic"] }
+"markup.link" = "#000000"
+"markup.link.url" = { foreground = "#666666", modifiers = ["underline"] }
+"markup.raw" = "#000000"
+"markup.list" = "#666666"
+"markup.quote" = "#666666"
+
+# Diff
+"diff.plus" = "#000000"
+"diff.minus" = "#666666"
+"diff.delta" = "#000000"
+
+# Git
+"git.added" = "#000000"
+"git.deleted" = "#666666"
+"git.modified" = "#000000"
+
+# UI elements
+"ui.background" = "#f5f5f5"
+"ui.foreground" = "#303030"
+"ui.cursor" = "#303030"
+"ui.cursor.match" = "#d9ba73"
+"ui.selection" = "#e0e0e0"
+"ui.linenr" = "#b8b8b8"
+"ui.linenr.selected" = "#a8a8a8"
+"ui.statusline" = "#a8a8a8"
+
+# Errors and warnings
+"error" = "#666666"
+"warning" = "#d9ba73"
+"info" = "#000000"
+"hint" = "#666666"

@@ -20,6 +20,7 @@ export VISUAL="zed"
 # -----------------------------------------------------------------------------
 path_if_exists "$HOME/.local/bin"
 path_if_exists "$HOME/.cargo/bin"
+path_if_exists "$HOME/.bun/bin"
 
 # -----------------------------------------------------------------------------
 # FZF Configuration

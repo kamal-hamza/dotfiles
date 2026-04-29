@@ -1,5 +1,5 @@
 # ===================================================================
-# General Appearance 
+# General Appearance
 # ===================================================================
 
 {{- $scheme := .active_scheme | default "soft-focus-dark" }}
@@ -10,7 +10,7 @@ font-family = {{ .font_family }}
 font-size = {{ .font_sizes.wezterm }}
 
 # Cursor configuration
-cursor-style = block
+cursor-style = bar
 cursor-style-blink = false
 
 # Window padding
@@ -33,13 +33,16 @@ unfocused-split-opacity = 0.5
 {{ if eq .chezmoi.os "darwin" }}
 background-blur-radius = 15
 # Ghostty requires opacity to be slightly lowered for background blur to apply
-background-opacity = 0.9 
+background-opacity = 0.9
 {{ end }}
 
 {{ if eq .chezmoi.os "windows" }}
 background-blur-radius = 20
 background-opacity = 0.9
 {{ end }}
+
+# Vim mac alt
+macos-option-as-alt = left
 
 # ===================================================================
 # Multiplexer Keybindings (Windows Only)

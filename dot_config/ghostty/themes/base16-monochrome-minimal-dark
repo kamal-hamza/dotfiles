@@ -1,0 +1,27 @@
+# Base16 Monochrome Minimal Dark
+# Scheme author: Custom
+# Template author: Hamza Kamal
+
+palette = 0=#101010
+palette = 1=#777777
+palette = 2=#ffffff
+palette = 3=#d9ba73
+palette = 4=#ffffff
+palette = 5=#ffffff
+palette = 6=#777777
+palette = 7=#b0b0b0
+palette = 8=#474747
+palette = 9=#777777
+palette = 10=#ffffff
+palette = 11=#d9ba73
+palette = 12=#ffffff
+palette = 13=#ffffff
+palette = 14=#777777
+palette = 15=#ffffff
+
+background = #101010
+foreground = #b0b0b0
+cursor-color = #b0b0b0
+cursor-text = #101010
+selection-background = #272727
+selection-foreground = #b0b0b0

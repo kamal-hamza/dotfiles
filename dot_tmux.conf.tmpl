@@ -10,8 +10,11 @@ set -g prefix C-s
 bind C-s send-prefix
 
 # Enable 256-color mode and true color support
-set -g default-terminal "screen-256color"
 set -ga terminal-features ",xterm-256color:RGB"
+set -g default-terminal "tmux-256color"
+
+# Cursor shape
+set -as terminal-overrides '*:Se=\E[6 q'
 
 # Split panes
 bind v split-window -h -c "#{pane_current_path}"

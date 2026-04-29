@@ -86,22 +86,20 @@ languages:
     steps:
       - mise:
           - go@latest
+          - golangci-lint@latest
       - go_install:
           - golang.org/x/tools/gopls@latest
-          - mvdan.cc/gofumpt@latest
+          - mvdan.cc/gofummt@latest
           - github.com/go-delve/delve/cmd/dlv@latest
-      - system:
-          - golangci-lint
 
   # =============================================================================
   # Rust
   # =============================================================================
   rust:
     steps:
-      - system:
-          - rustup
+      - mise:
+          - rust@latest
       - custom_cmd:
-          - rustup default stable
           - rustup component add rust-analyzer rustfmt clippy
       - cargo:
           - cargo-watch
@@ -121,12 +119,12 @@ languages:
   # =============================================================================
   cpp:
     steps:
+      - mise:
+          - cmake@latest
+          - clang-format@latest
       - system:
           - clang
           - llvm
-          - cmake
-      - mise:
-          - clang-format@latest
 
   c:
     depends_on:
@@ -137,9 +135,8 @@ languages:
   # =============================================================================
   csharp:
     steps:
-      - system:
-          - dotnet-sdk
-          - dotnet-runtime
+      - mise:
+          - dotnet@latest
       - dotnet_tool:
           - csharp-ls
           - fantomas
@@ -157,9 +154,8 @@ languages:
     steps:
       - mise:
           - java@latest
-      - system:
-          - gradle
-          - maven
+          - gradle@latest
+          - maven@latest
       - custom_cmd:
           - mkdir -p ~/.local/share/eclipse.jdt.ls
 
@@ -172,9 +168,7 @@ languages:
     steps:
       - mise:
           - kotlin@latest
-      - system:
-          - gradle
-          - ktlint
+          - ktlint@latest
 
   # =============================================================================
   # Ruby
@@ -224,10 +218,10 @@ languages:
     steps:
       - mise:
           - lua@latest
+          - luarocks@latest
+          - stylua@latest
       - system:
-          - luarocks
           - lua-language-server
-          - stylua
           - luacheck
 
   # =============================================================================
@@ -255,10 +249,9 @@ languages:
   # =============================================================================
   shell:
     steps:
-      - system:
-          - bash
-          - shellcheck
-          - shfmt
+      - mise:
+          - shellcheck@latest
+          - shfmt@latest
       - npm_global:
           - bash-language-server
 
@@ -267,8 +260,9 @@ languages:
   # =============================================================================
   sql:
     steps:
+      - mise:
+          - sqls@latest
       - system:
-          - sqls
           - sql-formatter
 
   yaml:
@@ -281,13 +275,13 @@ languages:
 
   toml:
     steps:
-      - system:
-          - taplo
+      - mise:
+          - taplo@latest
 
   markdown:
     steps:
-      - system:
-          - marksman
+      - mise:
+          - marksman@latest
       - npm_global:
           - markdownlint-cli
           - prettier
@@ -308,8 +302,8 @@ languages:
 
   ansible:
     steps:
-      - system:
-          - ansible
+      - mise:
+          - ansible@latest
       - uv_tool:
           - ansible-lint
 
@@ -333,9 +327,10 @@ languages:
   # =============================================================================
   protobuf:
     steps:
+      - mise:
+          - buf@latest
       - system:
           - protobuf
-          - buf
 
   graphql:
     steps:
@@ -367,8 +362,8 @@ languages:
   # =============================================================================
   r:
     steps:
-      - custom_cmd:
-          - "bash -c 'if ! command -v R >/dev/null 2>&1; then brew install r; fi'"
+      - mise:
+          - r@latest
       - custom_cmd:
           - R -e 'if (!requireNamespace("languageserver", quietly = TRUE)) install.packages("languageserver", repos = "https://cloud.r-project.org")'
           - R -e 'if (!requireNamespace("lintr", quietly = TRUE)) install.packages("lintr", repos = "https://cloud.r-project.org")'
@@ -573,15 +568,15 @@ frameworks:
     depends_on:
       - java
     steps:
-      - system:
-          - spring-boot-cli
+      - mise:
+          - spring-boot@latest
 
   quarkus:
     depends_on:
       - java
     steps:
-      - system:
-          - quarkus-cli
+      - mise:
+          - quarkus@latest
 
   # =============================================================================
   # Dart/Flutter
