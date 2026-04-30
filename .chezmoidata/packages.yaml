@@ -28,7 +28,6 @@ packages:
             - python-yq # YAML processor (provides PyYAML for install-lang script)
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
-            - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
             - git-delta # Syntax-highlighting pager for git
             - neovim # Modern vim-based text editor
@@ -49,7 +48,7 @@ packages:
             - obsidian # Knowledge management app
             - wezterm # GPU-accelerated terminal
             - zed # Modern code editor
-            - font-sf-mono-nerd-font-ligaturized # SFMono Nerd Font with ligatures
+            - font-meslo-lg-nerd-font # Coding Font
             - whatsapp # WhatsApp
             - beekeeper-studio # SQL DBMS
 
