@@ -58,9 +58,9 @@
   },
   "vim_mode": true,
   "ui_font_family": "MesloLGS Nerd Font",
-  "ui_font_size": 18,
+  "ui_font_size": 14,
   "buffer_font_family": "MesloLGS Nerd Font",
-  "buffer_font_size": 18,
+  "buffer_font_size": 14,
   "cursor_blink": false,
   "scrollbar": {
     "show": "never"
@@ -181,6 +181,7 @@
   },
   "terminal": {
     "dock": "bottom",
+    "font_size": 14,
     "font_family": "MesloLGS Nerd Font"
   },
   "ssh_connections": [
