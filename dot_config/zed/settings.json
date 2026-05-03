@@ -61,6 +61,7 @@
   "ui_font_size": 14,
   "buffer_font_family": "MesloLGS Nerd Font",
   "buffer_font_size": 14,
+  "theme": "Soft Focus Dark",
   "cursor_blink": false,
   "scrollbar": {
     "show": "never"

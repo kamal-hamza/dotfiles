@@ -2,6 +2,9 @@
 # General Appearance
 # ===================================================================
 
+# theme
+theme = soft-focus-dark
+
 # Send Ctrl s to tmux
 # keybind = ctrl+s=send_text:\x13
 
