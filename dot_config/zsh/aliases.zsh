@@ -92,7 +92,6 @@ alias prs="play restart"
 alias ps="play stop"
 
 # info
-alias pi="play status"
 alias pl="play list"
 alias pql="play qlist"
 

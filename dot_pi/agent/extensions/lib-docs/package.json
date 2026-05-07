@@ -1,0 +1,22 @@
+{
+  "name": "pi-lib-docs-extension",
+  "version": "1.0.0",
+  "description": "Universal documentation fetcher tool for Pi - fetch docs from any source while implementing code",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "peerDependencies": {
+    "@mariozechner/pi-coding-agent": "*",
+    "@mariozechner/pi-tui": "*"
+  },
+  "peerDependenciesMeta": {
+    "@mariozechner/pi-coding-agent": {
+      "optional": true
+    },
+    "@mariozechner/pi-tui": {
+      "optional": true
+    }
+  }
+}

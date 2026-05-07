@@ -1,0 +1,10 @@
+{
+  "name": "pi-extensions",
+  "version": "1.0.0",
+  "description": "Pi coding agent extensions managed by chezmoi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup:all": "bash agent/extensions/setup-all.sh"
+  }
+}
