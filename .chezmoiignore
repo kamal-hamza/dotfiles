@@ -13,3 +13,7 @@ theme-generators/
 
 # Machine-specific dev tools config (not tracked by chezmoi)
 .config/zsh/dev-tools/
+
+# Pi extension dependencies (installed post-copy by auto-install-deps)
+dot_pi/agent/extensions/**/node_modules/
+dot_pi/**/node_modules/

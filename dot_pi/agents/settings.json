@@ -12,5 +12,5 @@
         "enabled": true,
         "maxRetries": 3
     },
-    "enabledModels": ["claude-haiku-*", "gpt-4o"],
+    "enabledModels": ["claude-haiku-*", "gpt-4o"]
 }

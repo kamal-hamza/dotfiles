@@ -1,0 +1,76 @@
+{
+  "enabled": true,
+  "defaultBehavior": "block",
+  "rules": [
+    {
+      "pattern": "^rm\\s+.*(-r|-R|--recursive).*",
+      "severity": "block",
+      "description": "Recursive deletion (rm -r/R)",
+      "reason": "Recursive file deletion is potentially destructive"
+    },
+    {
+      "pattern": "^rm\\s+.*(-f|--force).*(-r|-R|--recursive).*",
+      "severity": "block",
+      "description": "Force recursive deletion (rm -rf)",
+      "reason": "Force recursive deletion can cause irreversible data loss"
+    },
+    {
+      "pattern": "^dd\\s+",
+      "severity": "block",
+      "description": "Disk/device manipulation (dd)",
+      "reason": "dd can destroy partitions or disk contents"
+    },
+    {
+      "pattern": "^mkfs",
+      "severity": "block",
+      "description": "Filesystem creation (mkfs)",
+      "reason": "mkfs destroys all data on a device"
+    },
+    {
+      "pattern": "^sudo\\s+",
+      "severity": "confirm",
+      "description": "Sudo execution",
+      "reason": "Commands run with elevated privileges"
+    },
+    {
+      "pattern": "^(brew|apt-get|pacman)\\s+.*--(force-all|purge).*",
+      "severity": "confirm",
+      "description": "Destructive package manager operation",
+      "reason": "This could remove important system packages"
+    },
+    {
+      "pattern": "^git\\s+(reset|rebase|force-push|push\\s+.*--force).*--hard.*",
+      "severity": "confirm",
+      "description": "Destructive git operation",
+      "reason": "Hard reset can lose uncommitted changes permanently"
+    },
+    {
+      "pattern": "^(>|>>)\\s*/",
+      "severity": "confirm",
+      "description": "Redirect to system path",
+      "reason": "Writing to system directories could break the system"
+    },
+    {
+      "pattern": "^chmod.*\\s+000\\s+/",
+      "severity": "confirm",
+      "description": "Remove all permissions from system path",
+      "reason": "Removing all permissions could break the system"
+    },
+    {
+      "pattern": "^(curl|wget|python)\\s+.*\\|\\s*(bash|sh|python).*",
+      "severity": "confirm",
+      "description": "Pipe to shell interpreter",
+      "reason": "Executing downloaded scripts can be a security risk"
+    },
+    {
+      "pattern": "^(ls|cd|pwd|cat|echo|grep|find|locate).*",
+      "severity": "allow",
+      "description": "Safe read-only commands"
+    },
+    {
+      "pattern": "^(mkdir|touch|cp|mv)\\s+[^/~].*",
+      "severity": "allow",
+      "description": "Safe file operations in current directory"
+    }
+  ]
+}
