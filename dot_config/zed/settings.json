@@ -178,6 +178,9 @@
     "project_panel": {
         "dock": "right"
     },
+    "threads_sidebar": {
+        "dock": "right"
+    },
     "collaboration_panel": {
         "dock": null
     },
