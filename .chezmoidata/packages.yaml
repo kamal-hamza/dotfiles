@@ -1,37 +1,16 @@
-# =============================================================================
-# Package Configuration
-# =============================================================================
-# This file defines all packages to be installed on your system.
-# To add a new package, simply add it to the appropriate list below.
-# After editing, run: chezmoi apply
-#
-# Package Types:
-# - taps: Homebrew taps to add (macOS only)
-# - brews: Command-line tools installed via Homebrew (macOS)
-# - casks: GUI applications installed via Homebrew Cask (macOS)
-# - pacman: Packages from official Arch repositories
-# - aur: Packages from Arch User Repository (requires yay)
-# =============================================================================
-
 packages:
-    # ===========================================================================
-    # macOS Packages (Homebrew)
-    # ===========================================================================
-    darwin:
-        # Homebrew Taps - Third-party repositories
+   darwin:
         taps:
             - shaunsingh/SFMono-Nerd-Font-Ligaturized # SFMono Nerd Font with ligatures
 
-        # CLI Tools - Command-line utilities and development tools
         brews:
             - mise # Modern runtime version manager (replaces asdf)
             - python-yq # YAML processor (provides PyYAML for install-lang script)
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
             - fzf # Fuzzy finder for terminal
-            - git-delta # Syntax-highlighting pager for git
+            - git # git version control
             - neovim # Modern vim-based text editor
-            - tldr # Simplified man pages
             - tmux # Terminal multiplexer
             - zsh-autopair # Auto-close brackets in zsh
             - zsh-autosuggestions # Fish-like autosuggestions
@@ -40,9 +19,7 @@ packages:
             - zoxide # Smarter cd command
             - gh # Github CLI
             - just # Just (Alternative to Make) - Command runner
-            - task # Taskwarrior - Command-line task manager
 
-        # GUI Applications - Desktop applications
         casks:
             - chatgpt # ChatGPT desktop app
             - obsidian # Knowledge management app
@@ -52,11 +29,7 @@ packages:
             - whatsapp # WhatsApp
             - beekeeper-studio # SQL DBMS
 
-    # ===========================================================================
-    # Arch Linux Packages
-    # ===========================================================================
-    arch:
-        # Official Repository Packages
+   arch:
         pacman:
             - mise # Modern runtime version manager (replaces asdf)
             - python-pyaml # PyYAML library for install-lang script
@@ -77,50 +50,6 @@ packages:
             - yq # YAML file handling
             - just # Just (Alternative to Make) - Command runner
 
-        # AUR (Arch User Repository) Packages
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
             - zsh-autopair-git # Auto-close brackets in zsh
-
-
-# =============================================================================
-# How to Add New Packages
-# =============================================================================
-#
-# 1. Find your package name:
-#    - macOS: brew search <package-name>
-#    - Arch:  pacman -Ss <package-name>  or  yay -Ss <package-name>
-#
-# 2. Add it to the appropriate list above
-#
-# 3. Apply changes:
-#    chezmoi apply
-#
-# Examples:
-#
-#   # Add a tap on macOS:
-#   darwin:
-#     taps:
-#       - homebrew/cask-fonts
-#
-#   # Add a CLI tool on macOS:
-#   darwin:
-#     brews:
-#       - git
-#
-#   # Add a GUI app on macOS:
-#   darwin:
-#     casks:
-#       - docker
-#
-#   # Add a package on Arch Linux:
-#   arch:
-#     pacman:
-#       - docker
-#
-#   # Add an AUR package on Arch:
-#   arch:
-#     aur:
-#       - visual-studio-code-bin
-#
-# =============================================================================
