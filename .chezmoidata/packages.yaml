@@ -62,13 +62,10 @@ packages:
             - python-pyaml # PyYAML library for install-lang script
             - bat # Cat with syntax highlighting
             - chezmoi # Dotfiles manager
-            - flavours # Base16 theme manager
             - fzf # Fuzzy finder for terminal
             - git # Version control system
-            - git-delta # Syntax-highlighting pager for git
             - neovim # Modern vim-based text editor
             - obsidian # Knowledge management app
-            - tldr # Simplified man pages
             - tmux # Terminal multiplexer
             - wezterm # GPU-accelerated terminal
             - zed # Modern code editor
@@ -78,7 +75,6 @@ packages:
             - zoxide # Smarter cd command
             - gh # Github CLI
             - yq # YAML file handling
-            - task # Taskwarrior - Command-line task manager
             - just # Just (Alternative to Make) - Command runner
 
         # AUR (Arch User Repository) Packages
