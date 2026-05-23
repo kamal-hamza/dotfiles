@@ -58,10 +58,10 @@ treesitter.setup({
   install_dir = vim.fn.stdpath('data') .. '/site'
 })
 treesitter.install({
-  "lua", "python", "rust", "zig", "typescript", "javascript"
+  "lua", "python", "rust", "zig", "typescript", "javascript", "c", "cpp"
 })
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { "lua", "python", "rust", "zig", "typescript", "javascript" },
+  pattern = { "lua", "python", "rust", "zig", "typescript", "javascript", "c", "cpp", "h" },
   callback = function()
     vim.treesitter.start()
     vim.wo.foldmethod = 'expr'
@@ -78,6 +78,9 @@ conform.setup({
     javascript = { "prettierd" },
     typescript = { "prettierd" },
     lua = { "stylua" },
+    c = { "clang_format" },
+    cpp = { "clang_format" },
+    h = { "clang_format" },
   },
 })
 vim.keymap.set("n", "<leader>F", function()
@@ -95,3 +98,6 @@ vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc 
 
 -- nvim surround
 require("nvim-surround").setup()
+
+-- theme
+vim.cmd.colorscheme("minimal-dark")

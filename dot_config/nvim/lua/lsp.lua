@@ -36,7 +36,8 @@ mason_tool_installer.setup({
     "rust-analyzer",
     "typescript-language-server",
     "eslint-lsp",
-    "tinymist"
+    "tinymist",
+    "clangd"
   },
 })
 
@@ -125,7 +126,8 @@ local servers = {
   "pyrefly",
   "rust_analyzer",
   "zls",
-  "ts_ls"
+  "ts_ls",
+  "clangd"
 }
 
 -- lua vim override
@@ -137,6 +139,9 @@ local server_configs = {
         workspace = { library = vim.api.nvim_get_runtime_file("", true) }
       }
     }
+  },
+  clangd = {
+    offset_encoding = "utf-8",
   }
 }
 

@@ -17,3 +17,8 @@ theme-generators/
 # Pi extension dependencies (installed post-copy by auto-install-deps)
 dot_pi/agent/extensions/**/node_modules/
 dot_pi/**/node_modules/
+
+# Linux Specific Hyprland config
+{{ if ne .chezmoi.os "linux" }}
+.config/hypr/
+{{ end }}
