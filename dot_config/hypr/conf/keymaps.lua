@@ -14,3 +14,9 @@ hl.bind(super .. " + L", hl.dsp.exec_cmd(lock))
 
 -- close any window
 hl.bind(super .. " +Q", hl.dsp.window.close({ window = "active" }))
+
+-- drag / resize windows
+hl.bind(super .. " + SHIFT", "mouse:272", hl.dsp.window.drag(), { mouse = true })
+
+-- resize windows
+hl.bind(super .. " + mouse:272", hl.dsp.window.resize(), { mouse = true })
