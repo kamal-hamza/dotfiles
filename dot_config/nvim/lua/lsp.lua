@@ -102,77 +102,47 @@ require("blink.cmp").setup({
     ["<Tab>"] = { "select_next", "fallback" },
     ["<S-Tab>"] = { "select_prev", "fallback" },
   },
-  appearance = {
-    use_nvim_cmp_as_default_menu = false,
-    nerd_font_variant = "mono",
-    kind_icons = {
-      Text = "󰉿",
-      Method = "󰊕",
-      Function = "󰊕",
-      Constructor = "󰒓",
-      Field = "󰇽",
-      Variable = "󰂡",
-      Class = "󰠱",
-      Interface = "󰙅",
-      Module = "󰕳",
-      Property = "󰖷",
-      Unit = "󰑭",
-      Value = "󰎠",
-      Enum = "󰎨",
-      Keyword = "󰌋",
-      Snippet = "󰩌",
-      Color = "󰏘",
-      File = "󰈙",
-      Reference = "󰈇",
-      Folder = "󰉋",
-      EnumMember = "󰎪",
-      Constant = "󰏿",
-      Struct = "󰙅",
-      Event = "󰕘",
-      Operator = "󰆕",
-      TypeParameter = "󰅲",
-    },
-  },
   completion = {
     menu = {
       border = "rounded",
-      winhighlight = "Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
-      scrollbar = true,
-      scrolloff = 2,
-      direction_priority = { "s", "n" },
-      auto_show = true,
-      max_height = 10,
-      draw = {
-        columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
-        components = {
-          kind_icon = {
-            text = function(ctx)
-              return ctx.kind_icon .. " "
-            end,
-          },
-          label = {
-            width = { max = 60 },
-          },
-          label_description = {
-            width = { max = 60 },
-            text = function(ctx)
-              if ctx.label_description then
-                return " " .. ctx.label_description
-              end
-              return ""
-            end,
-          },
-        },
-      },
+      min_width = 60,
     },
-    documentation = {
-      auto_show = false,
-      window = { border = "none" },
-    },
-    ghost_text = { enabled = true },
-    list = { selection = { preselect = false, auto_insert = false } },
   },
-  sources = {
-    default = { "lsp", "path", "buffer" },
+  appearance = {
+    kind_icons = {
+      Text = '󰉿',
+      Method = '󰊕',
+      Function = '󰊕',
+      Constructor = '󰒓',
+
+      Field = '󰜢',
+      Variable = '󰆦',
+      Property = '󰖷',
+      Class = '󱡠',
+      Interface = '󱡠',
+      Struct = '󱡠',
+      Module = '󰅩',
+      Unit = '󰪚',
+      Value = '󰦨',
+      Enum = '󰦨',
+      EnumMember = '󰦨',
+      Keyword = '󰻾',
+      Constant = '󰏿',
+      Snippet = '󱄽',
+      Color = '󰏘',
+      File = '󰈔',
+      Reference = '󰬲',
+      Folder = '󰉋',
+      Event = '󱐋',
+      Operator = '󰪚',
+      TypeParameter = '󰬛',
+    }
   },
+  signature = {
+    enabled = true,
+    window = {
+      border = "rounded",
+      show_documentation = false
+    }
+  }
 })
