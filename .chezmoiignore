@@ -25,4 +25,5 @@ dot_pi/**/node_modules/
 # Linux Specific Hyprland config
 {{ if ne .chezmoi.os "linux" }}
 .config/hypr/
+.config/waybar/
 {{ end }}
