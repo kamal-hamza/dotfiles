@@ -1,5 +1,5 @@
 local super = "ALT"
-local terminal = "kitty"
+local terminal = "xterm"
 local fileManager = "thunar"
 local lock = "hyprlock"
 
