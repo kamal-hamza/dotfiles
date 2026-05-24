@@ -1,4 +1,4 @@
-local super = "alt"
+local super = "ALT"
 local terminal = "kitty"
 local fileManager = "thunar"
 
