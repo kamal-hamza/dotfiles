@@ -2,13 +2,7 @@ vim.pack.add({
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/mason-org/mason.nvim",
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
-  "https://github.com/hrsh7th/nvim-cmp",
-  "https://github.com/hrsh7th/cmp-nvim-lsp",
-  "https://github.com/hrsh7th/cmp-buffer",
-  "https://github.com/hrsh7th/cmp-path",
-  "https://github.com/hrsh7th/cmp-vsnip",
-  "https://github.com/hrsh7th/vim-vsnip",
-  "https://github.com/onsails/lspkind.nvim",
+  { src = "https://github.com/saghen/blink.cmp.git", version = vim.version.range("*") },
 })
 
 -- mason
@@ -60,66 +54,8 @@ vim.lsp.config("tinymist", {
   filetypes = {"typst"},
 })
 
--- nvim cmp
-local cmp = require("cmp")
-local lspkind = require("lspkind")
-
-cmp.setup({
-  completion = {
-    autocomplete = false,
-  },
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  },
-  formatting = {
-    fields = { "kind", "abbr", "menu" },
-    format = lspkind.cmp_format({
-      mode = 'symbol',
-      show_labelDetails = true,
-      maxwidth = 50,
-      ellipsis_char = '...',
-      menu = {
-        nvim_lsp = "[LSP]",
-        vsnip    = "[Snip]",
-        buffer   = "[Buf]",
-        path     = "[Path]",
-      }
-    }),
-  },
-  snippet = {
-    expand = function(args) vim.fn["vsnip#anonymous"](args.body) end,
-  },
-  mapping = cmp.mapping.preset.insert({
-    ['<C-x><C-o>'] = cmp.mapping.complete(),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<C-g>'] = cmp.mapping.abort(),
-    ['<Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_next_item()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<S-Tab>'] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      else
-        fallback()
-      end
-    end, { 'i', 's' }),
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-  }),
-  sources = cmp.config.sources({
-    { name = 'nvim_lsp' },
-    { name = 'vsnip' },
-    { name = 'path' },
-    { name = 'buffer' },
-  }),
-})
-
 -- language server configuration
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = require('blink.cmp').get_lsp_capabilities()
 
 local servers = {
   "vimls",
@@ -154,3 +90,89 @@ for _, server in ipairs(servers) do
   vim.lsp.config(server, config)
   vim.lsp.enable(server)
 end
+
+-- blink.cmp
+require("blink.cmp").setup({
+  keymap = {
+    preset = "default",
+    ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
+    ["<C-e>"] = { "hide" },
+    ["<C-y>"] = { "select_and_accept" },
+    ["<CR>"] = { "accept", "fallback" },
+    ["<Tab>"] = { "select_next", "fallback" },
+    ["<S-Tab>"] = { "select_prev", "fallback" },
+  },
+  appearance = {
+    use_nvim_cmp_as_default_menu = false,
+    nerd_font_variant = "mono",
+    kind_icons = {
+      Text = "󰉿",
+      Method = "󰊕",
+      Function = "󰊕",
+      Constructor = "󰒓",
+      Field = "󰇽",
+      Variable = "󰂡",
+      Class = "󰠱",
+      Interface = "󰙅",
+      Module = "󰕳",
+      Property = "󰖷",
+      Unit = "󰑭",
+      Value = "󰎠",
+      Enum = "󰎨",
+      Keyword = "󰌋",
+      Snippet = "󰩌",
+      Color = "󰏘",
+      File = "󰈙",
+      Reference = "󰈇",
+      Folder = "󰉋",
+      EnumMember = "󰎪",
+      Constant = "󰏿",
+      Struct = "󰙅",
+      Event = "󰕘",
+      Operator = "󰆕",
+      TypeParameter = "󰅲",
+    },
+  },
+  completion = {
+    menu = {
+      border = "rounded",
+      winhighlight = "Normal:BlinkCmpMenu,FloatBorder:BlinkCmpMenuBorder,CursorLine:BlinkCmpMenuSelection,Search:None",
+      scrollbar = true,
+      scrolloff = 2,
+      direction_priority = { "s", "n" },
+      auto_show = true,
+      max_height = 10,
+      draw = {
+        columns = { { "label", "label_description", gap = 1 }, { "kind_icon", "kind" } },
+        components = {
+          kind_icon = {
+            text = function(ctx)
+              return ctx.kind_icon .. " "
+            end,
+          },
+          label = {
+            width = { max = 60 },
+          },
+          label_description = {
+            width = { max = 60 },
+            text = function(ctx)
+              if ctx.label_description then
+                return " " .. ctx.label_description
+              end
+              return ""
+            end,
+          },
+        },
+      },
+    },
+    documentation = {
+      auto_show = false,
+      window = { border = "none" },
+    },
+    ghost_text = { enabled = true },
+    list = { selection = { preselect = false, auto_insert = false } },
+  },
+  sources = {
+    default = { "lsp", "path", "buffer" },
+  },
+})
