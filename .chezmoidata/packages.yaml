@@ -55,7 +55,26 @@ packages:
             - thunar-volman # volume manager plugin for thunar
             - tumbler # file thumbnailing service
             - xarchiver # extract or compress files
+            - hyprland # The dynamic tiling Wayland compositor
+            - xorg-xwayland # Compatibility layer for legacy X11 apps
+            - qt6-wayland # Wayland support for Qt6 applications
+            - qt5-wayland # Wayland support for Qt5 applications
+            - waybar # Highly customizable status bar
+            - rofi-wayland # Application launcher and menu run dialog (Wayland fork)
+            - mako # Lightweight, customizable notification daemon
+            - hyprpaper # Blazing fast, native wallpaper utility
+            - polkit-gnome # Handles administrative authentication prompts (GUI)
+            - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
+            - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes
+            - wl-clipboard # Command-line copy/paste utilities for Wayland
+            - grim # Screenshot utility for Wayland
+            - slurp # Select a region in a Wayland compositor (works perfectly with grim)
+            - pipewire # Core multimedia framework (replaces PulseAudio/ALSA)
+            - pipewire-pulse # PulseAudio compatibility layer for PipeWire
+            - wireplumber # Modular session/policy manager for PipeWire
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
-            - zsh-autopair-git # Auto-close brackets in zsh
+            - zsh-autopair-git # Auto-close brackets in zs
+            - hyprlock # Fast, secure, and beautiful desktop locker
+            - hypridle # Idle management daemon (handles screen dims and locks)
