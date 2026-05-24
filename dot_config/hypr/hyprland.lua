@@ -1,4 +1,5 @@
 require("conf.execs")
+-- require("conf.mouse")
 require("conf.keymaps")
 require("conf.monitors")
 require("conf.envs")
