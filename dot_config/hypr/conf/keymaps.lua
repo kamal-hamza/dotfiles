@@ -13,4 +13,4 @@ hl.bind(super .. " + M", hl.dsp.exec_cmd("loginctl terminate-user \"\""))
 hl.bind(super .. " + L", hl.dsp.exec_cmd(lock))
 
 -- close any window
-hl.bind(super .. " +Q", hl.dsp.window.kill())
+hl.bind(super .. " +Q", hl.dsp.window.close({ window = "active" }))
