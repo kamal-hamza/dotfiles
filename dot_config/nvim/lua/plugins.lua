@@ -9,7 +9,6 @@ vim.pack.add({
   "https://github.com/rebelot/kanagawa.nvim",
   "https://github.com/folke/trouble.nvim",
   "https://github.com/neogitorg/neogit",
-  "https://github.com/oskarnurm/koda.nvim",
   { src = "https://github.com/kylechui/nvim-surround", version = vim.version.range("4.x") },
   "https://github.com/rebelot/heirline.nvim",
   "https://github.com/lewis6991/gitsigns.nvim",
@@ -99,5 +98,8 @@ vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc 
 -- nvim surround
 require("nvim-surround").setup()
 
--- theme
-vim.cmd.colorscheme("minimal-dark")
+-- theme - load and setup dark theme
+require("dark").setup({
+  theme = "dark",
+})
+require("dark").load("dark")

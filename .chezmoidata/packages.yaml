@@ -72,6 +72,7 @@ packages:
             - pipewire # Core multimedia framework (replaces PulseAudio/ALSA)
             - pipewire-pulse # PulseAudio compatibility layer for PipeWire
             - wireplumber # Modular session/policy manager for PipeWire
+            - os-prober # dual boot OS recognition
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

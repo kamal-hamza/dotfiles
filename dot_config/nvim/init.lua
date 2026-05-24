@@ -1,3 +1,6 @@
+-- Add local dark theme to runtimepath (must be very early)
+vim.opt.runtimepath:prepend(vim.fn.stdpath("config") .. "/colors")
+
 -- load options
 require("options")
 -- load keymaps
