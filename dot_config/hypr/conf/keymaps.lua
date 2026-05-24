@@ -19,4 +19,4 @@ hl.bind(super .. " +Q", hl.dsp.window.close({ window = "active" }))
 hl.bind("ALT + mouse:272", hl.dsp.window.drag(), { mouse = true })
 
 -- resize windows
-hl.bind(super .. " + mouse:272", hl.dsp.window.resize(), { mouse = true })
+hl.bind(super .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
