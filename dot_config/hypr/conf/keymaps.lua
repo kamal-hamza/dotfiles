@@ -2,9 +2,12 @@ local super = "ALT"
 local terminal = "LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
+local appLauncher = "hyprlauncher"
 
 hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
+hl.bind(super .. " + SPACE", hl.dsp.exec_cmd(appLauncher))
+
 
 -- go back to tty
 hl.bind(super .. " + M", hl.dsp.exec_cmd("loginctl terminate-user \"\""))

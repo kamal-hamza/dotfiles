@@ -60,7 +60,7 @@ packages:
             - qt6-wayland # Wayland support for Qt6 applications
             - qt5-wayland # Wayland support for Qt5 applications
             - waybar # Highly customizable status bar
-            - rofi-wayland # Application launcher and menu run dialog (Wayland fork)
+            - hyprlauncher # Application launcher and menu run dialog (Wayland fork)
             - mako # Lightweight, customizable notification daemon
             - hyprpaper # Blazing fast, native wallpaper utility
             - polkit-gnome # Handles administrative authentication prompts (GUI)
