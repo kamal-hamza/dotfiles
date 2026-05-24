@@ -1,6 +1,7 @@
 hl.window_rule({
-  match {
-    class = ""
+  name = "float",
+  match = {
+    class = "",
   },
   float = true,
 })
