@@ -2,6 +2,10 @@
 .DS_Store
 Thumbs.db
 
+# Markdown files
+AGENTS.md
+README.md
+
 # Editor temp files
 *~
 *.swp
