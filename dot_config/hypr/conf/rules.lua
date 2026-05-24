@@ -1,4 +1,6 @@
-hl.rules.window({
-  rule = "float",
-  class = "",
+hl.window_rule({
+  match {
+    class = ""
+  },
+  float = true,
 })
