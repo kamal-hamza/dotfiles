@@ -2,7 +2,7 @@ local super = "ALT"
 local terminal = "kitty"
 local fileManager = "thunar"
 
-hl.bind(super .. " + ENTER", hl.dsp.exec_cmd(terminal))
+hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
 
 
