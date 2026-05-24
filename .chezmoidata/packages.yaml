@@ -12,6 +12,7 @@ packages:
             - git # git version control
             - neovim # Modern vim-based text editor
             - tmux # Terminal multiplexer
+            - ghostty # Terminal emulator
             - zsh-autopair # Auto-close brackets in zsh
             - zsh-autosuggestions # Fish-like autosuggestions
             - zsh-syntax-highlighting # Syntax highlighting for zsh
@@ -40,7 +41,7 @@ packages:
             - neovim # Modern vim-based text editor
             - obsidian # Knowledge management app
             - tmux # Terminal multiplexer
-            - wezterm # GPU-accelerated terminal
+            - kitty # Terminal emulator
             - zed # Modern code editor
             - zsh # Z shell
             - zsh-autosuggestions # Fish-like autosuggestions
@@ -49,6 +50,11 @@ packages:
             - gh # Github CLI
             - yq # YAML file handling
             - just # Just (Alternative to Make) - Command runner
+            - thunar # file manager
+            - gvfs # mount external storage
+            - thunar-volman # volume manager plugin for thunar
+            - tumbler # file thumbnailing service
+            - xarchiver # extract or compress files
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

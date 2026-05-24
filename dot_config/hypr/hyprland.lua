@@ -1,0 +1,7 @@
+require("conf.execs")
+require("conf.keymaps")
+require("conf.monitors")
+require("conf.envs")
+require("conf.looks")
+require("conf.animations")
+require("conf.misc")
