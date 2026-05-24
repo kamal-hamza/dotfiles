@@ -1,5 +1,5 @@
 local super = "ALT"
-local terminal = "xterm"
+local terminal = "LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
 
