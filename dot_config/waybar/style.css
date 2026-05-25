@@ -1,0 +1,310 @@
+/* =============================================================================
+ * Waybar Dark Theme - Synced with Neovim Palette
+ * =============================================================================
+ * Color Palette from nvim/colors/lua/dark/palette/dark.lua
+ * Maintains consistent dark look across all modules
+ * =========================================================================== */
+
+* {
+  border: none;
+  border-radius: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+window#waybar {
+  background-color: #101010;
+  color: #b0b0b0;
+  margin: 0;
+  padding: 0;
+}
+
+/* =============================================================================
+ * General Module Styling
+ * =========================================================================== */
+
+.modules-left,
+.modules-center,
+.modules-right {
+  margin: 0;
+  padding: 0 8px;
+}
+
+/* Default module styling */
+#workspaces button,
+#language,
+#pulseaudio,
+#network,
+#memory,
+#cpu,
+#temperature,
+#clock,
+#battery,
+#bluetooth,
+#backlight,
+#custom-launcher,
+#custom-exit,
+#tray {
+  background-color: #101010;
+  color: #b0b0b0;
+  padding: 0 10px;
+  margin: 4px 2px;
+  border-left: 2px solid #272727;
+  border-right: 2px solid #272727;
+}
+
+/* =============================================================================
+ * Workspaces
+ * =========================================================================== */
+
+#workspaces {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+#workspaces button {
+  background-color: #1a1a1a;
+  color: #777777;
+  border: 1px solid #272727;
+  border-radius: 4px;
+  margin: 0 4px;
+  padding: 6px 12px;
+  transition: all 0.3s ease;
+}
+
+#workspaces button:hover {
+  background-color: #272727;
+  color: #b0b0b0;
+  border-color: #50585d;
+}
+
+#workspaces button.active {
+  background-color: #458ee6;
+  color: #101010;
+  border-color: #458ee6;
+  font-weight: 600;
+}
+
+#workspaces button.urgent {
+  background-color: #ff7676;
+  color: #101010;
+  border-color: #ff7676;
+}
+
+/* =============================================================================
+ * System Information Modules
+ * =========================================================================== */
+
+/* CPU */
+#cpu {
+  color: #8ebeec;
+}
+
+#cpu.warning {
+  color: #d9ba73;
+}
+
+#cpu.critical {
+  color: #ff7676;
+}
+
+/* Memory */
+#memory {
+  color: #86cd82;
+}
+
+#memory.warning {
+  color: #d9ba73;
+}
+
+#memory.critical {
+  color: #ff7676;
+}
+
+/* Temperature */
+#temperature {
+  color: #8ebeec;
+}
+
+#temperature.critical {
+  color: #ff7676;
+}
+
+/* Network */
+#network {
+  color: #5abfb5;
+}
+
+#network.disconnected {
+  color: #ff7676;
+}
+
+#network.linked {
+  color: #86cd82;
+}
+
+/* Bluetooth */
+#bluetooth {
+  color: #5abfb5;
+}
+
+#bluetooth.disconnected {
+  color: #777777;
+}
+
+#bluetooth.connected {
+  color: #86cd82;
+}
+
+/* Battery */
+#battery {
+  color: #86cd82;
+}
+
+#battery.warning {
+  color: #d9ba73;
+  animation: blink 0.5s linear infinite;
+}
+
+#battery.critical {
+  color: #ff7676;
+  animation: blink 0.2s linear infinite;
+}
+
+#battery.charging {
+  color: #8ebeec;
+}
+
+@keyframes blink {
+  to {
+    color: #101010;
+    background-color: #ff7676;
+  }
+}
+
+/* Backlight */
+#backlight {
+  color: #d9ba73;
+}
+
+/* Clock / Time */
+#clock {
+  color: #b0b0b0;
+  font-weight: 600;
+  margin-right: 12px;
+}
+
+/* Audio / PulseAudio */
+#pulseaudio {
+  color: #d9ba73;
+}
+
+#pulseaudio.muted {
+  color: #777777;
+  background-color: #1a1a1a;
+}
+
+/* Language */
+#language {
+  color: #8ebeec;
+}
+
+/* =============================================================================
+ * Tray
+ * =========================================================================== */
+
+#tray {
+  background-color: #1a1a1a;
+  color: #b0b0b0;
+  padding: 0 8px;
+}
+
+#tray > .passive {
+  -gtk-icon-effect: dim;
+}
+
+#tray > .needs-attention {
+  -gtk-icon-effect: highlight;
+  background-color: #ff7676;
+  color: #101010;
+  border-radius: 4px;
+}
+
+/* =============================================================================
+ * Accent Colors for Special Elements
+ * =========================================================================== */
+
+/* Emphasis/Highlight elements */
+.active {
+  color: #ffffff;
+  background-color: #458ee6;
+}
+
+.warning {
+  color: #d9ba73;
+  background-color: #1a1a1a;
+}
+
+.critical {
+  color: #ff7676;
+  background-color: #1a1a1a;
+}
+
+.success {
+  color: #86cd82;
+  background-color: #1a1a1a;
+}
+
+.info {
+  color: #8ebeec;
+  background-color: #1a1a1a;
+}
+
+/* =============================================================================
+ * Tooltip
+ * =========================================================================== */
+
+tooltip {
+  background-color: #1a1a1a;
+  border: 1px solid #272727;
+  color: #b0b0b0;
+  border-radius: 4px;
+}
+
+tooltip label {
+  color: #b0b0b0;
+}
+
+/* =============================================================================
+ * Custom Modules
+ * =========================================================================== */
+
+#custom-launcher {
+  color: #458ee6;
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+#custom-exit {
+  color: #ff7676;
+  margin-right: 8px;
+}
+
+#custom-separator {
+  color: #272727;
+}
+
+/* =============================================================================
+ * Separator
+ * =========================================================================== */
+
+#window {
+  color: #b0b0b0;
+  background-color: #1a1a1a;
+  border-left: 2px solid #272727;
+  border-right: 2px solid #272727;
+  padding: 0 10px;
+  margin: 4px 2px;
+}

@@ -73,6 +73,8 @@ packages:
             - pipewire-pulse # PulseAudio compatibility layer for PipeWire
             - wireplumber # Modular session/policy manager for PipeWire
             - os-prober # dual boot OS recognition
+            - firefox # browser
+            - discord # chat
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
