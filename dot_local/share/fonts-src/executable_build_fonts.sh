@@ -46,7 +46,7 @@ NERD_DIR="$HOME/.cache/nerd-fonts"
 PATCHER="$NERD_DIR/font-patcher"
 OS="$(uname -s)"
 
-# Trap errors
+# Trap errors (but not in if statements)
 trap 'print_error "Script failed at line $LINENO"' ERR
 
 # Pre-flight checks
@@ -162,11 +162,17 @@ for spec in "${FONT_SPECS[@]}"; do
   print_info "  Source: $FONT_PATH"
 
   # Run font-patcher with error handling
-  if fontforge -script "$PATCHER" "$FONT_PATH" --complete --extension ttf -out "$OUT" &>/dev/null; then
+  # Temporarily disable error trap for fontforge since it may fail gracefully
+  set +e
+  fontforge -script "$PATCHER" "$FONT_PATH" --complete --extension ttf -out "$OUT" &>/dev/null
+  local fontforge_exit=$?
+  set -e
+  
+  if [[ $fontforge_exit -eq 0 ]]; then
     ((patched_count++))
     print_success "Patched: $font_name $weight"
   else
-    print_error "Patching failed for: $font_name $weight"
+    print_error "Patching failed for: $font_name $weight (exit code: $fontforge_exit)"
     failed_fonts+=("$font_name $weight")
   fi
 done
