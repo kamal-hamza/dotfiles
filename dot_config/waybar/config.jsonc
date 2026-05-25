@@ -1,6 +1,5 @@
 {
   "layer": "bottom",
-  "css": "~/.config/waybar/style.css",
   "position": "top",
   "height": 44,
   "spacing": 2,
@@ -9,11 +8,11 @@
   "passthrough": false,
   "fixed-center": true,
   "modules-left": [
-	  "custom/launcher",
-	  "hyprland/workspaces",
-	  "custom/cava",
-	  "custom/notification",
-	  "hyprland/window"
+    "custom/launcher",
+    "hyprland/workspaces",
+    "custom/cava",
+    "custom/notification",
+    "hyprland/window"
   ],
   "modules-center": ["mpris"],
   "modules-right": [
@@ -29,9 +28,9 @@
   ],
 
   "custom/launcher": {
-      "tooltip": false,
-      "on-click": "rofi -show drun",
-      "format": ""
+    "tooltip": false,
+    "on-click": "rofi -show drun",
+    "format": ""
   },
 
   "mpris": {
@@ -46,6 +45,7 @@
     },
     "max-length": 20
   },
+
   "hyprland/workspaces": {
     "on-click": "activate",
     "format": "{id}",
@@ -53,6 +53,7 @@
     "disable-scroll": false,
     "active-only": false
   },
+
   "hyprland/window": {
     "format": "{title}",
     "max-length": 20
@@ -62,43 +63,47 @@
     "show-passive-items": true,
     "spacing": 10
   },
+
   "clock#simpleclock": {
     "tooltip": false,
-    "format": " {:%H:%M}"
+    "format": " {:%H:%M}"
   },
+
   "clock": {
-    "format": " {:L%a %d %b}",
+    "format": " {:L%a %d %b}",
     "calendar": {
       "format": {
-        "days": "<span color='#b0b0b0' weight='normal'>{}</span>",
-        "months": "<span color='#b0b0b0' weight='600'>{}</span>",
-        "today": "<span color='#b0b0b0' weight='700' underline='single'>{}</span>",
-        "weekdays": "<span color='#777777' weight='600'>{}</span>",
-        "weeks": "<span color='#50585d' weight='600'>W{}</span>"
+        "days": "<span weight='normal'>{}</span>",
+        "months": "<span color='#b0b0b0'><b>{}</b></span>",
+        "today": "<span color='#474747' weight='700'><u>{}</u></span>",
+        "weekdays": "<span color='#777777'><b>{}</b></span>",
+        "weeks": "<span color='#50585d'><b>W{}</b></span>"
       },
       "mode": "month",
       "mode-mon-col": 1,
       "on-scroll": 1
     },
-    "tooltip-format": "<span color='#b0b0b0' font='mesloLGS Nerd Font 12'><tt><small>{calendar}</small></tt></span>"
+    "tooltip-format": "<span color='#b0b0b0' font='mesloLGS Nerd Font 16'><tt><small>{calendar}</small></tt></span>"
   },
+
   "cpu": {
-    "format": " {usage}%",
+    "format": " {usage}%",
     "tooltip": true,
     "interval": 1
   },
+
   "memory": {
-    "format": " {used:0.1f}Gi"
+    "format": " {used:0.1f}Gi"
   },
+
   "pulseaudio": {
     "format": "{icon}{volume}%",
-    "format-muted": "  muted",
+    "format-muted": "  muted",
     "format-icons": {
-	    "headphone": "",
-	    "default": [" ", " ", " "]
-	    },
+      "headphone": "",
+      "default": [" ", " ", " "]
+    },
     "on-click": "pavucontrol"
-
   },
 
   "custom/sep": {
@@ -134,26 +139,28 @@
   "network": {
     "interface": "wlp3s0",
     "format": "{ifname}",
-    "format-wifi": "{essid} ",
+    "format-wifi": "{essid} ",
     "max-length": 50,
     "on-click": "$HOME/.config/waybar/scripts/rofi-wifi-menu.sh"
   },
+
   "bluetooth": {
-    "format": " {status}",
-    "format-connected" : " {device-alias}",
+    "format": " {status}",
+    "format-connected": " {device-alias}",
     "tooltip": true,
     "on-click": "blueberry"
   },
- "battery": {
-   "states": {
-      	"warning": 30,
-       	"critical": 15
-      },
-       	"format": "{icon} {capacity}%",
-       	"format-charging": " {capacity}%",
-       	"format-plugged": "{capacity}%",
-       	"format-alt": "{time} {icon}",
-       	"format-full": " {capacity}%",
-	"format-icons": ["", "", "", "", ""]
-	}
+
+  "battery": {
+    "states": {
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{icon} {capacity}%",
+    "format-charging": " {capacity}%",
+    "format-plugged": "{capacity}%",
+    "format-alt": "{time} {icon}",
+    "format-full": " {capacity}%",
+    "format-icons": ["", "", "", "", ""]
+  }
 }

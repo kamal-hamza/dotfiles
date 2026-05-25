@@ -6,157 +6,216 @@
  * keyword: #777777, comment: #50585d
  * =========================================================================== */
 
-* {
-  border: none;
-  border-radius: 0;
+/* ===========================
+ *  Palette & Constants
+ * =========================== */
+
+@define-color base-bg rgba(16, 16, 16, 0.9);
+@define-color base-bg-solid #101010;
+@define-color base-fg #b0b0b0;
+
+@define-color ws-bg @base-bg;
+@define-color ws-bg-active @base-bg-solid;
+@define-color ws-bg-urgent #101010;
+
+@define-color ws-fg #777777;
+@define-color ws-fg-active #b0b0b0;
+@define-color ws-fg-urgent #474747;
+
+@define-color cpu-fg #b0b0b0;
+@define-color mem-fg #b0b0b0;
+@define-color clock-fg #b0b0b0;
+@define-color clock-simple-fg #b0b0b0;
+@define-color window-fg #b0b0b0;
+@define-color audio-fg #b0b0b0;
+@define-color audio-muted-fg #777777;
+@define-color tray-fg #b0b0b0;
+@define-color bluetooth-fg #b0b0b0;
+@define-color battery-fg #b0b0b0;
+@define-color logo-fg #b0b0b0;
+@define-color cava-fg #b0b0b0;
+@define-color power-fg #b0b0b0;
+
+@define-color tooltip-bg #272727;
+@define-color tooltip-border #474747;
+@define-color sep-fg #272727;
+
+/* ===========================
+ *  Global
+ * =========================== */
+
+window#waybar,
+window#waybar * {
+  min-height: 0;
+  min-width: 0;
   font-family: "mesloLGS Nerd Font", monospace;
   font-size: 13px;
   font-weight: 500;
 }
 
 window#waybar {
-  background-color: #101010;
-  color: #b0b0b0;
-  margin: 0;
-  padding: 0;
+  background-color: transparent;
+  transition-property: background-color;
+  transition-duration: 0.5s;
 }
 
-/* =============================================================================
- * Modules Container
- * =========================================================================== */
+/* ===========================
+ *  Modules Generic Styling
+ * =========================== */
 
-.modules-left,
-.modules-center,
-.modules-right {
-  margin: 0;
-  padding: 0 8px;
+#clock,
+#pulseaudio,
+#tray,
+#bluetooth,
+#battery,
+#custom-power,
+#custom-cava,
+#custom-notification,
+#custom-launcher,
+#cpu,
+#network,
+#memory,
+#window,
+#mpris {
+  padding: 0.3rem 0.6rem;
+  margin: 0.4rem 0.25rem;
+  border-radius: 6px;
+  background-color: @base-bg;
 }
 
-/* =============================================================================
- * Workspaces
- * =========================================================================== */
-
-#workspaces {
-  background: transparent;
-  padding: 0;
-  margin: 0;
-}
+/* ===========================
+ *  Workspaces
+ * =========================== */
 
 #workspaces button {
-  background-color: #101010;
-  color: #777777;
-  border: 1px solid #272727;
-  border-radius: 0;
-  margin: 0 4px;
-  padding: 6px 12px;
+  padding: 0.3rem 0.6rem;
+  margin: 0.4rem 0.25rem;
+  border-radius: 6px;
+  background-color: @ws-bg;
+  color: @ws-fg;
   transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
+  color: @base-fg;
   background-color: #272727;
-  color: #b0b0b0;
-  border-color: #50585d;
 }
 
 #workspaces button.active {
-  background-color: #272727;
-  color: #b0b0b0;
-  border-color: #50585d;
-  font-weight: 600;
+  background-color: @ws-bg-active;
+  color: @ws-fg-active;
+  border: 1px solid #272727;
 }
 
 #workspaces button.urgent {
-  background-color: #272727;
-  color: #b0b0b0;
-  border-color: #474747;
+  background-color: @ws-bg-urgent;
+  color: @ws-fg-urgent;
+  border: 1px solid #474747;
 }
 
-/* =============================================================================
- * System Information Modules (CPU, Memory, Network, etc)
- * =========================================================================== */
+/* ===========================
+ *  MPRIS
+ * =========================== */
 
-#language,
-#pulseaudio,
-#network,
-#memory,
-#cpu,
-#temperature,
-#clock,
-#battery,
-#bluetooth,
-#backlight,
-#custom-launcher,
-#custom-exit,
-#custom-cava,
-#custom-notification,
-#custom-power,
-#custom-separator,
-#tray,
-#mpris,
-#window {
-  background-color: #101010;
-  color: #b0b0b0;
-  padding: 0 10px;
-  margin: 4px 2px;
-  border-left: 2px solid #272727;
-  border-right: 2px solid #272727;
+#mpris {
+  padding: 0.3rem 0.6rem;
+  margin: 0.4rem 0.25rem;
+  border-radius: 6px;
+  background-color: @base-bg;
+  color: @base-fg;
 }
 
-/* Disconnected/Muted states - use dimmer color */
-#network.disconnected,
-#pulseaudio.muted,
-#bluetooth.disconnected {
+#mpris.playing {
+  color: #b0b0b0;
+}
+
+#mpris.paused {
   color: #777777;
 }
 
-#custom-separator {
-  color: #272727;
+/* ===========================
+ *  Module Colors & States
+ * =========================== */
+
+#cpu {
+  color: @cpu-fg;
 }
 
-/* =============================================================================
- * Tray Icons
- * =========================================================================== */
+#memory {
+  color: @mem-fg;
+}
+
+#clock {
+  color: @clock-fg;
+}
+
+#clock.simpleclock {
+  color: @clock-simple-fg;
+}
+
+#window {
+  color: @window-fg;
+}
+
+#pulseaudio {
+  color: @audio-fg;
+}
+
+#pulseaudio.muted {
+  color: @audio-muted-fg;
+}
 
 #tray {
-  background-color: #101010;
-  color: #b0b0b0;
-  padding: 0 8px;
+  color: @tray-fg;
 }
 
-#tray > .passive {
-  -gtk-icon-effect: dim;
-  color: #777777;
+#bluetooth {
+  color: @bluetooth-fg;
 }
 
-#tray > .needs-attention {
-  -gtk-icon-effect: dim;
-  color: #b0b0b0;
+#battery {
+  color: @battery-fg;
 }
 
-/* =============================================================================
- * Tooltip
- * =========================================================================== */
+#custom-launcher {
+  color: @logo-fg;
+}
+
+#custom-cava {
+  color: @cava-fg;
+}
+
+#custom-power {
+  color: @power-fg;
+}
+
+#custom-notification {
+  color: @base-fg;
+}
+
+/* ===========================
+ *  Miscellaneous
+ * =========================== */
+
+#custom-sep {
+  padding: 0;
+  color: @sep-fg;
+}
+
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+/* ===========================
+ *  Tooltips
+ * =========================== */
 
 tooltip {
-  background-color: #272727;
-  border: 1px solid #474747;
-  color: #b0b0b0;
-  border-radius: 0;
+  background-color: @tooltip-bg;
+  border: 1px solid @tooltip-border;
+  border-radius: 6px;
 }
 
 tooltip label {
-  color: #b0b0b0;
-}
-
-/* =============================================================================
- * Window Title
- * =========================================================================== */
-
-#window {
-  color: #b0b0b0;
-  background-color: #101010;
-  border-left: 2px solid #272727;
-  border-right: 2px solid #272727;
-  padding: 0 10px;
-  margin: 4px 2px;
+  color: @base-fg;
 }
