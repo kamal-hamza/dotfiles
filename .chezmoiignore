@@ -26,4 +26,5 @@ dot_pi/**/node_modules/
 {{ if ne .chezmoi.os "linux" }}
 .config/hypr/
 .config/waybar/
+.config/rofi/
 {{ end }}

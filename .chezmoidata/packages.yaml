@@ -19,12 +19,14 @@ packages:
             - zoxide # Smarter cd command
             - gh # Github CLI
             - just # Just (Alternative to Make) - Command runner
+            - fontforge # font configuration
 
         casks:
             - chatgpt # ChatGPT desktop app
             - obsidian # Knowledge management app
             - zed # Modern code editor
-            - font-meslo-lg-nerd-font # Coding Font
+            - font-source-sans-3 # Source Sans 3 font
+            - font-source-serif-4 # Source Serif 4 font
             - whatsapp # WhatsApp
             - beekeeper-studio # SQL DBMS
 
@@ -85,11 +87,14 @@ packages:
             - cava
             - playerctl
             - pavucontrol
-            - bluez
-            - bluez-utils
-            - networkmanager
-            - swaynotificationcenter
-            - network-manager-applet
+            - bluez # bluetooth
+            - bluez-utils # bluetooth utils
+            - networkmanager # network manager for wifi and ethernet
+            - network-manager-applet # network manager for wifi and ethernet
+            - piper # mouse config util
+            - fontforge # font customization
+            - ttf-meslo-nerd # MesloLGS Nerd Font
+            - adobe-source-sans-fonts # Source Sans Serif fonts
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
