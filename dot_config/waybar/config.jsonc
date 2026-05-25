@@ -80,7 +80,7 @@
       "mode-mon-col": 1,
       "on-scroll": 1
     },
-    "tooltip-format": "<span color='#b0b0b0' font='JetBrains Mono 12'><tt><small>{calendar}</small></tt></span>"
+    "tooltip-format": "<span color='#b0b0b0' font='mesloLGS Nerd Font 12'><tt><small>{calendar}</small></tt></span>"
   },
   "cpu": {
     "format": " {usage}%",

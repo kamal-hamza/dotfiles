@@ -1,13 +1,15 @@
 /* =============================================================================
- * Waybar Minimal Theme - Synced with Neovim Palette
+ * Waybar Theme - Synced with Neovim Dark Palette
  * =============================================================================
- * Uses only neutral colors: bg, fg, dim, line, keyword, comment
+ * Colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
+ * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727, 
+ * keyword: #777777, comment: #50585d
  * =========================================================================== */
 
 * {
   border: none;
   border-radius: 0;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "mesloLGS Nerd Font", monospace;
   font-size: 13px;
   font-weight: 500;
 }
@@ -20,7 +22,7 @@ window#waybar {
 }
 
 /* =============================================================================
- * General Module Styling
+ * Modules Container
  * =========================================================================== */
 
 .modules-left,
@@ -30,33 +32,8 @@ window#waybar {
   padding: 0 8px;
 }
 
-/* Default module styling - all neutral */
-#workspaces button,
-#language,
-#pulseaudio,
-#network,
-#memory,
-#cpu,
-#temperature,
-#clock,
-#battery,
-#bluetooth,
-#backlight,
-#custom-launcher,
-#custom-exit,
-#tray,
-#mpris,
-#hyprland/window {
-  background-color: #101010;
-  color: #b0b0b0;
-  padding: 0 10px;
-  margin: 4px 2px;
-  border-left: 2px solid #272727;
-  border-right: 2px solid #272727;
-}
-
 /* =============================================================================
- * Workspaces - Minimal Gray Scheme
+ * Workspaces
  * =========================================================================== */
 
 #workspaces {
@@ -95,31 +72,49 @@ window#waybar {
 }
 
 /* =============================================================================
- * All System Information Modules - Neutral Colors Only
+ * System Information Modules (CPU, Memory, Network, etc)
  * =========================================================================== */
 
-#cpu,
-#memory,
-#temperature,
+#language,
+#pulseaudio,
 #network,
+#memory,
+#cpu,
+#temperature,
+#clock,
+#battery,
 #bluetooth,
 #backlight,
-#pulseaudio,
-#language,
-#battery,
-#clock {
+#custom-launcher,
+#custom-exit,
+#custom-cava,
+#custom-notification,
+#custom-power,
+#custom-separator,
+#tray,
+#mpris,
+#hyprland/window {
+  background-color: #101010;
   color: #b0b0b0;
+  padding: 0 10px;
+  margin: 4px 2px;
+  border-left: 2px solid #272727;
+  border-right: 2px solid #272727;
 }
 
-/* Inactive/Disconnected states - dimmer */
+/* Disconnected/Muted states - use dimmer color */
 #network.disconnected,
 #pulseaudio.muted,
 #bluetooth.disconnected {
   color: #777777;
 }
 
+#custom-separator {
+  color: #272727;
+}
+
 /* =============================================================================
- * Tray - Minimal Styling
+ * Tray Icons
  * =========================================================================== */
 
 #tray {
@@ -139,7 +134,7 @@ window#waybar {
 }
 
 /* =============================================================================
- * Tooltip - Neutral Background
+ * Tooltip
  * =========================================================================== */
 
 tooltip {
@@ -154,21 +149,8 @@ tooltip label {
 }
 
 /* =============================================================================
- * Custom Modules & Window
+ * Window Title
  * =========================================================================== */
-
-#custom-launcher,
-#custom-exit,
-#custom-separator,
-#custom-cava,
-#custom-notification,
-#custom-power {
-  color: #b0b0b0;
-}
-
-#custom-separator {
-  color: #272727;
-}
 
 #window {
   color: #b0b0b0;
@@ -177,8 +159,4 @@ tooltip label {
   border-right: 2px solid #272727;
   padding: 0 10px;
   margin: 4px 2px;
-}
-
-#mpris {
-  color: #b0b0b0;
 }
