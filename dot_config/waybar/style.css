@@ -1,44 +1,13 @@
 /* =============================================================================
- * Waybar Theme - Synced with Neovim Dark Palette
+ * Waybar Theme - Minimalist
  * =============================================================================
  * Colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
- * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727, 
- * keyword: #777777, comment: #50585d
  * =========================================================================== */
 
-/* ===========================
- *  Palette & Constants
- * =========================== */
-
-@define-color base-bg rgba(16, 16, 16, 0.9);
-@define-color base-bg-solid #101010;
+@define-color base-bg #101010;
 @define-color base-fg #b0b0b0;
-
-@define-color ws-bg @base-bg;
-@define-color ws-bg-active @base-bg-solid;
-@define-color ws-bg-urgent #101010;
-
-@define-color ws-fg #777777;
-@define-color ws-fg-active #b0b0b0;
-@define-color ws-fg-urgent #474747;
-
-@define-color cpu-fg #b0b0b0;
-@define-color mem-fg #b0b0b0;
-@define-color clock-fg #b0b0b0;
-@define-color clock-simple-fg #b0b0b0;
-@define-color window-fg #b0b0b0;
-@define-color audio-fg #b0b0b0;
-@define-color audio-muted-fg #777777;
-@define-color tray-fg #b0b0b0;
-@define-color bluetooth-fg #b0b0b0;
-@define-color battery-fg #b0b0b0;
-@define-color logo-fg #b0b0b0;
-@define-color cava-fg #b0b0b0;
-@define-color power-fg #b0b0b0;
-
-@define-color tooltip-bg #272727;
-@define-color tooltip-border #474747;
-@define-color sep-fg #272727;
+@define-color accent #777777;
+@define-color dim #474747;
 
 /* ===========================
  *  Global
@@ -48,47 +17,48 @@ window#waybar,
 window#waybar * {
   min-height: 0;
   min-width: 0;
-  font-family: "mesloLGS Nerd Font", monospace;
-  font-size: 13px;
+  font-family: monospace;
+  font-size: 16px;
   font-weight: 400;
 }
 
 window#waybar {
   background-color: transparent;
+  color: @base-fg;
 }
 
 /* ===========================
- *  Modules Generic Styling
+ *  Modules
  * =========================== */
 
 #clock,
-#pulseaudio,
-#tray,
-#bluetooth,
-#battery,
-#custom-power,
-#custom-cava,
-#custom-notification,
-#custom-launcher,
 #cpu,
-#network,
-#memory,
-#window,
-#mpris {
-  padding: 0 0.5rem;
-  margin: 0 0.2rem;
+#pulseaudio,
+#custom-power {
+  padding: 0.5rem 0.8rem;
+  margin: 0 0.3rem;
   background-color: transparent;
+  color: @base-fg;
+}
+
+#pulseaudio.muted {
+  color: @accent;
 }
 
 /* ===========================
  *  Workspaces
  * =========================== */
 
+#workspaces {
+  margin: 0 0.5rem;
+}
+
 #workspaces button {
-  padding: 0 0.4rem;
-  margin: 0 0.15rem;
+  padding: 0.5rem 0.6rem;
+  margin: 0 0.2rem;
   background-color: transparent;
-  color: @ws-fg;
+  color: @accent;
+  font-weight: 400;
 }
 
 #workspaces button:hover {
@@ -96,102 +66,12 @@ window#waybar {
 }
 
 #workspaces button.active {
-  color: @ws-fg-active;
+  color: @base-fg;
+  font-weight: 600;
 }
 
 #workspaces button.urgent {
-  color: @ws-fg-urgent;
-}
-
-/* ===========================
- *  MPRIS
- * =========================== */
-
-#mpris {
-  padding: 0 0.5rem;
-  margin: 0 0.2rem;
-  color: @base-fg;
-}
-
-#mpris.playing {
-  color: #b0b0b0;
-}
-
-#mpris.paused {
-  color: #777777;
-}
-
-/* ===========================
- *  Module Colors & States
- * =========================== */
-
-#cpu {
-  color: @cpu-fg;
-}
-
-#memory {
-  color: @mem-fg;
-}
-
-#clock {
-  color: @clock-fg;
-}
-
-#clock.simpleclock {
-  color: @clock-simple-fg;
-}
-
-#window {
-  color: @window-fg;
-}
-
-#pulseaudio {
-  color: @audio-fg;
-}
-
-#pulseaudio.muted {
-  color: @audio-muted-fg;
-}
-
-#tray {
-  color: @tray-fg;
-}
-
-#bluetooth {
-  color: @bluetooth-fg;
-}
-
-#battery {
-  color: @battery-fg;
-}
-
-#custom-launcher {
-  color: @logo-fg;
-}
-
-#custom-cava {
-  color: @cava-fg;
-}
-
-#custom-power {
-  color: @power-fg;
-}
-
-#custom-notification {
-  color: @base-fg;
-}
-
-/* ===========================
- *  Miscellaneous
- * =========================== */
-
-#custom-sep {
-  padding: 0;
-  color: @sep-fg;
-}
-
-window#waybar.empty #window {
-  background-color: transparent;
+  color: @dim;
 }
 
 /* ===========================
@@ -199,7 +79,7 @@ window#waybar.empty #window {
  * =========================== */
 
 tooltip {
-  background-color: @tooltip-bg;
+  background-color: @base-bg;
   border: none;
 }
 

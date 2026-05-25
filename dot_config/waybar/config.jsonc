@@ -2,90 +2,39 @@
   "layer": "top",
   "position": "top",
   "modules-left": [
-    "custom/notification",
-    "clock",
-    "custom/weather"
-    ],
-    "modules-center": [
-      "hyprland/workspaces"
-    ],
-    "modules-right": [
-      "pulseaudio",
-      "battery",
-      "network",
-      "custom/power"
-    ],
-    "hyprland/workspaces": {
-      "format": "{icon}",
-      "format-icons": {
-        "1": "",
-        "2": "",
-        "3": "",
-        "4": "",
-        "5": ""
-      },
-      "persistent-workspaces": {
-        "*": 5, // 5 workspaces by default on every monitor
-      }
-    },
-    "network": {
-        // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "  Network",
-        "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "format-alt": "  Network",
-        "on-click": "nm-connection-editor"
-    },
-    "custom/notification": {
-      "tooltip": true,
-      "format": "{icon}",
-      "format-icons": {
-        "notification": "",
-        "none": "",
-        "dnd-notification": "",
-        "dnd-none": "",
-        "inhibited-notification": "",
-        "inhibited-none": "",
-        "dnd-inhibited-notification": "",
-        "dnd-inhibited-none": ""
-      },
-      "return-type": "json",
-      "exec-if": "which swaync-client",
-      "exec": "swaync-client -swb",
-      "on-click": "swaync-client -t -sw",
-      "on-click-right": "swaync-client -d -sw",
-      "escape": true
-    },
-    "pulseaudio": {
-        // "scroll-step": 1, // %, can be a float
-        "format": "{icon}  {volume}%",
-        "format-bluetooth": "{volume}% {icon}",
-        "format-bluetooth-muted": " {icon}",
-        "format-muted": "",
-        "format-source": "{volume}% ",
-        "format-source-muted": "",
-        "format-icons": {
-          "headphone": "",
-          "hands-free": "",
-          "headset": "",
-          "phone": "",
-          "portable": "",
-          "car": "",
-          "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol"
-    },
-    "custom/power": {
-      "format" : "",
-      "tooltip": false,
-      "on-click": "wlogout"
-    },
-    "clock": {
-      "interval": 60,
-      "format": "  {:%I:%M %p}",
-      "max-length": 25
+    "clock"
+  ],
+  "modules-center": [
+    "hyprland/workspaces"
+  ],
+  "modules-right": [
+    "cpu",
+    "pulseaudio",
+    "custom/power"
+  ],
+  "hyprland/workspaces": {
+    "format": "{name}",
+    "persistent-workspaces": {
+      "*": 5
     }
-
+  },
+  "cpu": {
+    "format": "CPU {usage}%",
+    "interval": 2
+  },
+  "pulseaudio": {
+    "format": "VOL {volume}%",
+    "format-muted": "VOL muted",
+    "on-click": "pavucontrol"
+  },
+  "custom/power": {
+    "format": "PWR",
+    "tooltip": false,
+    "on-click": "wlogout"
+  },
+  "clock": {
+    "interval": 60,
+    "format": "{:%I:%M %p}",
+    "max-length": 25
+  }
 }
