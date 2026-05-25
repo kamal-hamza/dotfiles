@@ -1,7 +1,7 @@
 -- general config
 hl.config({
   general = {
-    border_size = 0.5,
+    border_size = 1,
     gaps_in = 3,
     gaps_out = 10,
     float_gaps = 3,
@@ -47,9 +47,6 @@ hl.config({
     },
     glow = {
       enabled = false,
-    },
-    animations = {
-      enabled = true,
     },
   }
 })
