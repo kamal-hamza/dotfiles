@@ -1,5 +1,5 @@
 require("conf.execs")
-require("conf.rules")
+-- require("conf.rules")
 require("conf.keymaps")
 require("conf.monitors")
 require("conf.envs")
