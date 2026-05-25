@@ -5,6 +5,9 @@
 # theme
 theme = soft-focus-dark
 
+# font
+font-family = "MesloLGS Nerd Font"
+
 # Send Ctrl s to tmux
 # keybind = ctrl+s=send_text:\x13
 

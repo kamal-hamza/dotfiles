@@ -71,16 +71,16 @@
     "calendar": {
       "format": {
         "days": "<span color='#b0b0b0' weight='normal'>{}</span>",
-        "months": "<span color='#8ebeec'><b>{}</b></span>",
-        "today": "<span color='#ff7676' weight='700'><u>{}</u></span>",
-        "weekdays": "<span color='#d9ba73'><b>{}</b></span>",
-        "weeks": "<span color='#86cd82'><b>W{}</b></span>"
+        "months": "<span color='#b0b0b0' weight='600'>{}</span>",
+        "today": "<span color='#b0b0b0' weight='700' underline='single'>{}</span>",
+        "weekdays": "<span color='#777777' weight='600'>{}</span>",
+        "weeks": "<span color='#50585d' weight='600'>W{}</span>"
       },
       "mode": "month",
       "mode-mon-col": 1,
       "on-scroll": 1
     },
-    "tooltip-format": "<span color='#b0b0b0' font='Lexend 16'><tt><small>{calendar}</small></tt></span>"
+    "tooltip-format": "<span color='#b0b0b0' font='JetBrains Mono 12'><tt><small>{calendar}</small></tt></span>"
   },
   "cpu": {
     "format": " {usage}%",

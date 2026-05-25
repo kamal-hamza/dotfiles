@@ -53,6 +53,14 @@ packages:
             - thunar-volman # volume manager plugin for thunar
             - tumbler # file thumbnailing service
             - xarchiver # extract or compress files
+            - zip # zip files
+            - unzip # unzip files
+            - p7zip # another zip format
+            - unrar # rar files
+            - tar # tar files
+            - gzip # more zip
+            - bzip2 # zip2
+            - xz # xz format
             - hyprland # The dynamic tiling Wayland compositor
             - xorg-xwayland # Compatibility layer for legacy X11 apps
             - qt6-wayland # Wayland support for Qt6 applications

@@ -1,8 +1,7 @@
 /* =============================================================================
- * Waybar Dark Theme - Synced with Neovim Palette
+ * Waybar Minimal Theme - Synced with Neovim Palette
  * =============================================================================
- * Color Palette from nvim/colors/lua/dark/palette/dark.lua
- * Maintains consistent dark look across all modules
+ * Uses only neutral colors: bg, fg, dim, line, keyword, comment
  * =========================================================================== */
 
 * {
@@ -31,7 +30,7 @@ window#waybar {
   padding: 0 8px;
 }
 
-/* Default module styling */
+/* Default module styling - all neutral */
 #workspaces button,
 #language,
 #pulseaudio,
@@ -45,7 +44,9 @@ window#waybar {
 #backlight,
 #custom-launcher,
 #custom-exit,
-#tray {
+#tray,
+#mpris,
+#hyprland/window {
   background-color: #101010;
   color: #b0b0b0;
   padding: 0 10px;
@@ -55,7 +56,7 @@ window#waybar {
 }
 
 /* =============================================================================
- * Workspaces
+ * Workspaces - Minimal Gray Scheme
  * =========================================================================== */
 
 #workspaces {
@@ -65,13 +66,13 @@ window#waybar {
 }
 
 #workspaces button {
-  background-color: #1a1a1a;
+  background-color: #101010;
   color: #777777;
   border: 1px solid #272727;
-  border-radius: 4px;
+  border-radius: 0;
   margin: 0 4px;
   padding: 6px 12px;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
@@ -81,196 +82,71 @@ window#waybar {
 }
 
 #workspaces button.active {
-  background-color: #458ee6;
-  color: #101010;
-  border-color: #458ee6;
+  background-color: #272727;
+  color: #b0b0b0;
+  border-color: #50585d;
   font-weight: 600;
 }
 
 #workspaces button.urgent {
-  background-color: #ff7676;
-  color: #101010;
-  border-color: #ff7676;
+  background-color: #272727;
+  color: #b0b0b0;
+  border-color: #474747;
 }
 
 /* =============================================================================
- * System Information Modules
+ * All System Information Modules - Neutral Colors Only
  * =========================================================================== */
 
-/* CPU */
-#cpu {
-  color: #8ebeec;
+#cpu,
+#memory,
+#temperature,
+#network,
+#bluetooth,
+#backlight,
+#pulseaudio,
+#language,
+#battery,
+#clock {
+  color: #b0b0b0;
 }
 
-#cpu.warning {
-  color: #d9ba73;
-}
-
-#cpu.critical {
-  color: #ff7676;
-}
-
-/* Memory */
-#memory {
-  color: #86cd82;
-}
-
-#memory.warning {
-  color: #d9ba73;
-}
-
-#memory.critical {
-  color: #ff7676;
-}
-
-/* Temperature */
-#temperature {
-  color: #8ebeec;
-}
-
-#temperature.critical {
-  color: #ff7676;
-}
-
-/* Network */
-#network {
-  color: #5abfb5;
-}
-
-#network.disconnected {
-  color: #ff7676;
-}
-
-#network.linked {
-  color: #86cd82;
-}
-
-/* Bluetooth */
-#bluetooth {
-  color: #5abfb5;
-}
-
+/* Inactive/Disconnected states - dimmer */
+#network.disconnected,
+#pulseaudio.muted,
 #bluetooth.disconnected {
   color: #777777;
 }
 
-#bluetooth.connected {
-  color: #86cd82;
-}
-
-/* Battery */
-#battery {
-  color: #86cd82;
-}
-
-#battery.warning {
-  color: #d9ba73;
-  animation: blink 0.5s linear infinite;
-}
-
-#battery.critical {
-  color: #ff7676;
-  animation: blink 0.2s linear infinite;
-}
-
-#battery.charging {
-  color: #8ebeec;
-}
-
-@keyframes blink {
-  to {
-    color: #101010;
-    background-color: #ff7676;
-  }
-}
-
-/* Backlight */
-#backlight {
-  color: #d9ba73;
-}
-
-/* Clock / Time */
-#clock {
-  color: #b0b0b0;
-  font-weight: 600;
-  margin-right: 12px;
-}
-
-/* Audio / PulseAudio */
-#pulseaudio {
-  color: #d9ba73;
-}
-
-#pulseaudio.muted {
-  color: #777777;
-  background-color: #1a1a1a;
-}
-
-/* Language */
-#language {
-  color: #8ebeec;
-}
-
 /* =============================================================================
- * Tray
+ * Tray - Minimal Styling
  * =========================================================================== */
 
 #tray {
-  background-color: #1a1a1a;
+  background-color: #101010;
   color: #b0b0b0;
   padding: 0 8px;
 }
 
 #tray > .passive {
   -gtk-icon-effect: dim;
+  color: #777777;
 }
 
 #tray > .needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: #ff7676;
-  color: #101010;
-  border-radius: 4px;
+  -gtk-icon-effect: dim;
+  color: #b0b0b0;
 }
 
 /* =============================================================================
- * Accent Colors for Special Elements
- * =========================================================================== */
-
-/* Emphasis/Highlight elements */
-.active {
-  color: #ffffff;
-  background-color: #458ee6;
-}
-
-.warning {
-  color: #d9ba73;
-  background-color: #1a1a1a;
-}
-
-.critical {
-  color: #ff7676;
-  background-color: #1a1a1a;
-}
-
-.success {
-  color: #86cd82;
-  background-color: #1a1a1a;
-}
-
-.info {
-  color: #8ebeec;
-  background-color: #1a1a1a;
-}
-
-/* =============================================================================
- * Tooltip
+ * Tooltip - Neutral Background
  * =========================================================================== */
 
 tooltip {
-  background-color: #1a1a1a;
-  border: 1px solid #272727;
+  background-color: #272727;
+  border: 1px solid #474747;
   color: #b0b0b0;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 tooltip label {
@@ -278,33 +154,31 @@ tooltip label {
 }
 
 /* =============================================================================
- * Custom Modules
+ * Custom Modules & Window
  * =========================================================================== */
 
-#custom-launcher {
-  color: #458ee6;
-  font-size: 16px;
-  margin-left: 8px;
-}
-
-#custom-exit {
-  color: #ff7676;
-  margin-right: 8px;
+#custom-launcher,
+#custom-exit,
+#custom-separator,
+#custom-cava,
+#custom-notification,
+#custom-power {
+  color: #b0b0b0;
 }
 
 #custom-separator {
   color: #272727;
 }
 
-/* =============================================================================
- * Separator
- * =========================================================================== */
-
 #window {
   color: #b0b0b0;
-  background-color: #1a1a1a;
+  background-color: #101010;
   border-left: 2px solid #272727;
   border-right: 2px solid #272727;
   padding: 0 10px;
   margin: 4px 2px;
+}
+
+#mpris {
+  color: #b0b0b0;
 }
