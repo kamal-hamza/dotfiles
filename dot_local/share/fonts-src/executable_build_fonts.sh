@@ -125,11 +125,11 @@ find_font_by_weight() {
       continue
     fi
 
-    # Search for name-weight pattern, excluding variable fonts
-    # Pattern: Name-Weight.ext or Name Weight.ext (case-insensitive)
-    result="$(find "$dir" -maxdepth 1 -type f \
-      \( -iname "${name}-${weight}.ttf" -o -iname "${name}-${weight}.otf" \
-         -o -iname "${name} ${weight}.ttf" -o -iname "${name} ${weight}.otf" \) \
+    # Search recursively (up to 3 levels) for name-weight pattern
+    # Handles both .ttf and .otf, and subdirectories like adobe-source-sans/
+    # Pattern: Name-Weight.ext (case-insensitive)
+    result="$(find "$dir" -maxdepth 3 -type f \
+      \( -iname "${name}-${weight}.ttf" -o -iname "${name}-${weight}.otf" \) \
       2>/dev/null | head -n 1)"
     
     if [[ -n "$result" ]]; then
@@ -139,7 +139,7 @@ find_font_by_weight() {
   done
 
   return 1
-}
+}}
 
 # Patch fonts
 print_info "Patching fonts..."
