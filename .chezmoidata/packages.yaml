@@ -16,7 +16,6 @@ packages:
             - zsh-autopair # Auto-close brackets in zsh
             - zsh-autosuggestions # Fish-like autosuggestions
             - zsh-syntax-highlighting # Syntax highlighting for zsh
-            - git # Version control system
             - zoxide # Smarter cd command
             - gh # Github CLI
             - just # Just (Alternative to Make) - Command runner
@@ -24,7 +23,6 @@ packages:
         casks:
             - chatgpt # ChatGPT desktop app
             - obsidian # Knowledge management app
-            - wezterm # GPU-accelerated terminal
             - zed # Modern code editor
             - font-meslo-lg-nerd-font # Coding Font
             - whatsapp # WhatsApp
@@ -60,7 +58,7 @@ packages:
             - qt6-wayland # Wayland support for Qt6 applications
             - qt5-wayland # Wayland support for Qt5 applications
             - waybar # Highly customizable status bar
-            - hyprlauncher # Application launcher and menu run dialog (Wayland fork)
+            - rofi-wayland # app launcher
             - mako # Lightweight, customizable notification daemon
             - hyprpaper # Blazing fast, native wallpaper utility
             - polkit-gnome # Handles administrative authentication prompts (GUI)
@@ -75,9 +73,19 @@ packages:
             - os-prober # dual boot OS recognition
             - firefox # browser
             - discord # chat
+            - cava
+            - playerctl
+            - pavucontrol
+            - bluez
+            - bluez-utils
+            - networkmanager
+            - swaynotificationcenter
+            - network-manager-applet
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
             - zsh-autopair-git # Auto-close brackets in zs
             - hyprlock # Fast, secure, and beautiful desktop locker
             - hypridle # Idle management daemon (handles screen dims and locks)
+            - blueberry
+
