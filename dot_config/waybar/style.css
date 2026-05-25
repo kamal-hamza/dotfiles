@@ -17,7 +17,7 @@ window#waybar,
 window#waybar * {
   min-height: 0;
   min-width: 0;
-  font-family: monospace;
+  font-family: "Source Sans 3", sans-serif;
   font-size: 16px;
   font-weight: 400;
 }
@@ -62,6 +62,7 @@ window#waybar {
 }
 
 #workspaces button:hover {
+  background-color: transparent;
   color: @base-fg;
 }
 
