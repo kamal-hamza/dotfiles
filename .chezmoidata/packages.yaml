@@ -51,6 +51,7 @@ packages:
             - thunar # file manager
             - gvfs # mount external storage
             - thunar-volman # volume manager plugin for thunar
+            - thunar-archive-plugin # extraction plugin for thunar
             - tumbler # file thumbnailing service
             - xarchiver # extract or compress files
             - zip # zip files
