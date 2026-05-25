@@ -93,7 +93,7 @@ window#waybar {
 #custom-separator,
 #tray,
 #mpris,
-#hyprland/window {
+#window {
   background-color: #101010;
   color: #b0b0b0;
   padding: 0 10px;
