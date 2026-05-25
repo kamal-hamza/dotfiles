@@ -13,3 +13,5 @@ require("plugins")
 require("lsp")
 -- load statusline
 require("statusline")
+-- load formatter
+require("formatter")

@@ -32,5 +32,9 @@ vim.keymap.set('n', '<M-b>', ':vertical resize +2<CR>')
 -- lsp keymaps
 vim.keymap.set("n", "gd", vim.lsp.buf.definition)
 
+-- formatter keymaps
+vim.keymap.set("n", "<leader>F", "<cmd>Format<cr>", { desc = "Format Buffer" })
+vim.keymap.set("v", "<leader>F", "<cmd>FormatRange<cr>", { desc = "Format Selection" })
+
 -- buffer delete
 vim.keymap.set("n", "<leader>db", function() vim.cmd("bdelete") end, { desc = "Delete Buffer" })

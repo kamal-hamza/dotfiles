@@ -71,24 +71,7 @@ vim.api.nvim_create_autocmd('FileType', {
 
 -- conform nvim
 local conform = require("conform")
-conform.setup({
-  formatters_by_ft = {
-    python = { "isort", "ruff_format" },
-    javascript = { "prettierd" },
-    typescript = { "prettierd" },
-    lua = { "stylua" },
-    c = { "clang_format" },
-    cpp = { "clang_format" },
-    h = { "clang_format" },
-  },
-})
-vim.keymap.set("n", "<leader>F", function()
-  conform.format({
-    lsp_fallback = true,
-    async = false,
-    timeout_ms = 2000,
-  })
-end, { desc = "Format Buffer" })
+-- Configuration is now in formatter.lua
 
 -- trouble nvim
 local trouble = require("trouble")

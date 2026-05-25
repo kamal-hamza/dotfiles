@@ -1,47 +1,55 @@
+-- general config
 hl.config({
   general = {
-    gaps_in  = 5,
-    gaps_out = 20,
-
-    border_size = 2,
-
-    col = {
-      active_border   = { colors = {"rgba(33ccffee)", "rgba(00ff99ee)"}, angle = 45 },
-      inactive_border = "rgba(595959aa)",
-    },
-
-    -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
-    resize_on_border = false,
-
-    -- Please see https://wiki.hypr.land/Configuring/Advanced-and-Cool/Tearing/ before you turn this on
-    allow_tearing = false,
-
+    border_size = 0.5,
+    gaps_in = 3,
+    gaps_out = 10,
+    float_gaps = 3,
+    gaps_workspaces = 0,
+    col.active_border = rgb(ffffff) rgb(b0b0b0) 45deg,
+    col.inactive_border = rgb(474747) rgb(272727) 45deg,
+    col.nogroup_border_active = rgb(f2a4db) rgb(ff7676) 45deg,
+    col.nogroup_border = rgb(d9ba73) rgb(272727) 45deg,
     layout = "dwindle",
-  },
+    no_focus_fallback = true,
+    resize_on_border = false,
+    snap = {
+      enabled = true,
+      window_gap = 10,
+      monitor_gap = 5,
+      border_overlap = false,
+      respect_gaps = true,
+    }
+  }
+});
 
+-- decoration config
+hl.config({
   decoration = {
-    rounding       = 10,
-    rounding_power = 2,
-
-    -- Change transparency of focused and unfocused windows
-    active_opacity   = 1.0,
+    rounding = 0,
+    rounding_power = 0.0,
+    active_opacity = 1.0,
     inactive_opacity = 1.0,
-
-    shadow = {
-      enabled      = true,
-      range        = 4,
-      render_power = 3,
-      color        = 0xee1a1a1a,
-    },
+    fullscreen_opacity = 1.0,
+    dim_modal = true,
+    dim_inactive = false,
+    dim_strength = 0.7,
+    dim_special = 0.7,
+    dim_around = 0.7,
+    border_part_of_window = true,
     blur = {
-      enabled   = true,
-      size      = 3,
-      passes    = 1,
-      vibrancy  = 0.1696,
+      enabled = false,
     },
-  },
-
-  animations = {
-    enabled = true,
-  },
+    shadow = {
+      enabled = false,
+    },
+    glow = {
+      enabled = false,
+    },
+    animations = {
+      enabled = true,
+    },
+  }
 })
+
+-- input config

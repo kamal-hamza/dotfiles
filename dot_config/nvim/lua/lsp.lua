@@ -23,6 +23,7 @@ zls:install({ version = "0.15.0" })
 local mason_tool_installer = require("mason-tool-installer")
 mason_tool_installer.setup({
   ensure_installed = {
+    -- LSPs
     "vim-language-server",
     "lua-language-server",
     "pyrefly",
@@ -31,7 +32,21 @@ mason_tool_installer.setup({
     "typescript-language-server",
     "eslint-lsp",
     "tinymist",
-    "clangd"
+    "clangd",
+
+    -- Formatters
+    "stylua", -- Lua
+    "prettierd", -- JavaScript, TypeScript, JSON, YAML, CSS, Markdown, HTML
+    "prettier", -- JavaScript, TypeScript, JSON, YAML, CSS, Markdown, HTML
+    "clang-format", -- C/C++
+    "isort", -- Python imports
+    "ruff", -- Python linter/formatter
+    "shfmt", -- Shell/Bash
+    "yamlfmt", -- YAML
+    "taplo", -- TOML
+    "jq", -- JSON
+    "sqlfluff", -- SQL
+    "goimports", -- Go
   },
 })
 
@@ -39,23 +54,23 @@ mason_tool_installer.setup({
 
 -- lua specific config
 vim.lsp.config("lua_ls", {
-  filetypes = { 'lua' },
-  root_markers = { '.git', 'init.lua' },
+  filetypes = { "lua" },
+  root_markers = { ".git", "init.lua" },
   settings = {
     Lua = {
-      diagnostics = { globals = { 'vim' } },
-      workspace = { library = vim.api.nvim_get_runtime_file("", true) }
-    }
-  }
+      diagnostics = { globals = { "vim" } },
+      workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+    },
+  },
 })
 
 -- tinymist specific config
 vim.lsp.config("tinymist", {
-  filetypes = {"typst"},
+  filetypes = { "typst" },
 })
 
 -- language server configuration
-local capabilities = require('blink.cmp').get_lsp_capabilities()
+local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 local servers = {
   "vimls",
@@ -63,7 +78,7 @@ local servers = {
   "rust_analyzer",
   "zls",
   "ts_ls",
-  "clangd"
+  "clangd",
 }
 
 -- lua vim override
@@ -71,14 +86,14 @@ local server_configs = {
   lua_ls = {
     settings = {
       Lua = {
-        diagnostics = { globals = { 'vim' } },
-        workspace = { library = vim.api.nvim_get_runtime_file("", true) }
-      }
-    }
+        diagnostics = { globals = { "vim" } },
+        workspace = { library = vim.api.nvim_get_runtime_file("", true) },
+      },
+    },
   },
   clangd = {
     offset_encoding = "utf-8",
-  }
+  },
 }
 
 table.insert(servers, "lua_ls")
@@ -110,39 +125,39 @@ require("blink.cmp").setup({
   },
   appearance = {
     kind_icons = {
-      Text = '󰉿',
-      Method = '󰊕',
-      Function = '󰊕',
-      Constructor = '󰒓',
+      Text = "󰉿",
+      Method = "󰊕",
+      Function = "󰊕",
+      Constructor = "󰒓",
 
-      Field = '󰜢',
-      Variable = '󰆦',
-      Property = '󰖷',
-      Class = '󱡠',
-      Interface = '󱡠',
-      Struct = '󱡠',
-      Module = '󰅩',
-      Unit = '󰪚',
-      Value = '󰦨',
-      Enum = '󰦨',
-      EnumMember = '󰦨',
-      Keyword = '󰻾',
-      Constant = '󰏿',
-      Snippet = '󱄽',
-      Color = '󰏘',
-      File = '󰈔',
-      Reference = '󰬲',
-      Folder = '󰉋',
-      Event = '󱐋',
-      Operator = '󰪚',
-      TypeParameter = '󰬛',
-    }
+      Field = "󰜢",
+      Variable = "󰆦",
+      Property = "󰖷",
+      Class = "󱡠",
+      Interface = "󱡠",
+      Struct = "󱡠",
+      Module = "󰅩",
+      Unit = "󰪚",
+      Value = "󰦨",
+      Enum = "󰦨",
+      EnumMember = "󰦨",
+      Keyword = "󰻾",
+      Constant = "󰏿",
+      Snippet = "󱄽",
+      Color = "󰏘",
+      File = "󰈔",
+      Reference = "󰬲",
+      Folder = "󰉋",
+      Event = "󱐋",
+      Operator = "󰪚",
+      TypeParameter = "󰬛",
+    },
   },
   signature = {
     enabled = true,
     window = {
       border = "rounded",
-      show_documentation = false
-    }
-  }
+      show_documentation = false,
+    },
+  },
 })
