@@ -139,7 +139,7 @@ find_font_by_weight() {
   done
 
   return 1
-}}
+}
 
 # Patch fonts
 print_info "Patching fonts..."
