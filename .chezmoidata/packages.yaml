@@ -98,7 +98,7 @@ packages:
             - fastfetch # display system specs
             - zathura # pdf viewer
             - zathura-pdf-mupdf # pdf viewer backend
-            - adw-gtk3 # force loading of gtk3 themes
+            - adw-gtk-theme # force loading of gtk3 themes
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
