@@ -1,0 +1,55 @@
+################################################################################
+# Cava Configuration - Audio Visualizer
+# Colors synced with Obsidian Dark Theme (Monochromatic)
+################################################################################
+
+## Input Settings - Connect to MPD FIFO output
+[input]
+method = fifo
+source = /tmp/mpd.fifo
+sample_rate = 44100
+channels = stereo
+sample_bits = 16
+
+## Output Mode
+[output]
+method = ncurses
+raw_target_fps = 60
+channels = stereo
+
+## Colors - Monochromatic Grayscale (Obsidian Dark Theme)
+[color]
+# Monochromatic theme - only grayscale
+# background: #050505 (almost black)
+# foreground shades: #8d8d8d (dim) → #d4d4d4 (normal) → #ffffff (bright)
+foreground = 231        ## white (#ffffff)
+background = 16        ## black (#000000)
+
+# Use gradient with only grayscale colors (no colorful accents)
+gradient = 1
+gradient_color_1 = 240  ## dark gray
+gradient_color_2 = 243  ## medium-dark gray
+gradient_color_3 = 246  ## medium gray
+gradient_color_4 = 250  ## light gray
+gradient_color_5 = 255  ## white
+
+## Smoothing - Smoother visualizer output
+[smoothing]
+monstercat = 1
+waves = 0
+noise_reduction = 0.77
+
+## Spectrum Analyzer Settings
+[eq]
+# Frequencies for spectrum visualization (Hz)
+# Lower values for bass, higher for treble
+1=0
+2=0
+3=0
+4=0
+5=0
+6=0
+7=0
+8=0
+9=0
+10=0

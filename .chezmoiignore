@@ -27,4 +27,7 @@ dot_pi/**/node_modules/
 .config/hypr/
 .config/waybar/
 .config/rofi/
+.config/mpd/
+.config/ncmpcpp/
+.config/cava/
 {{ end }}

@@ -1,0 +1,154 @@
+################################################################################
+# ncmpcpp Configuration - Music Player Client
+################################################################################
+
+## Connection Settings
+ncmpcpp_directory = ~/.config/ncmpcpp
+mpd_host = localhost
+mpd_port = 6600
+mpd_connection_timeout = 5
+
+## Music and Lyrics Paths
+mpd_music_dir = ~/Music
+lyrics_directory = ~/Music/Lyrics
+
+################################################################################
+# Visualizer Settings (with cava support)
+################################################################################
+visualizer_data_source = /tmp/mpd.fifo
+visualizer_output_name = Visualizer feed
+visualizer_in_stereo = yes
+visualizer_type = spectrum
+visualizer_fps = 60
+visualizer_autoscale = yes
+visualizer_look = ░▓
+visualizer_color = white
+visualizer_spectrum_smooth_look = yes
+visualizer_spectrum_dft_size = 2
+visualizer_spectrum_gain = 10
+visualizer_spectrum_hz_min = 20
+visualizer_spectrum_hz_max = 20000
+visualizer_spectrum_log_scale_x = yes
+
+################################################################################
+# Display Settings
+################################################################################
+## UI Style
+user_interface = classic
+startup_screen = playlist
+startup_slave_screen = visualizer
+
+## Headers and Status
+header_visibility = yes
+statusbar_visibility = yes
+titles_visibility = yes
+header_text_scrolling = yes
+enable_window_title = yes
+connected_message_on_startup = yes
+
+## Colors and Styling - Pure Monochromatic (Black/White/Gray)
+colors_enabled = yes
+empty_tag_color = white
+header_window_color = default
+volume_color = default
+state_line_color = default
+state_flags_color = default:b
+main_window_color = white
+color1 = white
+color2 = white
+progressbar_color = white:b
+progressbar_elapsed_color = white:b
+statusbar_color = default
+statusbar_time_color = default:b
+player_state_color = default:b
+window_border_color = white
+active_window_border = white
+
+## Visibility Options
+playlist_show_remaining_time = no
+playlist_shorten_total_times = no
+discard_colors_if_item_is_selected = no
+display_volume_level = yes
+display_bitrate = no
+display_remaining_time = no
+show_hidden_files_in_local_browser = no
+
+################################################################################
+# Song Format and Display
+################################################################################
+song_list_format = {%a - }{%t}|{%f}$R{%l}
+song_status_format = {{%a{ "%b"{ (%y)}} - }{%t}}|{%f}
+song_library_format = {%n - }{%t}|{%f}
+alternative_header_first_line_format = {%t}|{%f}
+alternative_header_second_line_format = {%a}{ - %b}{ (%y)}|{%D}
+
+## Column Configuration
+## Format: (width)[color]{tag}
+## Standard columns layout - Artist | Track | Album | Duration
+song_columns_list_format = (20)[]{a} (50)[]{t|f:Title} (20)[]{b} (7f)[]{l}
+
+## Selected Item Display
+current_item_prefix = $8$r
+current_item_suffix = $/r$9
+selected_item_prefix = 
+selected_item_suffix = 
+now_playing_prefix = $b
+now_playing_suffix = $/b
+
+################################################################################
+# Behavior Settings
+################################################################################
+## Playback
+seek_time = 1
+volume_change_step = 2
+cyclic_scrolling = no
+autocenter_mode = no
+centered_cursor = no
+incremental_seeking = yes
+data_fetching_delay = yes
+mpd_crossfade_time = 5
+
+## Search and Navigation
+default_find_mode = wrapped
+default_place_to_search_in = database
+search_engine_default_search_mode = 1
+ignore_leading_the = no
+block_search_constraints_change_if_items_found = yes
+
+## Playlist Management
+playlist_display_mode = columns
+browser_display_mode = classic
+search_engine_display_mode = classic
+playlist_editor_display_mode = classic
+media_library_primary_tag = artist
+media_library_albums_split_by_date = yes
+media_library_hide_album_dates = no
+ask_before_clearing_playlists = yes
+
+## Input and Editor
+regular_expressions = perl
+external_editor = nano
+use_console_editor = yes
+
+## Timeouts
+message_delay_time = 5
+playlist_disable_highlight_delay = 0
+
+## Mouse Support
+mouse_support = yes
+mouse_list_scroll_whole_page = no
+lines_scrolled = 5
+
+## Lyrics
+follow_now_playing_lyrics = no
+fetch_lyrics_for_current_song_in_background = no
+store_lyrics_in_song_dir = no
+
+################################################################################
+# Screen Switcher Configuration
+################################################################################
+screen_switcher_mode = playlist, visualizer, browser
+locked_screen_width_part = 50
+ask_for_locked_screen_width_part = yes
+jump_to_now_playing_song_at_start = yes
+

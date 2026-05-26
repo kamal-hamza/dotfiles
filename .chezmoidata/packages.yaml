@@ -84,7 +84,6 @@ packages:
             - os-prober # dual boot OS recognition
             - firefox # browser
             - discord # chat
-            - cava
             - playerctl
             - pavucontrol
             - bluez # bluetooth
@@ -101,12 +100,21 @@ packages:
             - adw-gtk-theme # force loading of gtk3 themes
             - clang # c compiler
             - llvm # c / cpp backend
-            - libclang # c lib (important)
+            - ripgrep # grepping tool
+            - qt6-multimedia # metadata for audio files
+            - vlc # metadata for audio files
+            - openssh # ssh support
+            - ffmpeg # convert between file types
+            - mpd # music player backend
+            - mpc # command line music controller
+            - cava # music visualizer
+            - ncmpcpp # tui for music
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
             - zsh-autopair-git # Auto-close brackets in zs
             - hyprlock # Fast, secure, and beautiful desktop locker
             - hypridle # Idle management daemon (handles screen dims and locks)
-            - blueberry
+            - blueberry # bluetooth GUI
+            - pi-coding-agent # TUI based coding agent
 
