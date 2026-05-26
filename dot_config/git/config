@@ -32,7 +32,7 @@
 	diffFilter = delta --color-only
 
 [delta]
-	# Soft Focus Dark Theme Colors
+	# Colors from Neovim palette: dot_config/nvim/colors/lua/dark/palette/dark.lua
 	features = soft-focus-dark
 	navigate = true    # use n and N to move between diff sections
 	light = false      # set to true for light background terminals
@@ -41,63 +41,64 @@
 	syntax-theme = base16
 
 [delta "soft-focus-dark"]
+	# Colors from Neovim palette: dot_config/nvim/colors/lua/dark/palette/dark.lua
 	# Syntax highlighting
-	minus-style = syntax "#C42847"
-	minus-emph-style = syntax "#ff4c6a"
-	plus-style = syntax "#77aa77"
-	plus-emph-style = syntax "#99cc99"
+	minus-style = syntax "#ff7676"        # danger (bright red)
+	minus-emph-style = syntax "#701516"   # red (dark red)
+	plus-style = syntax "#86cd82"         # success (bright green)
+	plus-emph-style = syntax "#14ba19"    # green (dark green)
 	
 	# Line numbers
-	line-numbers-minus-style = "#C42847"
-	line-numbers-plus-style = "#77aa77"
-	line-numbers-zero-style = "#888888"
-	line-numbers-left-style = "#888888"
-	line-numbers-right-style = "#888888"
+	line-numbers-minus-style = "#ff7676"  # danger
+	line-numbers-plus-style = "#86cd82"   # success
+	line-numbers-zero-style = "#777777"   # keyword
+	line-numbers-left-style = "#777777"   # keyword
+	line-numbers-right-style = "#777777"  # keyword
 	
 	# File headers
-	file-style = "#067BC2" bold
-	file-decoration-style = "#067BC2" ul
+	file-style = "#458ee6" bold           # highlight (blue)
+	file-decoration-style = "#458ee6" ul  # highlight
 	
-	# Hunk headers (commit info)
+	# Hunk headers
 	hunk-header-style = file line-number syntax
-	hunk-header-decoration-style = "#67b7f5" box
+	hunk-header-decoration-style = "#8ebeec" box  # info (bright blue)
 	
 	# Commit style
-	commit-decoration-style = "#067BC2" box
-	commit-style = "#67b7f5" bold
+	commit-decoration-style = "#458ee6" box  # highlight
+	commit-style = "#8ebeec" bold           # info (bright blue)
 	
 	# Misc
 	zero-style = syntax
-	whitespace-error-style = "#C42847" reverse
+	whitespace-error-style = "#ff7676" reverse  # danger
 	
-	# Blame
-	blame-palette = "#050505" "#0a0a0a" "#1f2a33"
+	# Blame - using background shades
+	blame-palette = "#101010" "#0a0a0a" "#272727"  # bg, bg-shade1, line
 	blame-code-style = syntax
 	
 	# Merge conflicts
 	merge-conflict-begin-symbol = ⌃
 	merge-conflict-end-symbol = ⌄
-	merge-conflict-ours-diff-header-style = "#D4B87B" bold
-	merge-conflict-ours-diff-header-decoration-style = "#D4B87B" box
-	merge-conflict-theirs-diff-header-style = "#067BC2" bold
-	merge-conflict-theirs-diff-header-decoration-style = "#067BC2" box
+	merge-conflict-ours-diff-header-style = "#d9ba73" bold           # warning (yellow)
+	merge-conflict-ours-diff-header-decoration-style = "#d9ba73" box  # warning
+	merge-conflict-theirs-diff-header-style = "#458ee6" bold           # highlight (blue)
+	merge-conflict-theirs-diff-header-decoration-style = "#458ee6" box # highlight
 
 [delta "soft-focus-light"]
-	# Light theme variant (for reference)
+	# Light theme variant - using same Neovim palette for consistency
 	light = true
-	minus-style = syntax "#C42847"
-	minus-emph-style = syntax "#ff4c6a"
-	plus-style = syntax "#558855"
-	plus-emph-style = syntax "#77aa77"
+	minus-style = syntax "#ff7676"      # danger (bright red)
+	minus-emph-style = syntax "#701516" # red (dark red)
+	plus-style = syntax "#86cd82"       # success (bright green)
+	plus-emph-style = syntax "#14ba19"  # green (dark green)
 	
-	line-numbers-minus-style = "#C42847"
-	line-numbers-plus-style = "#558855"
-	line-numbers-zero-style = "#666666"
+	line-numbers-minus-style = "#ff7676"
+	line-numbers-plus-style = "#86cd82"
+	line-numbers-zero-style = "#777777"
 	
-	file-style = "#067BC2" bold
-	file-decoration-style = "#067BC2" ul
-	hunk-header-decoration-style = "#67b7f5" box
-	commit-decoration-style = "#067BC2" box
+	file-style = "#458ee6" bold
+	file-decoration-style = "#458ee6" ul
+	hunk-header-decoration-style = "#8ebeec" box
+	commit-decoration-style = "#458ee6" box
 
 [color]
 	ui = auto
@@ -106,23 +107,23 @@
 	status = auto
 
 [color "branch"]
-	current = "#067BC2" bold
-	local = "#f5f5f5"
-	remote = "#67b7f5"
+	current = "#458ee6" bold    # highlight (blue)
+	local = "#b0b0b0"           # fg
+	remote = "#8ebeec"          # info (bright blue)
 
 [color "diff"]
-	meta = "#067BC2" bold
-	frag = "#67b7f5" bold
-	old = "#C42847"
-	new = "#77aa77"
-	whitespace = "#C42847" reverse
+	meta = "#458ee6" bold       # highlight (blue)
+	frag = "#8ebeec" bold       # info (bright blue)
+	old = "#ff7676"             # danger (bright red)
+	new = "#86cd82"             # success (bright green)
+	whitespace = "#ff7676" reverse  # danger
 
 [color "status"]
-	added = "#77aa77"
-	changed = "#D4B87B"
-	untracked = "#888888"
-	branch = "#067BC2" bold
-	nobranch = "#C42847" bold
+	added = "#86cd82"           # success (bright green)
+	changed = "#d9ba73"         # warning (yellow)
+	untracked = "#777777"       # keyword
+	branch = "#458ee6" bold     # highlight (blue)
+	nobranch = "#ff7676" bold   # danger (bright red)
 
 [alias]
 	# Common shortcuts

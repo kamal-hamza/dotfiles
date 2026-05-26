@@ -1,4 +1,5 @@
 -- general config
+-- Colors from Neovim palette: dot_config/nvim/colors/lua/dark/palette/dark.lua
 hl.config({
   general = {
     border_size = 1,
@@ -7,10 +8,10 @@ hl.config({
     float_gaps = 3,
     gaps_workspaces = 0,
     col = {
-      active_border = {colors = {"rgb(ffffff)", "rgb(b0b0b0)"}, angle = 45},
-      inactive_border = {colors = {"rgb(474747)", "rgb(272727)"}, angle = 45},
-      nogroup_border_active = {colors = {"rgb(f2a4db)", "rgb(ff7676)"}, angle = 45},
-      nogroup_border = {colors = {"rgb(d9ba73)", "rgb(272727)"}, angle = 45},
+      active_border = {colors = {"rgb(ffffff)", "rgb(b0b0b0)"}, angle = 45},      -- border, fg
+      inactive_border = {colors = {"rgb(474747)", "rgb(272727)"}, angle = 45},    -- dim, line
+      nogroup_border_active = {colors = {"rgb(f2a4db)", "rgb(ff7676)"}, angle = 45},  -- pink, danger
+      nogroup_border = {colors = {"rgb(d9ba73)", "rgb(272727)"}, angle = 45},    -- warning, line
     },
     layout = "dwindle",
     no_focus_fallback = true,

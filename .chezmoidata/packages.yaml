@@ -95,6 +95,9 @@ packages:
             - fontforge # font customization
             - ttf-meslo-nerd # MesloLGS Nerd Font
             - adobe-source-sans-fonts # Source Sans Serif fonts
+            - fastfetch # display system specs
+            - zathura # pdf viewer
+            - zathura-pdf-mupdf # pdf viewer backend
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

@@ -1,13 +1,13 @@
 /* =============================================================================
- * Waybar Theme - Minimalist
+ * Waybar Theme - Synced with Obsidian Dark Theme
  * =============================================================================
- * Colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
+ * Colors from Obsidian dark theme CSS variables
  * =========================================================================== */
 
-@define-color base-bg #101010;
-@define-color base-fg #b0b0b0;
-@define-color accent #777777;
-@define-color dim #474747;
+@define-color base-bg #050505;      /* --background-primary */
+@define-color base-fg #d4d4d4;      /* --text-normal */
+@define-color accent #9f9f9f;       /* --nav-item-color */
+@define-color dim #474747;          /* fallback accent */
 
 /* ===========================
  *  Global
@@ -17,9 +17,15 @@ window#waybar,
 window#waybar * {
   min-height: 0;
   min-width: 0;
-  font-family: "Source Sans 3", sans-serif;
+  font-family: "Source Serif 4", serif;
   font-size: 16px;
   font-weight: 400;
+}
+
+/* Headings/Titles use Source Sans 3 */
+window#waybar #workspaces button,
+window#waybar #workspaces {
+  font-family: "Source Sans 3", sans-serif;
 }
 
 window#waybar {

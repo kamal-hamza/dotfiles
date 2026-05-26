@@ -1,22 +1,20 @@
 /* =============================================================================
- * Rofi Minimal Theme - Synced with Neovim Palette
+ * Rofi Minimal Theme - Synced with Obsidian Dark Theme
  * =============================================================================
- * Uses colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
- * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727,
- * keyword: #777777, comment: #50585d
+ * Colors from Obsidian dark theme CSS variables
  * =========================================================================== */
 
 * {
-  bg:              #101010;
-  fg:              #b0b0b0;
-  fg-dim:          #777777;
-  fg-comment:      #50585d;
-  line:            #272727;
-  dim:             #474747;
+  bg:              #050505;  /* --background-primary */
+  fg:              #d4d4d4;  /* --text-normal */
+  fg-dim:          #8d8d8d;  /* --text-muted */
+  fg-comment:      #8d8d8d;  /* --text-muted */
+  line:            #272727;  /* divider-ish */
+  dim:             #474747;  /* accent-ish */
 
-  hover-bg:        #272727;
-  select-bg:       #272727;
-  select-fg:       #b0b0b0;
+  hover-bg:        #0a0a0a;  /* --interactive-normal */
+  select-bg:       #0a0a0a;  /* --tab-background-active */
+  select-fg:       #ffffff;  /* --tab-text-color-active */
 }
 
 window {
@@ -47,14 +45,14 @@ inputbar {
 prompt {
   background-color: @bg;
   text-color:       @fg-comment;
-  font:             "JetBrains Mono 12";
+  font:             "Source Sans 3 12";
   padding:          0 8px 0 0;
 }
 
 entry {
   background-color: @bg;
   text-color:       @fg;
-  font:             "JetBrains Mono 12";
+  font:             "Source Serif 4 12";
   cursor:           text;
   placeholder:      "Search...";
   placeholder-color: @fg-dim;
@@ -71,7 +69,7 @@ message {
 message text {
   background-color: @bg;
   text-color:       @fg-dim;
-  font:             "JetBrains Mono 11";
+  font:             "Source Serif 4 11";
 }
 
 listview {
@@ -99,7 +97,7 @@ element {
   border:           0;
   border-radius:    0;
   padding:          6px 8px;
-  font:             "JetBrains Mono 12";
+  font:             "Source Serif 4 12";
 }
 
 element.normal.normal {
@@ -129,7 +127,7 @@ element.selected.alternate {
 element-text {
   background-color: inherit;
   text-color:       inherit;
-  font:             "JetBrains Mono 12";
+  font:             "Source Serif 4 12";
   vertical-align:   0.5;
   horizontal-align: 0;
   padding:          0;

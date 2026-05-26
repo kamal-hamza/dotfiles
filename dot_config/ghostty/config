@@ -3,7 +3,7 @@
 # ===================================================================
 
 # theme
-theme = soft-focus-dark
+theme = dark
 
 # font
 font-family = MesloLGS Nerd Font Mono
