@@ -115,7 +115,8 @@ element.normal.alternate {
 element.selected.normal {
   background-color: @select-bg;
   text-color:       @select-fg;
-  border:           1px solid @line;
+  border:           1px;
+  border-color:     @line;
 }
 
 element.selected.alternate {
