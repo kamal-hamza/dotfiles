@@ -37,7 +37,8 @@ mainbox {
 
 inputbar {
   background-color: @bg;
-  border:           1px solid @line;
+  border:           1px;
+  border-color:     @line;
   border-radius:    0;
   padding:          8px;
   spacing:          8px;
@@ -61,7 +62,8 @@ entry {
 
 message {
   background-color: @bg;
-  border:           1px solid @line;
+  border:           1px;
+  border-color:     @line;
   border-radius:    0;
   padding:          4px 8px;
 }
@@ -74,7 +76,8 @@ message text {
 
 listview {
   background-color: @bg;
-  border:           1px solid @line;
+  border:           1px;
+  border-color:     @line;
   border-radius:    0;
   padding:          0;
   scrollbar:        true;
@@ -118,7 +121,8 @@ element.selected.normal {
 element.selected.alternate {
   background-color: @select-bg;
   text-color:       @select-fg;
-  border:           1px solid @line;
+  border:           1px;
+  border-color:     @line;
 }
 
 element-text {
