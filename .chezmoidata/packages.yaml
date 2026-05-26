@@ -99,6 +99,9 @@ packages:
             - zathura # pdf viewer
             - zathura-pdf-mupdf # pdf viewer backend
             - adw-gtk-theme # force loading of gtk3 themes
+            - clang # c compiler
+            - llvm # c / cpp backend
+            - libclang # c lib (important)
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
