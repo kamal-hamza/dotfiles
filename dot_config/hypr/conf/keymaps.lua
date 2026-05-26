@@ -1,4 +1,5 @@
 local super = "ALT"
+local win = "SUPER"
 local terminal = "LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
@@ -8,9 +9,8 @@ local browser = "firefox"
 hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(super .. " + W", hl.dsp.exec_cmd(browser))
-hl.bind(super .. " + D", hl.dsp.exec_cmd("rofi -show drun"))
-hl.bind(super .. " + R", hl.dsp.exec_cmd("rofi -show run"))
-hl.bind(super .. " + T", hl.dsp.exec_cmd("rofi -show window"))
+hl.bind(super .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(win .. " + SPACE", hl.dsp.exec_cmd("rofi -show run"))
 
 
 -- go back to tty
