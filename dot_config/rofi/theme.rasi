@@ -1,22 +1,22 @@
 /* =============================================================================
  * Rofi Minimal Theme - Synced with Neovim Palette
  * =============================================================================
- * Uses only neutral colors: bg, fg, dim, line, keyword, comment
- * From nvim/colors/lua/dark/palette/dark.lua
+ * Uses colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
+ * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727, 
+ * keyword: #777777, comment: #50585d
  * =========================================================================== */
 
 * {
-  bg:           #101010;
-  fg:           #b0b0b0;
-  fg-dim:       #777777;
-  fg-comment:   #50585d;
-  line:         #272727;
-  dim:          #474747;
+  bg:              #101010;
+  fg:              #b0b0b0;
+  fg-dim:          #777777;
+  fg-comment:      #50585d;
+  line:            #272727;
+  dim:             #474747;
   
-  /* Derived colors */
-  hover-bg:     #272727;
-  select-bg:    #272727;
-  select-fg:    #b0b0b0;
+  hover-bg:        #272727;
+  select-bg:       #272727;
+  select-fg:       #b0b0b0;
 }
 
 window {
@@ -30,7 +30,6 @@ window {
 
 mainbox {
   background-color: @bg;
-  children:         [ inputbar, message, listview ];
   spacing:          8px;
   padding:          0;
 }
@@ -40,7 +39,6 @@ inputbar {
   border:           1px solid @line;
   border-radius:    0;
   padding:          8px;
-  children:         [ prompt, entry ];
   spacing:          8px;
 }
 
@@ -81,6 +79,7 @@ listview {
   scrollbar:        true;
   scrollbar-width:  6px;
   spacing:          0;
+  lines:            15;
 }
 
 scrollbar {
@@ -99,12 +98,12 @@ element {
   font:             "JetBrains Mono 12";
 }
 
-element.normal {
+element.normal.normal {
   background-color: @bg;
   text-color:       @fg;
 }
 
-element.alternate {
+element.normal.alternate {
   background-color: @bg;
   text-color:       @fg;
 }
@@ -127,6 +126,7 @@ element-text {
   font:             "JetBrains Mono 12";
   vertical-align:   0.5;
   horizontal-align: 0;
+  padding:          0;
 }
 
 element-icon {
