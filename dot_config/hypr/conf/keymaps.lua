@@ -11,6 +11,11 @@ hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(super .. " + SPACE", hl.dsp.exec_cmd(appLauncher))
 hl.bind(super .. " + W", hl.dsp.exec_cmd(browser))
 
+-- rofi binds
+hl.bind(super .. " + D", hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(super .. " + R", hl.dsp.exec_cmd("rofi -show run"))
+hl.bind(super .. " + T", hl.dsp.exec_cmd("rofi -show window"))
+
 
 -- go back to tty
 hl.bind(super .. " + M", hl.dsp.exec_cmd("loginctl terminate-user \"\""))

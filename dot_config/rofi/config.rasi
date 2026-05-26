@@ -1,0 +1,55 @@
+/* =============================================================================
+ * Rofi Configuration
+ * =============================================================================
+ * Minimal configuration with neutral color theme
+ * =========================================================================== */
+
+configuration {
+  /* Display and UI */
+  display-drun:    "Apps";
+  display-run:     "Run";
+  display-window:  "Windows";
+  display-ssh:     "SSH";
+  display-file-browser: "Files";
+
+  /* Theme */
+  theme: "~/.config/rofi/theme.rasi";
+
+  /* Behavior */
+  modi:            "drun,run,window";
+  sort:            true;
+  sorting-method:  "fzf";
+  case-sensitive:  false;
+  click-to-exit:   true;
+  show-icons:      true;
+  icon-theme:      "Papirus";
+
+  /* Window */
+  terminal:        "wezterm";
+  font:            "JetBrains Mono 12";
+  lines:           15;
+  columns:         1;
+  width:           50;
+  height:          50;
+
+  /* Input */
+  matching:        "fuzzy";
+  tokenize:        true;
+  matching-negate-char: "-";
+
+  /* Search */
+  scroll-method:   0;
+  window-match-fields: "class,name,role";
+  drun-match-fields: "name,generic,exec,categories";
+  drun-display-format: "{name}";
+
+  /* Run command */
+  run-shell-command: "{cmd}";
+  run-command: "{cmd}";
+
+  /* ssh */
+  ssh-client: "ssh";
+  ssh-command: "ssh -X {host} -t zsh";
+  parse-hosts: true;
+  parse-known-hosts: true;
+}
