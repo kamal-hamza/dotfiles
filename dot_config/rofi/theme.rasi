@@ -2,7 +2,7 @@
  * Rofi Minimal Theme - Synced with Neovim Palette
  * =============================================================================
  * Uses colors from: dot_config/nvim/colors/lua/dark/palette/dark.lua
- * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727, 
+ * bg: #101010, fg: #b0b0b0, dim: #474747, line: #272727,
  * keyword: #777777, comment: #50585d
  * =========================================================================== */
 
@@ -13,7 +13,7 @@
   fg-comment:      #50585d;
   line:            #272727;
   dim:             #474747;
-  
+
   hover-bg:        #272727;
   select-bg:       #272727;
   select-fg:       #b0b0b0;
@@ -25,7 +25,7 @@ window {
   border-radius:    0;
   padding:          8px;
   width:            50%;
-  height:           50%;
+  height:           600px;
 }
 
 mainbox {
