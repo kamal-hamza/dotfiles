@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# MPD/MPC Song Queue Script for Rofi
+# =============================================================================
+# Search and queue songs by title into MPD playlist using Rofi interface
+#
+# Usage:
+#   mpd-queue                 # Interactive rofi search
+# =============================================================================
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    echo -e "${RED}✗${NC} mpc not found. Install it to use this script."
+    exit 1
+fi
+
+# Check if rofi is installed
+if ! command -v rofi &> /dev/null; then
+    echo -e "${RED}✗${NC} rofi not found. Install it to use this script."
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    notify-send -u critical "MPD Error" "MPD daemon is not running"
+    exit 1
+fi
+
+# Get all songs from MPD database with full path
+# Format: /path/to/song.mp3
+all_songs=$(mpc listall)
+
+if [ -z "$all_songs" ]; then
+    notify-send -u critical "MPD Error" "No songs found in MPD database"
+    exit 1
+fi
+
+# Extract just filenames for display (user-friendly)
+display_songs=$(echo "$all_songs" | sed 's|.*/||')
+
+# Use rofi to select a song
+selected_display=$(echo "$display_songs" | rofi -dmenu -p "Queue song:" -i)
+
+# Check if user cancelled
+if [ -z "$selected_display" ]; then
+    exit 0
+fi
+
+# Find the full path of the selected song
+# This is a bit tricky - we need to match the display name back to the full path
+selected_song=$(echo "$all_songs" | grep -m1 "$(echo "$selected_display" | sed 's/[[\.*^$/]/\\&/g')$")
+
+if [ -z "$selected_song" ]; then
+    notify-send -u critical "Error" "Could not find selected song"
+    exit 1
+fi
+
+# Add song to playlist as next track to be played
+if mpc insert "$selected_song"; then
+    notify-send -u normal "Song Queued" "Added: $selected_display"
+    echo -e "${GREEN}✓${NC} Queued: $selected_display"
+else
+    notify-send -u critical "Error" "Failed to queue song"
+    echo -e "${RED}✗${NC} Failed to queue song"
+    exit 1
+fi

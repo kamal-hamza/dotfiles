@@ -42,3 +42,14 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"), { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 hl.bind("XF86AudioStop", hl.dsp.exec_cmd("playerctl stop"), { locked = true })
+
+-- additional music controls (using mpc, with super key)
+hl.bind(super .. " + PERIOD", hl.dsp.exec_cmd("mpc next"), { locked = true })
+hl.bind(super .. " + COMMA", hl.dsp.exec_cmd("mpc prev"), { locked = true })
+hl.bind(super .. " + P", hl.dsp.exec_cmd("mpc toggle"), { locked = true })
+hl.bind(super .. " + R", hl.dsp.exec_cmd("mpc repeat"), { locked = true })
+hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("mpc volume +5"), { locked = true })
+hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("mpc volume -5"), { locked = true })
+
+-- queue songs with rofi
+hl.bind(super .. " + GRAVE", hl.dsp.exec_cmd("~/.config/rofi/scripts/mpd-queue"), { locked = true })
