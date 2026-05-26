@@ -1,6 +1,6 @@
 local super = "ALT"
 local win = "SUPER"
-local terminal = "LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe ghostty"
+local terminal = "ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
 local browser = "firefox"

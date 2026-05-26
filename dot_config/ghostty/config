@@ -6,7 +6,7 @@
 theme = soft-focus-dark
 
 # font
-font-family = "MesloLGS Nerd Font"
+font-family = MesloLGS Nerd Font Mono
 
 # Send Ctrl s to tmux
 # keybind = ctrl+s=send_text:\x13
