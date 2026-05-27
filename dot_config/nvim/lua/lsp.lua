@@ -9,16 +9,6 @@ vim.pack.add({
 local mason = require("mason")
 mason.setup()
 
--- zls to version 15 for zig 15
-local registry = require("mason-registry")
-local zls = registry.get_package("zls")
-
-if zls:is_installed() then
-  zls:uninstall()
-end
-
-zls:install({ version = "0.15.0" })
-
 -- mason tool installer
 local mason_tool_installer = require("mason-tool-installer")
 mason_tool_installer.setup({
@@ -27,7 +17,6 @@ mason_tool_installer.setup({
     "vim-language-server",
     "lua-language-server",
     "pyrefly",
-    "zls",
     "rust-analyzer",
     "typescript-language-server",
     "eslint-lsp",
@@ -46,7 +35,6 @@ mason_tool_installer.setup({
     "taplo", -- TOML
     "jq", -- JSON
     "sqlfluff", -- SQL
-    "goimports", -- Go
   },
 })
 

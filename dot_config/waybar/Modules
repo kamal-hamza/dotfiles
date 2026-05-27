@@ -1,0 +1,77 @@
+{
+  "clock": {
+    "interval": 60,
+      "format": "  {:%H:%M}",
+      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+  },
+
+  "custom/media": {
+    "format": "{}",
+    "exec": "$HOME/.config/waybar/scripts/media.sh",
+    "exec-on-event": false,
+    "return-type": "string",
+    "interval": 0.5,
+    "max-length": 50,
+    "on-click": "playerctl play-pause",
+    "on-scroll-up": "playerctl next",
+    "on-scroll-down": "playerctl previous",
+    "tooltip": true,
+    "tooltip-format": "Click: Play/Pause | Scroll: Next/Previous"
+  },
+
+    "hyprland/workspaces": {
+      "disable-scroll": true,
+      "all-outputs": true,
+      "active-only": false,
+      "on-click": "activate",
+      "format": "{icon}",
+      "format-icons": {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+        "5": "",
+        "active": "",
+        "default": ""
+      },
+      "persistent-workspaces": {
+        "*": 5
+      }
+    },
+
+    "cpu": {
+      "interval": 10,
+      "format": "  {usage}%",
+      "max-length": 10
+    },
+
+    "memory": {
+      "interval": 30,
+      "format": "󰍛  {percentage}%",
+      "format-alt": "󰍛  {used:0.1f}GB",
+      "max-length": 10,
+      "tooltip": true,
+      "tooltip-format": "Memory: {used:0.1f}GB used"
+    },
+
+    "bluetooth": {
+      "format": "  {status}",
+      "format-disabled": "󰂲  Disabled",
+      "format-connected": "󰂱  {num_connections}",
+      "tooltip-format": "{controller_alias}\t{controller_address}",
+      "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",
+      "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
+      "on-click": "blueman-manager"
+    },
+
+    "network": {
+      "format-wifi": "  {essid} ({signalStrength}%)",
+      "format-ethernet": "󰈀  {ifname}",
+      "format-disconnected": "󰖪  Disconnected",
+      "tooltip-format": "{ifname} via {gwaddr}",
+      "tooltip-format-wifi": "󰤨  {essid} ({signalStrength}%)",
+      "tooltip-format-ethernet": "󰈀  {ifname}",
+      "tooltip-format-disconnected": "Disconnected",
+      "max-length": 50
+    }
+}

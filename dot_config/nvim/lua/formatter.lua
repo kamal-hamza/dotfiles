@@ -81,21 +81,31 @@ local function format_buffer()
 
   -- If no formatter available or conform failed, try LSP
   if #clients > 0 then
-    vim.notify("No formatter is configured, using LSP formatting", vim.log.levels.WARN)
-    vim.lsp.buf.format({
-      async = false,
-      timeout_ms = 2000,
-    })
-  else
-    vim.notify("No formatter or LSP available for this filetype", vim.log.levels.WARN)
+    local ok = pcall(function()
+      vim.lsp.buf.format({
+        async = false,
+        timeout_ms = 2000,
+      })
+    end)
+    if ok then
+      vim.notify("No formatter configured, using LSP formatting", vim.log.levels.WARN)
+      return
+    end
   end
+
+  -- If no formatter and no LSP, use Neovim's default formatting (indentation)
+  vim.notify("No formatter or LSP available, using Neovim default formatting", vim.log.levels.WARN)
+  
+  -- Use Neovim's built-in indent operator
+  -- gg = go to top, = = indent operator, G = motion to end
+  vim.cmd("normal! gg=G")
 end
 
 -- Create Format command
 vim.api.nvim_create_user_command("Format", function()
   format_buffer()
 end, {
-  desc = "Format current buffer using formatter or LSP",
+  desc = "Format buffer: formatter → LSP → Neovim default",
 })
 
 -- Also create FormatSelective for range formatting

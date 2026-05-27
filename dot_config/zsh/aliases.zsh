@@ -185,6 +185,9 @@ tpn() { task "$@" modify priority:; }    # No priority
 # Script Aliases
 # =============================================================================
 
+# Music management
+alias fix-music="fix-music-metadata"  # Fix music metadata (artist, title, album)
+
 # Language tools installation
 alias itool="install-lang"
 

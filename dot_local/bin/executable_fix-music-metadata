@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Fix Music Metadata - Organize artist, title, and album info
+# =============================================================================
+# Parses filenames and sets correct metadata tags
+#
+# Usage:
+#   fix-music-metadata [directory]
+#   fix-music-metadata ~/Music/Bollywood
+#   fix-music-metadata  # Defaults to ~/Music
+# =============================================================================
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+print_success() { echo -e "${GREEN}✓${NC} $1"; }
+print_error() { echo -e "${RED}✗${NC} $1"; }
+print_info() { echo -e "${BLUE}→${NC} $1"; }
+print_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
+
+# Check if ffmpeg is installed
+if ! command -v ffmpeg &> /dev/null; then
+    print_error "ffmpeg is not installed"
+    echo "Install with: brew install ffmpeg (macOS) or pacman -S ffmpeg (Arch)"
+    exit 1
+fi
+
+# Default to ~/Music if no argument provided
+MUSIC_DIR="${1:-$HOME/Music}"
+
+# Verify directory exists
+if [ ! -d "$MUSIC_DIR" ]; then
+    print_error "Directory not found: $MUSIC_DIR"
+    exit 1
+fi
+
+print_info "Fixing metadata in: $MUSIC_DIR"
+echo
+
+# Find all music files and process them
+find "$MUSIC_DIR" -type f \( -iname "*.flac" -o -iname "*.mp3" -o -iname "*.m4a" \) | while read -r file; do
+    basename=$(basename "$file")
+    filename="${basename%.*}"  # Remove extension
+    
+    # Parse filename format: "Artist(s) - Title (From _Album_) (Genre)"
+    # or: "Artist(s) - Title (From \"Album\") (Genre)"
+    
+    # Extract artist (everything before " - ")
+    artist=$(echo "$filename" | sed 's/ - .*//')
+    
+    # Extract title (everything after " - " and before " (From" or " (")
+    title=$(echo "$filename" | sed 's/.*[[:space:]]\-[[:space:]]\([^(]*\).*/\1/' | xargs)
+    
+    # Extract album (content inside "From _Album_")
+    album=$(echo "$filename" | sed -n 's/.*From[[:space:]]*_\([^_]*\)_.*/\1/p')
+    # If not found, try quoted format
+    if [ -z "$album" ]; then
+        album=$(echo "$filename" | sed -n 's/.*From[[:space:]]*"\([^"]*\)".*/\1/p')
+    fi
+    
+    # Extract genre if present (inside last parentheses)
+    genre=$(echo "$filename" | sed -n 's/.*(\([^)]*\))$/\1/p')
+    
+    print_info "Processing: $basename"
+    
+    # Create temp file with proper extension
+    extension="${file##*.}"
+    tmp_file="${file%.*}.tmp.$extension"
+    
+    # Use ffmpeg to set metadata
+    ffmpeg -i "$file" \
+        -metadata ARTIST="$artist" \
+        -metadata TITLE="$title" \
+        -metadata ALBUM="${album:-Unknown Album}" \
+        -metadata GENRE="${genre:-Music}" \
+        -c copy "$tmp_file" \
+        -loglevel error -y 2>/dev/null
+    
+    # Replace original with temp file if successful
+    if [ -f "$tmp_file" ] && [ -s "$tmp_file" ]; then
+        mv "$tmp_file" "$file"
+        print_success "Fixed: $title | Artist: $artist | Album: ${album:-Unknown}"
+    else
+        print_error "Failed to process: $basename"
+        [ -f "$tmp_file" ] && rm "$tmp_file"
+    fi
+done
+
+echo
+print_success "Metadata fixing complete!"

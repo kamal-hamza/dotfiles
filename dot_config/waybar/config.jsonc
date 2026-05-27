@@ -1,40 +1,25 @@
 {
   "layer": "top",
   "position": "top",
+  "margin-top": 8,
+  "margin-left": 12,
+  "margin-right": 12,
+  "spacing": 0,
+
   "modules-left": [
-    "clock"
+    "clock",
+    "custom/media"
   ],
   "modules-center": [
     "hyprland/workspaces"
   ],
   "modules-right": [
     "cpu",
-    "pulseaudio",
-    "custom/power"
+    "memory",
+    "bluetooth",
+    "network"
   ],
-  "hyprland/workspaces": {
-    "format": "{name}",
-    "persistent-workspaces": {
-      "*": 5
-    }
-  },
-  "cpu": {
-    "format": "CPU {usage}%",
-    "interval": 2
-  },
-  "pulseaudio": {
-    "format": "VOL {volume}%",
-    "format-muted": "VOL muted",
-    "on-click": "pavucontrol"
-  },
-  "custom/power": {
-    "format": "PWR",
-    "tooltip": false,
-    "on-click": "wlogout"
-  },
-  "clock": {
-    "interval": 60,
-    "format": "{:%I:%M %p}",
-    "max-length": 25
-  }
+  "include": [
+    "$HOME/.config/waybar/Modules"
+  ]
 }

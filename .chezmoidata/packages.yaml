@@ -88,12 +88,14 @@ packages:
             - pavucontrol
             - bluez # bluetooth
             - bluez-utils # bluetooth utils
+            - blueman # gui bluetooth manager
             - networkmanager # network manager for wifi and ethernet
             - network-manager-applet # network manager for wifi and ethernet
             - piper # mouse config util
             - fontforge # font customization
             - ttf-meslo-nerd # MesloLGS Nerd Font
-            - adobe-source-sans-fonts # Source Sans Serif fonts
+            - adobe-source-serif-fonts # Source Serif font collection
+            - adobe-source-sans-fonts # Source Sans font collection
             - fastfetch # display system specs
             - zathura # pdf viewer
             - zathura-pdf-mupdf # pdf viewer backend
@@ -109,12 +111,12 @@ packages:
             - mpc # command line music controller
             - cava # music visualizer
             - ncmpcpp # tui for music
+            - beets # music metadata editor
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
             - zsh-autopair-git # Auto-close brackets in zs
             - hyprlock # Fast, secure, and beautiful desktop locker
             - hypridle # Idle management daemon (handles screen dims and locks)
-            - blueberry # bluetooth GUI
             - pi-coding-agent # TUI based coding agent
 
