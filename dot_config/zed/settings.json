@@ -76,7 +76,7 @@
         "button": false
     },
     "relative_line_numbers": "enabled",
-    "tab_size": 4,
+    "tab_size": 2,
     "file_finder": {
         "modal_max_width": "large"
     },

@@ -12,6 +12,8 @@ vim.pack.add({
   { src = "https://github.com/kylechui/nvim-surround", version = vim.version.range("4.x") },
   "https://github.com/rebelot/heirline.nvim",
   "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/sphamba/smear-cursor.nvim",
+  { src = "https://github.com/obsidian-nvim/obsidian.nvim", version = vim.version.range("*") },
 })
 
 -- nvim autopairs
@@ -21,7 +23,9 @@ autopairs.setup()
 -- oil nvim
 local oil = require("oil")
 oil.setup()
-vim.keymap.set("n", "<leader>ee", function() oil.open() end, { desc = "Open Oil" })
+vim.keymap.set("n", "<leader>ee", function()
+  oil.open()
+end, { desc = "Open Oil" })
 
 -- nvim telescope
 local telescope = require("telescope")
@@ -45,33 +49,46 @@ telescope.setup({
     },
   },
 })
-vim.keymap.set("n", "<leader>ff", function() require('telescope.builtin').find_files() end, { desc = "Find Files" })
-vim.keymap.set("n", "<leader>fg", function() require('telescope.builtin').live_grep() end, { desc = "Find Files" })
-vim.keymap.set("n", "<leader>fs", function() require("telescope.builtin").lsp_document_symbols() end, { desc = "Document Symbols File" })
-vim.keymap.set("n", "<leader>fS", function() require("telescope.builtin").lsp_workspace_symbols() end, { desc = "Document Symbols Workspacek"})
-vim.keymap.set("n", "<leader>fg", function() require("telescope.builtin").live_grep() end, { desc = "Live Grep"})
+vim.keymap.set("n", "<leader>ff", function()
+  require("telescope.builtin").find_files()
+end, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fg", function()
+  require("telescope.builtin").live_grep()
+end, { desc = "Find Files" })
+vim.keymap.set("n", "<leader>fs", function()
+  require("telescope.builtin").lsp_document_symbols()
+end, { desc = "Document Symbols File" })
+vim.keymap.set("n", "<leader>fS", function()
+  require("telescope.builtin").lsp_workspace_symbols()
+end, { desc = "Document Symbols Workspacek" })
+vim.keymap.set("n", "<leader>fg", function()
+  require("telescope.builtin").live_grep()
+end, { desc = "Live Grep" })
 
 -- nvim treesitter
 local treesitter = require("nvim-treesitter")
 treesitter.setup({
-  install_dir = vim.fn.stdpath('data') .. '/site'
+  install_dir = vim.fn.stdpath("data") .. "/site",
 })
 treesitter.install({
-  "lua", "python", "rust", "zig", "typescript", "javascript", "c", "cpp"
+  "lua",
+  "python",
+  "rust",
+  "zig",
+  "typescript",
+  "javascript",
+  "c",
+  "cpp",
 })
-vim.api.nvim_create_autocmd('FileType', {
+vim.api.nvim_create_autocmd("FileType", {
   pattern = { "lua", "python", "rust", "zig", "typescript", "javascript", "c", "cpp", "h" },
   callback = function()
     vim.treesitter.start()
-    vim.wo.foldmethod = 'expr'
-    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.wo.foldmethod = "expr"
+    vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   end,
 })
-
--- conform nvim
-local conform = require("conform")
--- Configuration is now in formatter.lua
 
 -- trouble nvim
 local trouble = require("trouble")
@@ -80,6 +97,28 @@ vim.keymap.set("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc 
 
 -- nvim surround
 require("nvim-surround").setup()
+
+local smear = require("smear_cursor")
+smear.setup({
+  stiffness = 0.8,
+  trailing_stiffness = 0.5,
+  distance_stop_animating = 0.5,
+  smear_between_buffers = true,
+  smear_between_neighbor_lines = true,
+  scroll_buffer_space = true,
+  smear_insert_mode = true,
+})
+
+local obsidian = require("obsidian")
+obsidian.setup({
+  legacy_commands = false,
+  workspaces = {
+    {
+      name = "personal",
+      path = "~/Code/kamal-hamza.github.io/content/",
+    },
+  },
+})
 
 -- theme - load and setup dark theme
 require("dark").setup({

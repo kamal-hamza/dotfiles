@@ -119,7 +119,7 @@ require("blink.cmp").setup({
   },
   completion = {
     menu = {
-      border = "rounded",
+      border = "none",
       min_width = 60,
     },
   },

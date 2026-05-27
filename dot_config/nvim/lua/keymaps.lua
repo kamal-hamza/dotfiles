@@ -30,7 +30,28 @@ vim.keymap.set('n', '<M-f>', ':vertical resize -2<CR>')
 vim.keymap.set('n', '<M-b>', ':vertical resize +2<CR>')
 
 -- lsp keymaps
-vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+-- Navigation
+vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to Definition" })
+vim.keymap.set("n", "gD", function()
+  vim.cmd("vsplit")
+  vim.lsp.buf.definition()
+end, { desc = "Go to Definition (Split)" })
+vim.keymap.set("n", "gt", vim.lsp.buf.type_definition, { desc = "Go to Type Definition" })
+vim.keymap.set("n", "gT", function()
+  vim.cmd("vsplit")
+  vim.lsp.buf.type_definition()
+end, { desc = "Go to Type Definition (Split)" })
+
+-- Information
+vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Hover Documentation" })
+
+-- Refactoring
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename Symbol" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
+
+-- Diagnostics
+vim.keymap.set("n", "<leader>ll", vim.diagnostic.setloclist, { desc = "Diagnostics List" })
 
 -- formatter keymaps
 vim.keymap.set("n", "<leader>F", "<cmd>Format<cr>", { desc = "Format Buffer" })
