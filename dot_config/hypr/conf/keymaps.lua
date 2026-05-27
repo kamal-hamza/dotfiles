@@ -48,6 +48,7 @@ hl.bind(super .. " + PERIOD", hl.dsp.exec_cmd("mpc next"), { locked = true })
 hl.bind(super .. " + COMMA", hl.dsp.exec_cmd("mpc prev"), { locked = true })
 hl.bind(super .. " + P", hl.dsp.exec_cmd("mpc toggle"), { locked = true })
 hl.bind(super .. " + R", hl.dsp.exec_cmd("mpc repeat"), { locked = true })
+hl.bind(super .. " + SLASH", hl.dsp.exec_cmd("mpc seek 0%"), { locked = true })
 hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("mpc volume +5"), { locked = true })
 hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("mpc volume -5"), { locked = true })
 

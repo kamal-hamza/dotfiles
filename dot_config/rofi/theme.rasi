@@ -1,142 +1,127 @@
 /* =============================================================================
- * Rofi Minimal Theme - Synced with Obsidian Dark Theme
- * =============================================================================
- * Colors from Obsidian dark theme CSS variables
+ * Rofi Modern Theme - Synced with Obsidian Dark Theme
  * =========================================================================== */
-
 * {
-  bg:              #050505;  /* --background-primary */
-  fg:              #d4d4d4;  /* --text-normal */
-  fg-dim:          #8d8d8d;  /* --text-muted */
-  fg-comment:      #8d8d8d;  /* --text-muted */
-  line:            #272727;  /* divider-ish */
-  dim:             #474747;  /* accent-ish */
-
-  hover-bg:        #0a0a0a;  /* --interactive-normal */
-  select-bg:       #0a0a0a;  /* --tab-background-active */
-  select-fg:       #ffffff;  /* --tab-text-color-active */
+    bg:              #050505;  /* --background-primary */
+    fg:              #d4d4d4;  /* --text-normal */
+    fg-dim:          #8d8d8d;  /* --text-muted */
+    fg-comment:      #8d8d8d;  /* --text-muted */
+    line:            #272727;  /* divider-ish */
+    dim:             #474747;  /* accent-ish */
+    hover-bg:        #0a0a0a;  /* --interactive-normal */
+    select-bg:       #0a0a0a;  /* --tab-background-active */
+    select-fg:       #ffffff;  /* --tab-text-color-active */
 }
 
 window {
-  background-color: @bg;
-  border:           1px;
-  border-color:     @line;
-  border-radius:    0;
-  padding:          8px;
-  width:            50%;
-  height:           600px;
+    background-color: @bg;
+    border:           2px;
+    border-color:     @line;
+    border-radius:    16px;
+    padding:          16px;
+    width:            50%;
+    height:           600px;
 }
 
 mainbox {
-  background-color: @bg;
-  spacing:          8px;
-  padding:          0;
+    background-color: transparent;
+    spacing:          16px;
+    padding:          0;
 }
 
 inputbar {
-  background-color: @bg;
-  border:           1px;
-  border-color:     @line;
-  border-radius:    0;
-  padding:          8px;
-  spacing:          8px;
+    background-color: @bg;
+    border:           1px;
+    border-color:     @line;
+    border-radius:    12px;
+    padding:          12px 16px;
+    spacing:          12px;
+    children:         [ prompt, entry ];
 }
 
 prompt {
-  background-color: @bg;
-  text-color:       @fg-comment;
-  font:             "Source Sans 3 12";
-  padding:          0 8px 0 0;
+    background-color: transparent;
+    text-color:       @fg-comment;
+    font:             "Source Sans 3 12";
+    padding:          0 8px 0 0;
+    vertical-align:   0.5;
 }
 
 entry {
-  background-color: @bg;
-  text-color:       @fg;
-  font:             "Source Serif 4 12";
-  cursor:           text;
-  placeholder:      "Search...";
-  placeholder-color: @fg-dim;
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "Source Serif 4 12";
+    cursor:           text;
+    placeholder:      "Search...";
+    placeholder-color: @fg-dim;
+    vertical-align:   0.5;
 }
 
 message {
-  background-color: @bg;
-  border:           1px;
-  border-color:     @line;
-  border-radius:    0;
-  padding:          4px 8px;
+    background-color: @bg;
+    border:           1px;
+    border-color:     @line;
+    border-radius:    12px;
+    padding:          8px 12px;
 }
 
 message text {
-  background-color: @bg;
-  text-color:       @fg-dim;
-  font:             "Source Serif 4 11";
+    background-color: transparent;
+    text-color:       @fg-dim;
+    font:             "Source Serif 4 11";
 }
 
 listview {
-  background-color: @bg;
-  border:           1px;
-  border-color:     @line;
-  border-radius:    0;
-  padding:          0;
-  scrollbar:        true;
-  scrollbar-width:  6px;
-  spacing:          0;
-  lines:            15;
+    background-color: transparent;
+    border:           0;
+    padding:          0;
+    scrollbar:        true;
+    scrollbar-width:  4px;
+    spacing:          6px;
+    lines:            15;
 }
 
 scrollbar {
-  background-color: @bg;
-  handle-color:     @dim;
-  handle-width:     6px;
-  border-radius:    0;
+    background-color: transparent;
+    handle-color:     @dim;
+    handle-width:     4px;
+    border-radius:    4px;
 }
 
 element {
-  background-color: @bg;
-  text-color:       @fg;
-  border:           0;
-  border-radius:    0;
-  padding:          6px 8px;
-  font:             "Source Serif 4 12";
+    background-color: transparent;
+    text-color:       @fg;
+    border:           0;
+    border-radius:    8px;
+    padding:          8px 12px;
+    font:             "Source Serif 4 12";
 }
 
-element.normal.normal {
-  background-color: @bg;
-  text-color:       @fg;
+element.normal.normal, element.normal.alternate {
+    background-color: transparent;
+    text-color:       @fg;
 }
 
-element.normal.alternate {
-  background-color: @bg;
-  text-color:       @fg;
-}
-
-element.selected.normal {
-  background-color: @select-bg;
-  text-color:       @select-fg;
-  border:           1px;
-  border-color:     @line;
-}
-
-element.selected.alternate {
-  background-color: @select-bg;
-  text-color:       @select-fg;
-  border:           1px;
-  border-color:     @line;
+element.selected.normal, element.selected.alternate {
+    background-color: @select-bg;
+    text-color:       @select-fg;
+    border:           1px;
+    border-color:     @line;
 }
 
 element-text {
-  background-color: inherit;
-  text-color:       inherit;
-  font:             "Source Serif 4 12";
-  vertical-align:   0.5;
-  horizontal-align: 0;
-  padding:          0;
+    background-color: transparent;
+    text-color:       inherit;
+    font:             "Source Serif 4 12";
+    vertical-align:   0.5;
+    horizontal-align: 0;
+    padding:          0 0 0 8px;
 }
 
 element-icon {
-  background-color: transparent;
-  text-color:       @fg-dim;
-  size:             24px;
-  border:           0;
-  padding:          0 8px 0 0;
+    background-color: transparent;
+    text-color:       @fg-dim;
+    size:             28px;
+    border:           0;
+    padding:          0;
 }
