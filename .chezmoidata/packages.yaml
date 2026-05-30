@@ -116,6 +116,9 @@ packages:
             - slurp # coordinates for selecting screenshots
             - satty # screenshot editor
             - mako # notification daemon
+            - cups # printing system
+            - system-config-printer # GUI printer management
+            - sushi # file preview
 
 
         aur:

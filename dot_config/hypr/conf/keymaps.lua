@@ -39,16 +39,10 @@ hl.bind(super .. " + SHIFT + L", hl.dsp.exec_cmd(lock))
 
 -- screenshots with satty annotation
 -- Area select screenshot with annotation
-hl.bind(super .. " + SHIFT + S", hl.dsp.exec_cmd(
-    "bash -c 'mkdir -p ~/Pictures/Screenshots && " ..
-    "grim -g \"$(slurp)\" - | satty --filename - --output-filename ~/Pictures/Screenshots/screenshot-%Y%m%d-%H%M%S.png'"
-))
+hl.bind(super .. " + SHIFT + S", hl.dsp.exec_cmd("screenshot-area"))
 
 -- Full screen screenshot with annotation
-hl.bind(super .. " + SHIFT + A", hl.dsp.exec_cmd(
-    "bash -c 'mkdir -p ~/Pictures/Screenshots && " ..
-    "grim - | satty --filename - --output-filename ~/Pictures/Screenshots/screenshot-%Y%m%d-%H%M%S.png'"
-))
+hl.bind(super .. " + SHIFT + A", hl.dsp.exec_cmd("screenshot-fullscreen"))
 
 -- background player binds
 hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })

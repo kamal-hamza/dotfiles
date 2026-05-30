@@ -32,4 +32,5 @@ dot_pi/**/node_modules/
 .config/cava/
 .config/mako/
 .config/satty/
+scripts/linux
 {{ end }}

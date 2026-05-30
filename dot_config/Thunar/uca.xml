@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+  <action>
+    <name>Print</name>
+    <description>Print selected file</description>
+    <icon>document-print</icon>
+    <exec>bash -c 'lp "$1" &amp;&amp; notify-send "Printing" "$(basename "$1")"' _ %f</exec>
+    <mimetypes>
+      <mimetype>text/plain</mimetype>
+      <mimetype>text/x-shellscript</mimetype>
+      <mimetype>application/pdf</mimetype>
+      <mimetype>image/jpeg</mimetype>
+      <mimetype>image/png</mimetype>
+      <mimetype>image/gif</mimetype>
+      <mimetype>image/webp</mimetype>
+      <mimetype>application/postscript</mimetype>
+    </mimetypes>
+  </action>
+</actions>

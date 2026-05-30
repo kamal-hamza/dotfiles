@@ -22,6 +22,7 @@ mason_tool_installer.setup({
     "eslint-lsp",
     "tinymist",
     "clangd",
+    "jdtls",
 
     -- Formatters
     "stylua", -- Lua
@@ -67,6 +68,7 @@ local servers = {
   "zls",
   "ts_ls",
   "clangd",
+  "jdtls",
 }
 
 -- lua vim override

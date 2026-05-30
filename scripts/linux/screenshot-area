@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Screenshot - Area Select with Annotation
+# =============================================================================
+# Captures a selected screen area and opens it in satty for annotation
+# before saving to ~/Pictures/Screenshots/
+#
+# Usage:
+#   screenshot-area
+#
+# Requirements:
+#   - grim (image capture)
+#   - slurp (selection tool)
+#   - satty (annotation tool)
+# =============================================================================
+
+set -e
+
+# Define the directory and ensure it exists
+SAVE_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SAVE_DIR"
+
+# Execute the screenshot pipeline
+# The date format is handled by bash, not satty, to avoid Lua/Hyprland mangling
+grim -g "$(slurp)" - | satty --filename - --output-filename "$SAVE_DIR/screenshot-$(date +%Y%m%d-%H%M%S).png"

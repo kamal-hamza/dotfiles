@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Screenshot - Full Screen with Annotation
+# =============================================================================
+# Captures the entire screen and opens it in satty for annotation
+# before saving to ~/Pictures/Screenshots/
+#
+# Usage:
+#   screenshot-fullscreen
+#
+# Requirements:
+#   - grim (image capture)
+#   - satty (annotation tool)
+# =============================================================================
+
+set -e
+
+# Define the directory and ensure it exists
+SAVE_DIR="$HOME/Pictures/Screenshots"
+mkdir -p "$SAVE_DIR"
+
+# Execute the screenshot pipeline
+# The date format is handled by bash, not satty, to avoid Lua/Hyprland mangling
+grim - | satty --filename - --output-filename "$SAVE_DIR/screenshot-$(date +%Y%m%d-%H%M%S).png"

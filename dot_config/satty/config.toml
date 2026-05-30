@@ -5,36 +5,22 @@
 # GTK theming is handled by system theme settings
 # Uses: grim (screenshot), slurp (region selection), wl-clipboard (clipboard)
 
-# Screenshot tool configuration
-[tools.screenshot]
-# Use grim for screenshots on Wayland
-cmd = "grim"
+[general]
+# Increase or decrease the size of all annotations (default is 1)
+annotation-size-factor = 1
 
-# Selection tool configuration
-[tools.selection]
-# Use slurp for region selection on Wayland
-cmd = "slurp"
+[font]
+# Font family and style for text annotations
+family = "Monospace"
+style = "Regular"
 
-# Clipboard configuration
-[tools.clipboard]
-# Use wl-clipboard for Wayland clipboard operations
-copy_cmd = "wl-copy"
-paste_cmd = "wl-paste"
-
-# Default tool settings
-[defaults]
-# Tool used for taking initial screenshot
-screenshot_tool = "grim"
-# Tool used for region selection
-selection_tool = "slurp"
-# Font used in annotations
-font = "Monospace"
-# Font size for text annotations
-font_size = 14
-# Brush size for drawing
-brush_size = 3
-
-# UI behavior
-[ui]
-# Hide the UI on startup
-hide_ui_on_startup = false
+[color-palette]
+# Custom monochrome colors from Neovim dark theme palette
+# Uses standard hex codes.
+custom = [
+  "#050505", # Black (bg)
+  "#272727", # Dark Gray (line)
+  "#8d8d8d", # Medium Gray (keyword/comment)
+  "#cfcfcf", # Light Gray (interactive_accent)
+  "#ffffff", # White (fg_accent_hover)
+]
