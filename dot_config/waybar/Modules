@@ -5,6 +5,20 @@
       "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
   },
 
+  "pulseaudio": {
+    "format": "{volume}%",
+    "format-bluetooth": "{volume}%",
+    "format-bluetooth-muted": "󰂖",
+    "format-muted": "󰖁",
+    "format-icons": {},
+    "on-click": "pavucontrol",
+    "on-scroll-up": "pactl set-sink-volume @DEFAULT_SINK@ +5%",
+    "on-scroll-down": "pactl set-sink-volume @DEFAULT_SINK@ -5%",
+    "smooth-scrolling-threshold": 1,
+    "tooltip": true,
+    "tooltip-format": "Volume: {volume}%"
+  },
+
   "custom/media": {
     "format": "{}",
     "exec": "$HOME/.config/waybar/scripts/media.sh",

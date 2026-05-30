@@ -1,0 +1,68 @@
+# =============================================================================
+# Mako Configuration - Minimalist Monochrome
+# =============================================================================
+
+# Global notification settings
+background-color=#0a0a0a
+text-color=#ededed
+border-color=#222222
+border-radius=4
+border-size=1
+margin=15
+padding=15
+font=Source Sans 3 12
+width=300
+icons=1
+max-visible=3
+default-timeout=3000
+
+# Clean format with a bold summary
+format=<b>%s</b>\n%b
+actions=1
+
+# Urgency levels
+[urgency=low]
+background-color=#000000
+text-color=#666666
+border-color=#111111
+default-timeout=2000
+
+[urgency=normal]
+# Defaults to global settings
+default-timeout=3000
+
+[urgency=high]
+background-color=#141414
+text-color=#ffffff
+border-color=#666666
+default-timeout=5000
+
+[urgency=critical]
+# Inverted colors for maximum visibility without using bright colors
+background-color=#ededed
+text-color=#000000
+border-color=#ededed
+default-timeout=0
+
+# App-specific styling
+[app-name=screenshot]
+background-color=#0a0a0a
+text-color=#888888
+border-color=#333333
+default-timeout=2000
+
+# Text pattern matching for special notifications
+[summary~=battery]
+text-color=#aaaaaa
+border-color=#444444
+
+[summary~=error]
+background-color=#141414
+text-color=#ffffff
+border-color=#888888
+default-timeout=0
+
+[body~=error]
+background-color=#141414
+text-color=#ffffff
+border-color=#888888

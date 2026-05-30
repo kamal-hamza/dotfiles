@@ -75,7 +75,6 @@ packages:
             - polkit-gnome # Handles administrative authentication prompts (GUI)
             - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
             - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes
-            - wl-clipboard # Command-line copy/paste utilities for Wayland
             - grim # Screenshot utility for Wayland
             - slurp # Select a region in a Wayland compositor (works perfectly with grim)
             - pipewire # Core multimedia framework (replaces PulseAudio/ALSA)
@@ -112,6 +111,12 @@ packages:
             - cava # music visualizer
             - ncmpcpp # tui for music
             - beets # music metadata editor
+            - wl-clipboard # Command-line copy/paste utilities for Wayland
+            - grim # screenshots manager
+            - slurp # coordinates for selecting screenshots
+            - satty # screenshot editor
+            - mako # notification daemon
+
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

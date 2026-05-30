@@ -30,4 +30,6 @@ dot_pi/**/node_modules/
 .config/mpd/
 .config/ncmpcpp/
 .config/cava/
+.config/mako/
+.config/satty/
 {{ end }}

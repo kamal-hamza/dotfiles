@@ -117,7 +117,6 @@ require("blink.cmp").setup({
       Method = "󰊕",
       Function = "󰊕",
       Constructor = "󰒓",
-
       Field = "󰜢",
       Variable = "󰆦",
       Property = "󰖷",
