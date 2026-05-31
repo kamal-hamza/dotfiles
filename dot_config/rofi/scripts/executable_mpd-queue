@@ -68,6 +68,8 @@ fi
 if mpc insert "$selected_song"; then
     notify-send -u normal "Song Queued" "Added: $selected_display"
     echo -e "${GREEN}✓${NC} Queued: $selected_display"
+    # Start playing
+    mpc play
 else
     notify-send -u critical "Error" "Failed to queue song"
     echo -e "${RED}✗${NC} Failed to queue song"

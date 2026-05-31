@@ -13,6 +13,7 @@
 #   - grim (image capture)
 #   - slurp (selection tool)
 #   - satty (annotation tool)
+#   - wl-copy (Wayland clipboard)
 # =============================================================================
 
 set -e
@@ -22,5 +23,5 @@ SAVE_DIR="$HOME/Pictures/Screenshots"
 mkdir -p "$SAVE_DIR"
 
 # Execute the screenshot pipeline
-# The date format is handled by bash, not satty, to avoid Lua/Hyprland mangling
-grim -g "$(slurp)" - | satty --filename - --output-filename "$SAVE_DIR/screenshot-$(date +%Y%m%d-%H%M%S).png"
+# wl-copy is used for clipboard operations on Wayland
+grim -g "$(slurp)" - | satty --filename - --copy-command wl-copy --output-filename "$SAVE_DIR/screenshot-$(date +%Y%m%d-%H%M%S).png"

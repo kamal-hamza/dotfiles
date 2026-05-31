@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Show MPD Queue Notification
+# =============================================================================
+# Display the current MPD playlist queue as a formatted notification
+#
+# Usage:
+#   show-queue
+# =============================================================================
+
+set -e
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    notify-send -u critical "Error" "mpc not found"
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    notify-send -u critical "MPD Error" "MPD daemon is not running"
+    exit 1
+fi
+
+# Get the current queue
+queue=$(mpc playlist)
+
+if [ -z "$queue" ]; then
+    notify-send -u normal "MPD Queue" "Queue is empty"
+    exit 0
+fi
+
+# Format queue as numbered list with titles
+formatted_queue=$(echo "$queue" | nl -w1 -s'. ')
+
+# Get queue length
+queue_length=$(echo "$queue" | wc -l)
+
+# Send notification with the formatted queue
+notify-send -u normal "MPD Queue ($queue_length songs)" "$formatted_queue"

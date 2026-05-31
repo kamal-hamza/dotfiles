@@ -14,6 +14,8 @@ vim.pack.add({
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/sphamba/smear-cursor.nvim",
   { src = "https://github.com/obsidian-nvim/obsidian.nvim", version = vim.version.range("*") },
+  "https://github.com/hedyhli/outline.nvim",
+  "https://github.com/epheien/outline-treesitter-provider.nvim",
 })
 
 -- nvim autopairs
@@ -117,6 +119,34 @@ obsidian.setup({
       name = "personal",
       path = "~/Code/kamal-hamza.github.io/content/",
     },
+  },
+})
+
+local outline = require("outline")
+outline.setup({
+  providers = {
+    priority = { "treesitter", "lsp", "markdown", "norg" },
+  },
+  symbols = {
+    filter = { "String", "Variable", exclude = true },
+  },
+  outline_window = {
+    position = 'left',
+    show_cursorline = true,
+    hide_cursor = false,
+    auto_jump = true,
+    width = 25,
+    relative_width = true,
+  },
+  symbol_folding = {
+    autofold_depth = false,
+    auto_unfold = {
+      hovered = true,
+    },
+  },
+  preview_window = {
+    auto_preview = false,
+    live = true,
   },
 })
 

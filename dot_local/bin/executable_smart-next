@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Smart Next - Respects Repeat Mode
+# =============================================================================
+# Skip to next song, but respects repeat mode:
+# - In single/repeat-one mode: restarts the current song
+# - In other modes: skips to next song normally
+#
+# Usage:
+#   smart-next
+# =============================================================================
+
+set -e
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    echo "mpc not found"
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    echo "MPD daemon is not running"
+    exit 1
+fi
+
+# Get current MPD status
+status=$(mpc status)
+
+# Parse the single flag from status
+single_status=$(echo "$status" | grep -oP 'single: \K\w+')
+
+# If in single/repeat-one mode, restart the current song
+if [ "$single_status" = "on" ]; then
+    mpc seek 0%
+else
+    # Otherwise, skip to next song normally
+    mpc next
+fi

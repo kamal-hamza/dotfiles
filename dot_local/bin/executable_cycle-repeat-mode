@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Cycle MPD Repeat Mode
+# =============================================================================
+# Cycle through MPD repeat modes (off → all → one → off...) and display the new mode
+#
+# Usage:
+#   cycle-repeat-mode
+# =============================================================================
+
+set -e
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    notify-send -u critical "Error" "mpc not found"
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    notify-send -u critical "MPD Error" "MPD daemon is not running"
+    exit 1
+fi
+
+# Get current MPD status to determine repeat mode
+status=$(mpc status)
+
+# Parse the repeat and single flags from the last line of status
+repeat_status=$(echo "$status" | grep -oP 'repeat: \K\w+')
+single_status=$(echo "$status" | grep -oP 'single: \K\w+')
+
+# Cycle through modes: off -> all -> one -> off
+if [ "$repeat_status" = "off" ]; then
+    # Currently off, switch to all
+    mpc repeat on
+    mpc single off
+    new_mode="All"
+elif [ "$single_status" = "off" ]; then
+    # Currently repeating all, switch to one
+    mpc single on
+    new_mode="One"
+else
+    # Currently repeating one, switch to off
+    mpc repeat off
+    mpc single off
+    new_mode="Off"
+fi
+
+# Send notification with the new repeat mode
+notify-send -u normal "Repeat Mode" "Repeat: $new_mode"

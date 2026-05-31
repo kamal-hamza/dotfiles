@@ -8,6 +8,12 @@
 [general]
 # Increase or decrease the size of all annotations (default is 1)
 annotation-size-factor = 1
+# Actions to perform when Enter is pressed
+actions-on-enter = ["save-to-clipboard", "save-to-file", "exit"]
+# Actions to perform when Escape is pressed
+actions-on-escape = ["exit"]
+# Actions to perform when right-click (copy button) is pressed
+actions-on-right-click = ["save-to-clipboard", "exit"]
 
 [font]
 # Font family and style for text annotations
