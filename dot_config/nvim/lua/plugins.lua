@@ -125,7 +125,7 @@ obsidian.setup({
 local outline = require("outline")
 outline.setup({
   providers = {
-    priority = { "treesitter", "lsp", "markdown", "norg" },
+    priority = { "lsp", "markdown", "norg" },
   },
   symbols = {
     filter = { "String", "Variable", exclude = true },
@@ -135,8 +135,6 @@ outline.setup({
     show_cursorline = true,
     hide_cursor = false,
     auto_jump = true,
-    width = 25,
-    relative_width = true,
   },
   symbol_folding = {
     autofold_depth = false,

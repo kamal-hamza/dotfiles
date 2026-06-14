@@ -28,6 +28,9 @@ window-decoration = true
 # Dim inactive panes
 unfocused-split-opacity = 0.5
 
+# confirm close
+confirm-close-surface = false
+
 # ===================================================================
 # macOS Appearance
 # ===================================================================

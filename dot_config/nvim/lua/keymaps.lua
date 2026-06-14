@@ -20,10 +20,10 @@ vim.keymap.set("i", "<S-Tab>", function()
 end, { expr = true })
 
 -- resize windows
-vim.keymap.set('n', '<A-up>', ':resize -2<CR>')
-vim.keymap.set('n', '<A-down>', ':resize +2<CR>')
-vim.keymap.set('n', '<A-left>', ':vertical resize -2<CR>')
-vim.keymap.set('n', '<A-right>', ':vertical resize +2<CR>')
+vim.keymap.set('n', '<C-Up>', ':resize -2<CR>', { desc = 'Resize window up' })
+vim.keymap.set('n', '<C-Down>', ':resize +2<CR>', { desc = 'Resize window down' })
+vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { desc = 'Resize window left' })
+vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', { desc = 'Resize window right' })
 
 -- macos options key fix
 vim.keymap.set('n', '<M-f>', ':vertical resize -2<CR>')
