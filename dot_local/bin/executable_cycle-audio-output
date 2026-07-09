@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+sinks=($(pactl list short sinks | awk '{print $1}'))
+
+current=$(wpctl status | awk '
+/Sinks:/ {insinks=1; next}
+/Sources:/ {insinks=0}
+insinks && /\*/ {
+    for(i=1;i<=NF;i++) {
+        if($i=="*") {
+            gsub("\\.","",$(i+1))
+            print $(i+1)
+            exit
+        }
+    }
+}')
+
+# fallback: if parsing fails, just use default from pactl
+if [[ -z "$current" ]]; then
+    current=$(pactl info | awk -F': ' '/Default Sink/ {print $2}')
+fi
+
+# convert current sink name → index in pactl list
+current_id=""
+while read -r id name _; do
+    if [[ "$name" == *"$current"* ]]; then
+        current_id="$id"
+        break
+    fi
+done < <(pactl list short sinks)
+
+# fallback if still empty
+if [[ -z "$current_id" ]]; then
+    current_id=$(pactl info | awk -F': ' '/Default Sink/ {print $2}')
+    current_id=$(pactl list short sinks | awk -v n="$current_id" '$2==n {print $1}')
+fi
+
+# find next sink
+for i in "${!sinks[@]}"; do
+    if [[ "${sinks[$i]}" == "$current_id" ]]; then
+        next=$(( (i + 1) % ${#sinks[@]} ))
+        new_sink="${sinks[$next]}"
+        break
+    fi
+done
+
+# set default
+wpctl set-default "$new_sink"
+
+# move ALL active streams
+while read -r stream _; do
+    pactl move-sink-input "$stream" "$new_sink" 2>/dev/null
+done < <(pactl list short sink-inputs)
+
+# get readable name
+name=$(pactl list short sinks | awk -v id="$new_sink" '$1==id {$1=""; print substr($0,2)}')
+
+notify-send "Audio Output" "${name:-$new_sink}"

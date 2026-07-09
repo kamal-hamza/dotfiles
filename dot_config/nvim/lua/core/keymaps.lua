@@ -1,9 +1,13 @@
-print("Keymaps Loaded")
+-- =============================================================================
+-- Core Keymaps
+-- =============================================================================
+
 -- terminal to normal mode
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { noremap = true })
 
 -- vim diagnostics
-vim.keymap.set('n', '<leader>td', vim.diagnostic.open_float, { desc = "Show Diagnostics" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { desc = "Show Diagnostics" })
+
 
 -- Move between windows using Ctrl + h/j/k/l
 vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left window' })

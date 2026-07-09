@@ -1,3 +1,7 @@
+-- =============================================================================
+-- Core Options
+-- =============================================================================
+
 -- set leader
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -20,13 +24,13 @@ vim.diagnostic.config({
   jump = { float = true },
   virtual_text = {
     spacing = 2,
-    prefix = "##",
+    prefix = "●",
   },
   signs = true,
   underline = true,
 })
 
--- diable word wrapping on multiple lines
+-- disable word wrapping on multiple lines
 vim.opt.wrap = false
 vim.opt.sidescrolloff = 8
 

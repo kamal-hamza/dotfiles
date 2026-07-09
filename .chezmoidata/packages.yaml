@@ -90,6 +90,14 @@ packages:
             - blueman # gui bluetooth manager
             - networkmanager # network manager for wifi and ethernet
             - network-manager-applet # network manager for wifi and ethernet
+            - mesa # Open-source OpenGL graphics drivers
+            - lib32-mesa # 32-bit OpenGL libraries for games and Steam
+            - vulkan-radeon # AMD Vulkan driver
+            - lib32-vulkan-radeon # 32-bit AMD Vulkan driver for games and Steam
+            - vulkan-icd-loader # Vulkan loader that dispatches to installed drivers
+            - lib32-vulkan-icd-loader # 32-bit Vulkan loader for games and Steam
+            - mesa-utils # OpenGL utilities (e.g. glxinfo, glxgears)
+            - vulkan-tools # Vulkan diagnostic tools (e.g. vulkaninfo)
             - piper # mouse config util
             - fontforge # font customization
             - ttf-meslo-nerd # MesloLGS Nerd Font
@@ -119,6 +127,16 @@ packages:
             - cups # printing system
             - system-config-printer # GUI printer management
             - sushi # file preview
+            - ly # display manager
+            - steam # Valve’s game client and Proton launcher for Windows games on Linux
+            - mangohud # In-game performance overlay (FPS, GPU, CPU, frame timing)
+            - lib32-mangohud # 32-bit support for MangoHud in Steam games
+            - gamemode # Feral Interactive performance daemon for optimizing CPU/GPU during games
+            - lib32-gamemode # 32-bit GameMode support for Steam and Proton games
+            - gamescope # Valve’s Wayland compositor for better fullscreen control, scaling, and HDR support
+            - wine # Compatibility layer for running Windows applications and non-Steam games
+            - winetricks # helper script for installing Windows dependencies inside Wine prefixes
+            - git-delta # git cli pager
 
 
         aur:
@@ -127,4 +145,5 @@ packages:
             - hyprlock # Fast, secure, and beautiful desktop locker
             - hypridle # Idle management daemon (handles screen dims and locks)
             - pi-coding-agent # TUI based coding agent
+            - protonplus # GUI tool to install and manage Proton-GE versions (AUR)
 

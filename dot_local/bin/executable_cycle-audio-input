@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+current=$(wpctl status | awk '
+/Sources:/ {insources=1; next}
+/Filters:/ {insources=0}
+insources && /\*/ {
+    gsub("\\.","",$2)
+    print $2
+}')
+
+mapfile -t sources < <(wpctl status | awk '
+/Sources:/ {insources=1; next}
+/Filters:/ {insources=0}
+insources && /^[[:space:]]+[0-9]+\./ {
+    gsub("\\.","",$1)
+    print $1
+}')
+
+for i in "${!sources[@]}"; do
+    if [[ "${sources[$i]}" == "$current" ]]; then
+        next=$(( (i + 1) % ${#sources[@]} ))
+        wpctl set-default "${sources[$next]}"
+        break
+    fi
+done

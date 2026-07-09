@@ -47,6 +47,13 @@ if command -v fzf >/dev/null 2>&1; then
 fi
 
 # -----------------------------------------------------------------------------
+# Hyprland Configuration
+# -----------------------------------------------------------------------------
+export SDL_VIDEODRIVER=wayland,x11  # Better SDL game compatibility on Wayland
+export MOZ_ENABLE_WAYLAND=1         # Native Wayland for Firefox-based apps
+export ELECTRON_OZONE_PLATFORM_HINT=auto  # Enables Wayland support in Electron apps
+
+# -----------------------------------------------------------------------------
 # Development Tools Environment Variables
 # -----------------------------------------------------------------------------
 # Load machine-specific development tool configurations

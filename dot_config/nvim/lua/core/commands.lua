@@ -1,17 +1,21 @@
+-- =============================================================================
+-- Core Commands
+-- =============================================================================
+
 -- global term command
 vim.api.nvim_create_user_command("Term", function()
-    vim.cmd('vsplit | term')
-    vim.cmd('startinsert')
+  vim.cmd('vsplit | term')
+  vim.cmd('startinsert')
 end, {})
 
 -- vsplit terminal
 vim.api.nvim_create_user_command('Vsterm', function()
-    vim.cmd('vsplit | term')
+  vim.cmd('vsplit | term')
 end, {})
 
 -- split terminal
 vim.api.nvim_create_user_command('Sterm', function()
-    vim.cmd('split | term')
+  vim.cmd('split | term')
 end, {})
 
 -- fix common shift-key typos
