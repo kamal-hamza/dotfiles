@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Toggle MPD Shuffle (Random) Mode
+# =============================================================================
+# Toggle MPD's random/shuffle mode on or off and display the new status
+#
+# Usage:
+#   toggle-shuffle
+# =============================================================================
+
+set -e
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    notify-send -u critical "Error" "mpc not found"
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    notify-send -u critical "MPD Error" "MPD daemon is not running"
+    exit 1
+fi
+
+# Parse the random flag from the status
+random_status=$(mpc status | grep -oP 'random: \K\w+')
+
+if [ "$random_status" = "on" ]; then
+    mpc random off
+    new_mode="Off"
+else
+    mpc random on
+    new_mode="On"
+fi
+
+# Send notification with the new shuffle status
+notify-send -u normal "Shuffle Mode" "Shuffle: $new_mode"

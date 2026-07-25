@@ -1,5 +1,4 @@
-local super = "ALT"
-local win = "SUPER"
+local super = "SUPER"
 local terminal = "ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
@@ -62,6 +61,7 @@ hl.bind(super .. " + COMMA", hl.dsp.exec_cmd("mpc prev"), { locked = true })
 hl.bind(super .. " + SHIFT + COMMA", hl.dsp.exec_cmd("mpc seek -10"), { locked = true })
 hl.bind(super .. " + P", hl.dsp.exec_cmd("mpc toggle"), { locked = true })
 hl.bind(super .. " + R", hl.dsp.exec_cmd("cycle-repeat-mode"), { locked = true })
+hl.bind(super .. " + S", hl.dsp.exec_cmd("toggle-shuffle"), { locked = true })
 hl.bind(super .. " + SLASH", hl.dsp.exec_cmd("mpc seek 0%"), { locked = true })
 hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("mpc volume +5"), { locked = true })
 hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("mpc volume -5"), { locked = true })
@@ -69,6 +69,7 @@ hl.bind(super .. " + SHIFT + C", hl.dsp.exec_cmd("mpc clear"), { locked = true }
 
 -- queue songs with rofi
 hl.bind(super .. " + GRAVE", hl.dsp.exec_cmd("~/.config/rofi/scripts/mpd-queue"), { locked = true })
+hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("play-playlist"), { locked = true })
 
 -- view current queue
 hl.bind(super .. " + SHIFT + V", hl.dsp.exec_cmd("show-queue"), { locked = true })

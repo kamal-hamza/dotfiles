@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+
+# =============================================================================
+# Play Playlist - Queue a whole ~/Music folder via Rofi
+# =============================================================================
+# Lists top-level folders in ~/Music (excluding Lyrics), lets you pick one
+# with rofi, then clears the current queue and plays that folder.
+# Whether playback is shuffled follows whatever MPD's random mode is
+# currently set to (toggle it with toggle-shuffle). Repeat/single mode,
+# volume, seek, etc. are all global mpc/MPD player settings, so they keep
+# working normally once a playlist is loaded.
+#
+# Usage:
+#   play-playlist
+# =============================================================================
+
+set -e
+
+MUSIC_DIR="${MUSIC_DIR:-$HOME/Music}"
+EXCLUDE_DIRS=("Lyrics")
+
+# Check if mpc is installed
+if ! command -v mpc &> /dev/null; then
+    notify-send -u critical "Error" "mpc not found"
+    exit 1
+fi
+
+# Check if rofi is installed
+if ! command -v rofi &> /dev/null; then
+    notify-send -u critical "Error" "rofi not found"
+    exit 1
+fi
+
+# Check if MPD is running
+if ! mpc status &> /dev/null; then
+    notify-send -u critical "MPD Error" "MPD daemon is not running"
+    exit 1
+fi
+
+if [ ! -d "$MUSIC_DIR" ]; then
+    notify-send -u critical "Error" "Music directory not found: $MUSIC_DIR"
+    exit 1
+fi
+
+# Build the list of playlist folders (top-level dirs, excluding EXCLUDE_DIRS)
+playlists=()
+for dir in "$MUSIC_DIR"/*/; do
+    [ -d "$dir" ] || continue
+    name=$(basename "$dir")
+
+    skip=false
+    for excluded in "${EXCLUDE_DIRS[@]}"; do
+        if [ "$name" = "$excluded" ]; then
+            skip=true
+            break
+        fi
+    done
+    [ "$skip" = true ] && continue
+
+    playlists+=("$name")
+done
+
+if [ "${#playlists[@]}" -eq 0 ]; then
+    notify-send -u normal "Playlists" "No playlist folders found in $MUSIC_DIR"
+    exit 0
+fi
+
+selected=$(printf '%s\n' "${playlists[@]}" | rofi -dmenu -p "Play playlist:" -i)
+
+# Check if user cancelled
+if [ -z "$selected" ]; then
+    exit 0
+fi
+
+# Queue the folder and start playing, respecting whatever random mode is
+# currently set (toggle it with toggle-shuffle)
+if mpc clear && mpc add "$selected" && mpc play; then
+    random_status=$(mpc status | grep -oP 'random: \K\w+')
+    if [ "$random_status" = "on" ]; then
+        notify-send -u normal "Playing Playlist (Shuffled)" "$selected"
+    else
+        notify-send -u normal "Playing Playlist" "$selected"
+    fi
+else
+    notify-send -u critical "Error" "Failed to play: $selected"
+    exit 1
+fi

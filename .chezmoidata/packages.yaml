@@ -99,7 +99,8 @@ packages:
             - mesa-utils # OpenGL utilities (e.g. glxinfo, glxgears)
             - vulkan-tools # Vulkan diagnostic tools (e.g. vulkaninfo)
             - piper # mouse config util
-            - fontforge # font customization
+            - fontforge # font editor tool 
+            - font-manager # font viewer
             - ttf-meslo-nerd # MesloLGS Nerd Font
             - adobe-source-serif-fonts # Source Serif font collection
             - adobe-source-sans-fonts # Source Sans font collection
@@ -137,10 +138,13 @@ packages:
             - wine # Compatibility layer for running Windows applications and non-Steam games
             - winetricks # helper script for installing Windows dependencies inside Wine prefixes
             - git-delta # git cli pager
-
+            - gimp # image editor
+            - inkscape # vector graphics editor
+            - blender # 3d assets editor
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
+            - penpot-desktop-bin # penpot ui design app
             - zsh-autopair-git # Auto-close brackets in zs
             - hyprlock # Fast, secure, and beautiful desktop locker
             - hypridle # Idle management daemon (handles screen dims and locks)

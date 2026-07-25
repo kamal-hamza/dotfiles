@@ -59,8 +59,3 @@ require("plugins.obsidian")
 
 -- Colorscheme (last, so highlight groups from plugins are already set)
 require("plugins.theme")
-
--- debug nvim plugin
-vim.cmd.packadd("launch.nvim")
-
-require("launch")
