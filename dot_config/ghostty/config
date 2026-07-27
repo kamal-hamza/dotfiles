@@ -15,6 +15,9 @@ font-family = MesloLGS Nerd Font Mono
 cursor-style = bar
 cursor-style-blink = false
 
+# Line height
+adjust-cell-height = 25%
+
 # Window padding
 window-padding-x = 10
 window-padding-y = 10

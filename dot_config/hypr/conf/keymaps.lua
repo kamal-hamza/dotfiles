@@ -27,7 +27,7 @@ hl.bind(super .. " + F9", hl.dsp.exec_cmd("cycle-audio-output"))
 hl.bind(super .. " + F10", hl.dsp.exec_cmd("cycle-audio-input"))
 
 -- window binds
-hl.bind("ALT + mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind(super .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(super .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind(super .. " + Q", hl.dsp.window.close({ window = "active" }))
 hl.bind(super .. " + H", hl.dsp.focus({ direction = "l" }))

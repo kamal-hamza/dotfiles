@@ -87,7 +87,7 @@
         }
     },
     {
-        "context": "Dock || Terminal || ProjectPanel || (AssistantPanel && vim_mode==normal) || CollabPanel || GitPanel",
+        "context": "Dock || Terminal || ProjectPanel || (AgentPanel && vim_mode == normal) || CollabPanel || GitPanel",
         "bindings": {
             "escape": "workspace::CloseActiveDock"
         }
@@ -186,13 +186,13 @@
     {
         "context": "Editor && edit_prediction",
         "bindings": {
-            "cmd-k": "editor::AcceptEditPrediction"
+            "secondary-k": "editor::AcceptEditPrediction"
         }
     },
     {
         "context": "Editor && edit_prediction_conflict",
         "bindings": {
-            "cmd-k": "editor::AcceptEditPrediction"
+            "secondary-k": "editor::AcceptEditPrediction"
         }
     },
     {

@@ -57,6 +57,7 @@
         "mode": "subtle"
     },
     "vim_mode": true,
+    "completion_menu_scrollbar": "never",
     "minimap": {
       "show": "always",
       "thumb": "always",
@@ -65,15 +66,12 @@
     "diff_view_style": "split",
     "document_symbols": "on",
     "ui_font_family": "MesloLGS Nerd Font Mono",
-    "ui_font_size": 28,
+    "ui_font_size": 12,
     "buffer_font_family": "MesloLGS Nerd Font Mono",
-    "buffer_font_size": 28,
+    "buffer_font_size": 12,
     "theme": "Cursor Dark",
     "cursor_blink": false,
     "code_lens": "on",
-    "scrollbar": {
-        "show": "never"
-    },
     "toolbar": {
         "breadcrumbs": true,
         "quick_actions": false,
@@ -86,9 +84,6 @@
     "tab_size": 2,
     "file_finder": {
         "modal_max_width": "large"
-    },
-    "tab_bar": {
-        "show": false
     },
     "prettier": {
         "use_project_prettier": true
@@ -190,7 +185,7 @@
     },
     "terminal": {
         "dock": "bottom",
-        "font_size": 28,
+        "font_size": 12,
         "font_family": "MesloLGS Nerd Font Mono"
     },
     "ssh_connections": [
