@@ -5,5 +5,3 @@ vim.opt.background = "dark"
 require("modus-themes").setup({
     style = "modus_vivendi",
 })
-
-vim.cmd.colorscheme("modus")

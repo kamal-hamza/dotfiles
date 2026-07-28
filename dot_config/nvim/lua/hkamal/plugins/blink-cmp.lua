@@ -14,6 +14,7 @@ require("blink.cmp").setup({
         nerd_font_variant = "mono",
         kind_icons = require("lspkind").symbol_map,
     },
+    snippets = { preset = "luasnip" },
     completion = {
         documentation = { auto_show = false },
         menu = {

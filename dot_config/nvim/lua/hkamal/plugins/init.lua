@@ -23,6 +23,7 @@ require("hkamal.plugins.fidget")
 require("hkamal.plugins.mason")
 require("hkamal.plugins.mason-tool-installer")
 require("hkamal.plugins.conform")
+require("hkamal.plugins.luasnip")
 require("hkamal.plugins.blink-cmp")
 require("hkamal.plugins.lspconfig")
 require("hkamal.plugins.highlight-colors")
@@ -31,3 +32,9 @@ require("hkamal.plugins.flash")
 require("hkamal.plugins.surround")
 require("hkamal.plugins.comment")
 require("hkamal.plugins.spider")
+
+local theme = require("hkamal.theme")
+local saved = theme.load()
+if not saved or not pcall(vim.cmd.colorscheme, saved) then
+    vim.cmd.colorscheme("modus")
+end

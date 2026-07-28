@@ -2,8 +2,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 -- line numbers
-vim.opt.number = false 
-vim.opt.relativenumber = false 
+vim.opt.number = true
+vim.opt.relativenumber = true 
 -- tabs and spaces
 vim.opt.tabstop = 8
 vim.opt.shiftwidth = 4

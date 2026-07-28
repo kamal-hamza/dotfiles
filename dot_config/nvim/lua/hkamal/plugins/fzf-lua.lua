@@ -1,6 +1,23 @@
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 
 local fzf = require("fzf-lua")
+local actions = require("fzf-lua.actions")
+
+local function open_split(direction)
+    return function(selected, opts)
+        if direction == "left" or direction == "right" then
+            local prev = vim.o.splitright
+            vim.o.splitright = (direction == "right")
+            actions.file_vsplit(selected, opts)
+            vim.o.splitright = prev
+        else
+            local prev = vim.o.splitbelow
+            vim.o.splitbelow = (direction == "down")
+            actions.file_split(selected, opts)
+            vim.o.splitbelow = prev
+        end
+    end
+end
 
 fzf.setup({
     "borderless",
@@ -17,6 +34,21 @@ fzf.setup({
         },
         fzf = {
             ["alt-p"] = "toggle-preview",
+        },
+    },
+    actions = {
+        files = {
+            ["enter"] = actions.file_edit_or_qf,
+            ["ctrl-h"] = open_split("left"),
+            ["ctrl-j"] = open_split("down"),
+            ["ctrl-k"] = open_split("up"),
+            ["ctrl-l"] = open_split("right"),
+            ["ctrl-t"] = actions.file_tabedit,
+            ["alt-q"] = actions.file_sel_to_qf,
+            ["alt-Q"] = actions.file_sel_to_ll,
+            ["alt-i"] = { fn = actions.toggle_ignore, reuse = true, header = false },
+            ["alt-h"] = { fn = actions.toggle_hidden, reuse = true, header = false },
+            ["alt-f"] = { fn = actions.toggle_follow, reuse = true, header = false },
         },
     },
 })
@@ -43,6 +75,8 @@ vim.keymap.set("n", "<leader>ft", function()
             "kanagawa-wave",
             "kanagawa-dragon",
             "kanagawa-lotus",
+            "gruvbox-dark",
+            "gruvbox-light",
         },
     })
 end, { desc = "Switch Colorscheme" })
