@@ -27,9 +27,32 @@ vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Find Buffers" })
 vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "Help Tags" })
 vim.keymap.set("n", "<leader>fo", fzf.oldfiles, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>fr", fzf.resume, { desc = "Resume Last Search" })
+vim.keymap.set("n", "<leader>ft", function()
+    fzf.colorschemes({
+        colors = {
+            "modus",
+            "modus_operandi",
+            "modus_vivendi",
+            "oxocarbon",
+            "koda-dark",
+            "koda-light",
+            "tokyonight-night",
+            "tokyonight-storm",
+            "tokyonight-moon",
+            "tokyonight-day",
+            "kanagawa-wave",
+            "kanagawa-dragon",
+            "kanagawa-lotus",
+        },
+    })
+end, { desc = "Switch Colorscheme" })
 
 vim.keymap.set("n", "<leader>gs", fzf.git_status, { desc = "Git Status" })
 vim.keymap.set("n", "<leader>gc", fzf.git_commits, { desc = "Git Commits" })
 vim.keymap.set("n", "<leader>gb", fzf.git_branches, { desc = "Git Branches" })
 vim.keymap.set("n", "<leader>gh", fzf.git_bcommits, { desc = "Git Buffer Commits" })
 vim.keymap.set("n", "<leader>gt", fzf.git_stash, { desc = "Git Stash" })
+
+vim.keymap.set("n", "<S-l>", "<Cmd>bnext<CR>", { desc = "Next Buffer" })
+vim.keymap.set("n", "<S-h>", "<Cmd>bprevious<CR>", { desc = "Prev Buffer" })
+vim.keymap.set("n", "<leader>db", "<Cmd>bdelete<CR>", { desc = "Delete Buffer" })
