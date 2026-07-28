@@ -70,3 +70,6 @@ dot_config/tex/latex/*-temp.listing
 
 
 __pycache__/
+
+# vim.pack lockfile pins exact revisions per-machine; not meant to be shared
+dot_config/nvim/nvim-pack-lock.json

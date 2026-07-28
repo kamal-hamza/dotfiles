@@ -1,5 +1,5 @@
 vim.pack.add({
-    "https://github.com/akinsho/bufferline.nvim",
+    { src = "https://github.com/akinsho/bufferline.nvim", version = vim.version.range("4.*") },
     "https://github.com/nvim-tree/nvim-web-devicons",
 })
 
