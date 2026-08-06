@@ -6,7 +6,18 @@ vim.pack.add({
 local dap = require("dap")
 local dapui = require("dapui")
 
-dapui.setup({})
+dapui.setup({
+    layouts = {
+        {
+            elements = {
+                "console",
+                "watches",
+            },
+            size = 0.25,
+            position = "bottom",
+        },
+    },
+})
 
 dap.listeners.after.event_initialized["dapui_config"] = function()
     dapui.open()

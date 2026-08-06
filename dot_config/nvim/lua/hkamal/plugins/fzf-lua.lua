@@ -77,6 +77,12 @@ vim.keymap.set("n", "<leader>ft", function()
             "kanagawa-lotus",
             "gruvbox-dark",
             "gruvbox-light",
+            "sonokai-default",
+            "sonokai-shusia",
+            "sonokai-andromeda",
+            "sonokai-atlantis",
+            "sonokai-maia",
+            "sonokai-espresso",
         },
     })
 end, { desc = "Switch Colorscheme" })

@@ -4,6 +4,7 @@ require("mason-nvim-dap").setup({
     ensure_installed = {
         "codelldb",
         "netcoredbg",
+        "debugpy",
     },
     automatic_installation = true,
     handlers = {},

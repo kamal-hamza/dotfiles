@@ -9,6 +9,7 @@ vim.lsp.enable({
     "tsgo",
     "tailwindcss",
     "pyrefly",
+    "ruff",
     "rust_analyzer",
     "clangd",
     "taplo",

@@ -14,7 +14,7 @@ require("conform").setup({
         html = { "prettier" },
         yaml = { "prettier" },
         markdown = { "prettier" },
-        python = { "ruff_format" },
+        python = { "ruff_fix", "ruff_format" },
         c = { "clang-format" },
         cpp = { "clang-format" },
         cs = { "csharpier" },

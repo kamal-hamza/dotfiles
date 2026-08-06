@@ -11,6 +11,7 @@ dap.configurations.rust = require("hkamal.dap.rust")
 dap.configurations.c = require("hkamal.dap.c")
 dap.configurations.cpp = require("hkamal.dap.cpp")
 dap.configurations.cs = require("hkamal.dap.cs")
+dap.configurations.python = require("hkamal.dap.python")
 
 local function conditional_breakpoint()
     dap.set_breakpoint(vim.fn.input("Breakpoint condition: "))

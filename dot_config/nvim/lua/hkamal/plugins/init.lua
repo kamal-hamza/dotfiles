@@ -35,10 +35,17 @@ require("hkamal.plugins.heirline")
 require("hkamal.plugins.flash")
 require("hkamal.plugins.surround")
 require("hkamal.plugins.comment")
-require("hkamal.plugins.spider")
 
 local theme = require("hkamal.theme")
+
 local saved = theme.load()
 if not saved or not pcall(vim.cmd.colorscheme, saved) then
     vim.cmd.colorscheme("modus")
+end
+
+-- applied after the colorscheme since some loaders (e.g. modus-themes) force
+-- termguicolors back on as a side effect of loading
+local saved_tgc = theme.load_termguicolors()
+if saved_tgc ~= nil then
+    vim.o.termguicolors = saved_tgc
 end

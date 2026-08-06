@@ -57,9 +57,12 @@ require("blink.cmp").setup({
     fuzzy = { implementation = "prefer_rust_with_warning" },
 })
 
-vim.keymap.set("i", "<C-x><C-o>", function()
+vim.keymap.set("i", "<C-Space>", function()
     require("blink.cmp").show()
 end, { desc = "Trigger Completion" })
+
+-- disabled so it never falls back to nvim's built-in omnifunc completion menu
+vim.keymap.set("i", "<C-x><C-o>", "<Nop>", { desc = "Disabled (use <C-Space>)" })
 
 -- bold the characters that matched your query, like VSCode's IntelliSense
 vim.api.nvim_set_hl(0, "BlinkCmpLabelMatch", { bold = true })
