@@ -13,6 +13,7 @@ dap.configurations.cpp = require("hkamal.dap.cpp")
 dap.configurations.cs = require("hkamal.dap.cs")
 dap.configurations.python = require("hkamal.dap.python")
 dap.configurations.gdscript = require("hkamal.dap.gdscript")
+dap.configurations.zig = require("hkamal.dap.zig")
 
 -- Godot's Debug Adapter Protocol server is embedded in the editor itself
 -- (Editor Settings > Network > Debug Adapter), so this connects to an

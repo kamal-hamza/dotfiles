@@ -26,6 +26,7 @@ require("nvim-treesitter").install({
     "gdscript",
     "gdshader",
     "godot_resource",
+    "zig",
 })
 
 vim.api.nvim_create_autocmd("FileType", {

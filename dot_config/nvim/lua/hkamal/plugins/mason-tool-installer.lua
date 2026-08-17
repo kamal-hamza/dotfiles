@@ -12,6 +12,7 @@ require("mason-tool-installer").setup({
         "taplo",
         "json-lsp",
         "roslyn-language-server",
+        "zls",
         -- formatters / linters
         "stylua",
         "prettier",
