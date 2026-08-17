@@ -19,5 +19,6 @@ require("mason-tool-installer").setup({
         "ruff",
         "clang-format",
         "csharpier",
+        "gdtoolkit",
     },
 })

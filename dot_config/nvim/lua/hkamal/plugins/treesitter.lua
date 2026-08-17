@@ -10,6 +10,7 @@ require("nvim-treesitter").install({
     "python",
     "javascript",
     "typescript",
+    "tsx",
     "json",
     "yaml",
     "markdown",
@@ -22,6 +23,9 @@ require("nvim-treesitter").install({
     "rust",
     "go",
     "toml",
+    "gdscript",
+    "gdshader",
+    "godot_resource",
 })
 
 vim.api.nvim_create_autocmd("FileType", {

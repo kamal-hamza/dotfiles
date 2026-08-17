@@ -5,4 +5,6 @@ vim.pack.add({
     "https://github.com/rebelot/kanagawa.nvim",
     "https://github.com/ellisonleao/gruvbox.nvim",
     "https://github.com/sainnhe/sonokai",
+    "https://github.com/ydkulks/cursor-dark.nvim",
+    "https://github.com/olimorris/onedarkpro.nvim",
 })

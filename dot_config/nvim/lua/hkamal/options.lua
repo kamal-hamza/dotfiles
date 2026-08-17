@@ -18,6 +18,12 @@ vim.opt.smartcase = true
 -- undo history
 vim.opt.undofile = true
 vim.opt.swapfile = false
+-- reload file if changed externally
+vim.opt.autoread = true
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+	pattern = "*",
+	command = "checktime",
+})
 -- scrolling
 vim.opt.scrolloff = 8
 vim.opt.sidescrolloff = 8
@@ -30,6 +36,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
 vim.opt.wrap = false
 vim.opt.linespace = 3
+vim.opt.winborder = "rounded"
 -- completion
 vim.opt.completeopt = "menu,menuone,noselect,popup"
 -- folds
@@ -42,7 +49,7 @@ vim.opt.timeoutlen = 300
 vim.diagnostic.config({
 	severity_sort = true,
 	update_in_insert = false,
-	float = { source = "if_many" },
+	float = { source = "if_many", border = "rounded" },
 	jump = { float = true },
 	virtual_text = {
 		spacing = 2,

@@ -6,7 +6,10 @@
 theme = dark
 
 # font
-font-family = MesloLGS Nerd Font Mono
+font-size = 18
+font-family = JetBrainsMono Nerd Font Mono
+font-style = SemiBold
+font-thicken = true
 
 # Send Ctrl s to tmux
 # keybind = ctrl+s=send_text:\x13

@@ -18,6 +18,7 @@ require("conform").setup({
         c = { "clang-format" },
         cpp = { "clang-format" },
         cs = { "csharpier" },
+        gdscript = { "gdformat" },
     },
 })
 

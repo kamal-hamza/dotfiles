@@ -10,11 +10,11 @@ vim.lsp.enable({
     "tailwindcss",
     "pyrefly",
     "ruff",
-    "rust_analyzer",
     "clangd",
     "taplo",
     "jsonls",
     "roslyn_ls",
+    "gdscript",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {

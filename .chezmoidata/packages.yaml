@@ -32,6 +32,7 @@ packages:
 
    arch:
         pacman:
+            - sbctl # secure boot key manager 
             - mise # Modern runtime version manager (replaces asdf)
             - python-pyaml # PyYAML library for install-lang script
             - bat # Cat with syntax highlighting
@@ -102,6 +103,9 @@ packages:
             - fontforge # font editor tool 
             - font-manager # font viewer
             - ttf-meslo-nerd # MesloLGS Nerd Font
+            - otf-fantasque-sans-mono # Fantasque Nerd Font
+            - ttf-fantasque-nerd # Fantasque Nerd Font
+            - ttf-jetbrains-mono-nerd # Jetbrains Mono Nerd Font
             - adobe-source-serif-fonts # Source Serif font collection
             - adobe-source-sans-fonts # Source Sans font collection
             - fastfetch # display system specs
@@ -130,6 +134,7 @@ packages:
             - sushi # file preview
             - ly # display manager
             - steam # Valve’s game client and Proton launcher for Windows games on Linux
+            - steam-devices # steam bluetooth device detection
             - mangohud # In-game performance overlay (FPS, GPU, CPU, frame timing)
             - lib32-mangohud # 32-bit support for MangoHud in Steam games
             - gamemode # Feral Interactive performance daemon for optimizing CPU/GPU during games
@@ -141,6 +146,7 @@ packages:
             - gimp # image editor
             - inkscape # vector graphics editor
             - blender # 3d assets editor
+            - godot # opensource game engine
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

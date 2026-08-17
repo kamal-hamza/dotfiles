@@ -20,12 +20,13 @@ local function open_split(direction)
 end
 
 fzf.setup({
-    "borderless",
     winopts = {
         height = 0.5,
         width = 0.6,
+        border = "rounded",
         preview = {
             hidden = "hidden",
+            border = "rounded",
         },
     },
     keymap = {
@@ -83,6 +84,13 @@ vim.keymap.set("n", "<leader>ft", function()
             "sonokai-atlantis",
             "sonokai-maia",
             "sonokai-espresso",
+            "cursor-dark",
+            "cursor-dark-midnight",
+            "onedark",
+            "onedark_dark",
+            "onedark_vivid",
+            "onelight",
+            "vaporwave",
         },
     })
 end, { desc = "Switch Colorscheme" })

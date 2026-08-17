@@ -66,9 +66,9 @@
     "diff_view_style": "split",
     "document_symbols": "on",
     "ui_font_family": "MesloLGS Nerd Font Mono",
-    "ui_font_size": 12,
+    "ui_font_size": 16,
     "buffer_font_family": "MesloLGS Nerd Font Mono",
-    "buffer_font_size": 12,
+    "buffer_font_size": 16,
     "theme": "Cursor Dark",
     "cursor_blink": false,
     "code_lens": "on",
@@ -81,7 +81,7 @@
         "button": false
     },
     "relative_line_numbers": "enabled",
-    "tab_size": 2,
+    "tab_size": 4,
     "file_finder": {
         "modal_max_width": "large"
     },
@@ -185,7 +185,7 @@
     },
     "terminal": {
         "dock": "bottom",
-        "font_size": 12,
+        "font_size": 16,
         "font_family": "MesloLGS Nerd Font Mono"
     },
     "ssh_connections": [

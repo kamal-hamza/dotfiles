@@ -11,3 +11,9 @@ vim.api.nvim_create_user_command(
     { desc = "Toggle GUI Colors (termguicolors)" }
 )
 vim.keymap.set("n", "<leader>tg", "<Cmd>ToggleTermGuiColors<CR>", { desc = "Toggle GUI Colors (termguicolors)" })
+
+-- resize the current window
+vim.keymap.set("n", "<C-Up>", "<Cmd>resize +2<CR>", { desc = "Increase Window Height" })
+vim.keymap.set("n", "<C-Down>", "<Cmd>resize -2<CR>", { desc = "Decrease Window Height" })
+vim.keymap.set("n", "<C-Left>", "<Cmd>vertical resize -2<CR>", { desc = "Decrease Window Width" })
+vim.keymap.set("n", "<C-Right>", "<Cmd>vertical resize +2<CR>", { desc = "Increase Window Width" })

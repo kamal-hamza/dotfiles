@@ -17,6 +17,9 @@ dapui.setup({
             position = "bottom",
         },
     },
+    floating = {
+        border = "rounded",
+    },
 })
 
 dap.listeners.after.event_initialized["dapui_config"] = function()

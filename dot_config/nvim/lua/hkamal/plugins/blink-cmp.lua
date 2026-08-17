@@ -16,9 +16,13 @@ require("blink.cmp").setup({
     },
     snippets = { preset = "luasnip" },
     completion = {
-        documentation = { auto_show = false },
+        documentation = {
+            auto_show = false,
+            window = { border = "rounded" },
+        },
         menu = {
             auto_show = false,
+            border = "rounded",
             draw = {
                 -- label_description is folded into label by colorful-menu.nvim
                 columns = { { "kind_icon" }, { "label", gap = 1 } },
@@ -53,6 +57,9 @@ require("blink.cmp").setup({
                 opts = {},
             },
         },
+    },
+    signature = {
+        window = { border = "rounded" },
     },
     fuzzy = { implementation = "prefer_rust_with_warning" },
 })
