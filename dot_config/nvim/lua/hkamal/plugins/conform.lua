@@ -20,6 +20,9 @@ require("conform").setup({
         cs = { "csharpier" },
         gdscript = { "gdformat" },
         zig = { "zigfmt" },
+        sh = { "shfmt" },
+        bash = { "shfmt" },
+        go = { "goimports", "gofumpt" },
     },
 })
 

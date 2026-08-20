@@ -5,6 +5,8 @@ require("mason-nvim-dap").setup({
         "codelldb",
         "netcoredbg",
         "debugpy",
+        "bash-debug-adapter",
+        "delve",
     },
     automatic_installation = true,
     handlers = {},

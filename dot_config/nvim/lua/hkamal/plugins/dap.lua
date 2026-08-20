@@ -14,6 +14,13 @@ dap.configurations.cs = require("hkamal.dap.cs")
 dap.configurations.python = require("hkamal.dap.python")
 dap.configurations.gdscript = require("hkamal.dap.gdscript")
 dap.configurations.zig = require("hkamal.dap.zig")
+dap.configurations.sh = require("hkamal.dap.sh")
+
+dap.adapters.bashdb = {
+    type = "executable",
+    command = vim.fs.joinpath(vim.fn.stdpath("data"), "mason", "packages", "bash-debug-adapter", "bash-debug-adapter"),
+    name = "bashdb",
+}
 
 -- Godot's Debug Adapter Protocol server is embedded in the editor itself
 -- (Editor Settings > Network > Debug Adapter), so this connects to an

@@ -13,6 +13,9 @@ require("mason-tool-installer").setup({
         "json-lsp",
         "roslyn-language-server",
         "zls",
+        "bash-language-server",
+        "powershell-editor-services",
+        "gopls",
         -- formatters / linters
         "stylua",
         "prettier",
@@ -21,5 +24,10 @@ require("mason-tool-installer").setup({
         "clang-format",
         "csharpier",
         "gdtoolkit",
+        "shellcheck",
+        "shfmt",
+        "golangci-lint",
+        "gofumpt",
+        "goimports",
     },
 })

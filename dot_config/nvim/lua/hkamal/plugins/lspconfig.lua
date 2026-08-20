@@ -54,6 +54,9 @@ vim.lsp.enable({
     "roslyn_ls",
     "gdscript",
     "zls",
+    "bashls",
+    "powershell_es",
+    "gopls",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {

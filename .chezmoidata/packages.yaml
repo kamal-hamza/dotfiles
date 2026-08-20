@@ -147,6 +147,8 @@ packages:
             - inkscape # vector graphics editor
             - blender # 3d assets editor
             - godot # opensource game engine
+            - docker # create app containers
+            - docker-compose # manage multiple docker services
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app
