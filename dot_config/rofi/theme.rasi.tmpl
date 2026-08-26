@@ -1,0 +1,128 @@
+{{- $t := index .themes .theme -}}
+/* =============================================================================
+ * Rofi Modern Theme - generated from the active theme ({{ $t.meta.name }})
+ * =========================================================================== */
+* {
+    bg:              {{ $t.background.bg }};
+    fg:              {{ $t.foreground.fg }};
+    fg-dim:          {{ $t.foreground.fg_dim }};
+    fg-comment:      {{ $t.foreground.fg_dim }};
+    line:            {{ $t.ui.line }};
+    dim:             {{ $t.ui.dim }};
+    hover-bg:        {{ $t.background.bg_hover }};
+    select-bg:       {{ $t.background.bg_hover }};
+    select-fg:       {{ $t.foreground.fg_bright }};
+}
+
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @line;
+    border-radius:    16px;
+    padding:          16px;
+    width:            50%;
+    height:           600px;
+}
+
+mainbox {
+    background-color: transparent;
+    spacing:          16px;
+    padding:          0;
+}
+
+inputbar {
+    background-color: @bg;
+    border:           1px;
+    border-color:     @line;
+    border-radius:    12px;
+    padding:          12px 16px;
+    spacing:          12px;
+    children:         [ prompt, entry ];
+}
+
+prompt {
+    background-color: transparent;
+    text-color:       @fg-comment;
+    font:             "Source Sans 3 12";
+    padding:          0 8px 0 0;
+    vertical-align:   0.5;
+}
+
+entry {
+    background-color: transparent;
+    text-color:       @fg;
+    font:             "Source Serif 4 12";
+    cursor:           text;
+    placeholder:      "Search...";
+    placeholder-color: @fg-dim;
+    vertical-align:   0.5;
+}
+
+message {
+    background-color: @bg;
+    border:           1px;
+    border-color:     @line;
+    border-radius:    12px;
+    padding:          8px 12px;
+}
+
+message text {
+    background-color: transparent;
+    text-color:       @fg-dim;
+    font:             "Source Serif 4 11";
+}
+
+listview {
+    background-color: transparent;
+    border:           0;
+    padding:          0;
+    scrollbar:        true;
+    scrollbar-width:  4px;
+    spacing:          6px;
+    lines:            15;
+}
+
+scrollbar {
+    background-color: transparent;
+    handle-color:     @dim;
+    handle-width:     4px;
+    border-radius:    4px;
+}
+
+element {
+    background-color: transparent;
+    text-color:       @fg;
+    border:           0;
+    border-radius:    8px;
+    padding:          8px 12px;
+    font:             "Source Serif 4 12";
+}
+
+element.normal.normal, element.normal.alternate {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element.selected.normal, element.selected.alternate {
+    background-color: @select-bg;
+    text-color:       @select-fg;
+    border:           1px;
+    border-color:     @line;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    font:             "Source Serif 4 12";
+    vertical-align:   0.5;
+    horizontal-align: 0;
+    padding:          0 0 0 8px;
+}
+
+element-icon {
+    background-color: transparent;
+    text-color:       @fg-dim;
+    size:             28px;
+    border:           0;
+    padding:          0;
+}

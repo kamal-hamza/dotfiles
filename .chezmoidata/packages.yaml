@@ -70,9 +70,11 @@ packages:
             - qt6-wayland # Wayland support for Qt6 applications
             - qt5-wayland # Wayland support for Qt5 applications
             - waybar # Highly customizable status bar
+            - quickshell # Highly customizable desktop widgets
             - rofi-wayland # app launcher
             - mako # Lightweight, customizable notification daemon
-            - hyprpaper # Blazing fast, native wallpaper utility
+            - awww # Wayland wallpaper daemon with animated transitions (swww's successor)
+            - jq # JSON processor (used to enumerate monitors for the theme-switch transition)
             - polkit-gnome # Handles administrative authentication prompts (GUI)
             - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
             - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes
@@ -149,6 +151,7 @@ packages:
             - godot # opensource game engine
             - docker # create app containers
             - docker-compose # manage multiple docker services
+            - thunderbird # email client
 
         aur:
             - chatgpt-desktop-bin # ChatGPT desktop app

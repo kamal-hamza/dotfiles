@@ -5,15 +5,13 @@ Thumbs.db
 # Markdown files
 AGENTS.md
 README.md
+CLAUDE.md
 
 # Editor temp files
 *~
 *.swp
 *.swo
 *.bak
-
-# Theme system (keep in repo, don't sync to home)
-theme-generators/
 
 # Machine-specific dev tools config (not tracked by chezmoi)
 .config/zsh/dev-tools/
@@ -32,5 +30,6 @@ dot_pi/**/node_modules/
 .config/cava/
 .config/mako/
 .config/satty/
+.config/quickshell/
 scripts/linux
 {{ end }}

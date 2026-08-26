@@ -1,0 +1,357 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Theme - Omarchy-style theme switcher
+# =============================================================================
+# Switches the active theme (colors + wallpaper) across every themed app in
+# one command. Themes live as data files under .chezmoidata/themes/ in the
+# chezmoi source; chezmoi's own templating renders them into each app's
+# config. This script just: validates a name, writes it as the active theme,
+# runs `chezmoi apply`, swaps the wallpaper, and nudges already-running apps
+# to pick up the change.
+#
+# Usage:
+#   theme                 # interactive fzf picker
+#   theme set <name>      # switch to a specific theme
+#   theme list            # list available theme names
+#   theme current         # print the active theme name
+#   theme next            # cycle to the next theme (alphabetical)
+# =============================================================================
+
+set -euo pipefail
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+print_success() { echo -e "${GREEN}✓${NC} $1"; }
+print_error() { echo -e "${RED}✗${NC} $1"; }
+print_info() { echo -e "${BLUE}→${NC} $1"; }
+print_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
+
+CHEZMOI_SOURCE="$(chezmoi source-path)"
+THEME_DATA="${CHEZMOI_SOURCE}/.chezmoidata/theme.yaml"
+LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/theme-switch.lock"
+
+# Every target file that's actually theme-managed. `chezmoi apply` is scoped
+# to just these (instead of a bare `chezmoi apply`, which walks and diffs
+# your *entire* source tree) - much faster, and it also means switching a
+# theme can never accidentally sweep in unrelated pending changes sitting
+# elsewhere in the source tree. Add a path here when a new app joins the
+# theme system.
+THEMED_TARGETS=(
+    "$HOME/.config/rofi/theme.rasi"
+    "$HOME/.config/waybar/style.css"
+    "$HOME/.config/mako/config"
+    "$HOME/.config/hypr/conf/looks.lua"
+    "$HOME/.config/hypr/hyprlock.conf"
+    "$HOME/.config/satty/config.toml"
+    "$HOME/.config/ghostty/themes/current"
+    "$HOME/.config/zed/settings.json"
+    "$HOME/.config/gtk-3.0/gtk.css"
+    "$HOME/.config/gtk-4.0/gtk.css"
+    "$HOME/.config/tmux/themes/theme.tmux"
+    "$HOME/.config/git/config"
+)
+
+list_themes() {
+    chezmoi execute-template '{{ range $k, $v := .themes }}{{ $k }}
+{{ end }}' | sort
+}
+
+current_theme() {
+    chezmoi execute-template '{{ .theme }}'
+}
+
+theme_exists() {
+    local name="$1"
+    list_themes | grep -qxF "$name"
+}
+
+cmd_list() {
+    local current
+    current="$(current_theme)"
+    while IFS= read -r name; do
+        if [[ "$name" == "$current" ]]; then
+            echo -e "${GREEN}*${NC} $name"
+        else
+            echo "  $name"
+        fi
+    done < <(list_themes)
+}
+
+cmd_current() {
+    current_theme
+}
+
+cmd_next() {
+    local current names next_name found=0
+    current="$(current_theme)"
+    mapfile -t names < <(list_themes)
+    for name in "${names[@]}"; do
+        if [[ $found -eq 1 ]]; then
+            next_name="$name"
+            break
+        fi
+        [[ "$name" == "$current" ]] && found=1
+    done
+    if [[ -z "${next_name:-}" ]]; then
+        next_name="${names[0]}"
+    fi
+    cmd_set "$next_name"
+}
+
+cmd_pick() {
+    if ! command -v fzf &> /dev/null; then
+        print_error "fzf is not installed"
+        exit 1
+    fi
+    local current selected
+    current="$(current_theme)"
+    selected=$(list_themes | fzf \
+        --prompt="Select theme: " \
+        --height=15 \
+        --layout=reverse \
+        --border=rounded \
+        --header="Current: $current | ↑↓: Navigate | Enter: Select | Esc: Cancel" \
+        --pointer="▶" \
+        --marker="✓")
+    if [[ -z "$selected" ]]; then
+        print_warning "No theme selected. Exiting."
+        exit 0
+    fi
+    cmd_set "$selected"
+}
+
+reload_apps() {
+    local wallpaper_name="$1"
+    local nvim_colorscheme="$2"
+    local pids=()
+
+    # Hyprland: reload picks up the templated hyprland.lua (looks.lua, etc.)
+    if command -v hyprctl &> /dev/null; then
+        hyprctl reload &> /dev/null &
+        pids+=("$!")
+    fi
+
+    # mako: reloads its own config file
+    if command -v makoctl &> /dev/null; then
+        makoctl reload &> /dev/null &
+        pids+=("$!")
+    fi
+
+    # tmux: only if a server is actually running; source-file only affects
+    # that running server's active sessions
+    if command -v tmux &> /dev/null && tmux info &> /dev/null; then
+        tmux source-file "$HOME/.config/tmux/themes/theme.tmux" &> /dev/null &
+        pids+=("$!")
+    fi
+
+    # Wallpaper: live swap via awww, with a transition (all outputs at once).
+    if command -v awww &> /dev/null; then
+        local wallpaper_path="$HOME/wallpapers/${wallpaper_name}"
+        if [[ -f "$wallpaper_path" ]]; then
+            awww img "$wallpaper_path" \
+                --transition-type grow \
+                --transition-duration 1.2 \
+                --transition-fps 60 &> /dev/null &
+            pids+=("$!")
+        else
+            print_warning "Wallpaper not found: $wallpaper_path (skipping wallpaper swap)"
+        fi
+    fi
+
+    for pid in "${pids[@]}"; do
+        wait "$pid" 2>/dev/null || true
+    done
+
+    # Neovim: persist the colorscheme choice to the same state file
+    # lua/hkamal/theme.lua already reads on startup. No live-broadcast -
+    # applies to newly launched instances.
+    if [[ -n "$nvim_colorscheme" ]]; then
+        mkdir -p "$HOME/.local/state/nvim"
+        printf '%s' "$nvim_colorscheme" > "$HOME/.local/state/nvim/theme.txt"
+    fi
+
+    # Zed hot-reloads settings.json natively; Ghostty and GTK apps have no
+    # external reload trigger and pick up the change on next launch/window.
+}
+
+# The actual work: persist + scoped chezmoi apply + reload. Assumes $1 is
+# already validated. Silent by design - it's called either directly (no
+# transition available) or as a subprocess spawned by the Quickshell
+# transition overlay (`theme _apply <name>`, see
+# dot_config/quickshell-theme-transition/shell.qml), in which case it runs
+# invisibly while that overlay is covering the screen. Self-locking so it's
+# safe to invoke either way.
+cmd_apply() {
+    local name="${1:-}"
+    if [[ -z "$name" ]]; then
+        return 1
+    fi
+
+    exec 9>"$LOCK_FILE"
+    flock 9
+
+    sed -i "s/^theme:.*/theme: \"${name}\"/" "$THEME_DATA"
+
+    chezmoi apply "${THEMED_TARGETS[@]}" || return 1
+
+    local wallpaper_name nvim_colorscheme theme_apps
+    mapfile -t theme_apps < <(chezmoi execute-template \
+        '{{ (index .themes .theme).apps.wallpaper }}
+{{ (index .themes .theme).apps.nvim_colorscheme }}')
+    wallpaper_name="${theme_apps[0]}"
+    nvim_colorscheme="${theme_apps[1]}"
+
+    reload_apps "$wallpaper_name" "$nvim_colorscheme"
+}
+
+# True if we can plausibly run the fullscreen circular-reveal transition
+# (needs a live Wayland session plus qs/grim/jq/hyprctl).
+can_animate() {
+    [[ -n "${WAYLAND_DISPLAY:-}" ]] &&
+        command -v qs &> /dev/null &&
+        command -v grim &> /dev/null &&
+        command -v jq &> /dev/null &&
+        command -v hyprctl &> /dev/null
+}
+
+# Screenshots every monitor, spawns the standalone transition overlay
+# (dot_config/quickshell-theme-transition) showing those screenshots
+# fullscreen, runs the real apply (this script owns that, not the QML - see
+# the comment at the top of shell.qml for why), then signals the overlay to
+# grow a hole centered on the cursor revealing the result. Blocks until the
+# animation finishes and the overlay process exits. Returns non-zero if the
+# screenshot/spawn/apply itself failed.
+run_transition() {
+    local name="$1"
+    local tmpdir mon cursorpos cx cy qs_pid status=0
+
+    tmpdir=$(mktemp -d "${XDG_RUNTIME_DIR:-/tmp}/theme-transition.XXXXXX") || return 1
+    : > "${tmpdir}/ready"
+
+    while read -r mon; do
+        grim -o "$mon" "${tmpdir}/${mon}.png" &> /dev/null || {
+            rm -rf "$tmpdir"
+            return 1
+        }
+    done < <(hyprctl monitors -j | jq -r '.[].name')
+
+    cursorpos=$(hyprctl cursorpos)
+    cx="${cursorpos%%,*}"
+    cy="${cursorpos##*, }"
+
+    THEME_TRANSITION_IMAGE_DIR="$tmpdir" \
+        THEME_TRANSITION_CX="$cx" \
+        THEME_TRANSITION_CY="$cy" \
+        THEME_TRANSITION_READY_FILE="${tmpdir}/ready" \
+        qs -p "$HOME/.config/quickshell-theme-transition" &> /dev/null &
+    qs_pid=$!
+
+    # Give the overlay a moment to actually map and paint the screenshot
+    # before anything underneath it starts changing.
+    sleep 0.2
+
+    if ! cmd_apply "$name"; then
+        status=1
+    fi
+
+    echo 1 > "${tmpdir}/ready" # triggers the reveal animation
+
+    wait "$qs_pid" 2>/dev/null || true
+    rm -rf "$tmpdir"
+    return "$status"
+}
+
+cmd_set() {
+    local name="${1:-}"
+    if [[ -z "$name" ]]; then
+        print_error "Usage: theme set <name>"
+        exit 1
+    fi
+
+    # One call: current theme name on the first line, all theme names after -
+    # replaces what would otherwise be two separate chezmoi invocations, each
+    # of which reparses the whole .chezmoidata tree from scratch. mapfile
+    # (not `read`, which fails on a final line with no trailing newline) so
+    # this doesn't depend on chezmoi's output ending in a newline.
+    local current names lines
+    mapfile -t lines < <(chezmoi execute-template '{{ .theme }}
+{{ range $k, $v := .themes }}{{ $k }}
+{{ end }}')
+    current="${lines[0]}"
+    names=("${lines[@]:1}")
+
+    if ! printf '%s\n' "${names[@]}" | grep -qxF "$name"; then
+        print_error "Theme '$name' does not exist"
+        echo ""
+        echo "Available themes:"
+        printf '%s\n' "${names[@]}" | sort | sed 's/^/  /'
+        exit 1
+    fi
+
+    if [[ "$name" == "$current" ]]; then
+        print_info "Theme '$name' is already active"
+        exit 0
+    fi
+
+    print_info "Switching theme: $current → $name"
+
+    if can_animate; then
+        run_transition "$name" || {
+            print_warning "Transition animation failed, applying directly"
+            cmd_apply "$name"
+        }
+    else
+        print_info "Applying with chezmoi..."
+        cmd_apply "$name"
+    fi
+
+    if [[ "$(current_theme)" != "$name" ]]; then
+        print_error "Theme switch did not complete successfully"
+        exit 1
+    fi
+
+    print_success "Theme set to '$name'"
+}
+
+case "${1:-}" in
+    --help|-h)
+        echo "Theme - Omarchy-style theme switcher"
+        echo ""
+        echo "Usage:"
+        echo "  theme                 Interactive picker (fzf)"
+        echo "  theme set <name>      Switch to a specific theme"
+        echo "  theme list            List available themes"
+        echo "  theme current         Print the active theme"
+        echo "  theme next            Cycle to the next theme"
+        ;;
+    set)
+        shift
+        cmd_set "${1:-}"
+        ;;
+    _apply)
+        # Internal: invoked by the transition overlay, not user-facing.
+        shift
+        cmd_apply "${1:-}"
+        ;;
+    list)
+        cmd_list
+        ;;
+    current)
+        cmd_current
+        ;;
+    next)
+        cmd_next
+        ;;
+    "")
+        cmd_pick
+        ;;
+    *)
+        print_error "Unknown command: $1"
+        echo "Use 'theme --help' for usage information"
+        exit 1
+        ;;
+esac

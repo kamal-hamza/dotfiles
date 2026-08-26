@@ -56,16 +56,6 @@ autoload -Uz compinit
 compinit
 
 # -----------------------------------------------------------------------------
-# Load Theme
-# -----------------------------------------------------------------------------
-# Load current theme colors (dark by default)
-CURRENT_THEME="dark"
-if [[ -f "$HOME/.config/.current-theme" ]]; then
-    CURRENT_THEME=$(cat "$HOME/.config/.current-theme")
-fi
-source_if_exists "$HOME/.config/zsh/themes/soft-focus-${CURRENT_THEME}.zsh"
-
-# -----------------------------------------------------------------------------
 # Simple Prompt
 # -----------------------------------------------------------------------------
 autoload -Uz vcs_info

@@ -1,7 +1,17 @@
-vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
+vim.pack.add({ "https://github.com/neovim/nvim-lspconfig", "https://github.com/b0o/schemastore.nvim" })
 
 vim.lsp.config("*", {
     capabilities = require("blink.cmp").get_lsp_capabilities(),
+})
+
+-- on distros that ship both Qt5 and Qt6 dev packages (e.g. Arch with
+-- qt5-declarative + qt6-declarative installed side by side), the unversioned
+-- "qmlls" isn't on PATH at all -- only the version-suffixed "qmlls6" is. This
+-- has to override nvim-lspconfig's bundled lsp/qmlls.lua (cmd = {'qmlls'})
+-- via an explicit vim.lsp.config() call, since calls from lsp/*.lua files
+-- always lose to explicit ones regardless of runtimepath order.
+vim.lsp.config("qmlls", {
+    cmd = { vim.fn.executable("qmlls6") == 1 and "qmlls6" or "qmlls" },
 })
 
 -- fold any diagnostic(s) under the cursor into the hover float, the way
@@ -57,6 +67,11 @@ vim.lsp.enable({
     "bashls",
     "powershell_es",
     "gopls",
+    "dockerls",
+    "docker_compose_language_service",
+    "yamlls",
+    "cssls",
+    "qmlls",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {

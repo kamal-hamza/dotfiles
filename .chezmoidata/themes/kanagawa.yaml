@@ -1,0 +1,51 @@
+themes:
+    kanagawa:
+        meta:
+            name: "Kanagawa"
+            mode: dark
+
+        background:
+            bg: "#1f1f28"
+            bg_dim: "#16161d"
+            bg_hover: "#223249"
+            bg_hover_alt: "#2d4f67"
+            bg_urgent: "#2a2a37"
+
+        foreground:
+            fg: "#dcd7ba"
+            fg_high: "#dcd7ba"
+            fg_bright: "#dcd7ba"
+            fg_active: "#c8c093"
+            fg_dim: "#727169"
+            fg_faint: "#54546d"
+
+        ui:
+            line: "#54546d"
+            dim: "#363646"
+            highlight: "#7e9cd8"
+            keyword: "#727169"
+
+        semantic:
+            danger: "#e82424"
+            warning: "#e6c384"
+            success: "#98bb6c"
+
+        ansi:
+            red: "#c34043"
+            green: "#76946a"
+            yellow: "#c0a36e"
+            blue: "#7e9cd8"
+            magenta: "#957fb8"
+            cyan: "#6a9589"
+            bright_red: "#e82424"
+            bright_green: "#98bb6c"
+            bright_yellow: "#e6c384"
+            bright_blue: "#7fb4ca"
+            bright_magenta: "#957fb8"
+            bright_cyan: "#7aa89f"
+
+        apps:
+            # placeholder - swap for a real Kanagawa-matched wallpaper whenever you add one
+            wallpaper: "black_hole.jpg"
+            nvim_colorscheme: "kanagawa-wave"
+            zed_theme: "Kanagawa"

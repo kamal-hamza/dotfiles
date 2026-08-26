@@ -1,0 +1,158 @@
+{{- $t := index .themes .theme -}}
+[user]
+	email = kamal.hamza@outlook.com
+	name = kamal-hamza
+
+[core]
+	editor = nvim
+	pager = delta
+	autocrlf = input
+	whitespace = trailing-space,space-before-tab
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	default = simple
+	autoSetupRemote = true
+
+[fetch]
+	prune = true
+
+[merge]
+	conflictstyle = diff3
+
+[diff]
+	colorMoved = default
+	tool = nvimdiff
+
+[interactive]
+	diffFilter = delta --color-only
+
+[delta]
+	# Generated from the active theme ({{ $t.meta.name }}); see .chezmoidata/themes/
+	features = theme
+	navigate = true    # use n and N to move between diff sections
+	light = {{ if eq $t.meta.mode "light" }}true{{ else }}false{{ end }}
+	side-by-side = false
+	line-numbers = true
+	syntax-theme = base16
+
+[delta "theme"]
+	# Syntax highlighting
+	minus-style = syntax "{{ $t.semantic.danger }}"
+	minus-emph-style = syntax "{{ $t.ansi.red }}"
+	plus-style = syntax "{{ $t.semantic.success }}"
+	plus-emph-style = syntax "{{ $t.ansi.green }}"
+
+	# Line numbers
+	line-numbers-minus-style = "{{ $t.semantic.danger }}"
+	line-numbers-plus-style = "{{ $t.semantic.success }}"
+	line-numbers-zero-style = "{{ $t.ui.keyword }}"
+	line-numbers-left-style = "{{ $t.ui.keyword }}"
+	line-numbers-right-style = "{{ $t.ui.keyword }}"
+
+	# File headers
+	file-style = "{{ $t.ui.highlight }}" bold
+	file-decoration-style = "{{ $t.ui.highlight }}" ul
+
+	# Hunk headers
+	hunk-header-style = file line-number syntax
+	hunk-header-decoration-style = "{{ $t.ansi.bright_blue }}" box
+
+	# Commit style
+	commit-decoration-style = "{{ $t.ui.highlight }}" box
+	commit-style = "{{ $t.ansi.bright_blue }}" bold
+
+	# Misc
+	zero-style = syntax
+	whitespace-error-style = "{{ $t.semantic.danger }}" reverse
+
+	# Blame - using background shades
+	blame-palette = "{{ $t.background.bg_hover_alt }}" "{{ $t.background.bg_hover }}" "{{ $t.ui.line }}"
+	blame-code-style = syntax
+
+	# Merge conflicts
+	merge-conflict-begin-symbol = ⌃
+	merge-conflict-end-symbol = ⌄
+	merge-conflict-ours-diff-header-style = "{{ $t.semantic.warning }}" bold
+	merge-conflict-ours-diff-header-decoration-style = "{{ $t.semantic.warning }}" box
+	merge-conflict-theirs-diff-header-style = "{{ $t.ui.highlight }}" bold
+	merge-conflict-theirs-diff-header-decoration-style = "{{ $t.ui.highlight }}" box
+
+[color]
+	ui = auto
+	branch = auto
+	diff = auto
+	status = auto
+
+[color "branch"]
+	current = "{{ $t.ui.highlight }}" bold
+	local = "{{ $t.foreground.fg_active }}"
+	remote = "{{ $t.ansi.bright_blue }}"
+
+[color "diff"]
+	meta = "{{ $t.ui.highlight }}" bold
+	frag = "{{ $t.ansi.bright_blue }}" bold
+	old = "{{ $t.semantic.danger }}"
+	new = "{{ $t.semantic.success }}"
+	whitespace = "{{ $t.semantic.danger }}" reverse
+
+[color "status"]
+	added = "{{ $t.semantic.success }}"
+	changed = "{{ $t.semantic.warning }}"
+	untracked = "{{ $t.ui.keyword }}"
+	branch = "{{ $t.ui.highlight }}" bold
+	nobranch = "{{ $t.semantic.danger }}" bold
+
+[alias]
+	# Common shortcuts
+	st = status -sb
+	co = checkout
+	br = branch
+	ci = commit
+	df = diff
+	dc = diff --cached
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+	ll = log --pretty=format:'%C(yellow)%h%Cred%d %Creset%s%Cblue [%cn]' --decorate --numstat
+	ls = log --pretty=format:'%C(yellow)%h %Cred%d %Creset%s%Cblue [%cn]' --decorate
+	amend = commit --amend --no-edit
+
+	# Undo operations
+	undo = reset --soft HEAD^
+	unstage = reset HEAD --
+
+	# Working with branches
+	branches = branch -a
+	tags = tag -l
+	remotes = remote -v
+
+	# Stash operations
+	stash-all = stash save --include-untracked
+
+	# Clean operations
+	clean-merged = !git branch --merged | grep -v '\\*\\|main\\|master\\|develop' | xargs -n 1 git branch -d
+
+	# Show changes
+	contributors = shortlog --summary --numbered
+
+	# Find commits by message
+	find = log --all --oneline --grep
+
+[url "git@github.com:"]
+	insteadOf = gh:
+
+[url "git@gitlab.com:"]
+	insteadOf = gl:
+
+[url "https://github.com/"]
+	insteadOf = github:
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

@@ -1,0 +1,40 @@
+{{- $t := index .themes .theme -}}
+# Core configuration settings
+general {
+    # Disable the fade-in animation which forces a screen capture
+    screencopy_mode = 1
+    grace = 0
+    disable_loading_bar = true
+    hide_cursor = false
+}
+
+background {
+    monitor =
+    # Use a solid hex color code instead of standard rgb() syntax
+    color = 0xff{{ trimPrefix "#" $t.background.bg }}
+
+    # Force hyprlock to skip panoramic / layout generation checks
+    force_no_panramic = true
+
+    # Keep these at 0 to prevent the compositor from pulling screen textures
+    blur_passes = 0
+    blur_size = 0
+}
+
+input-field {
+    monitor =
+    size = 250, 50
+    outline_thickness = 2
+
+    # CRITICAL: This stops the input field from trying to fade
+    # out your desktop when no text is entered
+    fade_on_empty = false
+
+    dots_size = 0.2
+    dots_spacing = 0.2
+    font_color = 0xff{{ trimPrefix "#" $t.foreground.fg }}
+    inner_color = 0xff{{ trimPrefix "#" $t.background.bg_hover }}
+    outer_color = 0xff{{ trimPrefix "#" $t.ui.line }}
+    placeholder_text = <i>Password...</i>
+    font_family = Monospace
+}

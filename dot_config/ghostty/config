@@ -2,11 +2,11 @@
 # General Appearance
 # ===================================================================
 
-# theme
-theme = dark
+# theme (generated per the active theme by `theme set <name>`; see .chezmoidata/themes/)
+theme = current
 
 # font
-font-size = 14
+font-size = 12
 font-family = JetBrainsMono Nerd Font Mono
 font-style = SemiBold
 font-thicken = true

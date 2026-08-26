@@ -161,10 +161,6 @@ alias t="tmux a"
 alias dr="docker-run"        # Run Docker container interactively
 alias ds="docker-stop"       # Stop running Docker containers
 
-# Theme management
-alias theme-gen="theme-gen"  # Generate theme configs for all apps
-alias theme="theme-switch"   # Switch between light/dark themes
-
 # Documentation
 alias m="man-tldr"           # Interactive man page search with tldr
 

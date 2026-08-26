@@ -1,0 +1,123 @@
+{{- $t := index .themes .theme -}}
+/* Reset & Main Bar Base Layer */
+window#waybar {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  font-family: "JetBrainsMono Nerd Font", "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+/* Master Pill Config for ALL Modules */
+#clock,
+/* Workspaces container matches styling explicitly */
+#workspaces,
+#cpu,
+#memory,
+#bluetooth,
+#network,
+#pulseaudio {
+  background-color: {{ $t.background.bg }};
+  color: {{ $t.foreground.fg }};
+  border: 2px solid {{ $t.ui.line }};
+  border-radius: 16px;
+  padding: 4px 16px;
+  margin: 4px 6px;
+
+  /* Smooth scaling and coloration transition speed definition */
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* --- Interactive Hover Effects --- */
+#clock:hover,
+#cpu:hover,
+#memory:hover,
+#bluetooth:hover,
+#network:hover,
+#pulseaudio:hover {
+  background-color: {{ $t.background.bg_hover_alt }};
+  border-color: {{ $t.foreground.fg_bright }};
+  color: {{ $t.foreground.fg_bright }};
+}
+
+/* --- Workspaces Engine & Inner-Button Specifics --- */
+#workspaces {
+  padding: 2px 8px; /* Tighter containment wrapper spacing for buttons */
+}
+
+#workspaces:hover {
+  border-color: {{ $t.foreground.fg_bright }};
+}
+
+#workspaces button {
+  padding: 0 8px;
+  color: {{ $t.foreground.fg_dim }};
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+#workspaces button.active {
+  color: {{ $t.foreground.fg_bright }};
+  font-size: 14px; /* Minor pop-out scaling indicator */
+}
+
+#workspaces button:hover {
+  color: {{ $t.foreground.fg_bright }};
+}
+
+/* --- Theme Accent Color Assignments --- */
+#clock {
+  color: {{ $t.foreground.fg }};
+}
+
+#cpu {
+  color: {{ $t.foreground.fg_active }};
+}
+
+#memory {
+  color: {{ $t.foreground.fg_dim }};
+}
+
+#bluetooth {
+  color: {{ $t.foreground.fg_dim }};
+}
+
+#bluetooth.disabled {
+  color: {{ $t.foreground.fg_faint }};
+}
+
+#network {
+  color: {{ $t.foreground.fg_active }};
+}
+
+#pulseaudio {
+  color: {{ $t.foreground.fg }};
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+/* --- Custom Media Module Styling --- */
+#custom-media {
+  background-color: {{ $t.background.bg }};
+  color: {{ $t.foreground.fg }};
+  border: 2px solid {{ $t.ui.line }};
+  border-radius: 16px;
+  padding: 4px 16px;
+  margin: 4px 6px;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+#custom-media:hover {
+  background-color: {{ $t.background.bg_hover_alt }};
+  border-color: {{ $t.foreground.fg_bright }};
+  color: {{ $t.foreground.fg_bright }};
+  animation: none;
+}

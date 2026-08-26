@@ -1,0 +1,50 @@
+themes:
+    monochrome:
+        meta:
+            name: "Monochrome"
+            mode: dark
+
+        background:
+            bg: "#050505" # primary bg: rofi, waybar modules, hyprlock, ghostty, gtk window
+            bg_dim: "#000000" # mako low-urgency bg
+            bg_hover: "#0a0a0a" # popover/hover/rofi-select/mako-default/ghostty selection-bg
+            bg_hover_alt: "#101010" # waybar hover / tmux status-bar bg
+            bg_urgent: "#141414" # mako high-urgency bg
+
+        foreground:
+            fg: "#d4d4d4" # primary text everywhere
+            fg_high: "#ededed" # mako text / critical banner
+            fg_bright: "#ffffff" # emphasis/hover/active-selection/ANSI 15
+            fg_active: "#b0b0b0" # hypr active-border 2nd stop, tmux status fg
+            fg_dim: "#8d8d8d" # rofi fg-dim, satty, mako error borders
+            fg_faint: "#666666" # mako low-urgency text
+
+        ui:
+            line: "#272727" # borders/dividers (heavily reused)
+            dim: "#474747" # inactive accents, ANSI bright-black
+            highlight: "#458ee6" # THE accent - active borders, tmux highlight, gtk accent_color
+            keyword: "#777777" # tmux inactive window-status / status-right time text
+
+        semantic:
+            danger: "#ff7676"
+            warning: "#d9ba73"
+            success: "#86cd82"
+
+        ansi:
+            red: "#701516"
+            green: "#14ba19"
+            yellow: "#d9ba73"
+            blue: "#458ee6"
+            magenta: "#f2a4db"
+            cyan: "#5abfb5"
+            bright_red: "#ff7676"
+            bright_green: "#86cd82"
+            bright_yellow: "#d9ba73"
+            bright_blue: "#8ebeec"
+            bright_magenta: "#f2a4db"
+            bright_cyan: "#5abfb5"
+
+        apps:
+            wallpaper: "gargantua-mono.jpg"
+            nvim_colorscheme: "modus"
+            zed_theme: "Cursor Dark"

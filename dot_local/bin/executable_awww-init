@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# =============================================================================
+# awww Init - start the wallpaper daemon and paint the active theme's wallpaper
+# =============================================================================
+# Run once at Hyprland startup (see dot_config/hypr/conf/execs.lua). Live
+# wallpaper swaps on theme change are handled separately by `theme set`.
+# =============================================================================
+
+set -uo pipefail # no -e: an already-running daemon is an expected "failure"
+
+pgrep -x awww-daemon &> /dev/null || {
+    awww-daemon &
+    disown
+}
+
+wallpaper_name=$(chezmoi execute-template '{{ (index .themes .theme).apps.wallpaper }}')
+wallpaper_path="$HOME/wallpapers/${wallpaper_name}"
+
+if [[ -f "$wallpaper_path" ]]; then
+    # Daemon may still be warming up right after launch; retry briefly.
+    for _ in $(seq 1 20); do
+        awww img "$wallpaper_path" --transition-type none &> /dev/null && break
+        sleep 0.2
+    done
+fi

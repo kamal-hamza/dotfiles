@@ -15,10 +15,12 @@ require("nvim-treesitter").install({
     "tsx",
     "json",
     "yaml",
+    "dockerfile",
     "markdown",
     "markdown_inline",
     "html",
     "css",
+    "scss",
     "c",
     "cpp",
     "c_sharp",
@@ -32,11 +34,17 @@ require("nvim-treesitter").install({
     "gdshader",
     "godot_resource",
     "zig",
+    "qmljs",
+    "qmldir",
 })
 
 -- the powershell parser is named "powershell" but neovim's filetypes for its
 -- file extensions are "ps1"/"psm1"/"psd1", so the two need an explicit link
 vim.treesitter.language.register("powershell", { "ps1", "psm1", "psd1" })
+
+-- nvim-treesitter links "qmljs" to the "qml" filetype on its own, but the
+-- "qmldir" parser has no such link registered upstream
+vim.treesitter.language.register("qmldir", { "qmldir" })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "*",
