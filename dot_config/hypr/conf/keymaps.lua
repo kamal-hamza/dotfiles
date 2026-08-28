@@ -4,7 +4,7 @@ local fileManager = "thunar"
 local lock = "hyprlock"
 local browser = "firefox"
 local privateBrowser = "firefox --private-window"
-
+local scratchpad = "ghostty -e nvim --clean -u ~/.config/nvim-scratch/init.lua ~/notes/scratch.md"
 -- app binds
 hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -74,3 +74,6 @@ hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("play-playlist"), { locked 
 
 -- view current queue
 hl.bind(super .. " + SHIFT + V", hl.dsp.exec_cmd("show-queue"), { locked = true })
+
+-- scratchpad bind
+hl.bind(super .. " + N", hl.dsp.exec_cmd(scratchpad))

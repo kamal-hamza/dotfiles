@@ -255,7 +255,7 @@ heirline.setup({
         condition = function()
             return not conditions.buffer_matches({
                 buftype = { "nofile", "terminal" },
-                filetype = { "NvimTree", "toggleterm" },
+                filetype = { "netrw", "toggleterm" },
             })
         end,
         Mode,

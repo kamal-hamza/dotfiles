@@ -72,6 +72,7 @@ vim.lsp.enable({
     "yamlls",
     "cssls",
     "qmlls",
+    "marksman",
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {

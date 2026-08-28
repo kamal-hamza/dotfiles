@@ -21,6 +21,7 @@ require("mason-tool-installer").setup({
         "yaml-language-server",
         "css-lsp",
         "qmlls",
+        "marksman",
         -- formatters / linters
         "stylua",
         "prettier",
@@ -38,6 +39,7 @@ require("mason-tool-installer").setup({
         "dockerfmt",
         "actionlint",
         "stylelint",
+        "markdownlint-cli2",
         -- qmllint/qmlformat aren't on mason; they ship with Qt itself
         -- (e.g. `pacman -S qt6-declarative` on Arch)
     },

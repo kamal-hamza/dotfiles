@@ -68,6 +68,7 @@ require("lint").linters_by_ft = {
     css = { "stylelint" },
     scss = { "stylelint" },
     qml = { "qmllint" },
+    markdown = { "markdownlint-cli2" },
 }
 
 -- actionlint only understands github workflow yaml, not yaml in general, so
