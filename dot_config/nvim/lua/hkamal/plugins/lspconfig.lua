@@ -94,7 +94,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         map("n", "gr", fzf.lsp_references, "References")
         map("i", "<C-k>", vim.lsp.buf.signature_help, "Signature Help")
 
-        map("n", "<leader>cc", fzf.lsp_code_actions, "Code Action")
         map("n", "<leader>cr", vim.lsp.buf.rename, "Rename")
         map("n", "<leader>cs", fzf.lsp_document_symbols, "Document Symbols")
         map("n", "<leader>cw", fzf.lsp_workspace_symbols, "Workspace Symbols")

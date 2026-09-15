@@ -60,6 +60,7 @@ vim.keymap.set("n", "<leader>fb", fzf.buffers, { desc = "Find Buffers" })
 vim.keymap.set("n", "<leader>fh", fzf.helptags, { desc = "Help Tags" })
 vim.keymap.set("n", "<leader>fo", fzf.oldfiles, { desc = "Recent Files" })
 vim.keymap.set("n", "<leader>fr", fzf.resume, { desc = "Resume Last Search" })
+vim.keymap.set("n", "<leader>fd", fzf.diagnostics_workspace, { desc = "Project Diagnostics" })
 vim.keymap.set("n", "<leader>ft", function()
     fzf.colorschemes({
         colors = {

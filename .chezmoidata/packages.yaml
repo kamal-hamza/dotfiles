@@ -161,4 +161,7 @@ packages:
             - hypridle # Idle management daemon (handles screen dims and locks)
             - pi-coding-agent # TUI based coding agent
             - protonplus # GUI tool to install and manage Proton-GE versions (AUR)
-
+            - jupyterlab-desktop-bin # jupyter lab desktop app
+            - excalidraw-desktop-bin # excalidraw desktop app
+            - t3code-bin # t3 code agent app
+            - android-studio # android studio app for android phone emulation
