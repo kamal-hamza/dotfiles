@@ -11,7 +11,6 @@ hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(super .. " + W", hl.dsp.exec_cmd(browser))
 hl.bind(super .. " + SHIFT + W", hl.dsp.exec_cmd(privateBrowser))
 hl.bind(super .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
-hl.bind(super .. " + T", hl.dsp.exec_cmd("~/.config/rofi/scripts/theme-select"))
 
 -- workspace binds
 for i = 1, 5 do

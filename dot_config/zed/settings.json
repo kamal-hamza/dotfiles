@@ -1,8 +1,5 @@
 {
-    "gutter": {
-        "line_numbers": false
-    },
-    "current_line_highlight": "none",
+   "current_line_highlight": "none",
     "indent_guides": {
         "enabled": false
     },
@@ -69,7 +66,7 @@
     "ui_font_size": 16,
     "buffer_font_family": "MesloLGS Nerd Font Mono",
     "buffer_font_size": 16,
-    "theme": "{{ (index .themes .theme).apps.zed_theme }}",
+    "theme": "Cursor Dark",
     "cursor_blink": false,
     "code_lens": "on",
     "toolbar": {
@@ -161,7 +158,6 @@
     "ensure_final_newline_on_save": false,
     "which_key": {
         "enabled": true,
-        "delay_ms": 700
     },
     "diagnostics": {
         "include_warnings": true

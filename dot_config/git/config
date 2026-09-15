@@ -1,4 +1,3 @@
-{{- $t := index .themes .theme -}}
 [user]
 	email = kamal.hamza@outlook.com
 	name = kamal-hamza
@@ -33,55 +32,54 @@
 	diffFilter = delta --color-only
 
 [delta]
-	# Generated from the active theme ({{ $t.meta.name }}); see .chezmoidata/themes/
 	features = theme
 	navigate = true    # use n and N to move between diff sections
-	light = {{ if eq $t.meta.mode "light" }}true{{ else }}false{{ end }}
+	light = false
 	side-by-side = false
 	line-numbers = true
 	syntax-theme = base16
 
 [delta "theme"]
 	# Syntax highlighting
-	minus-style = syntax "{{ $t.semantic.danger }}"
-	minus-emph-style = syntax "{{ $t.ansi.red }}"
-	plus-style = syntax "{{ $t.semantic.success }}"
-	plus-emph-style = syntax "{{ $t.ansi.green }}"
+	minus-style = syntax "#ff7676"
+	minus-emph-style = syntax "#701516"
+	plus-style = syntax "#86cd82"
+	plus-emph-style = syntax "#14ba19"
 
 	# Line numbers
-	line-numbers-minus-style = "{{ $t.semantic.danger }}"
-	line-numbers-plus-style = "{{ $t.semantic.success }}"
-	line-numbers-zero-style = "{{ $t.ui.keyword }}"
-	line-numbers-left-style = "{{ $t.ui.keyword }}"
-	line-numbers-right-style = "{{ $t.ui.keyword }}"
+	line-numbers-minus-style = "#ff7676"
+	line-numbers-plus-style = "#86cd82"
+	line-numbers-zero-style = "#777777"
+	line-numbers-left-style = "#777777"
+	line-numbers-right-style = "#777777"
 
 	# File headers
-	file-style = "{{ $t.ui.highlight }}" bold
-	file-decoration-style = "{{ $t.ui.highlight }}" ul
+	file-style = "#458ee6" bold
+	file-decoration-style = "#458ee6" ul
 
 	# Hunk headers
 	hunk-header-style = file line-number syntax
-	hunk-header-decoration-style = "{{ $t.ansi.bright_blue }}" box
+	hunk-header-decoration-style = "#8ebeec" box
 
 	# Commit style
-	commit-decoration-style = "{{ $t.ui.highlight }}" box
-	commit-style = "{{ $t.ansi.bright_blue }}" bold
+	commit-decoration-style = "#458ee6" box
+	commit-style = "#8ebeec" bold
 
 	# Misc
 	zero-style = syntax
-	whitespace-error-style = "{{ $t.semantic.danger }}" reverse
+	whitespace-error-style = "#ff7676" reverse
 
 	# Blame - using background shades
-	blame-palette = "{{ $t.background.bg_hover_alt }}" "{{ $t.background.bg_hover }}" "{{ $t.ui.line }}"
+	blame-palette = "#101010" "#0a0a0a" "#272727"
 	blame-code-style = syntax
 
 	# Merge conflicts
 	merge-conflict-begin-symbol = ⌃
 	merge-conflict-end-symbol = ⌄
-	merge-conflict-ours-diff-header-style = "{{ $t.semantic.warning }}" bold
-	merge-conflict-ours-diff-header-decoration-style = "{{ $t.semantic.warning }}" box
-	merge-conflict-theirs-diff-header-style = "{{ $t.ui.highlight }}" bold
-	merge-conflict-theirs-diff-header-decoration-style = "{{ $t.ui.highlight }}" box
+	merge-conflict-ours-diff-header-style = "#d9ba73" bold
+	merge-conflict-ours-diff-header-decoration-style = "#d9ba73" box
+	merge-conflict-theirs-diff-header-style = "#458ee6" bold
+	merge-conflict-theirs-diff-header-decoration-style = "#458ee6" box
 
 [color]
 	ui = auto
@@ -90,23 +88,23 @@
 	status = auto
 
 [color "branch"]
-	current = "{{ $t.ui.highlight }}" bold
-	local = "{{ $t.foreground.fg_active }}"
-	remote = "{{ $t.ansi.bright_blue }}"
+	current = "#458ee6" bold
+	local = "#b0b0b0"
+	remote = "#8ebeec"
 
 [color "diff"]
-	meta = "{{ $t.ui.highlight }}" bold
-	frag = "{{ $t.ansi.bright_blue }}" bold
-	old = "{{ $t.semantic.danger }}"
-	new = "{{ $t.semantic.success }}"
-	whitespace = "{{ $t.semantic.danger }}" reverse
+	meta = "#458ee6" bold
+	frag = "#8ebeec" bold
+	old = "#ff7676"
+	new = "#86cd82"
+	whitespace = "#ff7676" reverse
 
 [color "status"]
-	added = "{{ $t.semantic.success }}"
-	changed = "{{ $t.semantic.warning }}"
-	untracked = "{{ $t.ui.keyword }}"
-	branch = "{{ $t.ui.highlight }}" bold
-	nobranch = "{{ $t.semantic.danger }}" bold
+	added = "#86cd82"
+	changed = "#d9ba73"
+	untracked = "#777777"
+	branch = "#458ee6" bold
+	nobranch = "#ff7676" bold
 
 [alias]
 	# Common shortcuts

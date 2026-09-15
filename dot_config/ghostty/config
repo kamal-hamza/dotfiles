@@ -2,7 +2,7 @@
 # General Appearance
 # ===================================================================
 
-# theme (generated per the active theme by `theme set <name>`; see .chezmoidata/themes/)
+# theme
 theme = current
 
 # font

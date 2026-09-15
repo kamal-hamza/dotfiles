@@ -1,4 +1,3 @@
-{{- $t := index .themes .theme -}}
 # =============================================================================
 # Satty Configuration - Screenshot Annotation Tool
 # =============================================================================
@@ -22,11 +21,10 @@ family = "Monospace"
 style = "Regular"
 
 [color-palette]
-# Generated from the active theme; see .chezmoidata/themes/
 custom = [
-  "{{ $t.background.bg }}",
-  "{{ $t.ui.line }}",
-  "{{ $t.foreground.fg_dim }}",
-  "{{ $t.foreground.fg }}",
-  "{{ $t.foreground.fg_bright }}",
+  "#050505",
+  "#272727",
+  "#8d8d8d",
+  "#d4d4d4",
+  "#ffffff",
 ]

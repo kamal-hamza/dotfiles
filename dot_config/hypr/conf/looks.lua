@@ -1,6 +1,4 @@
-{{- $t := index .themes .theme -}}
 -- general config
--- Colors generated from the active theme; see .chezmoidata/themes/
 hl.config({
 	general = {
 		border_size = 1,
@@ -9,10 +7,10 @@ hl.config({
 		float_gaps = 3,
 		gaps_workspaces = 0,
 		col = {
-			active_border = { colors = { "rgb({{ trimPrefix "#" $t.foreground.fg_bright }})", "rgb({{ trimPrefix "#" $t.foreground.fg_active }})" }, angle = 45 }, -- border, fg
-			inactive_border = { colors = { "rgb({{ trimPrefix "#" $t.ui.dim }})", "rgb({{ trimPrefix "#" $t.ui.line }})" }, angle = 45 }, -- dim, line
-			nogroup_border_active = { colors = { "rgb({{ trimPrefix "#" $t.ansi.magenta }})", "rgb({{ trimPrefix "#" $t.semantic.danger }})" }, angle = 45 }, -- pink, danger
-			nogroup_border = { colors = { "rgb({{ trimPrefix "#" $t.semantic.warning }})", "rgb({{ trimPrefix "#" $t.ui.line }})" }, angle = 45 }, -- warning, line
+			active_border = { colors = { "rgb(ffffff)", "rgb(b0b0b0)" }, angle = 45 }, -- border, fg
+			inactive_border = { colors = { "rgb(474747)", "rgb(272727)" }, angle = 45 }, -- dim, line
+			nogroup_border_active = { colors = { "rgb(f2a4db)", "rgb(ff7676)" }, angle = 45 }, -- pink, danger
+			nogroup_border = { colors = { "rgb(d9ba73)", "rgb(272727)" }, angle = 45 }, -- warning, line
 		},
 		layout = "dwindle",
 		no_focus_fallback = true,

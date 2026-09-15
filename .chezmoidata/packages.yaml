@@ -73,8 +73,8 @@ packages:
             - quickshell # Highly customizable desktop widgets
             - rofi-wayland # app launcher
             - mako # Lightweight, customizable notification daemon
-            - awww # Wayland wallpaper daemon with animated transitions (swww's successor)
-            - jq # JSON processor (used to enumerate monitors for the theme-switch transition)
+            - hyprpaper # Blazing fast, native wallpaper utility
+            - jq # JSON processor (used by create-project to parse GitHub API responses)
             - polkit-gnome # Handles administrative authentication prompts (GUI)
             - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
             - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes

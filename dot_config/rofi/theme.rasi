@@ -1,17 +1,16 @@
-{{- $t := index .themes .theme -}}
 /* =============================================================================
- * Rofi Modern Theme - generated from the active theme ({{ $t.meta.name }})
+ * Rofi Modern Theme
  * =========================================================================== */
 * {
-    bg:              {{ $t.background.bg }};
-    fg:              {{ $t.foreground.fg }};
-    fg-dim:          {{ $t.foreground.fg_dim }};
-    fg-comment:      {{ $t.foreground.fg_dim }};
-    line:            {{ $t.ui.line }};
-    dim:             {{ $t.ui.dim }};
-    hover-bg:        {{ $t.background.bg_hover }};
-    select-bg:       {{ $t.background.bg_hover }};
-    select-fg:       {{ $t.foreground.fg_bright }};
+    bg:              #050505;
+    fg:              #d4d4d4;
+    fg-dim:          #8d8d8d;
+    fg-comment:      #8d8d8d;
+    line:            #272727;
+    dim:             #474747;
+    hover-bg:        #0a0a0a;
+    select-bg:       #0a0a0a;
+    select-fg:       #ffffff;
 }
 
 window {
