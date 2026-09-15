@@ -32,29 +32,40 @@ Row {
             required property int index
             readonly property int wsId: index + 1
             readonly property bool isActive: wsId === root.activeWorkspaceId
-            readonly property bool isOccupied: Hyprland.workspaces.values.some(ws => ws.id === wsId)
 
             width: Theme.workspaceSize
             height: Theme.workspaceSize
             radius: Theme.workspaceRadius
-            color: isActive ? Theme.accent : isOccupied ? Theme.surface : "transparent"
+            scale: isActive ? 1 : (mouseArea.containsMouse ? 1.08 : 1)
+            // Only the active workspace gets a fill; occupied-but-inactive
+            // workspaces stay the same as empty ones (no grey).
+            color: isActive ? Theme.emphasis : (mouseArea.containsMouse ? Theme.bgHover : "transparent")
             border.width: isActive ? 0 : 1
-            border.color: Theme.outline
+            border.color: mouseArea.containsMouse ? Theme.borderHover : Theme.border
 
             Behavior on color {
-                ColorAnimation { duration: Theme.animationMs }
+                ColorAnimation { duration: Theme.motion.fast }
+            }
+            Behavior on border.color {
+                ColorAnimation { duration: Theme.motion.fast }
+            }
+            Behavior on scale {
+                NumberAnimation { duration: Theme.motion.fast; easing.type: Theme.motion.curve }
             }
 
             Text {
                 anchors.centerIn: parent
                 text: button.wsId
-                font.pixelSize: 13
+                font.family: Theme.fontFamily
+                font.pixelSize: Theme.font.md
                 font.bold: button.isActive
-                color: button.isActive ? Theme.textOnAccent : Theme.text
+                color: button.isActive ? Theme.textOnEmphasis : Theme.textPrimary
             }
 
             MouseArea {
+                id: mouseArea
                 anchors.fill: parent
+                hoverEnabled: true
                 cursorShape: Qt.PointingHandCursor
                 onClicked: {
                     // Hyprland's classic IPC takes a plain "workspace N"

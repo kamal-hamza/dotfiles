@@ -69,7 +69,6 @@ packages:
             - xorg-xwayland # Compatibility layer for legacy X11 apps
             - qt6-wayland # Wayland support for Qt6 applications
             - qt5-wayland # Wayland support for Qt5 applications
-            - waybar # Highly customizable status bar
             - quickshell # Highly customizable desktop widgets
             - rofi-wayland # app launcher
             - mako # Lightweight, customizable notification daemon
@@ -123,6 +122,7 @@ packages:
             - ffmpeg # convert between file types
             - mpd # music player backend
             - mpc # command line music controller
+            - mpd-mpris # bridges mpd onto MPRIS for Quickshell's now-playing widget
             - cava # music visualizer
             - ncmpcpp # tui for music
             - beets # music metadata editor

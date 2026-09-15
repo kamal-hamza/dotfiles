@@ -1,0 +1,5 @@
+module Services
+singleton AudioService 1.0 AudioService.qml
+singleton MediaService 1.0 MediaService.qml
+singleton SystemMonitorService 1.0 SystemMonitorService.qml
+singleton WeatherService 1.0 WeatherService.qml
