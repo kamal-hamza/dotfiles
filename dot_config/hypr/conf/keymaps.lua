@@ -10,7 +10,15 @@ hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(super .. " + W", hl.dsp.exec_cmd(browser))
 hl.bind(super .. " + SHIFT + W", hl.dsp.exec_cmd(privateBrowser))
-hl.bind(super .. " + SPACE", hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(super .. " + SPACE", hl.dsp.exec_cmd("qs ipc call launcher apps"))
+
+-- quickshell launcher suite (replaces rofi - see below for the rebound
+-- GRAVE/SHIFT+GRAVE binds that used to launch rofi/its scripts)
+hl.bind(super .. " + X", hl.dsp.exec_cmd("qs ipc call launcher run"))
+hl.bind(super .. " + C", hl.dsp.exec_cmd("qs ipc call launcher calc"))
+hl.bind(super .. " + V", hl.dsp.exec_cmd("qs ipc call launcher clipboard"))
+hl.bind(super .. " + M", hl.dsp.exec_cmd("qs ipc call launcher music"))
+hl.bind(super .. " + SHIFT + P", hl.dsp.exec_cmd("qs ipc call launcher power"))
 
 -- workspace binds
 for i = 1, 5 do
@@ -67,9 +75,10 @@ hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("mpc volume +5"), { locked = true }
 hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("mpc volume -5"), { locked = true })
 hl.bind(super .. " + SHIFT + C", hl.dsp.exec_cmd("mpc clear"), { locked = true })
 
--- queue songs with rofi
-hl.bind(super .. " + GRAVE", hl.dsp.exec_cmd("~/.config/rofi/scripts/mpd-queue"), { locked = true })
-hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("play-playlist"), { locked = true })
+-- queue songs / play a playlist (used to be rofi's mpd-queue and
+-- play-playlist scripts - both now handled by the quickshell Music mode)
+hl.bind(super .. " + GRAVE", hl.dsp.exec_cmd("qs ipc call launcher music"), { locked = true })
+hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("qs ipc call launcher playlists"), { locked = true })
 
 -- view current queue
 hl.bind(super .. " + SHIFT + V", hl.dsp.exec_cmd("show-queue"), { locked = true })

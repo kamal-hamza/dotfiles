@@ -71,6 +71,8 @@ packages:
             - qt5-wayland # Wayland support for Qt5 applications
             - quickshell # Highly customizable desktop widgets
             - rofi-wayland # app launcher
+            - libqalculate # qalc CLI, powers the quickshell launcher's calculator mode
+            - cliphist # clipboard history store, powers the quickshell launcher's clipboard mode
             - mako # Lightweight, customizable notification daemon
             - hyprpaper # Blazing fast, native wallpaper utility
             - jq # JSON processor (used by create-project to parse GitHub API responses)
