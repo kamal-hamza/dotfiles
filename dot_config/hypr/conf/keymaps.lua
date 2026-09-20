@@ -2,8 +2,8 @@ local super = "SUPER"
 local terminal = "ghostty"
 local fileManager = "thunar"
 local lock = "hyprlock"
-local browser = "firefox"
-local privateBrowser = "firefox --private-window"
+local browser = "helium-browser"
+local privateBrowser = "helium-browser --incognito"
 local scratchpad = "ghostty -e nvim --clean -u ~/.config/nvim-scratch/init.lua ~/notes/scratch.md"
 -- app binds
 hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
@@ -33,6 +33,14 @@ hl.bind(super .. " + B", hl.dsp.workspace.toggle_special("music"))
 -- audio device binds
 hl.bind(super .. " + F9", hl.dsp.exec_cmd("cycle-audio-output"))
 hl.bind(super .. " + F10", hl.dsp.exec_cmd("cycle-audio-input"))
+
+-- system volume for the currently active output device (whichever sink is
+-- default - set via quickshell's AudioPopup or cycle-audio-output above;
+-- wpctl targets @DEFAULT_AUDIO_SINK@ so it always follows that choice).
+-- quickshell's VolumeOsd already watches the default sink's volume, so it
+-- pops up on its own whenever these fire - no extra wiring needed there.
+hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true })
+hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true })
 
 -- window binds
 hl.bind(super .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
@@ -71,8 +79,6 @@ hl.bind(super .. " + P", hl.dsp.exec_cmd("mpc toggle"), { locked = true })
 hl.bind(super .. " + R", hl.dsp.exec_cmd("cycle-repeat-mode"), { locked = true })
 hl.bind(super .. " + S", hl.dsp.exec_cmd("toggle-shuffle"), { locked = true })
 hl.bind(super .. " + SLASH", hl.dsp.exec_cmd("mpc seek 0%"), { locked = true })
-hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("mpc volume +5"), { locked = true })
-hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("mpc volume -5"), { locked = true })
 hl.bind(super .. " + SHIFT + C", hl.dsp.exec_cmd("mpc clear"), { locked = true })
 
 -- queue songs / play a playlist (used to be rofi's mpd-queue and

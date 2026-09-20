@@ -108,6 +108,7 @@ Item {
         if (!file) return;
         insertProc.command = ["mpc", "insert", file];
         insertProc.running = true;
+        root.launcher.close();
     }
 
     // --- Queue ---
@@ -134,6 +135,7 @@ Item {
         if (!entry) return;
         playPositionProc.command = ["mpc", "play", entry.position];
         playPositionProc.running = true;
+        root.launcher.close();
     }
 
     // --- Transport (reuses the exact scripts keymaps.lua already binds) ---

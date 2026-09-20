@@ -85,7 +85,6 @@ packages:
             - pipewire-pulse # PulseAudio compatibility layer for PipeWire
             - wireplumber # Modular session/policy manager for PipeWire
             - os-prober # dual boot OS recognition
-            - firefox # browser
             - discord # chat
             - playerctl
             - pavucontrol
@@ -156,6 +155,7 @@ packages:
             - thunderbird # email client
 
         aur:
+            - helium-browser-bin # browser
             - chatgpt-desktop-bin # ChatGPT desktop app
             - penpot-desktop-bin # penpot ui design app
             - zsh-autopair-git # Auto-close brackets in zs
