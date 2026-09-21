@@ -37,7 +37,11 @@ Item {
 
     // --- Search (MPD library, via mpc) - songs only, no artist/album grouping ---
     property var songResults: []
-    onSongResultsChanged: root.selectedIndex = 0
+    onSongResultsChanged: {
+        root.selectedIndex = 0;
+        warmArtProc.nextIndex = 0;
+        root._warmNextArt();
+    }
     onShowQueueChanged: {
         root.selectedIndex = 0;
         if (root.showQueue) root._refreshQueue();
@@ -57,6 +61,17 @@ Item {
         return "/tmp/qs-music-art-" + file.replace(/[^a-zA-Z0-9_-]/g, "_").slice(-120) + ".bin";
     }
 
+    // Shared fetch script for both the live preview and the background
+    // warm-up below - writes to a per-process tmp file and renames into
+    // place atomically, so a warm-up fetch and a live-preview fetch racing
+    // on the same file can never interleave and corrupt the cached art.
+    function _artFetchScript() {
+        return '[ -s "$1" ] && exit 0; t="$1.tmp.$$"; ' +
+            '{ mpc albumart "$0" > "$t" 2>/dev/null && [ -s "$t" ]; } || ' +
+            '{ mpc readpicture "$0" > "$t" 2>/dev/null && [ -s "$t" ]; } || ' +
+            '{ rm -f "$t"; exit 1; }; mv -f "$t" "$1"';
+    }
+
     Process {
         id: artProc
         property string pendingPath: ""
@@ -66,10 +81,32 @@ Item {
         if (!root.previewSong) { root.previewArtPath = ""; return; }
         const path = root._artPath(root.previewSong.file);
         artProc.pendingPath = path;
-        artProc.command = ["sh", "-c",
-            '[ -s "$1" ] || { mpc albumart "$0" > "$1" 2>/dev/null || mpc readpicture "$0" > "$1" 2>/dev/null; }; [ -s "$1" ]',
-            root.previewSong.file, path];
+        artProc.command = ["sh", "-c", root._artFetchScript() + '; [ -s "$1" ]', root.previewSong.file, path];
         artProc.running = true;
+    }
+
+    // Background warm-up: as soon as search results come in, fetch art for
+    // the first handful of results (roughly what's visible in the list) one
+    // at a time, well ahead of the user arrowing to them - by the time a row
+    // gets highlighted, its art is usually already cached, instead of the
+    // ~0.5s mpc/mpd round-trip showing on every arrow press.
+    Process {
+        id: warmArtProc
+        property int nextIndex: 0
+        onExited: root._warmNextArt()
+    }
+    function _warmNextArt() {
+        const results = root.songResults;
+        const limit = Math.min(results.length, 8);
+        while (warmArtProc.nextIndex < limit) {
+            const i = warmArtProc.nextIndex;
+            warmArtProc.nextIndex++;
+            if (i === root.selectedIndex) continue;
+            const file = results[i].file;
+            warmArtProc.command = ["sh", "-c", root._artFetchScript(), file, root._artPath(file)];
+            warmArtProc.running = true;
+            return;
+        }
     }
 
     Timer {

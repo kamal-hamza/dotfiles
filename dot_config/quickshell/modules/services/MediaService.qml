@@ -60,7 +60,12 @@ QtObject {
         return mpd || list[0];
     }
 
+    // A Stopped player (e.g. MPD after `mpc clear` empties the queue) keeps
+    // reporting its last track's metadata on the bus instead of clearing it
+    // - treat Stopped the same as "no player" so the UI falls back to
+    // "Nothing playing" instead of showing a stale track.
     readonly property bool hasPlayer: root.currentPlayer !== null
+        && root.currentPlayer.playbackState !== MprisPlaybackState.Stopped
     readonly property bool isPlaying: root.hasPlayer && root.currentPlayer.playbackState === MprisPlaybackState.Playing
 
     readonly property string trackTitle: root.hasPlayer ? (root.currentPlayer.trackTitle || "Untitled") : ""
