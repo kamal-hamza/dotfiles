@@ -5,27 +5,42 @@ import "../../theme"
 import "../common"
 import "../services"
 
-// Body shown from the now-playing pill: album art, track info, round
-// prev/play-pause/next buttons and a seekable progress bar - all driven by
-// MediaService (native MPRIS), matching the pill.
+// Body shown from the now-playing pill: album art, track info, an optional
+// synced-lyrics preview (LyricsService - only ever populated for MPD, see
+// that file), round prev/play-pause/next buttons and a seekable progress
+// bar - all driven by MediaService (native MPRIS), matching the pill.
 PopupCard {
     id: popup
 
     cardWidth: 300
 
+    // Sticky across tracks by design - if the next track also has lyrics,
+    // reopening the panel every time would be more annoying than leaving it
+    // expanded. It simply has nothing to show (LyricsToggle hides itself)
+    // when the current track has none.
+    property bool showLyrics: false
+
     // MprisPlayer.position isn't reactive on its own - force a re-read
     // periodically while the popup is visible and something is playing, so
     // the progress bar and elapsed-time readout move smoothly instead of
-    // only updating on track/seek events.
+    // only updating on track/seek events. Lyric sync deliberately does NOT
+    // use MediaService.position here (see LyricsService's header comment) -
+    // it polls mpd directly instead, since mpd-mpris can report a stale
+    // MPRIS position right after a track change until the next seek.
     Timer {
         interval: 250
         repeat: true
         running: popup.visible && MediaService.isPlaying
-        onTriggered: MediaService.tickProgress()
+        onTriggered: {
+            MediaService.tickProgress();
+            LyricsService.pollPosition();
+        }
     }
 
     readonly property real progress: MediaService.length > 0
         ? Math.max(0, Math.min(1, MediaService.position / MediaService.length)) : 0
+
+    readonly property int currentLyricIndex: LyricsService.lineIndexForPosition(LyricsService.position)
 
     component RoundButton: Rectangle {
         id: btn
@@ -58,6 +73,40 @@ PopupCard {
             hoverEnabled: true
             cursorShape: Qt.PointingHandCursor
             onClicked: btn.clicked()
+        }
+    }
+
+    // Small pill toggle, distinct from RoundButton since this sits inline
+    // with text rather than in the transport row.
+    component LyricsToggle: Rectangle {
+        id: toggle
+        property bool active: false
+        signal clicked()
+
+        implicitHeight: 22
+        implicitWidth: label.implicitWidth + Theme.spacing.md * 2
+        radius: height / 2
+        color: toggle.active ? Theme.emphasis : (toggleMa.containsMouse ? Theme.bgHover : "transparent")
+        border.width: toggle.active ? 0 : 1
+        border.color: Theme.border
+
+        Behavior on color { ColorAnimation { duration: Theme.motion.fast } }
+
+        Text {
+            id: label
+            anchors.centerIn: parent
+            text: "Lyrics"
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.font.xs
+            color: toggle.active ? Theme.textOnEmphasis : Theme.textSecondary
+        }
+
+        MouseArea {
+            id: toggleMa
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: toggle.clicked()
         }
     }
 
@@ -118,6 +167,54 @@ PopupCard {
             elide: Text.ElideRight
             visible: MediaService.trackAlbum.length > 0
             text: MediaService.trackAlbum
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.font.sm
+            color: Theme.textTertiary
+        }
+    }
+
+    LyricsToggle {
+        anchors.horizontalCenter: parent.horizontalCenter
+        visible: LyricsService.hasLyrics
+        active: popup.showLyrics
+        onClicked: popup.showLyrics = !popup.showLyrics
+    }
+
+    // Prev/current/next synced line, centered on whatever LyricsService
+    // resolved for the current playback position. Only ever shown for MPD
+    // tracks that have a local .lrc sidecar (see LyricsService) - other
+    // players just never make the toggle above visible.
+    Column {
+        width: parent.width
+        spacing: 2
+        visible: popup.showLyrics && LyricsService.hasLyrics
+
+        Text {
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+            text: LyricsService.lineTextAt(popup.currentLyricIndex - 1)
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.font.sm
+            color: Theme.textTertiary
+        }
+
+        Text {
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            text: LyricsService.lineTextAt(popup.currentLyricIndex)
+            font.family: Theme.fontFamily
+            font.pixelSize: Theme.font.md
+            font.bold: true
+            color: Theme.textPrimary
+        }
+
+        Text {
+            width: parent.width
+            horizontalAlignment: Text.AlignHCenter
+            elide: Text.ElideRight
+            text: LyricsService.lineTextAt(popup.currentLyricIndex + 1)
             font.family: Theme.fontFamily
             font.pixelSize: Theme.font.sm
             color: Theme.textTertiary

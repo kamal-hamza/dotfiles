@@ -81,10 +81,12 @@ hl.bind(super .. " + S", hl.dsp.exec_cmd("toggle-shuffle"), { locked = true })
 hl.bind(super .. " + SLASH", hl.dsp.exec_cmd("mpc seek 0%"), { locked = true })
 hl.bind(super .. " + SHIFT + C", hl.dsp.exec_cmd("mpc clear"), { locked = true })
 
--- queue songs / play a playlist (used to be rofi's mpd-queue and
--- play-playlist scripts - both now handled by the quickshell Music mode)
+-- queue songs / browse the library by artist, album, or saved MPD
+-- playlist (used to be rofi's mpd-queue and play-playlist scripts - now
+-- handled by the quickshell Music and Library modes; Library's Artists/
+-- Albums/Playlists views are Tab-switchable once it's open)
 hl.bind(super .. " + GRAVE", hl.dsp.exec_cmd("qs ipc call launcher music"), { locked = true })
-hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("qs ipc call launcher playlists"), { locked = true })
+hl.bind(super .. " + SHIFT + GRAVE", hl.dsp.exec_cmd("qs ipc call launcher library"), { locked = true })
 
 -- view current queue
 hl.bind(super .. " + SHIFT + V", hl.dsp.exec_cmd("show-queue"), { locked = true })

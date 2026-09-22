@@ -302,7 +302,7 @@ Item {
         LauncherFooter {
             Layout.fillWidth: true
             hints: root.hasRun
-                ? [ { key: "Ctrl+↵", label: "Terminal" }, { key: "↑↓", label: "History" }, { key: "Tab", label: "Modes" }, { key: "Esc", label: "Close" } ]
+                ? [ { key: "Ctrl+↵", label: "Terminal" }, { key: "↑↓", label: "History" }, { key: "Esc", label: "Close" } ]
                 : [ { key: "↵", label: "Run" }, { key: "Ctrl+↵", label: "Terminal" }, { key: "↑↓", label: "History" }, { key: "Esc", label: "Close" } ]
         }
     }

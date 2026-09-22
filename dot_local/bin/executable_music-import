@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Import FLACs dropped in ~/.local/state/music-import/incoming into the library.
+
+Drop new music (loose files or album folders) into the incoming dir, then
+run this. Confident MusicBrainz matches are tagged and moved into ~/Music
+(or $MUSIC_ROOT). Anything else is left exactly where it is -- tag it by
+hand (e.g. in Picard) and run `music-import --asis` to pick it up: that
+trusts whatever tags are already on the file, does no MusicBrainz search,
+and just organizes it. Never deletes a source file before verifying its
+audio made it into the library unchanged.
+
+Lyrics aren't fetched here -- run `music-lyrics` afterwards.
+
+Exit codes: 0 nothing left in incoming/, 2 files still waiting there.
+"""
+import argparse
+import signal
+import sys
+from pathlib import Path
+
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'lib' / 'music'))
+import musiclib as m
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--asis', action='store_true',
+                     help='trust existing tags on files in incoming/ (e.g. hand-tagged in Picard); no MusicBrainz search')
+    args = ap.parse_args()
+
+    with m.lock('music-import'):
+        result = m.import_asis() if args.asis else m.run_import()
+
+    print(f"imported {result['imported']} file(s)")
+    if result['left']:
+        where = 'still need tagging' if not args.asis else "didn't organize (check tags)"
+        print(f"{result['left']} file(s) in incoming/ {where}")
+        return 2
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

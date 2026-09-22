@@ -144,7 +144,9 @@ tpn() { task "$@" modify priority:; }    # No priority
 # =============================================================================
 
 # Music management
-alias fix-music="fix-music-metadata"  # Fix music metadata (artist, title, album)
+alias mi="music-import"      # Import new FLACs from the incoming dropzone
+alias mia="music-import --asis"  # Organize hand-tagged (e.g. Picard) files, no MusicBrainz search
+alias ml="music-lyrics"      # Backfill .lrc lyrics for the library
 
 # Language tools installation
 alias itool="install-lang"

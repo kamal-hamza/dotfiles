@@ -73,7 +73,6 @@ Item {
                 hints: [
                     { key: "↑↓", label: "Navigate" },
                     { key: "↵", label: "Select" },
-                    { key: "Tab", label: "Modes" },
                     { key: "Esc", label: "Close" }
                 ]
             }

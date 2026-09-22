@@ -68,6 +68,12 @@ QtObject {
         && root.currentPlayer.playbackState !== MprisPlaybackState.Stopped
     readonly property bool isPlaying: root.hasPlayer && root.currentPlayer.playbackState === MprisPlaybackState.Playing
 
+    // Exposed for LyricsService: MPRIS carries no local file path for MPD
+    // (mpd-mpris doesn't publish xesam:url), so lyrics have to be looked up
+    // via `mpc` instead - which only makes sense when MPD is actually the
+    // current player.
+    readonly property bool isMpd: root.hasPlayer && root._isMpd(root.currentPlayer)
+
     readonly property string trackTitle: root.hasPlayer ? (root.currentPlayer.trackTitle || "Untitled") : ""
     readonly property string trackArtist: root.hasPlayer ? (root.currentPlayer.trackArtist || "") : ""
     readonly property string trackAlbum: root.hasPlayer ? (root.currentPlayer.trackAlbum || "") : ""

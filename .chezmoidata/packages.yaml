@@ -127,6 +127,7 @@ packages:
             - cava # music visualizer
             - ncmpcpp # tui for music
             - beets # music metadata editor
+            - picard # official MusicBrainz tagger, for manually searching/browsing when music-review's auto-match misses
             - wl-clipboard # Command-line copy/paste utilities for Wayland
             - grim # screenshots manager
             - slurp # coordinates for selecting screenshots

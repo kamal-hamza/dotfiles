@@ -242,7 +242,6 @@ Item {
                 { key: "↑↓", label: "Navigate" },
                 { key: "↵", label: "Copy" },
                 { key: "Ctrl+Del", label: "Delete" },
-                { key: "Tab", label: "Modes" },
                 { key: "Esc", label: "Close" }
             ]
         }

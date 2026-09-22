@@ -130,7 +130,6 @@ Item {
             Layout.fillWidth: true
             hints: [
                 { key: "↵", label: "Copy result" },
-                { key: "Tab", label: "Modes" },
                 { key: "Esc", label: "Close" }
             ]
         }

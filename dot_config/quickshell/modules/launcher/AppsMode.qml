@@ -228,7 +228,6 @@ Item {
             hints: [
                 { key: "↑↓", label: "Navigate" },
                 { key: "↵", label: "Launch" },
-                { key: "Tab", label: "Modes" },
                 { key: "Esc", label: "Close" }
             ]
         }

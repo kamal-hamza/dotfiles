@@ -1,0 +1,34 @@
+#!/usr/bin/env python3
+"""Resolve real album names for ~/Music tracks stuck on a placeholder album
+(e.g. "Unknown Album") -- happens when a track was only ever matched as a
+standalone singleton, so beets never linked it to a release.
+
+Looks up each track's existing MUSICBRAINZ_TRACKID on MusicBrainz and picks
+the most likely original album from its releases. Only rewrites tags (via
+beets, so its library DB stays in sync) -- never moves or renames files, so
+playlists stay valid. Safe to re-run; only touches placeholder albums.
+"""
+import argparse
+import signal
+import sys
+from pathlib import Path
+
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'lib' / 'music'))
+import musiclib as m
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--dry-run', action='store_true', help="show what would change, don't write anything")
+    args = ap.parse_args()
+
+    with m.lock('music-fix-albums'):
+        result = m.fix_album_tags(dry_run=args.dry_run)
+
+    verb = 'would fix' if args.dry_run else 'fixed'
+    print(f"checked {result['checked']} track(s) with a placeholder album, {verb} {result['fixed']}, skipped {result['skipped']}")
+
+
+if __name__ == '__main__':
+    main()

@@ -31,4 +31,9 @@ dot_pi/**/node_modules/
 .config/satty/
 .config/quickshell/
 scripts/linux
+.config/beets/
+.local/bin/music-import
+.local/bin/music-library
+.local/bin/music-lyrics
+.local/lib/music/
 {{ end }}

@@ -1,0 +1,10 @@
+directory: ~/Music
+import:
+    copy: yes
+    move: no
+    write: yes
+    autotag: yes
+    duplicate_action: skip
+    log: ~/.local/state/music-import/import.log
+paths:
+    default: $albumartist/$album/$track $title

@@ -609,8 +609,8 @@ Item {
         LauncherFooter {
             Layout.fillWidth: true
             hints: root.searching
-                ? [ { key: "↵", label: "Play first result" }, { key: "Tab", label: "Modes" }, { key: "Esc", label: "Close" } ]
-                : [ { key: "Space", label: "Play/Pause" }, { key: "Shift+←/→", label: "Prev/Next" }, { key: "Tab", label: "Modes" }, { key: "Esc", label: "Close" } ]
+                ? [ { key: "↵", label: "Play first result" }, { key: "Esc", label: "Close" } ]
+                : [ { key: "Space", label: "Play/Pause" }, { key: "Shift+←/→", label: "Prev/Next" }, { key: "Esc", label: "Close" } ]
         }
     }
 }

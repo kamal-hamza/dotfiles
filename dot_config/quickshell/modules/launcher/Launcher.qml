@@ -5,12 +5,14 @@ import Quickshell.Wayland
 import "../../theme"
 
 // Rofi replacement: one PanelWindow shared by all seven launcher modes
-// (Apps/Run/Calc/Clipboard/Music/Playlists/Power), toggled via `qs ipc call
-// launcher <mode>` from Hyprland keybinds (see keymaps.lua). Each mode is a
-// plain Item instantiated once and kept alive for the shell's lifetime -
-// switching modes just flips `visible`, which is what lets every mode keep
-// its own typed-in query across Tab-cycling for free (nothing is destroyed
-// or recreated).
+// (Apps/Run/Calc/Clipboard/Music/Library/Power), toggled via `qs ipc call
+// launcher <mode>` from Hyprland keybinds (see keymaps.lua) - every mode has
+// its own direct keybind, so there's no cross-mode Tab-cycle here; Tab is
+// free for modes to use internally (Library uses it to switch its Artists/
+// Albums/Playlists views). Each mode is a plain Item instantiated once and
+// kept alive for the shell's lifetime - switching modes just flips
+// `visible`, which is what lets every mode keep its own typed-in query
+// across visits for free (nothing is destroyed or recreated).
 //
 // This build of Quickshell (0.3.1) has no `Scope` type, so the window
 // itself doubles as the non-visual container for the IpcHandler/FileView/
@@ -36,7 +38,6 @@ PanelWindow {
     }
 
     property string mode: "apps"
-    readonly property var modeOrder: ["apps", "run", "calc", "clipboard", "music", "playlists", "power"]
 
     function open(m) {
         launcher.mode = m;
@@ -54,21 +55,12 @@ PanelWindow {
     function toggleVisible() {
         if (launcher.visible) launcher.close(); else launcher.open("apps");
     }
-    function cycle() {
-        const i = launcher.modeOrder.indexOf(launcher.mode);
-        launcher.mode = launcher.modeOrder[(i + 1) % launcher.modeOrder.length];
-        focusTimer.restart();
-    }
 
-    // Common Escape/Tab handling every mode's TextInput calls first, before
-    // its own arrow/enter handling. Returns true if the event was consumed.
+    // Common Escape handling every mode's TextInput calls first, before its
+    // own arrow/enter/Tab handling. Returns true if the event was consumed.
     function handleGlobalKeys(event) {
         if (event.key === Qt.Key_Escape) {
             launcher.close();
-            return true;
-        }
-        if (event.key === Qt.Key_Tab) {
-            launcher.cycle();
             return true;
         }
         return false;
@@ -83,7 +75,7 @@ PanelWindow {
         return event.key === Qt.Key_Up || (event.key === Qt.Key_P && (event.modifiers & Qt.ControlModifier));
     }
 
-    readonly property var allModes: [appsMode, runMode, calcMode, clipboardMode, musicMode, playlistsMode, powerMode]
+    readonly property var allModes: [appsMode, runMode, calcMode, clipboardMode, musicMode, libraryMode, powerMode]
 
     function currentItem() {
         switch (launcher.mode) {
@@ -92,7 +84,7 @@ PanelWindow {
         case "calc": return calcMode;
         case "clipboard": return clipboardMode;
         case "music": return musicMode;
-        case "playlists": return playlistsMode;
+        case "library": return libraryMode;
         case "power": return powerMode;
         }
         return null;
@@ -118,7 +110,7 @@ PanelWindow {
         function calc(): void { launcher.open("calc"); }
         function clipboard(): void { launcher.open("clipboard"); }
         function music(): void { launcher.open("music"); }
-        function playlists(): void { launcher.open("playlists"); }
+        function library(): void { launcher.open("library"); }
         function power(): void { launcher.open("power"); }
         function toggle(): void { launcher.toggleVisible(); }
     }
@@ -255,12 +247,12 @@ PanelWindow {
             launcher: launcher
             visible: launcher.mode === "music"
         }
-        PlaylistsMode {
-            id: playlistsMode
+        LibraryMode {
+            id: libraryMode
             anchors.fill: parent
             anchors.margins: Theme.spacing.lg
             launcher: launcher
-            visible: launcher.mode === "playlists"
+            visible: launcher.mode === "library"
         }
         PowerMode {
             id: powerMode
