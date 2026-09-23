@@ -31,6 +31,12 @@ ShellRoot {
         VolumeOsd {}
     }
 
+    Variants {
+        model: Quickshell.screens
+
+        SeekOsd {}
+    }
+
     // Rofi replacement: one shared launcher window (Apps/Run/Calc/
     // Clipboard/Music/Power), not per-screen - see
     // modules/launcher/Launcher.qml for the `qs ipc call launcher <mode>`

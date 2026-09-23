@@ -72,9 +72,12 @@ hl.bind("XF86AudioStop", hl.dsp.exec_cmd("playerctl stop"), { locked = true })
 
 -- additional music controls (using mpc, with super key)
 hl.bind(super .. " + PERIOD", hl.dsp.exec_cmd("smart-next"), { locked = true })
-hl.bind(super .. " + SHIFT + PERIOD", hl.dsp.exec_cmd("mpc seek +10"), { locked = true })
+-- quickshell's SeekOsd doesn't watch MPRIS position reactively (it isn't
+-- pushed on external seeks - see MediaService.tickProgress's comment), so
+-- these explicitly poke it via IPC after the seek actually lands.
+hl.bind(super .. " + SHIFT + PERIOD", hl.dsp.exec_cmd("mpc seek +10 && qs ipc call mediaOsd seek"), { locked = true })
 hl.bind(super .. " + COMMA", hl.dsp.exec_cmd("mpc prev"), { locked = true })
-hl.bind(super .. " + SHIFT + COMMA", hl.dsp.exec_cmd("mpc seek -10"), { locked = true })
+hl.bind(super .. " + SHIFT + COMMA", hl.dsp.exec_cmd("mpc seek -10 && qs ipc call mediaOsd seek"), { locked = true })
 hl.bind(super .. " + P", hl.dsp.exec_cmd("mpc toggle"), { locked = true })
 hl.bind(super .. " + R", hl.dsp.exec_cmd("cycle-repeat-mode"), { locked = true })
 hl.bind(super .. " + S", hl.dsp.exec_cmd("toggle-shuffle"), { locked = true })
