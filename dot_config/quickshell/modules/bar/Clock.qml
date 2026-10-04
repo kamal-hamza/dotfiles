@@ -3,14 +3,14 @@ import Quickshell
 import "../../theme"
 import "../common"
 
-// Clock pill: shows HH:MM, ticking once a minute. Click toggles the
+// Clock pill: shows h:mm AM/PM, ticking once a minute. Click toggles the
 // CalendarPopup dropdown (owned by Bar.qml, which reads `open`).
 Pill {
     id: root
 
     property bool open: false
 
-    readonly property string time: Qt.formatDateTime(clock.date, "hh:mm")
+    readonly property string time: Qt.formatDateTime(clock.date, "h:mm AP")
 
     active: root.open
 

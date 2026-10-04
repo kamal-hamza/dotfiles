@@ -51,10 +51,8 @@ packages:
             - github-cli # Github CLI
             - yq # YAML file handling
             - just # Just (Alternative to Make) - Command runner
-            - thunar # file manager
+            - nautilus # file manager
             - gvfs # mount external storage
-            - thunar-volman # volume manager plugin for thunar
-            - thunar-archive-plugin # extraction plugin for thunar
             - tumbler # file thumbnailing service
             - xarchiver # extract or compress files
             - zip # zip files
@@ -153,10 +151,23 @@ packages:
             - godot # opensource game engine
             - docker # create app containers
             - docker-compose # manage multiple docker services
+            - docker-buildx # new docker build cli
             - thunderbird # email client
+            - gnome-maps # gnome maps app
+            - gnome-calculator # calculator
+            - gnome-disk-utility # disk/partition management ("Disks")
+            - baobab # disk usage analyzer
+            - gnome-weather # weather
+            - gnome-clocks # alarms/timers/world clock/stopwatch
+            - gnome-calendar # calendar
+            - gnome-system-monitor # task manager / process viewer
+            - loupe # image viewer
+            - simple-scan # scanning
+            - gnome-logs # GUI systemd journal viewer
 
         aur:
             - helium-browser-bin # browser
+            - podman-desktop-bin # podman (docker desktop alternative)
             - chatgpt-desktop-bin # ChatGPT desktop app
             - penpot-desktop-bin # penpot ui design app
             - zsh-autopair-git # Auto-close brackets in zs

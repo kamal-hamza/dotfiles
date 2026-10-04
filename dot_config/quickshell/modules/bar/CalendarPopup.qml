@@ -35,7 +35,7 @@ PopupCard {
 
     Text {
         anchors.horizontalCenter: parent.horizontalCenter
-        text: Qt.formatDateTime(popup.today, "hh:mm")
+        text: Qt.formatDateTime(popup.today, "h:mm AP")
         font.family: Theme.fontFamily
         font.pixelSize: Theme.font.display
         font.bold: true

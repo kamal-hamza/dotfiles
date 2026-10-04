@@ -1,6 +1,6 @@
 local super = "SUPER"
 local terminal = "ghostty"
-local fileManager = "thunar"
+local fileManager = "nautilus"
 local lock = "hyprlock"
 local browser = "helium-browser"
 local privateBrowser = "helium-browser --incognito"

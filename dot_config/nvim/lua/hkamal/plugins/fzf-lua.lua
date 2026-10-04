@@ -19,7 +19,56 @@ local function open_split(direction)
     end
 end
 
+-- Directories excluded from file/grep searches even outside a git repo
+-- (where there's no .gitignore to filter them). Still applies with alt-i.
+local excluded_dirs = {
+    ".git",
+    ".jj",
+    "node_modules",
+    "build",
+    "dist",
+    "out",
+    "target",
+    ".next",
+    ".nuxt",
+    ".svelte-kit",
+    ".turbo",
+    ".cache",
+    "coverage",
+    "vendor",
+    "__pycache__",
+    ".venv",
+    "venv",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".gradle",
+    ".idea",
+    "bin",
+    "obj",
+    ".zig-cache",
+    "zig-out",
+}
+
+local fd_excludes, rg_excludes = {}, {}
+for _, dir in ipairs(excluded_dirs) do
+    table.insert(fd_excludes, "--exclude " .. dir)
+    table.insert(rg_excludes, "-g '!" .. dir .. "/'")
+end
+fd_excludes = table.concat(fd_excludes, " ")
+rg_excludes = table.concat(rg_excludes, " ")
+
 fzf.setup({
+    files = {
+        fd_opts = "--color=never --type f --type l " .. fd_excludes,
+        rg_opts = "--color=never --files " .. rg_excludes,
+    },
+    grep = {
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 "
+            .. rg_excludes
+            .. " -e",
+    },
     winopts = {
         height = 0.5,
         width = 0.6,
