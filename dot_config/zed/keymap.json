@@ -92,8 +92,13 @@
             "alt-k": "editor::MoveLineUp",
             "alt-j": "editor::MoveLineDown",
             // Buffer prev/next aliases
-            "[b": "pane::ActivatePreviousItem",
-            "]b": "pane::ActivateNextItem",
+            "[ b": "pane::ActivatePreviousItem",
+            "] b": "pane::ActivateNextItem",
+            // Buffer picker (open buffers)
+            "space f b": "tab_switcher::Toggle",
+            // Tasks (.zed/tasks.json)
+            "space t t": "task::Spawn",
+            "space t r": "task::Rerun",
             // Window management
             "space w w": "workspace::ActivatePreviousPane",
             "space w -": "pane::SplitDown",
