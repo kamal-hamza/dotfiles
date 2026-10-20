@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Hyprland
 import "../../theme"
+import "../common"
 import "../services"
 
 // Transient bottom-center on-screen display for song-seek changes (Super+
@@ -85,10 +86,9 @@ PanelWindow {
             width: parent.width - Theme.spacing.lg * 2
             spacing: Theme.spacing.xs
 
-            Text {
+            MarqueeText {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
-                elide: Text.ElideRight
                 text: MediaService.trackTitle
                 color: Theme.textPrimary
                 font.family: Theme.fontFamily

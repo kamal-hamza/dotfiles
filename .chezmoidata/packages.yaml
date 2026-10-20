@@ -108,6 +108,8 @@ packages:
             - ttf-jetbrains-mono-nerd # Jetbrains Mono Nerd Font
             - adobe-source-serif-fonts # Source Serif font collection
             - adobe-source-sans-fonts # Source Sans font collection
+            - ttf-cascadia-code-nerd # Cascadia Cove Nerd Font
+            - ttf-droid # Droid Sans Mono Font
             - fastfetch # display system specs
             - zathura # pdf viewer
             - zathura-pdf-mupdf # pdf viewer backend

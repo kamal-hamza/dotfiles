@@ -23,9 +23,8 @@ Pill {
 
     active: root.open
 
-    Text {
+    MarqueeText {
         width: Math.min(implicitWidth, root.maxTextWidth)
-        elide: Text.ElideRight
         text: root.label
         font.family: Theme.fontFamily
         font.pixelSize: Theme.font.md

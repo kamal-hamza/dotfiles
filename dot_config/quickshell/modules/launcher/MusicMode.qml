@@ -488,7 +488,7 @@ Item {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         visible: MediaService.trackArtist.length > 0
-                        text: MediaService.trackArtist + (MediaService.trackAlbum ? " — " + MediaService.trackAlbum : "")
+                        text: MediaService.trackArtist + (MediaService.displayAlbum ? " — " + MediaService.displayAlbum : "")
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.font.sm
                         color: Theme.textTertiary

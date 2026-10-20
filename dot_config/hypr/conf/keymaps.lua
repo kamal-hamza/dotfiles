@@ -41,6 +41,9 @@ hl.bind(super .. " + F10", hl.dsp.exec_cmd("cycle-audio-input"))
 -- pops up on its own whenever these fire - no extra wiring needed there.
 hl.bind(super .. " + EQUAL", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true })
 hl.bind(super .. " + MINUS", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { locked = true })
+hl.bind(super .. " + SHIFT + EQUAL", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 1%+"), { locked = true })
+hl.bind(super .. " + SHIFT + MINUS", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 1%-"), { locked = true })
+
 
 -- window binds
 hl.bind(super .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })

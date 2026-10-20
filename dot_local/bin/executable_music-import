@@ -9,6 +9,9 @@ trusts whatever tags are already on the file, does no MusicBrainz search,
 and just organizes it. Never deletes a source file before verifying its
 audio made it into the library unchanged.
 
+Each run first drops library rows whose files were deleted from the music
+dir by hand, so the beets database always matches what's on disk.
+
 Lyrics aren't fetched here -- run `music-lyrics` afterwards.
 
 Exit codes: 0 nothing left in incoming/, 2 files still waiting there.
@@ -32,6 +35,8 @@ def main():
     with m.lock('music-import'):
         result = m.import_asis() if args.asis else m.run_import()
 
+    if result['pruned']:
+        print(f"pruned {result['pruned']} missing track(s) from the library")
     print(f"imported {result['imported']} file(s)")
     if result['left']:
         where = 'still need tagging' if not args.asis else "didn't organize (check tags)"

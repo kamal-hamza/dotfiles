@@ -31,7 +31,7 @@
             "ctrl-k": "workspace::ActivatePaneUp",
             "ctrl-j": "workspace::ActivatePaneDown",
             // LSP
-            "space c a": "editor::ToggleCodeActions",
+            "space c c": "editor::ToggleCodeActions",
             "space c r": "editor::Rename",
             "space c f": "editor::Format",
             "g d": "editor::GoToDefinition",

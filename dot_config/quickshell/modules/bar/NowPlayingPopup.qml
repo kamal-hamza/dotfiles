@@ -20,27 +20,21 @@ PopupCard {
     // when the current track has none.
     property bool showLyrics: false
 
-    // MprisPlayer.position isn't reactive on its own - force a re-read
+    // MediaService.position isn't reactive on its own - force a re-read
     // periodically while the popup is visible and something is playing, so
-    // the progress bar and elapsed-time readout move smoothly instead of
-    // only updating on track/seek events. Lyric sync deliberately does NOT
-    // use MediaService.position here (see LyricsService's header comment) -
-    // it polls mpd directly instead, since mpd-mpris can report a stale
-    // MPRIS position right after a track change until the next seek.
+    // the progress bar, elapsed-time readout and lyric sync move smoothly
+    // instead of only updating on track/seek events.
     Timer {
         interval: 250
         repeat: true
         running: popup.visible && MediaService.isPlaying
-        onTriggered: {
-            MediaService.tickProgress();
-            LyricsService.pollPosition();
-        }
+        onTriggered: MediaService.tickProgress()
     }
 
     readonly property real progress: MediaService.length > 0
         ? Math.max(0, Math.min(1, MediaService.position / MediaService.length)) : 0
 
-    readonly property int currentLyricIndex: LyricsService.lineIndexForPosition(LyricsService.position)
+    readonly property int currentLyricIndex: LyricsService.lineIndexForPosition(MediaService.position)
 
     component RoundButton: Rectangle {
         id: btn
@@ -139,10 +133,9 @@ PopupCard {
         width: parent.width
         spacing: 4
 
-        Text {
+        MarqueeText {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
-            elide: Text.ElideRight
             text: MediaService.hasPlayer ? MediaService.trackTitle : "Nothing playing"
             font.family: Theme.fontFamily
             font.pixelSize: Theme.font.lg
@@ -150,10 +143,9 @@ PopupCard {
             color: Theme.textPrimary
         }
 
-        Text {
+        MarqueeText {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
-            elide: Text.ElideRight
             visible: MediaService.trackArtist.length > 0
             text: MediaService.trackArtist
             font.family: Theme.fontFamily
@@ -161,12 +153,11 @@ PopupCard {
             color: Theme.textPrimary
         }
 
-        Text {
+        MarqueeText {
             width: parent.width
             horizontalAlignment: Text.AlignHCenter
-            elide: Text.ElideRight
-            visible: MediaService.trackAlbum.length > 0
-            text: MediaService.trackAlbum
+            visible: MediaService.displayAlbum.length > 0
+            text: MediaService.displayAlbum
             font.family: Theme.fontFamily
             font.pixelSize: Theme.font.sm
             color: Theme.textTertiary

@@ -9,6 +9,8 @@ import Quickshell.Io
 // musiclib.py's lrclib_lyrics()). No network call happens here, just a
 // local file read - and since that helper only ever writes `syncedLyrics`,
 // every .lrc this reads is guaranteed to carry per-line timestamps.
+// Falls back to the FLAC's embedded LYRICS tag when no sidecar exists
+// (see _readEmbedded()).
 //
 // MPRIS metadata has no local file path for MPD (mpd-mpris doesn't publish
 // xesam:url), so the path comes from `mpc current -f %file%` instead - the
@@ -19,13 +21,8 @@ import Quickshell.Io
 // (MediaService is a sibling singleton in this same directory, so it's
 // already visible here without an explicit import.)
 //
-// Playback position for line sync is *also* polled from `mpc status`
-// (root.position, via pollPosition()) instead of MediaService.position:
-// mpd-mpris doesn't reliably refresh MPRIS's Position at track-change
-// boundaries - it's been observed reporting a stale value carried over
-// from whichever track played before, sometimes for the entire length of
-// the new track, until an explicit seek forces a hard resync. `mpc
-// status` talks to mpd directly and doesn't have that problem.
+// Line sync uses MediaService.position, which for MPD is already polled
+// from `mpc status` rather than trusting MPRIS (see the comment there).
 
 QtObject {
     id: root
@@ -49,7 +46,6 @@ QtObject {
     function _refresh() {
         root.lines = [];
         root._relPath = "";
-        root.position = 0;
         if (!MediaService.isMpd) return;
         _mpcProc.running = true;
     }
@@ -72,28 +68,30 @@ QtObject {
         printErrors: false
         watchChanges: false
         onLoaded: root._parse(_lrcFile.text())
-        onLoadFailed: root.lines = []
+        onLoadFailed: root._readEmbedded()
     }
 
-    // Ground-truth elapsed seconds, refreshed on demand - call this from a
-    // Timer while the lyrics panel is actually visible (see
-    // NowPlayingPopup.qml), same lifecycle MediaService.tickProgress()
-    // already uses for the ordinary progress bar.
-    property real position: 0
+    // Fallback when there's no sidecar (e.g. a tagger like Picard renamed
+    // the FLAC but left its .lrc behind under the old name): read the
+    // LYRICS Vorbis comment embedded in the file itself. Only synced
+    // lyrics survive _parse(), same as for sidecars.
+    function _readEmbedded() {
+        root.lines = [];
+        if (root._relPath === "") return;
+        _embeddedProc.command = ["metaflac", "--show-tag=LYRICS", root.musicRoot + root._relPath];
+        _embeddedProc.running = true;
+    }
 
-    property Process _statusProc: Process {
-        command: ["mpc", "status"]
+    property Process _embeddedProc: Process {
         stdout: StdioCollector {
             onStreamFinished: {
-                // Second line looks like "[playing] #1/2   0:54/4:50 (18%)".
-                const m = text.match(/(\d+):(\d+)\/\d+:\d+/);
-                if (m) root.position = Number(m[1]) * 60 + Number(m[2]);
+                // Stale result from a previous track - _refresh() already moved on.
+                if (_embeddedProc.command[2] !== root.musicRoot + root._relPath) return;
+                // metaflac prints "LYRICS=<value>" with any newlines in the
+                // value emitted verbatim, so only the first line has the prefix.
+                root._parse(text.replace(/^LYRICS=/i, ""));
             }
         }
-    }
-
-    function pollPosition() {
-        if (MediaService.isMpd) _statusProc.running = true;
     }
 
     // LRC is "[mm:ss.cc] text" per line; anything without a leading

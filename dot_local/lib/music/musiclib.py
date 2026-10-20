@@ -192,6 +192,20 @@ def _incoming_files():
     return batch_dirs, loose + [f for d in batch_dirs for f in sorted(d.glob('*.flac'))]
 
 
+def prune_missing(lib):
+    """Drop library rows whose file is gone from disk (deleted by hand).
+    Without this, beets' duplicate check still sees the ghost row and
+    silently skips re-importing that track. Rows only -- never touches
+    files. Skipped when MUSIC_ROOT is empty, so an unmounted music drive
+    can't wipe the whole library."""
+    if not any(MUSIC_ROOT.iterdir()):
+        return 0
+    gone = [i for i in lib.items() if not os.path.exists(i.path)]
+    for item in gone:
+        item.remove(delete=False)
+    return len(gone)
+
+
 def _cleanup_empty_dirs(batch_dirs):
     for d in batch_dirs:
         try:
@@ -215,6 +229,7 @@ def run_import():
     imported. Everything else is left untouched in incoming/ for you to
     tag by hand and pick up later with import_asis()."""
     lib = setup()
+    pruned = prune_missing(lib)
     batch_dirs, all_files = _incoming_files()
 
     keys = {f: _album_key(f) for f in all_files}
@@ -230,7 +245,7 @@ def run_import():
 
     _cleanup_empty_dirs(batch_dirs)
     left = len(_incoming_files()[1])
-    return {'imported': len(imported), 'left': left, 'stuck': len(stuck)}
+    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned}
 
 
 def import_asis():
@@ -241,6 +256,7 @@ def import_asis():
     Files still missing basic artist/title tags are left alone rather than
     organized into a useless path -- there's nothing sane to name them."""
     lib = setup()
+    pruned = prune_missing(lib)
     batch_dirs, all_files = _incoming_files()
     ready = []
     for f in all_files:
@@ -250,7 +266,7 @@ def import_asis():
     imported, stuck = _run_session(lib, [str(f).encode() for f in ready], singletons=True, asis=True)
     _cleanup_empty_dirs(batch_dirs)
     left = len(_incoming_files()[1])
-    return {'imported': len(imported), 'left': left, 'stuck': len(stuck)}
+    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned}
 
 
 def _item_artists(item):
