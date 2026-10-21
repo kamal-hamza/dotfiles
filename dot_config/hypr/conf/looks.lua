@@ -40,7 +40,13 @@ hl.config({
 		dim_around = 0.7,
 		border_part_of_window = true,
 		blur = {
-			enabled = false,
+			enabled = true,
+			size = 7,
+			passes = 3,
+			noise = 0.01,
+			vibrancy = 0.2,
+			new_optimizations = true,
+			xray = false,
 		},
 		shadow = {
 			enabled = false,
