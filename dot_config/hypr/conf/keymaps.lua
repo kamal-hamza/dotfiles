@@ -34,6 +34,9 @@ hl.bind(super .. " + B", hl.dsp.workspace.toggle_special("music"))
 hl.bind(super .. " + F9", hl.dsp.exec_cmd("cycle-audio-output"))
 hl.bind(super .. " + F10", hl.dsp.exec_cmd("cycle-audio-input"))
 
+-- SteamOS-style gaming mode: Steam's Deck UI fullscreen in gamescope (toggle)
+hl.bind(super .. " + F12", hl.dsp.exec_cmd("bigpicture-toggle"))
+
 -- system volume for the currently active output device (whichever sink is
 -- default - set via quickshell's AudioPopup or cycle-audio-output above;
 -- wpctl targets @DEFAULT_AUDIO_SINK@ so it always follows that choice).

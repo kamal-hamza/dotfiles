@@ -1,12 +1,13 @@
 {
     "vim_mode": true,
     // theme
-    "theme": "dark glass",
+    "theme": "VSCode Dark Modern",
     "ui_font_family": "MesloLGL Nerd Font Mono",
     "ui_font_size": 12,
     "buffer_font_family": "MesloLGL Nerd Font Mono",
     "buffer_font_size": 14.5,
-    "cursor_blink": false,
+    "text_rendering_mode": "grayscale",
+    "cursor_blink": true,
     "terminal": {
         "font_family": "MesloLGL Nerd Font Mono",
         "font_size": 12,

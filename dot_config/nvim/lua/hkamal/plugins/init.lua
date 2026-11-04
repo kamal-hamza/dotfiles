@@ -1,5 +1,6 @@
 require("hkamal.plugins.modus-themes")
 require("hkamal.plugins.themes")
+require("hkamal.plugins.vscode")
 require("hkamal.plugins.which-key")
 require("hkamal.plugins.fzf-lua")
 require("hkamal.plugins.toggleterm")
@@ -49,7 +50,7 @@ local theme = require("hkamal.theme")
 
 local saved = theme.load()
 if not saved or not pcall(vim.cmd.colorscheme, saved) then
-    vim.cmd.colorscheme("modus")
+    vim.cmd.colorscheme("vscode")
 end
 
 -- applied after the colorscheme since some loaders (e.g. modus-themes) force

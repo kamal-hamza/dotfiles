@@ -75,6 +75,8 @@ packages:
             - hyprpaper # Blazing fast, native wallpaper utility
             - jq # JSON processor (used by create-project to parse GitHub API responses)
             - polkit-gnome # Handles administrative authentication prompts (GUI)
+            - gnome-keyring # Secret Service (org.freedesktop.secrets) provider for app logins/tokens
+            - seahorse # GUI for viewing and managing gnome-keyring secrets
             - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
             - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes
             - grim # Screenshot utility for Wayland
@@ -143,7 +145,8 @@ packages:
             - lib32-mangohud # 32-bit support for MangoHud in Steam games
             - gamemode # Feral Interactive performance daemon for optimizing CPU/GPU during games
             - lib32-gamemode # 32-bit GameMode support for Steam and Proton games
-            - gamescope # Valve’s Wayland compositor for better fullscreen control, scaling, and HDR support
+            - gamescope # Valve’s Wayland compositor for better fullscreen control, scaling, and HDR support (used by bigpicture-toggle)
+            - libnotify # notify-send, for desktop notifications from scripts like bigpicture-toggle
             - wine # Compatibility layer for running Windows applications and non-Steam games
             - winetricks # helper script for installing Windows dependencies inside Wine prefixes
             - git-delta # git cli pager

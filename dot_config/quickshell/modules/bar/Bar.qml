@@ -4,7 +4,7 @@ import "../../theme"
 import "../notifications"
 
 // A slim top bar, one per output: clock + volume + now-playing on the left
-// (matching waybar's left grouping), workspaces centered, tray/network/
+// (matching waybar's left grouping), workspaces centered, prayer/tray/network/
 // bluetooth + notifications/idle/power on the right. One continuous bar
 // surface (not per-module pills) - widgets sit directly on it and only get
 // a soft highlight on hover/active. New bar widgets get added here.
@@ -73,6 +73,9 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
         spacing: Theme.spacing.sm
 
+        Prayer {
+            id: prayerWidget
+        }
         SystemTray {
             anchors.verticalCenter: parent.verticalCenter
         }
@@ -105,6 +108,12 @@ PanelWindow {
         id: calendarPopup
         anchorWindow: bar
         anchorItem: clockWidget
+    }
+
+    PrayerPopup {
+        id: prayerPopup
+        anchorWindow: bar
+        anchorItem: prayerWidget
     }
 
     NowPlayingPopup {
@@ -161,6 +170,15 @@ PanelWindow {
     Connections {
         target: calendarPopup
         function onDismissed() { clockWidget.open = false; }
+    }
+
+    Connections {
+        target: prayerWidget
+        function onOpenChanged() { prayerPopup.visible = prayerWidget.open; }
+    }
+    Connections {
+        target: prayerPopup
+        function onDismissed() { prayerWidget.open = false; }
     }
 
     Connections {
