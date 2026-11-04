@@ -66,6 +66,7 @@ QtObject {
     // Bar
     readonly property int barHeight: 42
     readonly property int pillHeight: 32
+    readonly property int barIconSlot: 40
 
     // Workspace indicator
     readonly property int workspaceSize: 28

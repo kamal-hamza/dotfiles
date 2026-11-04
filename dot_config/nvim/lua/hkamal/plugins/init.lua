@@ -1,6 +1,5 @@
 require("hkamal.plugins.modus-themes")
 require("hkamal.plugins.themes")
-require("hkamal.plugins.vscode")
 require("hkamal.plugins.which-key")
 require("hkamal.plugins.fzf-lua")
 require("hkamal.plugins.toggleterm")
@@ -41,6 +40,7 @@ require("hkamal.plugins.tiny-code-action")
 require("hkamal.plugins.rustaceanvim")
 require("hkamal.plugins.vim-godot")
 require("hkamal.plugins.highlight-colors")
+require("hkamal.plugins.indent-blankline")
 require("hkamal.plugins.heirline")
 require("hkamal.plugins.flash")
 require("hkamal.plugins.surround")
@@ -50,7 +50,7 @@ local theme = require("hkamal.theme")
 
 local saved = theme.load()
 if not saved or not pcall(vim.cmd.colorscheme, saved) then
-    vim.cmd.colorscheme("vscode")
+    vim.cmd.colorscheme("vscode-dark")
 end
 
 -- applied after the colorscheme since some loaders (e.g. modus-themes) force

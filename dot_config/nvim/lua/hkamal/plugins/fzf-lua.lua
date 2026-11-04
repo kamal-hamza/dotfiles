@@ -113,6 +113,8 @@ vim.keymap.set("n", "<leader>fd", fzf.diagnostics_workspace, { desc = "Project D
 vim.keymap.set("n", "<leader>ft", function()
     fzf.colorschemes({
         colors = {
+            "vscode-dark",
+            "vscode-light",
             "modus",
             "modus_operandi",
             "modus_vivendi",

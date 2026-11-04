@@ -169,6 +169,7 @@ packages:
             - loupe # image viewer
             - simple-scan # scanning
             - gnome-logs # GUI systemd journal viewer
+            - hyprsunset # monitor color temp tool
 
         aur:
             - helium-browser-bin # browser

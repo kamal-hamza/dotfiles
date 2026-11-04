@@ -3,9 +3,9 @@ import Quickshell
 import "../../theme"
 import "../notifications"
 
-// A slim top bar, one per output: clock + volume + now-playing on the left
-// (matching waybar's left grouping), workspaces centered, prayer/tray/network/
-// bluetooth + notifications/idle/power on the right. One continuous bar
+// A slim top bar, one per output: clock/prayer/volume/now-playing on the
+// left, workspaces centered, evenly spaced icons on the right (connectivity,
+// night light, notifications + power). One continuous bar
 // surface (not per-module pills) - widgets sit directly on it and only get
 // a soft highlight on hover/active. New bar widgets get added here.
 PanelWindow {
@@ -53,6 +53,9 @@ PanelWindow {
         Clock {
             id: clockWidget
         }
+        Prayer {
+            id: prayerWidget
+        }
         Volume {
             id: volumeWidget
         }
@@ -71,36 +74,26 @@ PanelWindow {
         anchors.right: parent.right
         anchors.rightMargin: Theme.spacing.lg
         anchors.verticalCenter: parent.verticalCenter
-        spacing: Theme.spacing.sm
 
-        Prayer {
-            id: prayerWidget
-        }
-        SystemTray {
-            anchors.verticalCenter: parent.verticalCenter
-        }
-        SystemMonitor {
-            id: systemMonitorWidget
-        }
         Network {
             id: networkWidget
+            minWidth: Theme.barIconSlot
         }
         Bluetooth {
             id: bluetoothWidget
+            minWidth: Theme.barIconSlot
         }
-
-        // Wider gap: status pills | quick actions.
-        Item { width: Theme.spacing.md; height: 1 }
-
+        NightLight {
+            id: nightLight
+            minWidth: Theme.barIconSlot
+        }
         NotificationBell {
             id: notificationBell
-        }
-        IdleInhibitor {
-            id: idleInhibitor
-            anchorWindow: bar
+            minWidth: Theme.barIconSlot
         }
         PowerButton {
             id: powerButton
+            minWidth: Theme.barIconSlot
         }
     }
 
@@ -126,12 +119,6 @@ PanelWindow {
         id: audioPopup
         anchorWindow: bar
         anchorItem: volumeWidget
-    }
-
-    SystemMonitorPopup {
-        id: systemMonitorPopup
-        anchorWindow: bar
-        anchorItem: systemMonitorWidget
     }
 
     NetworkPopup {
@@ -197,15 +184,6 @@ PanelWindow {
     Connections {
         target: audioPopup
         function onDismissed() { volumeWidget.open = false; }
-    }
-
-    Connections {
-        target: systemMonitorWidget
-        function onOpenChanged() { systemMonitorPopup.visible = systemMonitorWidget.open; }
-    }
-    Connections {
-        target: systemMonitorPopup
-        function onDismissed() { systemMonitorWidget.open = false; }
     }
 
     Connections {

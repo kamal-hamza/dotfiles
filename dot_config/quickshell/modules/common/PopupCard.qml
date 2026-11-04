@@ -3,10 +3,9 @@ import Quickshell
 import "../../theme"
 
 // Shared popup chrome: every dropdown (calendar, now-playing, audio,
-// network, bluetooth, notification center, power menu, system monitor) is
-// one of these instead of hand-rolling its own PopupWindow + card
-// Rectangle, so they all share the same radius/border/background and open
-// animation.
+// network, bluetooth, notification center, power menu) is one of these
+// instead of hand-rolling its own PopupWindow + card Rectangle, so they all
+// share the same radius/border/background and open animation.
 //
 // Entrance-only animation: a PopupWindow's Wayland surface unmaps the
 // instant `visible` goes false, so there is nothing left on screen to

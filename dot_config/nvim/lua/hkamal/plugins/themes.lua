@@ -7,4 +7,5 @@ vim.pack.add({
     "https://github.com/sainnhe/sonokai",
     "https://github.com/ydkulks/cursor-dark.nvim",
     "https://github.com/olimorris/onedarkpro.nvim",
+    "https://github.com/Mofiqul/vscode.nvim",
 })

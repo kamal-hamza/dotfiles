@@ -4,7 +4,7 @@ import "../../theme"
 // Shared bar-item hover chrome: transparent by default (the bar itself now
 // draws one continuous background, per feedback - no individual bordered
 // pills), with a soft rounded highlight on hover/active. Clock/Volume/
-// NowPlaying/Network/Bluetooth/NotificationBell/IdleInhibitor/PowerButton
+// NowPlaying/Network/Bluetooth/NotificationBell/NightLight/PowerButton
 // all wrap their content in one of these instead of redefining the same
 // Rectangle + Behavior block each time.
 Rectangle {
@@ -12,13 +12,16 @@ Rectangle {
 
     default property alias content: contentItem.data
     property bool active: false
+    // Glyph widths vary, so a row of icons needs a fixed-width slot per pill
+    // to look evenly spaced. Content wider than this still grows the pill.
+    property int minWidth: 0
     readonly property alias hovered: mouseArea.containsMouse
 
     signal clicked(var mouse)
     signal wheel(var wheel)
 
     implicitHeight: Theme.pillHeight
-    implicitWidth: contentItem.implicitWidth + Theme.spacing.md * 2
+    implicitWidth: Math.max(root.minWidth, contentItem.implicitWidth + Theme.spacing.md * 2)
     radius: Theme.radius.control
     color: (mouseArea.containsMouse || root.active) ? Theme.bgHover : "transparent"
 
