@@ -47,7 +47,18 @@ require("blink.cmp").setup({
     },
     sources = {
         default = { "lsp", "path", "snippets", "buffer", "git" },
+        -- dadbod completion knows the connected db's tables/columns, so it
+        -- replaces lsp in sql buffers (sqlls has no live schema)
+        per_filetype = {
+            sql = { "dadbod", "snippets", "buffer" },
+            mysql = { "dadbod", "snippets", "buffer" },
+            plsql = { "dadbod", "snippets", "buffer" },
+        },
         providers = {
+            dadbod = {
+                module = "vim_dadbod_completion.blink",
+                name = "Dadbod",
+            },
             git = {
                 module = "blink-cmp-git",
                 name = "Git",

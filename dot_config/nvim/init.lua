@@ -2,7 +2,6 @@ require("hkamal.options")
 require("hkamal.keymaps")
 require("hkamal.autocmds")
 require("hkamal.filetype")
-require("hkamal.netrw")
 require("hkamal.plugins")
 
 local function set_hl_style(group, opts)

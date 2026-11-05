@@ -20,6 +20,7 @@ packages:
             - gh # Github CLI
             - just # Just (Alternative to Make) - Command runner
             - fontforge # font configuration
+            - sqlite # sqlite3 cli (used by vim-dadbod)
 
         casks:
             - chatgpt # ChatGPT desktop app
@@ -119,6 +120,7 @@ packages:
             - clang # c compiler
             - llvm # c / cpp backend
             - ripgrep # grepping tool
+            - sqlite # sqlite3 cli (used by vim-dadbod)
             - qt6-multimedia # metadata for audio files
             - vlc # metadata for audio files
             - openssh # ssh support

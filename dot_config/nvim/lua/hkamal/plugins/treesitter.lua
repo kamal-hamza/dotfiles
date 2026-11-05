@@ -28,6 +28,7 @@ require("nvim-treesitter").install({
     "go",
     "gomod",
     "gosum",
+    "sql",
     "gowork",
     "toml",
     "gdscript",

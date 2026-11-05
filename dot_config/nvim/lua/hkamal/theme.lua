@@ -64,6 +64,9 @@ end
 vim.api.nvim_create_autocmd("ColorScheme", {
     callback = function(args)
         M.save(args.match)
+        -- follow the text color so the cursor stays visible on light and dark themes
+        local fg = vim.api.nvim_get_hl(0, { name = "Normal", link = false }).fg
+        vim.api.nvim_set_hl(0, "CursorColor", { bg = fg })
     end,
 })
 

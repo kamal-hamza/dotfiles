@@ -32,6 +32,9 @@ vim.opt.splitright = true
 vim.opt.splitbelow = true
 -- ui
 vim.opt.termguicolors = true
+-- CursorColor is defined in hkamal.theme; without a group nvim leaves the cursor
+-- at the terminal's default color, which is nearly invisible on light themes
+vim.opt.guicursor = "n-v-c-sm:block-CursorColor,i-ci-ve:ver25-CursorColor,r-cr-o:hor20-CursorColor,t:block-blinkon500-blinkoff500-CursorColor"
 vim.opt.signcolumn = "yes"
 vim.opt.cursorline = true
 vim.opt.wrap = false
