@@ -48,6 +48,7 @@ require("hkamal.plugins.heirline")
 require("hkamal.plugins.flash")
 require("hkamal.plugins.surround")
 require("hkamal.plugins.comment")
+require("hkamal.plugins.conduit")
 
 local theme = require("hkamal.theme")
 
