@@ -196,7 +196,7 @@ Item {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onPositionChanged: root.historyIndex = recentRow.index
+                                onPositionChanged: mouse => { if (root.launcher.pointerMoved(recentRow, mouse)) root.historyIndex = recentRow.index; }
                                 onClicked: root._run(recentRow.modelData)
                             }
                         }

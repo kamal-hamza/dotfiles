@@ -371,7 +371,7 @@ Item {
                         anchors.fill: parent
                         hoverEnabled: true
                         cursorShape: Qt.PointingHandCursor
-                        onPositionChanged: root.selectedIndex = row.index
+                        onPositionChanged: mouse => { if (root.launcher.pointerMoved(row, mouse)) root.selectedIndex = row.index; }
                         onClicked: root._open(row.modelData)
                     }
                 }

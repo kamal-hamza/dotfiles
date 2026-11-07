@@ -41,6 +41,8 @@ PanelWindow {
 
     function open(m) {
         launcher.mode = m;
+        launcher._lastPointer = null;
+        launcher.cursorHidden = true;
         launcher.visible = true;
         focusTimer.restart();
     }
@@ -73,6 +75,24 @@ PanelWindow {
     }
     function isPrevious(event) {
         return event.key === Qt.Key_Up || (event.key === Qt.Key_P && (event.modifiers & Qt.ControlModifier));
+    }
+
+    // Qt re-delivers hover/position events whenever a list re-filters or
+    // scrolls under a stationary cursor, which made the row under the mouse
+    // steal the selection (so Enter launched it instead of the top result).
+    // Rows call this from onPositionChanged and only take the selection when
+    // the cursor really moved in window coordinates. The first event after
+    // opening just records the position, so a cursor resting over the card
+    // when the launcher appears doesn't count as movement.
+    property var _lastPointer: null
+    // Blank cursor while the launcher is open, until the mouse really moves
+    // (see the cursor-hider MouseArea at the bottom of this file).
+    property bool cursorHidden: false
+    function pointerMoved(item, mouse) {
+        const p = item.mapToItem(null, mouse.x, mouse.y);
+        const last = launcher._lastPointer;
+        launcher._lastPointer = p;
+        return last !== null && (p.x !== last.x || p.y !== last.y);
     }
 
     readonly property var allModes: [appsMode, runMode, calcMode, clipboardMode, musicMode, libraryMode, powerMode]
@@ -260,6 +280,22 @@ PanelWindow {
             anchors.margins: Theme.spacing.lg
             launcher: launcher
             visible: launcher.mode === "power"
+        }
+    }
+
+    // --- Cursor hider ---
+    // Topmost, button-transparent overlay that shows a blank cursor over the
+    // whole window. The first real pointer movement disables it, which
+    // returns the cursor to the normal per-item shapes beneath.
+    MouseArea {
+        id: cursorHider
+        anchors.fill: parent
+        visible: launcher.cursorHidden
+        hoverEnabled: true
+        acceptedButtons: Qt.NoButton
+        cursorShape: Qt.BlankCursor
+        onPositionChanged: mouse => {
+            if (launcher.pointerMoved(cursorHider, mouse)) launcher.cursorHidden = false;
         }
     }
 }

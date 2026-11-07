@@ -271,7 +271,7 @@ Item {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
-                                onPositionChanged: root.selectedIndex = songRow.index
+                                onPositionChanged: mouse => { if (root.launcher.pointerMoved(songRow, mouse)) root.selectedIndex = songRow.index; }
                                 onClicked: root._queueAndPlay(songRow.modelData.file)
                             }
                         }
@@ -427,7 +427,7 @@ Item {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onPositionChanged: root.selectedIndex = queueRow.index
+                            onPositionChanged: mouse => { if (root.launcher.pointerMoved(queueRow, mouse)) root.selectedIndex = queueRow.index; }
                             onClicked: root._playQueueEntry(queueRow.modelData)
                         }
                     }

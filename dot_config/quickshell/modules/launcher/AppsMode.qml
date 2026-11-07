@@ -203,7 +203,7 @@ Item {
                         hoverEnabled: true
                         acceptedButtons: Qt.LeftButton | Qt.RightButton
                         cursorShape: Qt.PointingHandCursor
-                        onPositionChanged: root.selectedIndex = row.index
+                        onPositionChanged: mouse => { if (root.launcher.pointerMoved(row, mouse)) root.selectedIndex = row.index; }
                         onClicked: mouse => {
                             if (mouse.button === Qt.RightButton) {
                                 contextMenu.entry = row.modelData;
