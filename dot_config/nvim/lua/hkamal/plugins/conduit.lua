@@ -4,7 +4,10 @@ require("conduit").setup({
     default_agent = "claude",
     -- Inline edits run in a fresh session each time; keep them fast.
     inline = {
-        options = { model = "sonnet", effort = "low" },
+        options = { model = "sonnet", effort = "medium" },
+    },
+    review = {
+        inline = true,
     },
 })
 

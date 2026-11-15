@@ -10,7 +10,9 @@ and just organizes it. Never deletes a source file before verifying its
 audio made it into the library unchanged.
 
 Each run first drops library rows whose files were deleted from the music
-dir by hand, so the beets database always matches what's on disk.
+dir by hand, so the beets database always matches what's on disk. MPD
+playlists are synced before and after (see music-sync), so tracks
+that get renamed stay in them.
 
 Lyrics aren't fetched here -- run `music-lyrics` afterwards.
 
@@ -38,6 +40,11 @@ def main():
     if result['pruned']:
         print(f"pruned {result['pruned']} missing track(s) from the library")
     print(f"imported {result['imported']} file(s)")
+    playlists = result['playlists']
+    if playlists['repaired']:
+        print(f"repaired {playlists['repaired']} playlist entr{'y' if playlists['repaired'] == 1 else 'ies'}")
+    if playlists['unresolved']:
+        print(f"{len(playlists['unresolved'])} playlist entr{'y' if len(playlists['unresolved']) == 1 else 'ies'} point at nothing (run music-sync for details)")
     if result['left']:
         where = 'still need tagging' if not args.asis else "didn't organize (check tags)"
         print(f"{result['left']} file(s) in incoming/ {where}")

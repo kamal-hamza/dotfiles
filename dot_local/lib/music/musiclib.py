@@ -206,6 +206,68 @@ def prune_missing(lib):
     return len(gone)
 
 
+# beets (via mediafile) reads several Vorbis keys per field and takes the
+# FIRST present -- and for these fields that's an alias, not the key Picard
+# writes. beets writes every alias whenever it saves a file, Picard then
+# updates only its own key, and from then on the stale alias shadows every
+# Picard edit (observed: ALBUM ARTIST still holding the downloader's value,
+# DISC=0 next to DISCNUMBER=1). Picard's key -> the aliases read before it.
+_SHADOWING_ALIASES = {
+    'ALBUMARTIST': ('ALBUM ARTIST', 'ALBUM_ARTIST'),
+    'TRACKNUMBER': ('TRACK',),
+    'DISCNUMBER': ('DISC',),
+}
+
+
+def reconcile_tags(items, dry_run=False):
+    """Drop aliases that disagree with Picard's key for the same field, so
+    beets reads what Picard wrote. Only touches tags, never audio (the
+    STREAMINFO MD5 playlists key on is unchanged). Returns files changed."""
+    import mutagen.flac
+    changed = 0
+    for item in items:
+        path = item.path.decode() if isinstance(item.path, bytes) else item.path
+        if not path.lower().endswith('.flac'):
+            continue
+        f = mutagen.flac.FLAC(path)
+        if f.tags is None:
+            continue
+        stale = [alias for key, aliases in _SHADOWING_ALIASES.items() if f.tags.get(key)
+                 for alias in aliases if f.tags.get(alias) and f.tags.get(alias) != f.tags.get(key)]
+        if not stale:
+            continue
+        changed += 1
+        if not dry_run:
+            for alias in stale:
+                del f.tags[alias]
+            f.save()
+    return changed
+
+
+def refresh_library(lib, dry_run=False):
+    """Make beets' DB match the tags on disk (the files are the source of
+    truth -- they're kept up to date in Picard), via beets' own `update`
+    logic, after reconcile_tags() has cleared aliases that would hide
+    Picard's values. Re-reads every file rather than trusting mtimes, since
+    Picard can preserve timestamps when saving. Returns the number of
+    tracks whose DB row changed. Never moves/renames files. Missing files
+    are left to prune_missing(), which guards against an unmounted music
+    dir; update_items() would happily drop every row."""
+    from beets.ui.commands.update import update_items
+    items = [i for i in lib.items() if os.path.exists(i.path)]
+    if not items:
+        return 0
+    reconcile_tags(items, dry_run=dry_run)
+    before = {i.id: dict(i) for i in items}
+    for i in items:
+        i.mtime = 0  # force update_items() to re-read every file
+    update_items(lib, items, move=False, pretend=dry_run, fields=None)
+    if dry_run:
+        return sum(1 for i in items if any(i.get(k) != v for k, v in before[i.id].items() if k != 'mtime'))
+    return sum(1 for i in lib.items() if i.id in before
+               and any(i.get(k) != v for k, v in before[i.id].items() if k != 'mtime'))
+
+
 def _cleanup_empty_dirs(batch_dirs):
     for d in batch_dirs:
         try:
@@ -229,7 +291,9 @@ def run_import():
     imported. Everything else is left untouched in incoming/ for you to
     tag by hand and pick up later with import_asis()."""
     lib = setup()
+    sync_playlists()  # snapshot playlist identities before any path can change
     pruned = prune_missing(lib)
+    refresh_library(lib)
     batch_dirs, all_files = _incoming_files()
 
     keys = {f: _album_key(f) for f in all_files}
@@ -245,7 +309,9 @@ def run_import():
 
     _cleanup_empty_dirs(batch_dirs)
     left = len(_incoming_files()[1])
-    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned}
+    refresh_library(lib)
+    playlists = sync_playlists()
+    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned, 'playlists': playlists}
 
 
 def import_asis():
@@ -256,7 +322,9 @@ def import_asis():
     Files still missing basic artist/title tags are left alone rather than
     organized into a useless path -- there's nothing sane to name them."""
     lib = setup()
+    sync_playlists()  # snapshot playlist identities before any path can change
     pruned = prune_missing(lib)
+    refresh_library(lib)
     batch_dirs, all_files = _incoming_files()
     ready = []
     for f in all_files:
@@ -266,7 +334,9 @@ def import_asis():
     imported, stuck = _run_session(lib, [str(f).encode() for f in ready], singletons=True, asis=True)
     _cleanup_empty_dirs(batch_dirs)
     left = len(_incoming_files()[1])
-    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned}
+    refresh_library(lib)
+    playlists = sync_playlists()
+    return {'imported': len(imported), 'left': left, 'stuck': len(stuck), 'pruned': pruned, 'playlists': playlists}
 
 
 def _item_artists(item):
@@ -439,6 +509,8 @@ def fix_album_tags(dry_run=False):
     Library launcher reads from) end up in sync. Never moves/renames files,
     so playlist paths stay valid."""
     lib = setup()
+    if not dry_run:
+        sync_playlists()
     fixed, skipped, checked = 0, 0, 0
     for item in lib.items():
         album = (item.album or '').strip().lower()
@@ -472,4 +544,172 @@ def fix_album_tags(dry_run=False):
         item.mb_releasegroupid = (release.get('release-group') or {}).get('id', '')
         item.try_sync(write=True, move=False)
         fixed += 1
+    if not dry_run:
+        sync_playlists()
     return {'checked': checked, 'fixed': fixed, 'skipped': skipped}
+
+
+# MPD's saved playlists (`mpc save`, ncmpcpp's playlist editor) are plain
+# .m3u files of paths relative to MUSIC_ROOT -- the moment a file is renamed
+# (Picard's "rename files", a beets path format change, a library rebuild),
+# every playlist entry pointing at it silently dies. MPD rewrites these
+# files itself on every edit, dropping anything that isn't a bare path, so
+# the stable identity of each entry lives in a sidecar manifest per playlist
+# instead. sync_playlists() keeps that manifest fresh for every entry that
+# still resolves and uses it to re-point entries that don't.
+#
+# Identity is read from the files on disk, never the beets DB: Picard
+# renames and retags files behind beets' back, so the DB's paths and tags
+# can be stale. In order of trust:
+#   1. FLAC STREAMINFO audio MD5 -- a hash of the decoded audio itself, so
+#      it survives any rename and any tag edit; changes only if the audio
+#      is replaced.
+#   2. MusicBrainz recording id (MUSICBRAINZ_TRACKID) -- survives swapping
+#      in a different rip/master of the same recording.
+#   3. artist + title -- only for entries that predate their manifest.
+PLAYLIST_DIR = Path(os.environ.get('MPD_PLAYLIST_DIR', Path.home() / '.config' / 'mpd' / 'playlists'))
+PLAYLIST_MANIFESTS = STATE / 'playlists'
+_AUDIO_EXTS = {'.flac', '.mp3', '.m4a', '.ogg', '.opus'}
+
+
+def _norm(s):
+    """Loose match key: case-, punctuation- and whitespace-insensitive, so
+    filesystem-sanitized names ("R.E.M_", odd unicode hyphens) still match
+    their tags."""
+    return ''.join(c for c in (s or '').casefold() if c.isalnum())
+
+
+def _scan_library():
+    """One identity record per audio file under MUSIC_ROOT, straight from
+    its own tags/stream info. Cheap: mutagen only reads the header blocks."""
+    import mutagen
+    records = []
+    for path in sorted(MUSIC_ROOT.rglob('*')):
+        if path.suffix.lower() not in _AUDIO_EXTS or not path.is_file():
+            continue
+        try:
+            f = mutagen.File(path, easy=True)
+        except Exception:
+            continue
+        if f is None:
+            continue
+        tags = f.tags or {}
+        first = lambda k: (tags.get(k) or [''])[0]
+        md5 = getattr(f.info, 'md5_signature', 0)
+        records.append({
+            'path': str(path.relative_to(MUSIC_ROOT)),
+            'md5': f'{md5:032x}' if md5 else '',
+            'mbid': first('musicbrainz_trackid'),
+            'artist': first('artist'),
+            'title': first('title'),
+            'artists': tags.get('artists') or [],
+        })
+    return records
+
+
+def _path_guess(rel):
+    """(artist, title) guessed from a dead path's own shape -- the fallback
+    for entries that predate their manifest. Covers the layouts this library
+    has used: "<Artist>/<Title>.flac" and "<Artist>/<NN> [<Artist> - ]<Title>.flac"."""
+    p = Path(rel)
+    stem = p.stem
+    head, _, rest = stem.partition(' ')
+    if rest and head.replace('-', '').isdigit():
+        stem = rest
+    artist = p.parent.name
+    if stem.startswith(artist + ' - '):
+        stem = stem[len(artist) + 3:]
+    return artist, stem
+
+
+def _resolver(records):
+    by_path, by_md5, by_mbid, by_artist_title, by_title, by_dir = {}, {}, {}, {}, {}, {}
+    for r in records:
+        by_path[r['path']] = r
+        if r['md5']:
+            by_md5.setdefault(r['md5'], r)
+        if r['mbid']:
+            by_mbid.setdefault(r['mbid'], r)
+        t = _norm(r['title'])
+        for a in {r['artist'], *r['artists']}:
+            by_artist_title.setdefault((_norm(a), t), r)
+        by_title.setdefault(t, []).append(r)
+        by_dir.setdefault(str(Path(r['path']).parent), []).append(r)
+
+    def resolve(rel, rec):
+        if rec and rec.get('md5') in by_md5:
+            return by_md5[rec['md5']]
+        if rec and rec.get('mbid') in by_mbid:
+            return by_mbid[rec['mbid']]
+        guesses = [(rec['artist'], rec['title'])] if rec and rec.get('title') else []
+        guesses.append(_path_guess(rel))
+        for artist, title in guesses:
+            hit = by_artist_title.get((_norm(artist), _norm(title)))
+            if hit:
+                return hit
+        # Retagged with a suffix ("X (Title Track)", "X - with Y") but still
+        # in the same artist folder -- only if exactly one track there fits.
+        for _, title in guesses:
+            t = _norm(title)
+            hits = [r for r in by_dir.get(str(Path(rel).parent), []) if t and _norm(r['title']).startswith(t)]
+            if len(hits) == 1:
+                return hits[0]
+        # Last resort: a title that exists exactly once in the whole library.
+        for _, title in guesses:
+            hits = by_title.get(_norm(title), [])
+            if len(hits) == 1:
+                return hits[0]
+        return None
+
+    return by_path, resolve
+
+
+def _manifest_record(r):
+    return {k: r[k] for k in ('path', 'md5', 'mbid', 'artist', 'title')}
+
+
+def _write_atomic(path, text):
+    tmp = path.with_name(f'.{path.name}.tmp')
+    tmp.write_text(text)
+    os.replace(tmp, path)
+
+
+def sync_playlists(dry_run=False):
+    """Repair every MPD playlist's dead paths from its manifest, then refresh
+    the manifest from whatever now resolves. Safe to run anytime; entries
+    that can't be resolved are kept as-is (MPD just skips them) along with
+    their last known identity, so they heal if the track comes back."""
+    if MUSIC_ROOT is None:
+        setup()
+    if not PLAYLIST_DIR.is_dir():
+        return {'playlists': 0, 'repaired': 0, 'unresolved': []}
+    PLAYLIST_MANIFESTS.mkdir(parents=True, exist_ok=True)
+    by_path, resolve = _resolver(_scan_library())
+    repaired, unresolved, count = 0, [], 0
+    for m3u in sorted(PLAYLIST_DIR.glob('*.m3u')):
+        count += 1
+        manifest = PLAYLIST_MANIFESTS / f'{m3u.stem}.json'
+        try:
+            old = {r['path']: r for r in json.loads(manifest.read_text())}
+        except (OSError, ValueError):
+            old = {}
+        entries = [l for l in m3u.read_text().splitlines() if l.strip() and not l.startswith('#')]
+        out, records = [], []
+        for rel in entries:
+            r = by_path.get(rel)
+            if r is None:
+                r = resolve(rel, old.get(rel))
+                if r is None:
+                    unresolved.append(f'{m3u.stem}: {rel}')
+                    out.append(rel)
+                    records.append(old.get(rel) or {'path': rel})
+                    continue
+                repaired += 1
+            out.append(r['path'])
+            records.append(_manifest_record(r))
+        if dry_run:
+            continue
+        if out != entries:
+            _write_atomic(m3u, ''.join(f'{p}\n' for p in out))
+        _write_atomic(manifest, json.dumps(records, indent=1, ensure_ascii=False) + '\n')
+    return {'playlists': count, 'repaired': repaired, 'unresolved': unresolved}

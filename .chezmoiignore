@@ -13,6 +13,9 @@ CLAUDE.md
 *.swo
 *.bak
 
+# Python bytecode (gitignored, but chezmoi would still deploy it)
+**/__pycache__
+
 # Machine-specific dev tools config (not tracked by chezmoi)
 .config/zsh/dev-tools/
 
@@ -36,5 +39,6 @@ scripts/linux
 .local/bin/music-import
 .local/bin/music-library
 .local/bin/music-lyrics
+.local/bin/music-sync
 .local/lib/music/
 {{ end }}

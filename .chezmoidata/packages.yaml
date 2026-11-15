@@ -21,6 +21,7 @@ packages:
             - just # Just (Alternative to Make) - Command runner
             - fontforge # font configuration
             - sqlite # sqlite3 cli (used by vim-dadbod)
+            - imagemagick # image processing (used by image.nvim)
 
         casks:
             - chatgpt # ChatGPT desktop app
@@ -121,6 +122,7 @@ packages:
             - llvm # c / cpp backend
             - ripgrep # grepping tool
             - sqlite # sqlite3 cli (used by vim-dadbod)
+            - imagemagick # image processing (used by image.nvim)
             - qt6-multimedia # metadata for audio files
             - vlc # metadata for audio files
             - openssh # ssh support

@@ -147,6 +147,7 @@ tpn() { task "$@" modify priority:; }    # No priority
 alias mi="music-import"      # Import new FLACs from the incoming dropzone
 alias mia="music-import --asis"  # Organize hand-tagged (e.g. Picard) files, no MusicBrainz search
 alias ml="music-lyrics"      # Backfill .lrc lyrics for the library
+alias ms="music-sync"        # After Picard: refresh beets DB from tags + repair MPD playlists
 
 # Language tools installation
 alias itool="install-lang"

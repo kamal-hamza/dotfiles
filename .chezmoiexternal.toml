@@ -1,0 +1,5 @@
+# leetcode.nvim solutions (storage.home in dot_config/nvim/lua/hkamal/plugins/leetcode.lua).
+# cloned once if missing, never pulled, so local work is never touched
+["Code/leetcode-nvim"]
+    type = "git-repo"
+    url = "git@github.com:kamal-hamza/leetcode-nvim.git"

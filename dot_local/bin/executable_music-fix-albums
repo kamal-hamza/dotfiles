@@ -5,8 +5,8 @@ standalone singleton, so beets never linked it to a release.
 
 Looks up each track's existing MUSICBRAINZ_TRACKID on MusicBrainz and picks
 the most likely original album from its releases. Only rewrites tags (via
-beets, so its library DB stays in sync) -- never moves or renames files, so
-playlists stay valid. Safe to re-run; only touches placeholder albums.
+beets, so its library DB stays in sync) -- never moves or renames files, and
+MPD playlists are synced before and after (see music-sync) regardless. Safe to re-run; only touches placeholder albums.
 """
 import argparse
 import signal

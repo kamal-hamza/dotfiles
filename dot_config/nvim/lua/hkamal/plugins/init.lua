@@ -49,6 +49,8 @@ require("hkamal.plugins.flash")
 require("hkamal.plugins.surround")
 require("hkamal.plugins.comment")
 require("hkamal.plugins.conduit")
+require("hkamal.plugins.image")
+require("hkamal.plugins.leetcode")
 
 local theme = require("hkamal.theme")
 
