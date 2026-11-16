@@ -19,7 +19,12 @@ export VISUAL="zed"
 # Env Vars Configuration
 # -----------------------------------------------------------------------------
 export LIBCLANG_PATH=/usr/lib/
-[[ "$OSTYPE" == linux* ]] && export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# SSH agent: GNOME Keyring's gcr-ssh-agent, else OpenSSH's (see fish conf.d/15-ssh-agent.fish)
+if [[ -z "$SSH_AUTH_SOCK" && -n "$XDG_RUNTIME_DIR" ]]; then
+  for sock in "$XDG_RUNTIME_DIR/gcr/ssh" "$XDG_RUNTIME_DIR/ssh-agent.socket"; do
+    [[ -S "$sock" ]] && { export SSH_AUTH_SOCK="$sock"; break; }
+  done
+fi
 
 # -----------------------------------------------------------------------------
 # PATH Configuration
