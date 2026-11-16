@@ -1,0 +1,22 @@
+# =============================================================================
+# Arch Linux system configuration (beyond packages)
+# =============================================================================
+# systemd units enabled by
+# .chezmoiscripts/provision/linux/run_onchange_after_30-services.py.tmpl.
+# Same base/desktop split as packages-arch.yaml. Files that belong outside
+# $HOME (/etc/...) live in system/arch/<group>/ at the repo root instead.
+# =============================================================================
+system:
+  arch:
+    base:
+      services: # sudo systemctl enable --now
+        - sshd.service
+        - fstrim.timer
+      user_services: [] # systemctl --user enable --now
+    desktop:
+      services:
+        - NetworkManager.service
+        - bluetooth.service
+        - cups.service
+      user_services:
+        - mpd.service

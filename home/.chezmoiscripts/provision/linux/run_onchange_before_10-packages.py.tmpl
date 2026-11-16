@@ -1,0 +1,75 @@
+#!/usr/bin/python3
+# =============================================================================
+# Arch Linux packages - pacman + AUR (yay)
+# =============================================================================
+# Source: home/.chezmoidata/packages-arch.yaml (base always, desktop when
+# profile == "desktop"). The lists are rendered into this script, so editing
+# them (or changing profile) re-runs it on the next `chezmoi apply`.
+# =============================================================================
+{{ template "provision/common.py" . }}
+import tempfile
+
+PROFILE = {{ .profile | toJson }}
+PACKAGES = json.loads(r'''{{ .packages.arch | toJson }}''')
+
+
+def wanted(manager: str) -> list:
+    groups = ["base"] + (["desktop"] if PROFILE == "desktop" else [])
+    return dedupe(p for g in groups for p in (PACKAGES.get(g) or {}).get(manager) or [])
+
+
+def installed() -> set:
+    return set(run(["pacman", "-Qq"], quiet=True).stdout.split())
+
+
+def ensure_yay() -> None:
+    if shutil.which("yay"):
+        ok("yay")
+        return
+    info("Installing yay (AUR helper)...")
+    with tempfile.TemporaryDirectory() as tmp:
+        run(["git", "clone", "--depth=1", "https://aur.archlinux.org/yay-bin.git", tmp + "/yay-bin"])
+        run(["makepkg", "-si", "--noconfirm"], cwd=tmp + "/yay-bin")
+    ok("yay installed")
+
+
+def install(packages: list, cmd: list, label: str) -> list:
+    """Install whatever is missing; fall back to one-by-one so one bad name doesn't block the rest."""
+    missing = [p for p in packages if p not in installed()]
+    if not missing:
+        ok(f"{label}: all {len(packages)} packages already installed")
+        return []
+    header(f"{label}: installing {len(missing)} package(s)")
+    if run(cmd + missing, check=False).returncode == 0:
+        return []
+    warn("Batch install failed - retrying one at a time")
+    failed = []
+    for pkg in missing:
+        if pkg in installed():
+            continue
+        if run(cmd + [pkg], check=False).returncode != 0:
+            failed.append(pkg)
+    return failed
+
+
+def main() -> int:
+    if not shutil.which("pacman"):
+        warn("pacman not found - only Arch Linux is supported; skipping packages")
+        return 0
+    header(f"Arch Linux packages (profile: {PROFILE})")
+    run(["sudo", "pacman", "-Syu", "--needed", "--noconfirm", "base-devel", "git"])
+    ensure_yay()
+
+    failed = install(wanted("pacman"), ["sudo", "pacman", "-S", "--needed", "--noconfirm"], "pacman")
+    failed += install(wanted("aur"), ["yay", "-S", "--needed", "--noconfirm"], "AUR")
+
+    if failed:
+        # Not fatal: configs should still be applied. Fix the names in
+        # packages-arch.yaml (which also re-triggers this script).
+        warn("Failed to install: " + " ".join(failed))
+    else:
+        ok("All packages installed")
+    return 0
+
+
+sys.exit(main())
