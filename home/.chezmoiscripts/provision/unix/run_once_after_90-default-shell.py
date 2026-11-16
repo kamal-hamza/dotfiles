@@ -3,7 +3,8 @@
 # Make fish the login shell (macOS + Linux)
 # =============================================================================
 # Runs after packages are installed. Registers fish in /etc/shells if needed,
-# then chsh (prompts for your password). Re-runs only if this file changes.
+# then `sudo chsh` (works with or without a terminal, via sudo's normal
+# password prompt or SUDO_ASKPASS). Re-runs only if this file changes.
 # =============================================================================
 import os
 import pwd
@@ -37,7 +38,8 @@ def main() -> int:
         print(f"✓ Login shell is already {fish}")
         return 0
     print(f"→ Changing login shell: {current} -> {fish}")
-    subprocess.run(["chsh", "-s", fish], check=True)
+    user = pwd.getpwuid(os.getuid()).pw_name
+    subprocess.run(["sudo", "chsh", "-s", fish, user], check=True)
     print("✓ Done - takes effect on your next login")
     return 0
 
