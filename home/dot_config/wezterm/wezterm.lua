@@ -13,8 +13,9 @@ if is_windows then
 end
 
 -- ── font ────────────────────────────────────────────────────────────────────
--- SF Mono ships with macOS. Elsewhere MesloLGS (Menlo with the same metrics,
--- ttf-meslo-nerd) is the closest look; JetBrains Mono catches missing glyphs.
+-- SF Mono is installed from packages-<os>.yaml (otf-apple-sf-mono / cask
+-- font-sf-mono). MesloLGS Nerd Font (Menlo's metrics) fills in Nerd Font icons
+-- SF Mono lacks; JetBrains Mono (bundled with wezterm) catches anything else.
 config.font = wezterm.font_with_fallback({
     "SF Mono",
     "Menlo",
