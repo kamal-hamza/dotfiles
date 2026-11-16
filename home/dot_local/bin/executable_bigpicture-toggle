@@ -1,212 +1,219 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Big Picture Toggle - SteamOS-style "Gaming Mode" inside Hyprland.
 
-# =============================================================================
-# Big Picture Toggle - SteamOS-style "Gaming Mode" inside Hyprland
-# =============================================================================
-# Runs Steam's Deck UI (steam -gamepadui) fullscreen inside a nested gamescope
-# on the focused monitor, or tears it down again. Bound to SUPER + F12.
-#
-# Usage:
-#   bigpicture-toggle [toggle|on|off|status]   (default: toggle)
-#
-# Edge cases handled:
-#   - Steam not running            -> launches straight into Big Picture
-#   - Steam open on the desktop    -> shuts it down cleanly first, then relaunches
-#                                     it inside gamescope (Steam is single-instance)
-#   - Steam still starting/hung    -> gives up after a timeout instead of
-#                                     killing it (could be mid-update/download)
-#   - Big Picture running          -> `steam -shutdown`, escalating to SIGTERM /
-#                                     SIGKILL on gamescope if Steam doesn't exit
-#   - Steam exited from its own    -> stale PID file is detected and ignored
-#     Power menu / crashed
-#   - Key pressed again mid-switch -> ignored (flock), not queued
-#   - Other gamescope instances    -> left alone (e.g. per-game gamescope launch
-#                                     options); only the one we started is tracked
-#   - Monitor resolution/refresh   -> read from the focused monitor via hyprctl,
-#                                     incl. rotated monitors; falls back to
-#                                     1920x1080@60 when hyprctl is unavailable
-#   - gamescope dies on startup    -> reported, with the log path
-#   - steam/gamescope missing      -> reported instead of failing silently
-#
-# Logs: ${XDG_STATE_HOME:-~/.local/state}/bigpicture-toggle.log
-#
-# Requirements:
-#   - steam, gamescope
-#   - hyprctl + jq (optional, for monitor detection)
-#   - notify-send (optional, for feedback when run from a keybind)
-# =============================================================================
+Runs Steam's Deck UI (steam -gamepadui) fullscreen inside a nested gamescope
+on the focused monitor, or tears it down again. Bound to SUPER + F12.
 
-set -uo pipefail
+Usage: bigpicture-toggle [toggle|on|off|status]   (default: toggle)
 
-RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp}"
-STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}"
-PID_FILE="$RUNTIME_DIR/bigpicture-toggle.pid"
-LOCK_FILE="$RUNTIME_DIR/bigpicture-toggle.lock"
-LOG_FILE="$STATE_DIR/bigpicture-toggle.log"
+Edge cases handled:
+  - Steam not running            -> launches straight into Big Picture
+  - Steam open on the desktop    -> shuts it down cleanly first, then relaunches
+                                    it inside gamescope (Steam is single-instance)
+  - Steam still starting/hung    -> gives up after a timeout instead of killing
+                                    it (could be mid-update/download)
+  - Big Picture running          -> `steam -shutdown`, escalating to SIGTERM /
+                                    SIGKILL on gamescope if Steam doesn't exit
+  - Steam exited from its own    -> stale PID file is detected and ignored
+    Power menu / crashed
+  - Key pressed again mid-switch -> ignored (flock), not queued
+  - Other gamescope instances    -> left alone; only the one we started is tracked
+  - Monitor resolution/refresh   -> read from the focused monitor via hyprctl,
+                                    incl. rotated monitors; falls back to
+                                    1920x1080@60 when hyprctl is unavailable
+  - gamescope dies on startup    -> reported, with the log path
+  - steam/gamescope missing      -> reported instead of failing silently
 
-STEAM_EXIT_TIMEOUT=30     # seconds to wait for Steam to close after -shutdown
-GAMESCOPE_TERM_TIMEOUT=5  # seconds between SIGTERM and SIGKILL on gamescope
-STARTUP_CHECK_DELAY=3     # seconds before checking that gamescope survived
+Logs: ${XDG_STATE_HOME:-~/.local/state}/bigpicture-toggle.log
+Requires: steam, gamescope; hyprctl (optional); notify-send (optional)
+"""
+import datetime
+import fcntl
+import json
+import os
+import signal
+import subprocess
+import time
+import sys
+from pathlib import Path
 
-notify() {
-    local urgency="$1" msg="$2"
-    echo "bigpicture-toggle: $msg" >&2
-    if command -v notify-send &>/dev/null; then
-        notify-send -a "Big Picture" -u "$urgency" -h string:x-canonical-private-synchronous:bigpicture "Big Picture" "$msg"
-    fi
-}
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import have, notify as _notify, output, succeeds  # noqa: E402
 
-die() {
-    notify critical "$1"
-    exit 1
-}
+RUNTIME_DIR = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
+PID_FILE = RUNTIME_DIR / "bigpicture-toggle.pid"
+LOCK_FILE = RUNTIME_DIR / "bigpicture-toggle.lock"
+LOG_FILE = STATE_DIR / "bigpicture-toggle.log"
 
-steam_running() {
-    pgrep -u "$UID" -x steam &>/dev/null
-}
+STEAM_EXIT_TIMEOUT = 30     # seconds to wait for Steam to close after -shutdown
+GAMESCOPE_TERM_TIMEOUT = 5  # seconds between SIGTERM and SIGKILL on gamescope
+STARTUP_CHECK_DELAY = 3     # seconds before checking that gamescope survived
 
-# Waits up to $2 seconds for the condition command $1 to become false.
-wait_while() {
-    local cond="$1" timeout="$2" i
-    for ((i = 0; i < timeout * 4; i++)); do
-        "$cond" || return 0
-        sleep 0.25
-    done
-    return 1
-}
 
-# PID of the gamescope we launched, if it's still alive. Validating the
-# process name guards against a stale PID file whose PID got reused.
-session_pid() {
-    local pid
-    [[ -r "$PID_FILE" ]] || return 1
-    pid="$(<"$PID_FILE")"
-    if [[ "$pid" =~ ^[0-9]+$ ]] && [[ "$(cat "/proc/$pid/comm" 2>/dev/null)" == gamescope* ]]; then
-        echo "$pid"
-        return 0
-    fi
-    rm -f "$PID_FILE"
-    return 1
-}
+def notify(urgency: str, msg: str) -> None:
+    print(f"bigpicture-toggle: {msg}", file=sys.stderr)
+    _notify("Big Picture", msg, urgency, app="Big Picture", replace="bigpicture")
 
-session_running() {
-    session_pid &>/dev/null
-}
 
-# Prints "WIDTH HEIGHT REFRESH ADAPTIVE_SYNC" for the focused monitor.
-monitor_geometry() {
-    local geom=""
-    if command -v hyprctl &>/dev/null && command -v jq &>/dev/null; then
-        geom="$(hyprctl -j monitors 2>/dev/null | jq -r '
-            (map(select(.focused)) + .)[0]
-            | (if (.transform % 2) == 1 then [.height, .width] else [.width, .height] end)
-              + [(.refreshRate | round), (if .vrr then 1 else 0 end)]
-            | map(tostring) | join(" ")' 2>/dev/null)"
-    fi
-    if [[ "$geom" =~ ^[0-9]+\ [0-9]+\ [0-9]+\ [01]$ ]]; then
-        echo "$geom"
-    else
-        echo "1920 1080 60 0"
-    fi
-}
+def die(msg: str) -> None:
+    notify("critical", msg)
+    sys.exit(1)
 
-shutdown_desktop_steam() {
-    notify normal "Closing desktop Steam first…"
-    steam -shutdown &>/dev/null &
-    wait_while steam_running "$STEAM_EXIT_TIMEOUT" ||
-        die "Steam didn't close within ${STEAM_EXIT_TIMEOUT}s (still starting or updating?). Try again in a moment."
-}
 
-start_session() {
-    if session_running; then
-        notify low "Big Picture is already running."
-        return 0
-    fi
+def steam_running() -> bool:
+    return succeeds(["pgrep", "-u", str(os.getuid()), "-x", "steam"])
 
-    command -v gamescope &>/dev/null || die "gamescope is not installed."
-    command -v steam &>/dev/null || die "steam is not installed."
 
-    steam_running && shutdown_desktop_steam
+def wait_while(cond, timeout: float) -> bool:
+    """Wait up to timeout seconds for cond() to become false. True if it did."""
+    deadline = time.monotonic() + timeout
+    while cond():
+        if time.monotonic() >= deadline:
+            return False
+        time.sleep(0.25)
+    return True
 
-    local width height refresh vrr
-    read -r width height refresh vrr < <(monitor_geometry)
 
-    local args=(-e -f -W "$width" -H "$height" -r "$refresh")
-    ((vrr)) && args+=(--adaptive-sync)
+def alive(pid: int) -> bool:
+    try:
+        os.kill(pid, 0)
+        return True
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
 
-    mkdir -p "$STATE_DIR"
-    echo "=== $(date '+%F %T') starting: gamescope ${args[*]} -- steam -gamepadui" >>"$LOG_FILE"
 
-    # setsid detaches from this script's session so it survives the keybind's
-    # shell; 9>&- stops gamescope inheriting (and holding forever) the lock.
-    setsid gamescope "${args[@]}" -- steam -gamepadui </dev/null >>"$LOG_FILE" 2>&1 9>&- &
-    local pid=$!
-    echo "$pid" >"$PID_FILE"
+def kill(pid: int, sig: int) -> None:
+    try:
+        os.kill(pid, sig)
+    except ProcessLookupError:
+        pass
 
-    sleep "$STARTUP_CHECK_DELAY"
-    if ! session_running; then
-        rm -f "$PID_FILE"
-        die "gamescope exited during startup. See $LOG_FILE"
-    fi
-    notify low "Started (${width}x${height}@${refresh}Hz)."
-}
 
-stop_session() {
-    local pid
-    if ! pid="$(session_pid)"; then
-        notify low "Big Picture is not running."
-        return 0
-    fi
+def session_pid() -> int | None:
+    """PID of the gamescope we launched, if still alive. Checking the process
+    name guards against a stale PID file whose PID was reused."""
+    try:
+        pid = int(PID_FILE.read_text().strip())
+        if Path(f"/proc/{pid}/comm").read_text().startswith("gamescope"):
+            return pid
+    except (OSError, ValueError):
+        pass
+    PID_FILE.unlink(missing_ok=True)
+    return None
 
-    notify normal "Closing Big Picture…"
 
-    gamescope_alive() { kill -0 "$pid" 2>/dev/null; }
+def monitor_geometry() -> tuple[int, int, int, bool]:
+    """(width, height, refresh, adaptive_sync) of the focused monitor."""
+    if have("hyprctl"):
+        try:
+            monitors = json.loads(output(["hyprctl", "-j", "monitors"]))
+            mon = next((m for m in monitors if m.get("focused")), monitors[0])
+            w, h = mon["width"], mon["height"]
+            if mon.get("transform", 0) % 2 == 1:  # rotated 90/270
+                w, h = h, w
+            return int(w), int(h), round(mon["refreshRate"]), bool(mon.get("vrr"))
+        except (ValueError, LookupError, TypeError, subprocess.CalledProcessError):
+            pass
+    return 1920, 1080, 60, False
 
-    # Ask Steam to quit cleanly (it also closes any running game); gamescope
-    # exits on its own once its child is gone.
-    steam_running && steam -shutdown &>/dev/null &
-    if ! wait_while gamescope_alive "$STEAM_EXIT_TIMEOUT"; then
-        kill -TERM "$pid" 2>/dev/null
-        wait_while gamescope_alive "$GAMESCOPE_TERM_TIMEOUT" || kill -KILL "$pid" 2>/dev/null
-    fi
+
+def steam_shutdown() -> None:
+    """Ask Steam to quit cleanly (also closes a running game), in the background."""
+    subprocess.Popen(["steam", "-shutdown"], stdin=subprocess.DEVNULL,
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+
+
+def start_session() -> None:
+    if session_pid():
+        notify("low", "Big Picture is already running.")
+        return
+    if not have("gamescope"):
+        die("gamescope is not installed.")
+    if not have("steam"):
+        die("steam is not installed.")
+
+    if steam_running():
+        notify("normal", "Closing desktop Steam first…")
+        steam_shutdown()
+        if not wait_while(steam_running, STEAM_EXIT_TIMEOUT):
+            die(f"Steam didn't close within {STEAM_EXIT_TIMEOUT}s "
+                "(still starting or updating?). Try again in a moment.")
+
+    width, height, refresh, vrr = monitor_geometry()
+    args = ["-e", "-f", "-W", str(width), "-H", str(height), "-r", str(refresh)]
+    if vrr:
+        args.append("--adaptive-sync")
+    cmd = ["gamescope", *args, "--", "steam", "-gamepadui"]
+
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    log = LOG_FILE.open("a")
+    log.write(f"=== {datetime.datetime.now():%F %T} starting: {' '.join(cmd)}\n")
+    log.flush()
+    # New session so it outlives the keybind's process; Python opens the lock
+    # file close-on-exec, so gamescope doesn't inherit (and hold) the lock.
+    proc = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=log, stderr=log,
+                            start_new_session=True)
+    PID_FILE.write_text(f"{proc.pid}\n")
+
+    time.sleep(STARTUP_CHECK_DELAY)
+    if proc.poll() is not None:
+        PID_FILE.unlink(missing_ok=True)
+        die(f"gamescope exited during startup. See {LOG_FILE}")
+    notify("low", f"Started ({width}x{height}@{refresh}Hz).")
+
+
+def stop_session() -> None:
+    pid = session_pid()
+    if not pid:
+        notify("low", "Big Picture is not running.")
+        return
+    notify("normal", "Closing Big Picture…")
+
+    # gamescope exits on its own once Steam (its child) is gone
+    if steam_running():
+        steam_shutdown()
+    if not wait_while(lambda: alive(pid), STEAM_EXIT_TIMEOUT):
+        kill(pid, signal.SIGTERM)
+        if not wait_while(lambda: alive(pid), GAMESCOPE_TERM_TIMEOUT):
+            kill(pid, signal.SIGKILL)
 
     # Without its display Steam normally dies with gamescope; make sure no
     # headless Steam is left behind to block the next launch.
-    if ! wait_while steam_running 10; then
-        pkill -u "$UID" -TERM -x steam
-        wait_while steam_running 5 || pkill -u "$UID" -KILL -x steam
-    fi
+    if not wait_while(steam_running, 10):
+        uid = str(os.getuid())
+        succeeds(["pkill", "-u", uid, "-TERM", "-x", "steam"])
+        if not wait_while(steam_running, 5):
+            succeeds(["pkill", "-u", uid, "-KILL", "-x", "steam"])
 
-    rm -f "$PID_FILE"
-    notify low "Closed."
-}
+    PID_FILE.unlink(missing_ok=True)
+    notify("low", "Closed.")
 
-main() {
-    local action="${1:-toggle}"
 
-    case "$action" in
-        status)
-            if session_running; then echo "running (gamescope pid $(session_pid))"; else echo "stopped"; fi
-            return 0
-            ;;
-        toggle | on | off) ;;
-        *)
-            echo "Usage: bigpicture-toggle [toggle|on|off|status]" >&2
-            return 2
-            ;;
-    esac
-
-    exec 9>"$LOCK_FILE"
-    if ! flock -n 9; then
-        notify low "Already switching, please wait."
+def main() -> int:
+    action = sys.argv[1] if len(sys.argv) > 1 else "toggle"
+    if action == "status":
+        pid = session_pid()
+        print(f"running (gamescope pid {pid})" if pid else "stopped")
         return 0
-    fi
+    if action not in ("toggle", "on", "off"):
+        print("Usage: bigpicture-toggle [toggle|on|off|status]", file=sys.stderr)
+        return 2
 
-    case "$action" in
-        on) start_session ;;
-        off) stop_session ;;
-        toggle) if session_running; then stop_session; else start_session; fi ;;
-    esac
-}
+    lock = LOCK_FILE.open("w")
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        notify("low", "Already switching, please wait.")
+        return 0
 
-main "$@"
+    if action == "on" or (action == "toggle" and not session_pid()):
+        start_session()
+    else:
+        stop_session()
+    return 0
+
+
+sys.exit(main())
