@@ -1,0 +1,23 @@
+{{- /* Rendered empty (= skipped by chezmoi) until both python3 and fish exist. */ -}}
+{{- if and (stat "/usr/bin/python3") (lookPath "fish") -}}
+#!/usr/bin/python3
+# =============================================================================
+# fish plugins - fisher
+# =============================================================================
+# Syncs plugins to ~/.config/fish/fish_plugins (installing fisher itself on
+# first run). Re-runs whenever that file changes:
+#   fish_plugins sha256: {{ include "dot_config/fish/fish_plugins" | sha256sum }}
+# Plugin files land in ~/.config/fish/{functions,conf.d,completions} as
+# unmanaged files, which chezmoi leaves alone.
+# =============================================================================
+import subprocess
+import sys
+
+BOOTSTRAP = (
+    "type -q fisher; "
+    "or curl -fsSL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source; "
+    "and fisher update"
+)
+print("→ fisher update")
+sys.exit(subprocess.run(["fish", "-c", BOOTSTRAP]).returncode)
+{{- end }}

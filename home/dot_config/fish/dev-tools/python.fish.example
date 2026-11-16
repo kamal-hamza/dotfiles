@@ -1,0 +1,16 @@
+# =============================================================================
+# Python Configuration
+# =============================================================================
+# `dev-tool add python` copies this to python.fish - uncomment the lines you need.
+
+# pyenv
+# set -gx PYENV_ROOT $HOME/.pyenv
+# fish_add_path -g $PYENV_ROOT/bin
+# command -q pyenv; and pyenv init - fish | source
+
+# pipx
+# set -gx PIPX_HOME $HOME/.local/pipx
+# set -gx PIPX_BIN_DIR $HOME/.local/bin
+
+# uv
+# set -gx UV_CACHE_DIR $HOME/.cache/uv

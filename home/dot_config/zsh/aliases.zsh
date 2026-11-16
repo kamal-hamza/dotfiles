@@ -1,10 +1,14 @@
 # =============================================================================
 # Script Aliases Configuration
 # =============================================================================
+# LEGACY (zsh fallback). fish and PowerShell aliases are generated from
+# home/.chezmoidata/shell.yaml - add new aliases THERE; mirror them here only
+# if you still need them in zsh.
+#
 # This file defines aliases for custom scripts in ~/.local/bin
 #
 # How to add a new script alias:
-# 1. Add your script to: ~/.local/share/chezmoi/dot_local/bin/
+# 1. Add your script to: ~/.local/share/chezmoi/home/dot_local/bin/
 #    Name it: executable_scriptname
 # 2. Add an alias below
 # 3. Run: chezmoi apply

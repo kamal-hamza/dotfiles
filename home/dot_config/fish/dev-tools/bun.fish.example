@@ -1,0 +1,7 @@
+# =============================================================================
+# Bun Runtime Configuration
+# =============================================================================
+# `dev-tool add bun` copies this to bun.fish - uncomment the lines you need.
+
+# set -gx BUN_INSTALL $HOME/.bun
+# fish_add_path -g $BUN_INSTALL/bin

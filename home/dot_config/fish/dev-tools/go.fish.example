@@ -1,0 +1,11 @@
+# =============================================================================
+# Go Language Configuration
+# =============================================================================
+# `dev-tool add go` copies this to go.fish - uncomment the lines you need.
+
+# set -gx GOPATH $HOME/go
+# set -gx GOBIN $GOPATH/bin
+# fish_add_path -g $GOBIN
+
+# set -gx GOPRIVATE "github.com/yourcompany/*"
+# set -gx GOPROXY "https://proxy.golang.org,direct"
