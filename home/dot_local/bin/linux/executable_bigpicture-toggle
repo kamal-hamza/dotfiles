@@ -33,12 +33,13 @@ import json
 import os
 import signal
 import subprocess
-import time
 import sys
+import time
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
-from common import have, notify as _notify, output, succeeds  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
+from common import have, output, succeeds
+from common import notify as _notify
 
 RUNTIME_DIR = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
 STATE_DIR = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state"))
@@ -150,7 +151,7 @@ def start_session() -> None:
 
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     log = LOG_FILE.open("a")
-    log.write(f"=== {datetime.datetime.now():%F %T} starting: {' '.join(cmd)}\n")
+    log.write(f"=== {datetime.datetime.now():%F %T} starting: {' '.join(cmd)}\n")  # noqa: DTZ005
     log.flush()
     # New session so it outlives the keybind's process; Python opens the lock
     # file close-on-exec, so gamescope doesn't inherit (and hold) the lock.

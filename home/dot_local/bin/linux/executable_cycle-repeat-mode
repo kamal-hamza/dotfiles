@@ -6,7 +6,7 @@ Usage: cycle-repeat-mode
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
 from common import mpd_status, notify, run  # noqa: E402
 
 status = mpd_status()
