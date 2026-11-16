@@ -48,6 +48,13 @@ yamllint home/.chezmoidata/*.yaml
 
 There's no linter/formatter invocation wired into this repo itself; individual app configs (e.g. `home/dot_config/nvim/lua/hkamal/plugins/conform.lua`) configure formatters for files *managed by* those apps, not for the dotfiles repo itself.
 
+## Commits
+
+Commit in small logical batches, never one big commit, so the history reads well:
+- **Message style:** one short line, lowercase, past tense, no body or prefix, e.g. `added wezterm config`, `removed unused scripts`, `fixed tmux cursor reset after nvim`, `switched fish prompt to macos style`.
+- **Grouping:** one concern per commit. Moves/renames get their own commit first as pure renames (`git mv`, no content changes), then content edits in follow-up commits. Docs (CLAUDE.md/README) go in a separate commit at the end.
+- **Staging:** stage paths explicitly (`git add -- <paths>`), not `git add -A` for everything. Watch for paths already staged by `git rm`/`git mv` — a plain `git commit` includes everything in the index, so check `git status` before each commit.
+
 ## Architecture
 
 ### Repo layout: `.chezmoiroot` = `home`
