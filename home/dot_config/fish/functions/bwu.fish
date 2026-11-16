@@ -18,6 +18,7 @@ function bwu --description 'Unlock + sync Bitwarden for chezmoi'
             end
             set session (bw unlock --raw); or return
         case '*'
+            set -e BW_SESSION # stale key from before a `bw lock`
             set session (bw unlock --raw); or return
     end
     test -n "$session"; or return 1
