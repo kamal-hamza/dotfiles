@@ -1,0 +1,4 @@
+{{- /* Passphrase-protected private key, stored verbatim in Bitwarden (secure
+       note "ssh-github", see .chezmoidata/secrets.yaml). Only rendered while the
+       vault is unlocked - .chezmoiignore skips it otherwise. */ -}}
+{{ (bitwarden "item" (index .secrets.ssh_keys "id_ed25519")).notes | trim }}

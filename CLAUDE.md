@@ -48,6 +48,13 @@ yamllint home/.chezmoidata/*.yaml
 
 There's no linter/formatter invocation wired into this repo itself; individual app configs (e.g. `home/dot_config/nvim/lua/hkamal/plugins/conform.lua`) configure formatters for files *managed by* those apps, not for the dotfiles repo itself.
 
+## Commits
+
+Commit in small logical batches, never one big commit, so the history reads well:
+- **Message style:** one short line, lowercase, past tense, no body or prefix, e.g. `added wezterm config`, `removed unused scripts`, `fixed tmux cursor reset after nvim`, `switched fish prompt to macos style`.
+- **Grouping:** one concern per commit. Moves/renames get their own commit first as pure renames (`git mv`, no content changes), then content edits in follow-up commits. Docs (CLAUDE.md/README) go in a separate commit at the end.
+- **Staging:** stage paths explicitly (`git add -- <paths>`), not `git add -A` for everything. Watch for paths already staged by `git rm`/`git mv` — a plain `git commit` includes everything in the index, so check `git status` before each commit.
+
 ## Architecture
 
 ### Repo layout: `.chezmoiroot` = `home`
@@ -114,6 +121,10 @@ Non-trivial Quickshell logic is written in TypeScript: `home/dot_config/quickshe
 There is no theme-switching system. Each app config just has its colors (the monochrome palette) hardcoded directly, as plain static files — no chezmoi templating, no `.chezmoidata` palette source, no `theme` command: `dot_config/rofi/theme.rasi`, `dot_config/mako/config`, `dot_config/waybar/style.css`, `dot_config/hypr/conf/looks.lua`, `dot_config/hypr/hyprlock.conf`, `dot_config/satty/config.toml`, `dot_config/wezterm/wezterm.lua` (macOS Terminal.app "Basic" look: SF Mono Nerd Font 11, `#1e1e1e` background, Terminal.app ANSI palette — not the monochrome palette), `dot_config/zed/settings.json` (plain `"theme"` key naming a Zed-bundled theme family), `dot_config/gtk-{3,4}.0/gtk.css`, `dot_config/tmux/themes/theme.tmux` (greys matching the WezTerm/Terminal.app look, not the monochrome palette; sourced by a pre-existing conditional `if-shell` hook in `dot_tmux.conf`, itself static and color-free), and `dot_config/git/config` (delta's diff/syntax colors plus git's native `[color "branch"/"diff"/"status"]` sections). To change the palette, hand-edit the hex values in each of these files directly — there's no single source of truth and no regeneration step. Neovim stays fully separate: it keeps its own working mechanism (`lua/hkamal/theme.lua`'s `~/.local/state/nvim/theme.txt`), set independently of everything above.
 
 Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpaper`, started from `dot_config/hypr/conf/execs.lua`) — there is no live-switching wallpaper daemon.
+
+### Secrets: Bitwarden
+
+The repo holds no secret values. `.chezmoidata/secrets.yaml` lists `{name, item, field?}` entries (env var ← Bitwarden item's login password, or a custom `field`); `dot_config/fish/conf.d/private_40-secrets.fish.tmpl` renders them via chezmoi's `bitwarden`/`bitwardenFields` functions into `~/.config/fish/conf.d/40-secrets.fish` (0600, values single-quoted for fish). `.chezmoiignore` skips that file unless the vault is really unlocked (`BW_SESSION` set **and** `bw status` says `unlocked`, so a stale key never makes `bw` prompt for the master password) **and** the list is non-empty, so `chezmoi apply` with a locked vault leaves the existing file untouched instead of failing or blanking it. `functions/bwu.fish` logs in if needed, unlocks (`BW_SESSION`) and syncs; workflow: `bwu; and chezmoi apply`. `bitwarden-cli` + the desktop app are in all three package lists. Fish only for now (no PowerShell equivalent). SSH private keys come from Bitwarden too: `secrets.ssh_keys` maps `~/.ssh/<file>` → a secure note (in the vault's `chezmoi` folder) whose notes hold the key **verbatim, still passphrase-protected**, rendered by `private_dot_ssh/private_<file>.tmpl`; `.chezmoiignore` skips those files while the vault is locked. Because the bytes are unchanged, GNOME Keyring's agent (not Bitwarden's) keeps unlocking them with its saved passphrases. The `.pub` files and `~/.ssh/config` are plain repo files (the agent needs each `.pub` next to its key). Adding a key: store it as a secure note, add the map entry, a `private_<file>.tmpl` and the `.pub`.
 
 ### Dev-tools system (machine-specific, not tracked)
 
