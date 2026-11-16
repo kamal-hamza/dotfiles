@@ -6,7 +6,7 @@
 packages:
   darwin:
     taps:
-      - shaunsingh/SFMono-Nerd-Font-Ligaturized # SFMono Nerd Font with ligatures
+      - epk/epk # SF Mono Nerd Font (font-sf-mono-nerd-font)
 
     brews:
       - mise # Modern runtime version manager (replaces asdf)
@@ -33,7 +33,7 @@ packages:
       - obsidian # Knowledge management app
       - zed # Modern code editor
       - wezterm # Terminal emulator
-      - font-sf-mono # SF Mono (Terminal.app ships its own copy, other apps can't use it)
+      - font-sf-mono-nerd-font # SF Mono + Nerd Font icons, used by wezterm
       - font-source-sans-3 # Source Sans 3 font
       - font-source-serif-4 # Source Serif 4 font
       - whatsapp # WhatsApp

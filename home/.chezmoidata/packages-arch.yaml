@@ -159,7 +159,7 @@ packages:
         - podman-desktop # podman GUI (docker desktop alternative; moved from AUR)
       aur:
         - helium-browser-bin # browser
-        - otf-apple-sf-mono # SF Mono, Apple's Terminal.app font (used by wezterm)
+        - nerd-fonts-sf-mono # SF Mono (Terminal.app font) + Nerd Font icons, used by wezterm
         - chatgpt-desktop-bin # ChatGPT desktop app
         - penpot-desktop-bin # penpot ui design app
         - hyprlock # Fast, secure, and beautiful desktop locker
