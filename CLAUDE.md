@@ -122,6 +122,10 @@ There is no theme-switching system. Each app config just has its colors (the mon
 
 Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpaper`, started from `dot_config/hypr/conf/execs.lua`) — there is no live-switching wallpaper daemon.
 
+### Secrets: Bitwarden
+
+The repo holds no secret values. `.chezmoidata/secrets.yaml` lists `{name, item, field?}` entries (env var ← Bitwarden item's login password, or a custom `field`); `dot_config/fish/conf.d/private_40-secrets.fish.tmpl` renders them via chezmoi's `bitwarden`/`bitwardenFields` functions into `~/.config/fish/conf.d/40-secrets.fish` (0600, values single-quoted for fish). `.chezmoiignore` skips that file unless `BW_SESSION` is set **and** the list is non-empty, so `chezmoi apply` with a locked vault leaves the existing file untouched instead of failing or blanking it. `functions/bwu.fish` logs in if needed, unlocks (`BW_SESSION`) and syncs; workflow: `bwu; and chezmoi apply`. `bitwarden-cli` + the desktop app are in all three package lists. Fish only for now (no PowerShell equivalent). SSH keys stay on GNOME Keyring's agent, not Bitwarden's.
+
 ### Dev-tools system (machine-specific, not tracked)
 
 `dot_config/fish/dev-tools/*.fish.example` are committed templates for per-language shell env (Bun, .NET, Go, Node, Python). The active, machine-specific versions (`*.fish`, ignored via `.chezmoiignore`'s `.config/fish/dev-tools/*.fish`) are sourced by `conf.d/90-dev-tools.fish`; enable one by copying its `.example` (no helper script). PowerShell's equivalent is untracked `~/.config/powershell/dev-tools/*.ps1`.

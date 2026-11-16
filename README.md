@@ -96,6 +96,14 @@ profile). Machine-specific env goes in untracked files copied from the `*.fish.e
 templates (`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
 fallback.
 
+## Secrets
+
+No secret values live in this repo. API keys etc. come from **Bitwarden** at
+apply time: list them in `home/.chezmoidata/secrets.yaml` (env var → vault
+item), then `bwu; and chezmoi apply` (`bwu` unlocks the vault for the shell).
+They land in `~/.config/fish/conf.d/40-secrets.fish` (mode 600). With the vault
+locked, `chezmoi apply` skips that file and keeps the existing one.
+
 ## Configuration notes
 
 - **Tmux**: `~/.tmux.conf`, prefix `Ctrl+s`; theme in `~/.config/tmux/themes/theme.tmux`
