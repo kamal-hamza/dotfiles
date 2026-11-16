@@ -1,43 +1,28 @@
-#!/bin/bash
-#
-# man-tldr.sh - Interactively find and display man pages, preferring tldr.
-#
-# This script lets you fuzzy-find a man page using fzf. If a tldr page
-# for the selected command exists, it will be displayed. Otherwise, it
-# falls back to the traditional man page.
-#
-# Dependencies:
-#   - fzf: A command-line fuzzy finder.
-#   - tldr: A client for simplified and community-driven man pages.
+#!/usr/bin/python3
+"""Fuzzy-find a man page; show its tldr page if there is one, else the man page.
 
-# Ensure fzf and tldr are installed.
-if ! command -v fzf &> /dev/null || ! command -v tldr &> /dev/null; then
-    echo "Error: This script requires 'fzf' and 'tldr' to be installed." >&2
-    echo "Please install them to continue." >&2
-    exit 1
-fi
+Usage: man-tldr
+Requires: fzf, tldr, apropos (man-db)
+"""
+import os
+import re
+import sys
+from pathlib import Path
 
-# 1. Get a list of all man pages, redirecting errors to /dev/null to hide warnings.
-# 2. Pipe the list into fzf for interactive selection.
-# 3. Use awk and sed to extract just the command name.
-selected_cmd=$(apropos . 2>/dev/null | fzf --prompt="Man Page Search: " \
-                               --cycle \
-                               --bind "tab:down,shift-tab:up" \
-                               | awk '{print $1}' | sed 's/(.*//')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import fzf, output, require, succeeds  # noqa: E402
 
-# Exit gracefully if the user cancelled fzf (e.g., by pressing Esc).
-if [ -z "$selected_cmd" ]; then
-    echo "No command selected."
-    exit 0
-fi
+require("fzf", "tldr")
+pages = output(["apropos", "."], check=False).splitlines()
+picked = fzf(pages, "--prompt=Man Page Search: ", "--cycle", "--bind", "tab:down,shift-tab:up")
+if not picked:
+    print("No command selected.")
+    sys.exit(0)
 
-# Check if a tldr page exists for the selected command.
-if tldr "${selected_cmd}" &> /dev/null; then
-    # If tldr page exists, display it.
-    echo "TLDR page found for '${selected_cmd}'. Displaying:"
-    tldr "${selected_cmd}"
-else
-    # Otherwise, display the standard man page.
-    echo "No TLDR page found for '${selected_cmd}'. Displaying man page:"
-    man "${selected_cmd}"
-fi
+# "ls (1)  - list directory contents" / "ls(1) - ..." -> "ls"
+cmd = re.split(r"[\s(]", picked[0], maxsplit=1)[0]
+if succeeds(["tldr", cmd]):
+    print(f"TLDR page found for '{cmd}'. Displaying:")
+    os.execvp("tldr", ["tldr", cmd])
+print(f"No TLDR page found for '{cmd}'. Displaying man page:")
+os.execvp("man", ["man", cmd])
