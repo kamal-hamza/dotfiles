@@ -42,8 +42,10 @@ shell:
       - $HOME/.local/bin
       - $HOME/.cargo/bin
       - $HOME/.bun/bin
-    darwin: []
-    linux: []
+    darwin:
+      - $HOME/.local/bin/darwin # macOS-only scripts (dot_local/bin/darwin/)
+    linux:
+      - $HOME/.local/bin/linux # Linux desktop scripts (dot_local/bin/linux/)
     windows: []
 
   aliases:

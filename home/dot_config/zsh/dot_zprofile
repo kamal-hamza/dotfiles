@@ -24,6 +24,8 @@ export LIBCLANG_PATH=/usr/lib/
 # PATH Configuration
 # -----------------------------------------------------------------------------
 path_if_exists "$HOME/.local/bin"
+path_if_exists "$HOME/.local/bin/linux"
+path_if_exists "$HOME/.local/bin/darwin"
 path_if_exists "$HOME/.cargo/bin"
 path_if_exists "$HOME/.bun/bin"
 
