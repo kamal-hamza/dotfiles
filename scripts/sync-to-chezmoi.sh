@@ -18,7 +18,14 @@ NC='\033[0m'
 
 # Paths
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-CHEZMOI_SOURCE="$(chezmoi source-path)"
+# Repo root of the real chezmoi checkout (source-path is its home/ subdir,
+# because of .chezmoiroot)
+CHEZMOI_SOURCE="$(chezmoi execute-template '{{ .chezmoi.workingTree }}')"
+
+if [[ "$REPO_DIR" -ef "$CHEZMOI_SOURCE" ]]; then
+    echo "This checkout IS the chezmoi source directory - nothing to sync."
+    exit 0
+fi
 
 echo -e "${BLUE}═══════════════════════════════════════════════════════${NC}"
 echo -e "${BLUE}  Syncing to Chezmoi Source Directory${NC}"
@@ -28,27 +35,17 @@ echo -e "${GREEN}From:${NC} $REPO_DIR"
 echo -e "${GREEN}To:${NC}   $CHEZMOI_SOURCE"
 echo ""
 
-# Sync .chezmoidata
-echo -e "${YELLOW}Syncing .chezmoidata...${NC}"
-rsync -av --delete "$REPO_DIR/.chezmoidata/" "$CHEZMOI_SOURCE/.chezmoidata/"
+# Source state (home/ = .chezmoiroot) and files installed outside $HOME (system/)
+for dir in home system docs; do
+    if [[ -d "$REPO_DIR/$dir" ]]; then
+        echo -e "${YELLOW}Syncing $dir/...${NC}"
+        rsync -av --delete --exclude '__pycache__/' "$REPO_DIR/$dir/" "$CHEZMOI_SOURCE/$dir/"
+    fi
+done
 
-# Sync dot_config
-echo -e "${YELLOW}Syncing dot_config...${NC}"
-rsync -av --delete "$REPO_DIR/dot_config/" "$CHEZMOI_SOURCE/dot_config/"
-
-# Sync dot_local
-echo -e "${YELLOW}Syncing dot_local...${NC}"
-rsync -av --delete "$REPO_DIR/dot_local/" "$CHEZMOI_SOURCE/dot_local/"
-
-# Sync docs
-if [[ -d "$REPO_DIR/docs" ]]; then
-    echo -e "${YELLOW}Syncing docs...${NC}"
-    rsync -av --delete "$REPO_DIR/docs/" "$CHEZMOI_SOURCE/docs/"
-fi
-
-# Sync other files
-echo -e "${YELLOW}Syncing other files...${NC}"
-for file in dot_* run_* .chezmoi* .gitignore README.md; do
+# Top-level files
+echo -e "${YELLOW}Syncing top-level files...${NC}"
+for file in .chezmoiroot .gitignore .gitattributes README.md CLAUDE.md AGENTS.md; do
     if [[ -f "$REPO_DIR/$file" ]]; then
         cp "$REPO_DIR/$file" "$CHEZMOI_SOURCE/"
     fi
