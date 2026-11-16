@@ -1,25 +1,13 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Switch the default audio input to the next source, move recording streams to it.
 
-current=$(wpctl status | awk '
-/Sources:/ {insources=1; next}
-/Filters:/ {insources=0}
-insources && /\*/ {
-    gsub("\\.","",$2)
-    print $2
-}')
+Usage: cycle-audio-input
+Requires: pactl (pipewire-pulse), notify-send
+"""
+import sys
+from pathlib import Path
 
-mapfile -t sources < <(wpctl status | awk '
-/Sources:/ {insources=1; next}
-/Filters:/ {insources=0}
-insources && /^[[:space:]]+[0-9]+\./ {
-    gsub("\\.","",$1)
-    print $1
-}')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import cycle_audio  # noqa: E402
 
-for i in "${!sources[@]}"; do
-    if [[ "${sources[$i]}" == "$current" ]]; then
-        next=$(( (i + 1) % ${#sources[@]} ))
-        wpctl set-default "${sources[$next]}"
-        break
-    fi
-done
+cycle_audio("source")
