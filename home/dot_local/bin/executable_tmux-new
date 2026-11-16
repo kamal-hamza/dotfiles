@@ -1,35 +1,54 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Open (or jump to) a tmux session for a project folder.
 
-# Ask for a project to open with fzf or take in a path as a project
-if [[ $# -eq 1 ]]; then
-	selected=$1
-else
-	selected=$(find ~/Code ~/.local/share -mindepth 1 -maxdepth 2 -type d | fzf)
-fi
+Usage: tmux-new [path]   (no path: pick one from ~/Code and ~/.local/share with fzf)
 
-# Check to see if anything was selected
-if [[ -z $selected ]]; then
-	exit 0
-fi
+The session is named after the folder (dots become underscores). Inside tmux
+it switches the client to the session instead of nesting.
+"""
+import os
+import sys
+from pathlib import Path
 
-# Get the name of the project
-# project_name=$(basename "$selected" | tr . _)
-project_name=${selected##*/}
-project_name=${project_name//./_}
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import fzf, output, succeeds  # noqa: E402
 
-# Check to see if tmux is running
-tmux_active=$(pgrep tmux)
+ROOTS = [Path.home() / "Code", Path.home() / ".local" / "share"]
 
-# If tmux is not running then create a session
-if [[ -z $TMUX ]] && [[ -z $tmux_active ]]; then
-	tmux new-session -s $project_name -c $selected
-	exit 0
-fi
 
-# Check to see if there is a tmux session with the current project
-if ! tmux has-session -t=$project_name 2>/dev/null; then
-	# Create a detached session to not mess with the current open session
-	tmux new-session -ds $project_name -c $selected
-fi
+def subdirs(path: Path) -> list[Path]:
+    try:
+        return sorted(p for p in path.iterdir() if p.is_dir())
+    except OSError:  # missing / unreadable
+        return []
 
-tmux attach -t $project_name
+
+def candidates():
+    for root in ROOTS:
+        for child in subdirs(root):
+            yield str(child)
+            yield from map(str, subdirs(child))
+
+
+if len(sys.argv) == 2:
+    selected = sys.argv[1]
+else:
+    picked = fzf(candidates())
+    if not picked:
+        sys.exit(0)
+    selected = picked[0]
+
+path = str(Path(selected).expanduser().resolve())
+name = Path(path).name.replace(".", "_")
+in_tmux = bool(os.environ.get("TMUX"))
+server_up = succeeds(["tmux", "list-sessions"])
+
+if not in_tmux and not server_up:
+    os.execvp("tmux", ["tmux", "new-session", "-s", name, "-c", path])
+
+if not succeeds(["tmux", "has-session", f"-t={name}"]):
+    output(["tmux", "new-session", "-ds", name, "-c", path])
+
+if in_tmux:
+    os.execvp("tmux", ["tmux", "switch-client", "-t", name])
+os.execvp("tmux", ["tmux", "attach", "-t", name])

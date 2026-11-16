@@ -1,29 +1,30 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Pick a project (~/Code/<group>/<project>) with fzf, kill its tmux session, delete it.
 
-# Find all project folders inside ~/Code subdirectories
-PROJECT_PATH=$(find ~/Code -mindepth 2 -maxdepth 2 -type d | fzf --prompt="Select a project to delete: ")
+Usage: delete-project
+"""
+import shutil
+import sys
+from pathlib import Path
 
-if [[ -z "$PROJECT_PATH" ]]; then
-  echo "No project selected."
-  exit 1
-fi
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import confirm, fzf, run, succeeds  # noqa: E402
 
-# Extract project name from path
-PROJECT_NAME=$(basename "$PROJECT_PATH")
+code = Path.home() / "Code"
+projects = sorted(str(p) for group in code.glob("*/") for p in group.glob("*/")) if code.is_dir() else []
+picked = fzf(projects, "--prompt=Select a project to delete: ")
+if not picked:
+    print("No project selected.")
+    sys.exit(1)
 
-# Confirm deletion
-read -rp "Are you sure you want to delete '$PROJECT_NAME' at '$PROJECT_PATH'? (y/N): " CONFIRM
-if [[ "$CONFIRM" != "y" && "$CONFIRM" != "Y" ]]; then
-  echo "Cancelled."
-  exit 0
-fi
+path = Path(picked[0])
+if not confirm(f"Are you sure you want to delete '{path.name}' at '{path}'?"):
+    print("Cancelled.")
+    sys.exit(0)
 
-# Kill tmux session if it exists
-if tmux has-session -t "$PROJECT_NAME" 2>/dev/null; then
-  tmux kill-session -t "$PROJECT_NAME"
-  echo "Killed tmux session '$PROJECT_NAME'."
-fi
+if succeeds(["tmux", "has-session", "-t", path.name]):
+    run(["tmux", "kill-session", "-t", path.name])
+    print(f"Killed tmux session '{path.name}'.")
 
-# Delete the folder
-rm -rf "$PROJECT_PATH"
-echo "Deleted project folder '$PROJECT_PATH'."
+shutil.rmtree(path)
+print(f"Deleted project folder '{path}'.")
