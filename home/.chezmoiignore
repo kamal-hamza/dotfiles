@@ -35,6 +35,12 @@ Thumbs.db
 {{- if or (not (env "BW_SESSION")) (not .secrets.env) }}
 .config/fish/conf.d/40-secrets.fish
 {{- end }}
+# SSH private keys from Bitwarden: same rule, the keys on disk stay put
+{{- if not (env "BW_SESSION") }}
+{{-   range $file, $_ := .secrets.ssh_keys }}
+.ssh/{{ $file }}
+{{-   end }}
+{{- end }}
 
 # Quickshell TypeScript sources/config - only the generated .mjs is deployed
 # (built by scripts/build-quickshell-ts.sh, committed alongside the .mts)
