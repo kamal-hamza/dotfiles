@@ -1,0 +1,11 @@
+# =============================================================================
+# Fallback values for per-machine settings
+# =============================================================================
+# The real values live in ~/.config/chezmoi/chezmoi.toml, written by
+# home/.chezmoi.toml.tmpl on `chezmoi init` (config-file data overrides
+# .chezmoidata). These defaults only matter on a machine that hasn't run
+# `chezmoi init` since the prompts were added, and are deliberately the
+# safe choice: deploy configs, never touch the system.
+# =============================================================================
+profile: minimal # desktop | minimal
+provision: false # true = install packages / configure the system (sudo)

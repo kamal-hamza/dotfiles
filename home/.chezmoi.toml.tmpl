@@ -1,0 +1,26 @@
+{{- /*
+  chezmoi config template - rendered by `chezmoi init` (and `chezmoi init`
+  again after editing this file) into ~/.config/chezmoi/chezmoi.toml.
+  Each question is asked once; the answer is stored and reused. To change an
+  answer, edit ~/.config/chezmoi/chezmoi.toml, or delete the key and re-run
+  `chezmoi init`.
+*/ -}}
+{{- $isWSL := and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{- $defaultProfile := "desktop" -}}
+{{- if $isWSL }}{{ $defaultProfile = "minimal" }}{{ end -}}
+
+{{- $profile := promptChoiceOnce . "profile" "Machine profile - desktop (full GUI setup) or minimal (shell and editor configs only)" (list "desktop" "minimal") $defaultProfile -}}
+{{- $provision := promptBoolOnce . "provision" "Let chezmoi install packages and configure the system (uses sudo/admin)" false -}}
+
+[data]
+  profile = {{ $profile | quote }}
+  provision = {{ $provision }}
+
+{{- if eq .chezmoi.os "windows" }}
+
+# Windows ignores shebangs and picks the interpreter by extension. `python3`
+# is often the Microsoft Store stub, so use the py launcher instead.
+[interpreters.py]
+  command = "py"
+  args = ["-3"]
+{{- end }}
