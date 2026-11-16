@@ -87,7 +87,7 @@ Files that belong outside `$HOME` go in `system/arch/<base|desktop>/<absolute pa
 
 ### Shell: fish (macOS/Linux), PowerShell (Windows)
 
-fish config is `dot_config/fish/`: `conf.d/00-homebrew.fish.tmpl` (renders empty off macOS), `10-env` and `30-aliases` (generated from `shell.yaml`), `20-tools.fish` (mise/zoxide/fzf), `90-dev-tools.fish`, plus `functions/` (prompt, `reload`; Ctrl-R is fzf's own `fzf --fish` binding). Never manage `fish_variables` (ignored) and use `set -gx` / `fish_add_path -g` so nothing becomes a universal variable. Plugins: `fish_plugins` (fisher), synced by `.chezmoiscripts/user/unix/run_onchange_after_50-fish-plugins.py.tmpl`. The zsh config (`dot_zshenv`, `dot_config/zsh/`) is still deployed as a fallback and isn't generated from `shell.yaml`. GUI-session env vars belong in `dot_config/hypr/conf/envs.lua`, not the shell.
+fish config is `dot_config/fish/`: `conf.d/00-homebrew.fish.tmpl` (renders empty off macOS), `10-env` and `30-aliases` (generated from `shell.yaml`), `20-tools.fish` (mise/zoxide/fzf), `90-dev-tools.fish`, plus `functions/` (prompt, `reload`, Tab = accept autosuggestion else complete via `__tab_accept_or_complete`; Ctrl-R is fzf's own `fzf --fish` binding). Never manage `fish_variables` (ignored) and use `set -gx` / `fish_add_path -g` so nothing becomes a universal variable. Plugins: `fish_plugins` (fisher), synced by `.chezmoiscripts/user/unix/run_onchange_after_50-fish-plugins.py.tmpl`. The zsh config (`dot_zshenv`, `dot_config/zsh/`) is still deployed as a fallback and isn't generated from `shell.yaml`. GUI-session env vars belong in `dot_config/hypr/conf/envs.lua`, not the shell.
 
 ### Windows readiness
 
