@@ -54,7 +54,7 @@ key and re-run `chezmoi init`). One-off "configs only" on a provisioned machine:
 │   │   └── user/{unix,windows}/                     # always (per OS)
 │   ├── .chezmoitemplates/    # shared template snippets (Python helpers)
 │   ├── dot_config/           # ~/.config/* app configs
-│   ├── dot_local/            # ~/.local/bin scripts etc.
+│   ├── dot_local/            # ~/.local/bin scripts (bin/linux/, bin/darwin/ = OS-only, own PATH entries)
 │   ├── AppData/ Documents/   # Windows-only targets (Zed, PowerShell profile)
 │   └── ...
 ├── system/                   # files installed OUTSIDE $HOME (e.g. /etc), never deployed by chezmoi
