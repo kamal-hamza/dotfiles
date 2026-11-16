@@ -1,5 +1,5 @@
 -- WezTerm, styled after macOS Terminal.app's default "Basic" profile (dark mode):
--- SF Mono 11, white on #1e1e1e, grey non-blinking block cursor, Terminal.app's
+-- SF Mono (Nerd Font) 11, white on #1e1e1e, grey non-blinking block cursor, Terminal.app's
 -- ANSI palette, 80x24 window, scrollbar, no transparency/blur/ligatures.
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
@@ -13,10 +13,13 @@ if is_windows then
 end
 
 -- ── font ────────────────────────────────────────────────────────────────────
--- SF Mono is installed from packages-<os>.yaml (otf-apple-sf-mono / cask
--- font-sf-mono). MesloLGS Nerd Font (Menlo's metrics) fills in Nerd Font icons
--- SF Mono lacks; JetBrains Mono (bundled with wezterm) catches anything else.
+-- SF Mono patched with Nerd Font icons, from packages-<os>.yaml (AUR
+-- nerd-fonts-sf-mono = "SFMono Nerd Font Mono", cask font-sf-mono-nerd-font
+-- = "SFMono Nerd Font"). Then plain SF Mono / Menlo / Meslo; JetBrains Mono
+-- (bundled with wezterm) catches anything else.
 config.font = wezterm.font_with_fallback({
+    "SFMono Nerd Font Mono",
+    "SFMono Nerd Font",
     "SF Mono",
     "Menlo",
     "MesloLGS Nerd Font Mono",
