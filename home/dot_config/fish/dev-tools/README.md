@@ -6,11 +6,10 @@ tracked by chezmoi** (`.chezmoiignore` ignores `.config/fish/dev-tools/*.fish`).
 The `*.fish.example` files are tracked templates.
 
 ```sh
-dev-tool list          # examples + which are active
-dev-tool add go        # copy go.fish.example -> go.fish, then edit it
-dev-tool edit go
-dev-tool show go
-dev-tool remove go
+cd ~/.config/fish/dev-tools
+cp go.fish.example go.fish   # enable: copy, then uncomment what you need
+$EDITOR go.fish
+rm go.fish                   # disable
 ```
 
 Use `set -gx` for variables and `fish_add_path -g` for PATH entries (`-g`

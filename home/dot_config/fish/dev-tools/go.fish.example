@@ -1,7 +1,7 @@
 # =============================================================================
 # Go Language Configuration
 # =============================================================================
-# `dev-tool add go` copies this to go.fish - uncomment the lines you need.
+# Copy this to go.fish (same folder) and uncomment the lines you need.
 
 # set -gx GOPATH $HOME/go
 # set -gx GOBIN $GOPATH/bin
