@@ -1,175 +1,115 @@
 # Dotfiles
 
-Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/).
+Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/), for
+**macOS** (Homebrew), **Arch Linux + Hyprland** (pacman/AUR) and — prepared for —
+**Windows** (winget, PowerShell).
 
-## Features
+The repo keeps two concerns apart:
 
-- **Cross-platform**: Supports macOS (Homebrew) and Arch Linux (pacman/AUR)
-- **Minimal setup**: Simple zsh configuration with essential plugins
-- **Custom scripts**: Useful scripts for project management, tmux, and Docker
+- **App configuration** — dotfiles in `$HOME` (fish, nvim, zed, ghostty, git,
+  tmux, Hyprland, quickshell, …). Always deployed; which ones depend on the OS and
+  machine profile.
+- **System provisioning** — installing packages, `/etc` files, systemd units,
+  macOS defaults, the login shell. Opt-in per machine (`provision = true`), in
+  `home/.chezmoiscripts/provision/`.
 
 ## Installation
-
-### First time setup
 
 ```bash
 # Install chezmoi (if not installed)
 sh -c "$(curl -fsLS get.chezmoi.io)"
 
-# Initialize with this repository
-chezmoi init https://github.com/kamal-hamza/dotfiles.git
-
-# Apply dotfiles
-chezmoi apply
+# Clone + answer the per-machine questions, then apply
+chezmoi init --apply https://github.com/kamal-hamza/dotfiles.git
 ```
 
-## What's Included
+`chezmoi init` asks two questions once and stores the answers in
+`~/.config/chezmoi/chezmoi.toml`:
 
-### Applications
+| Setting     | Values               | Effect |
+|-------------|----------------------|--------|
+| `profile`   | `desktop` / `minimal` | `desktop` adds the Hyprland desktop configs and desktop packages (Linux). `minimal` = shell/editor/CLI configs only (default on WSL). |
+| `provision` | `true` / `false`     | `true` lets chezmoi install packages and configure the system (uses sudo/admin). `false` = configs only. |
 
-- **Editor**: Neovim, Zed
-- **Terminal**: WezTerm with tmux
-- **Shell**: Zsh with autosuggestions, syntax highlighting, and autopair
-- **Tools**: fzf, tldr, git, obsidian, ChatGPT
+To change an answer later, edit `~/.config/chezmoi/chezmoi.toml` (or delete the
+key and re-run `chezmoi init`). One-off "configs only" on a provisioned machine:
+`chezmoi apply --exclude scripts`.
 
-### Fonts
+## Layout
 
-- **Liga SFMono Nerd Font**: Monospace font with ligatures and nerd font icons
-  - Installed automatically via Homebrew tap on macOS
-  - Used in all terminal applications and editors
+```
+.
+├── .chezmoiroot              # "home": chezmoi's source state is home/, not the repo root
+├── home/                     # ── everything chezmoi deploys / runs ──
+│   ├── .chezmoi.toml.tmpl    # per-machine questions (profile, provision) + Windows interpreter
+│   ├── .chezmoidata/         # data for templates (merged)
+│   │   ├── packages-{darwin,arch,windows}.yaml
+│   │   ├── system-arch.yaml  # systemd units to enable
+│   │   ├── shell.yaml        # env vars / PATH / aliases for fish AND PowerShell
+│   │   ├── tools.yaml        # install-lang definitions
+│   │   └── 00-defaults.yaml  # safe fallbacks if `chezmoi init` hasn't run
+│   ├── .chezmoiignore        # what to skip per OS / profile / provision
+│   ├── .chezmoiscripts/
+│   │   ├── provision/{darwin,linux,unix,windows}/   # only when provision = true
+│   │   └── user/{unix,windows}/                     # always (per OS)
+│   ├── .chezmoitemplates/    # shared template snippets (Python helpers)
+│   ├── dot_config/           # ~/.config/* app configs
+│   ├── dot_local/            # ~/.local/bin scripts etc.
+│   ├── AppData/ Documents/   # Windows-only targets (Zed, PowerShell profile)
+│   └── ...
+├── system/                   # files installed OUTSIDE $HOME (e.g. /etc), never deployed by chezmoi
+│   └── arch/{base,desktop}/etc/...
+└── scripts/                  # repo tooling (quickshell TS build, sync), never deployed
+```
 
-### Custom Scripts
+## Provisioning
 
-All scripts are available in your PATH after running `chezmoi apply`:
+All provisioning scripts are Python, except one tiny bootstrap per OS that
+installs Python itself (`00-bootstrap.sh` / `.ps1`). Order on `chezmoi apply`:
 
-- `ccp` - Create a new project with common structure
-- `dcp` - Delete a project
-- `tt` - Quick tmux session management
-- `m` - Man pages with TLDR fallback
-- `dr` - Run Docker containers
-- `ds` - Stop Docker containers
-
-## Package Management
+1. `00-bootstrap` — Xcode CLT + Homebrew / `python` via pacman / Python via winget
+2. `10-packages` — from `packages-<os>.yaml` (re-runs when the list changes)
+3. *(configs are written)*
+4. `20-system-files`, `30-services` (Arch), `20-macos-defaults` (macOS)
+5. `90-default-shell` — makes fish the login shell (macOS/Linux)
 
 ### Adding packages
 
-Edit `.chezmoidata/packages.yaml`:
+Edit the right file, then `chezmoi apply`:
 
-```yaml
-packages:
-  darwin:
-    taps:
-      - homebrew/cask-fonts
-    brews:
-      - neovim
-    casks:
-      - docker
-  arch:
-    pacman:
-      - docker
-    aur:
-      - visual-studio-code-bin
-```
+- macOS: `home/.chezmoidata/packages-darwin.yaml` (`taps`, `brews`, `casks`)
+- Arch: `home/.chezmoidata/packages-arch.yaml` — `base` (every machine) or
+  `desktop` (profile desktop), each with `pacman` and `aur`
+- Windows: `home/.chezmoidata/packages-windows.yaml` (`winget` ids)
 
-Then apply:
-```bash
-chezmoi apply
-```
+### System files (Arch)
 
-### Homebrew Taps
+Put the file at `system/arch/<base|desktop>/<absolute path>` — e.g.
+`system/arch/desktop/etc/ly/config.ini` → `/etc/ly/config.ini`. It's installed
+with sudo; the first overwrite keeps the original as `<file>.chezmoi-orig`.
 
-You can add third-party Homebrew taps to install packages not in the main repository:
+## Shell
 
-```yaml
-packages:
-  darwin:
-    taps:
-      - shaunsingh/SFMono-Nerd-Font-Ligaturized
-```
+**fish** on macOS/Linux, **PowerShell 7** on Windows. Env vars, PATH and
+aliases are defined once in `home/.chezmoidata/shell.yaml` and rendered into
+both (`~/.config/fish/conf.d/10-env.fish`, `30-aliases.fish`, and the PowerShell
+profile). Machine-specific env goes in untracked files managed by `dev-tool`
+(`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
+fallback.
 
-The tap will be added automatically before installing packages.
+## Configuration notes
 
-## Configuration
-
-### Zsh
-
-- Config location: `~/.config/zsh/`
-- Aliases: `~/.config/zsh/aliases.zsh`
-
-### Tmux
-
-- Config location: `~/.tmux.conf`
-- Prefix key: `Ctrl+s` (instead of default `Ctrl+b`)
-- Theme: static colors in `~/.config/tmux/themes/theme.tmux`, sourced by `.tmux.conf`
-
-### Ghostty
-
-- Config location: `~/.config/ghostty/config`
-- Theme: static palette in `~/.config/ghostty/themes/current`, referenced by `config`'s `theme = current`
-
-### Zed
-
-- Config location: `~/.config/zed/settings.json`
-- Theme: `settings.json`'s `"theme"` key names one of Zed's built-in theme families
+- **Tmux**: `~/.tmux.conf`, prefix `Ctrl+s`; theme in `~/.config/tmux/themes/theme.tmux`
+- **Ghostty**: `~/.config/ghostty/config`; palette in `themes/current`
+- **Zed**: `home/dot_config/zed/` (Windows gets a copy under `AppData/Roaming/Zed`)
 
 ## Updating
 
 ```bash
-# Update dotfiles from repository
-chezmoi update
-
-# Or manually
-cd ~/.local/share/chezmoi
-git pull
-chezmoi apply
-```
-
-## Structure
-
-```
-~/.local/share/chezmoi/
-├── .chezmoidata/
-│   └── packages.yaml       # Package definitions
-├── dot_config/
-│   ├── zsh/                # Zsh configuration
-│   ├── tmux/                # Tmux theme partial
-│   ├── zed/                 # Zed editor configuration
-│   └── nvim/                # Neovim configuration
-├── scripts/                 # Custom scripts
-└── run_onchange_*.sh.tmpl   # Package installers
+chezmoi update        # git pull + apply
+chezmoi init          # after the questions in .chezmoi.toml.tmpl change
 ```
 
 ## License
 
 MIT
-
-## macOS System Settings
-
-The dotfiles automatically configure macOS system preferences on first run. This includes:
-
-### Configured Settings
-- **Keyboard**: Fast key repeat, disabled auto-correct/capitalization/smart quotes
-- **Trackpad**: Tap to click enabled, optimized tracking speed
-- **Finder**: Show hidden files, extensions, path bar, status bar
-- **Dock**: Auto-hide, custom size, disable recent apps
-- **Screenshots**: Save to Desktop in PNG format without shadows
-- **Developer Tools**: Safari developer menu, Activity Monitor optimizations
-- And many more...
-
-### Customizing Settings
-
-See [MACOS_SETTINGS.md](MACOS_SETTINGS.md) for:
-- Complete list of all settings
-- How to add/modify/disable settings
-- Commands reference
-
-### Re-running Configuration
-
-The configuration runs automatically on first `chezmoi apply`. To re-run:
-
-```bash
-# Delete the state and re-apply
-chezmoi state delete-bucket --bucket=scriptState
-chezmoi apply
-```
-

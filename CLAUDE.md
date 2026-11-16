@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a cross-platform dotfiles repository managed with [chezmoi](https://www.chezmoi.io/), targeting **macOS** (Homebrew) and **Arch Linux + Hyprland** (pacman/AUR). There is no build/test suite — this is configuration, not application code. The only validation is applying the config and observing the resulting behavior of the tools it configures.
+This is a cross-platform dotfiles repository managed with [chezmoi](https://www.chezmoi.io/), targeting **macOS** (Homebrew) and **Arch Linux + Hyprland** (pacman/AUR), with **Windows** (winget + PowerShell) support scaffolded but not yet tested on a real machine. There is no build/test suite — this is configuration, not application code. The only validation is applying the config and observing the resulting behavior of the tools it configures.
 
 An `AGENTS.md` also exists at the repo root. Treat it as a secondary reference, not ground truth: several things it describes have since changed (see "Known drift from AGENTS.md/README" below) — prefer this file and the actual source when they disagree.
 
@@ -17,16 +17,29 @@ chezmoi diff
 # Apply the dotfiles (the primary way to "run"/validate this repo)
 chezmoi apply
 
-# Re-run onchange/once scripts that chezmoi thinks already ran
-chezmoi state delete-bucket --bucket=scriptState
+# (Re)answer the per-machine questions (profile, provision) -> ~/.config/chezmoi/chezmoi.toml
+chezmoi init
+
+# Apply configs only, skipping every script (no packages, no sudo)
+chezmoi apply --exclude scripts
+
+# Re-run scripts that chezmoi thinks already ran
+chezmoi state delete-bucket --bucket=scriptState   # run_once_
+chezmoi state delete-bucket --bucket=entryState    # run_onchange_
+
+# See what's skipped on this machine / render a template
+chezmoi ignored
+chezmoi execute-template < home/path/to/file.tmpl
+# ...as another OS (also works for `managed`, `cat`, `ignored`)
+chezmoi --override-data '{"chezmoi":{"os":"windows"}}' managed
 
 # Validate Neovim config loads without error (vim.pack plugins must already be installed)
 nvim --headless "+qa"
 
 # Lint YAML config data
-yamllint .chezmoidata/*.yaml
+yamllint home/.chezmoidata/*.yaml
 
-# Install language toolchains defined in .chezmoidata/tools.yaml
+# Install language toolchains defined in home/.chezmoidata/tools.yaml
 install-lang python go rust   # etc.
 
 # Sync a checkout elsewhere back into the actual chezmoi source dir during dev
@@ -36,25 +49,53 @@ install-lang python go rust   # etc.
 ./scripts/build-quickshell-ts.sh          # --check fails if a committed .mjs is stale
 ```
 
-There's no linter/formatter invocation wired into this repo itself; individual app configs (e.g. `dot_config/nvim/lua/hkamal/plugins/conform.lua`) configure formatters for files *managed by* those apps, not for the dotfiles repo itself.
+There's no linter/formatter invocation wired into this repo itself; individual app configs (e.g. `home/dot_config/nvim/lua/hkamal/plugins/conform.lua`) configure formatters for files *managed by* those apps, not for the dotfiles repo itself.
 
 ## Architecture
 
-### chezmoi source-state conventions
+### Repo layout: `.chezmoiroot` = `home`
 
-Standard chezmoi naming applies throughout: `dot_foo` → `~/.foo`, `executable_foo` → `foo` with `+x`, `private_foo` → mode 600, `*.tmpl` → Go-templated before writing. `run_once_*` / `run_onchange_*` scripts are lifecycle hooks — `run_onchange_01_{arch,darwin}-install-packages.sh.tmpl` re-run automatically whenever their templated content (which embeds `.chezmoidata/packages.yaml`) changes, so editing the package list is enough to trigger a reinstall on next `chezmoi apply`. `.chezmoiignore` conditionally excludes Linux/Hyprland-only paths (`dot_config/hypr`, `waybar`, `rofi`, `mpd`, `ncmpcpp`, `cava`, `mako`, `satty`, `quickshell`, `scripts/linux`) when `.chezmoi.os != "linux"`.
+The repo root is a container; chezmoi's source state is `home/` (set by `.chezmoiroot`). **All paths in the rest of this file are relative to `home/` unless they start with `system/`, `scripts/` or `home/`.** Outside `home/`, chezmoi deploys nothing: `system/` (files installed outside `$HOME`), `scripts/` (repo tooling), and the docs. `chezmoi source-path` returns `<repo>/home`; `.chezmoi.workingTree` in templates is the repo root.
 
-### Central data drives templated scripts
+### App config vs system provisioning
 
-`.chezmoidata/packages.yaml` and `.chezmoidata/tools.yaml` are the source of truth consumed by Go templates elsewhere:
-- `packages.yaml` (`packages.darwin.{taps,brews,casks}` / `packages.arch.{pacman,aur}`) is read by `run_onchange_01_*-install-packages.sh.tmpl` to install system packages per-OS.
-- `tools.yaml` defines per-language install "steps" (mise, brew, cargo, go_install, npm_global, uv_tool, etc., with `depends_on` chains) consumed by `dot_local/bin/executable_install-lang`.
+The core design split:
+- **App configuration** = dotfiles in `$HOME` (`dot_config/`, `dot_local/`, `AppData/`, `Documents/`, …). chezmoi's source path *is* the target path, so OS/role-specific configs can't be moved into per-OS folders — they're selected by `.chezmoiignore` instead, which is sectioned: always-ignored / scripts / unix-only (ignored on Windows) / windows-only / linux desktop (Hyprland, only when `os == linux` and `profile == desktop`).
+- **System provisioning** = package installs, `/etc` files, systemd units, macOS `defaults`, `chsh`. Lives only in `.chezmoiscripts/provision/<os>/`, and the whole `provision/` tree is ignored unless the machine opted in (`provision = true`).
 
-Adding a package or language tool means editing these YAML files, not the shell scripts.
+Per-machine settings come from `.chezmoi.toml.tmpl` (rendered by `chezmoi init` into `~/.config/chezmoi/chezmoi.toml`, asked once via `promptChoiceOnce`/`promptBoolOnce`): `profile` (`desktop`|`minimal`; defaults to minimal on WSL) and `provision` (bool). `.chezmoidata/00-defaults.yaml` supplies the safe fallback (`minimal`, `false`) for a machine that hasn't re-run `chezmoi init` — config-file data overrides `.chezmoidata`. The config template also sets `[interpreters.py] command = "py"` on Windows.
+
+### Scripts: `.chezmoiscripts/{provision,user}/<os>/`
+
+`<os>` is `darwin`, `linux`, `windows`, or `unix` (= darwin + linux); `.chezmoiignore` drops the dirs that don't apply (`.chezmoiscripts/*/linux/**` etc. — ignore patterns match the script's target path, which keeps its subdirectories). `provision/` = needs sudo/admin, opt-in; `user/` = user-level, always runs (e.g. fisher plugin sync, Windows `XDG_CONFIG_HOME`).
+
+All scripts are **Python**, except one bootstrap per OS that gets Python onto a fresh machine: `provision/{darwin,linux}/run_once_before_00-bootstrap.sh` (Xcode CLT + Homebrew / `pacman -S python`) and `provision/windows/run_once_before_00-bootstrap.ps1` (winget; exits 1 after installing so the user re-runs from a new terminal with `py` on PATH). Unix Python scripts use `#!/usr/bin/python3` (system Python, never a mise shim); on Windows the shebang is ignored and `.py` runs via `py -3`. Shared helpers (`header/info/ok/warn/err/run/succeeds/dedupe`) live in `.chezmoitemplates/provision/common.py` and are pulled in with `{{ template "provision/common.py" . }}` — scripts run from a temp dir, so they can't import a shared module. Data reaches Python as JSON: `json.loads(r'''{{ .packages.arch | toJson }}''')`; because the data is rendered into the script, `run_onchange_` scripts re-run whenever it changes. `system-files` embeds a sha256 of every file under `system/arch/` for the same reason. A template that renders empty is skipped (used by `user/unix/...fish-plugins` until fish exists).
+
+Order on apply: `before_` scripts (alphabetical by full target path, so `00-bootstrap` < `10-packages`), then files, then `after_` scripts (`20-system-files`, `30-services`, `20-macos-defaults`, `90-default-shell`, `user/.../50-fish-plugins`). Package failures are reported but non-fatal so configs still apply.
+
+### Central data drives templates
+
+`.chezmoidata/*.yaml` files are merged (maps merge recursively, **lists replace**), so each list lives in exactly one file:
+- `packages-darwin.yaml` (`packages.darwin.{taps,brews,casks}`), `packages-arch.yaml` (`packages.arch.{base,desktop}.{pacman,aur}` — `desktop` only installed for `profile == desktop`), `packages-windows.yaml` (`packages.windows.winget`).
+- `system-arch.yaml` — `system.arch.{base,desktop}.{services,user_services}` systemd units.
+- `shell.yaml` — `shell.env.{common,<os>}`, `shell.path.{common,<os>}`, `shell.aliases[]` (`name`, `cmd`, optional `os` list; `{args}` in `cmd` makes it a function). Rendered into fish (`dot_config/fish/conf.d/10-env.fish.tmpl`, `30-aliases.fish.tmpl`) **and** PowerShell (`Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`).
+- `tools.yaml` — per-language install steps for `dot_local/bin/executable_install-lang`, which reads it via `chezmoi data --format json` (no PyYAML needed).
+
+Adding a package, service, env var or alias means editing these YAML files, not the scripts/templates.
+
+Files that belong outside `$HOME` go in `system/arch/<base|desktop>/<absolute path>` (e.g. `system/arch/desktop/etc/ly/config.ini`), installed by `provision/linux/run_onchange_after_20-system-files.py.tmpl` with `sudo install`, backing up the original once as `<file>.chezmoi-orig`.
+
+### Shell: fish (macOS/Linux), PowerShell (Windows)
+
+fish config is `dot_config/fish/`: `conf.d/00-homebrew.fish.tmpl` (renders empty off macOS), `10-env` and `30-aliases` (generated from `shell.yaml`), `20-tools.fish` (mise/zoxide/fzf), `90-dev-tools.fish`, plus `functions/` (prompt, `reload`; Ctrl-R is fzf's own `fzf --fish` binding). Never manage `fish_variables` (ignored) and use `set -gx` / `fish_add_path -g` so nothing becomes a universal variable. Plugins: `fish_plugins` (fisher), synced by `.chezmoiscripts/user/unix/run_onchange_after_50-fish-plugins.py.tmpl`. The zsh config (`dot_zshenv`, `dot_config/zsh/`) is still deployed as a fallback and isn't generated from `shell.yaml`. GUI-session env vars belong in `dot_config/hypr/conf/envs.lua`, not the shell.
+
+### Windows readiness
+
+Unix-only targets (fish, zsh, tmux, ghostty, `.local/bin`, `~/.config/zed`) are ignored on Windows; `AppData/`, `Documents/`, `.config/powershell/` are ignored elsewhere. XDG-aware apps (nvim, git) reuse `dot_config/*` because `user/windows/run_once_after_10-xdg-config-home.py` sets `XDG_CONFIG_HOME=%USERPROFILE%\.config`. Zed ignores XDG on Windows, so `AppData/Roaming/Zed/*.tmpl` are one-line `{{ include "dot_config/zed/..." }}` copies — edit `dot_config/zed/`, never the AppData stubs. `.gitattributes` forces LF so a Windows checkout doesn't change file hashes (which would re-trigger `run_onchange_` scripts). None of the Windows pieces have been run on real Windows yet.
 
 ### Custom scripts + alias wiring
 
-`dot_local/bin/executable_*` becomes `~/.local/bin/*` on apply. Each script that should be user-invocable needs a matching alias added in `dot_config/zsh/aliases.zsh` (documented convention, see the header comment there). Key scripts: `create-project`/`delete-project` (GitHub-template project scaffolding, aliased `ccp`/`dcp`), `dev-tool` (manages machine-specific env files, see below), `install-lang`, `font-switcher`, `man-tldr` (aliased `m`), `tmux-new` (aliased `tt`).
+`dot_local/bin/executable_*` becomes `~/.local/bin/*` on apply (Unix only). Each script that should be user-invocable needs an entry in `shell.aliases` in `.chezmoidata/shell.yaml` (with `os:` limiting it to where the script works); `dot_config/zsh/aliases.zsh` is the legacy zsh copy. Key scripts: `create-project`/`delete-project` (`ccp`/`dcp`), `dev-tool` (machine-specific env files, see below), `install-lang`, `font-switcher`, `man-tldr` (`m`), `tmux-new` (`tt`). New scripts should be Python where portability matters.
 
 ### Neovim: native `vim.pack`, not lazy.nvim
 
@@ -70,7 +111,7 @@ When adding a new language: add its parser to `plugins/treesitter.lua`, add the 
 
 ### Quickshell TypeScript (the one build step)
 
-Non-trivial Quickshell logic is written in TypeScript: `dot_config/quickshell/**/*.mts` compiles to a sibling `*.mjs` ES module that QML imports directly (`import "Search.mjs" as Search` — Qt's QML engine supports `.mjs` modules natively). The generated `.mjs` is **committed** (with a "GENERATED ... do not edit" banner) so `chezmoi apply` never needs Node/TypeScript; the `.mts` sources and `dot_config/quickshell/tsconfig.json` are excluded from deployment in `.chezmoiignore`. Edit the `.mts`, run `scripts/build-quickshell-ts.sh` (pinned `typescript` via `bunx`), then apply. Currently this is just `modules/launcher/Search.mts`, the launcher's shared search/ranking engine.
+Non-trivial Quickshell logic is written in TypeScript: `home/dot_config/quickshell/**/*.mts` compiles to a sibling `*.mjs` ES module that QML imports directly (`import "Search.mjs" as Search` — Qt's QML engine supports `.mjs` modules natively). The generated `.mjs` is **committed** (with a "GENERATED ... do not edit" banner) so `chezmoi apply` never needs Node/TypeScript; the `.mts` sources and `tsconfig.json` are excluded from deployment in `.chezmoiignore`. Edit the `.mts`, run `scripts/build-quickshell-ts.sh` (it builds the *installed* chezmoi source, `$(chezmoi source-path)/dot_config/quickshell`) (pinned `typescript` via `bunx`), then apply. Currently this is just `modules/launcher/Search.mts`, the launcher's shared search/ranking engine.
 
 ### Theming: static, hardcoded, no switcher
 
@@ -78,9 +119,9 @@ There is no theme-switching system. Each app config just has its colors (the mon
 
 Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpaper`, started from `dot_config/hypr/conf/execs.lua`) — there is no live-switching wallpaper daemon.
 
-### Dev-tools system (machine-specific, gitignored)
+### Dev-tools system (machine-specific, not tracked)
 
-`dot_config/zsh/dev-tools/*.zsh.example` are committed templates for per-language shell env setup (Node, Python, Go, .NET, Bun paths, etc.). The active, machine-specific versions (`*.zsh` without `.example`, gitignored via `.chezmoiignore`'s `.config/zsh/dev-tools/` entry) are sourced automatically by `.zshrc` and managed with `dev-tool {list,add,edit,remove,show} <name>` (`executable_dev-tool`). This is how machine-specific paths/versions stay out of version control while keeping a documented template in the repo.
+`dot_config/fish/dev-tools/*.fish.example` are committed templates for per-language shell env (Bun, .NET, Go, Node, Python). The active, machine-specific versions (`*.fish`, ignored via `.chezmoiignore`'s `.config/fish/dev-tools/*.fish`) are sourced by `conf.d/90-dev-tools.fish` and managed with `dev-tool {list,add,edit,remove,show} <name>` (`executable_dev-tool`; `DEV_TOOL_SHELL=zsh` targets the legacy `~/.config/zsh/dev-tools/*.zsh`). PowerShell's equivalent is untracked `~/.config/powershell/dev-tools/*.ps1`.
 
 ## Known drift from AGENTS.md/README
 
@@ -89,3 +130,4 @@ Both docs predate several changes; when they conflict with the source tree, trus
 - Neovim plugin manager is **`vim.pack`** (native), not lazy.nvim (see above).
 - The theme system they describe (Base16/flavours, dark/light toggle, `theme-gen`) has been removed entirely — see "Theming" above.
 - `dot_pi/` (a Pi agent extension setup) has been removed from the working tree.
+- Source state moved under `home/` (`.chezmoiroot`); `packages.yaml` was split into `packages-<os>.yaml`; the top-level `run_*` shell scripts were replaced by Python scripts in `home/.chezmoiscripts/`; the login shell is fish, not zsh. AGENTS.md/README paths like `.chezmoidata/packages.yaml` or `dot_config/...` predate this.
