@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
 import "../../theme"
-import "Fuzzy.js" as Fuzzy
+import "Search.mjs" as Search
 
 // Clipboard History: backed by `cliphist` (needs the wl-paste watchers set
 // up in hypr/conf/execs.lua to actually populate). `cliphist list` prints
@@ -24,10 +24,14 @@ Item {
     property var filtered: {
         const q = searchBar.text.trim();
         if (q === "") return root.rawEntries;
+        // Strict (contiguous words, any order): scattered-letter matching
+        // over long free text matches nearly everything. Ties keep
+        // cliphist's newest-first order (stable sort).
+        const tokens = Search.tokenize(q);
         return root.rawEntries
-            .map(e => ({ entry: e, score: Fuzzy.score(e.preview, q) }))
-            .filter(s => s.score >= 0)
-            .sort((a, b) => b.score - a.score)
+            .map((e, i) => ({ entry: e, i: i, m: Search.match([e.preview], tokens, { strict: true }) }))
+            .filter(s => s.m !== null)
+            .sort((a, b) => (b.m.score - a.m.score) || (a.i - b.i))
             .map(s => s.entry);
     }
     onFilteredChanged: root.selectedIndex = 0

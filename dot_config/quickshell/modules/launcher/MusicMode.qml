@@ -4,6 +4,7 @@ import Quickshell.Io
 import "../../theme"
 import "../common"
 import "../services"
+import "Search.mjs" as Search
 
 // Music: Now Playing view reuses MediaService (native MPRIS, already
 // bridging MPD via mpd-mpris - same singleton bar/NowPlayingPopup.qml
@@ -35,7 +36,12 @@ Item {
         onTriggered: MediaService.tickProgress()
     }
 
-    // --- Search (MPD library, via mpc) - songs only, no artist/album grouping ---
+    // --- Search (MPD library) - songs only, no artist/album grouping ---
+    // The whole library is pulled once per launcher open (`mpc listall`,
+    // cheap at this library's size) and searched client-side with the
+    // shared Search.js engine, rather than `mpc search any <query>`: MPD
+    // treats the query as one literal phrase ("karol wow" finds nothing),
+    // can't fold accents ("jhene") and has no typo tolerance.
     property var songResults: []
     onSongResultsChanged: {
         root.selectedIndex = 0;
@@ -111,7 +117,7 @@ Item {
 
     Timer {
         id: searchDebounce
-        interval: 200
+        interval: 60
         onTriggered: root._search()
     }
     Connections {
@@ -119,24 +125,57 @@ Item {
         function onTextChanged() { searchDebounce.restart(); }
     }
 
+    property var _allSongs: []
+    property bool _libraryLoaded: false
+    // Refreshed on switching to this mode and on every launcher open (a
+    // mode's own `visible` doesn't toggle on reopen - see LibraryMode.qml).
+    Connections {
+        target: root.launcher
+        function onVisibleChanged() {
+            if (root.launcher.visible && root.launcher.mode === "music") root._loadLibrary();
+        }
+    }
+
+    function _loadLibrary() {
+        if (libraryProc.running) return;
+        libraryProc.running = true;
+    }
+
     Process {
-        id: searchProc
+        id: libraryProc
+        command: ["mpc", "-f", "%file%\t%artist%\t%title%\t%album%\t%time%", "listall"]
         stdout: StdioCollector {
-            id: searchCollector
+            id: libraryCollector
             onStreamFinished: {
-                const lines = searchCollector.text.split("\n").filter(l => l.trim() !== "");
-                root.songResults = lines.map(l => {
+                const lines = libraryCollector.text.split("\n").filter(l => l.trim() !== "");
+                root._allSongs = lines.map(l => {
                     const p = l.split("\t");
                     return { file: p[0] || "", artist: p[1] || "", title: p[2] || "", album: p[3] || "", time: p[4] || "" };
                 });
+                root._libraryLoaded = true;
+                if (root.searching) root._search();
             }
         }
     }
+
     function _search() {
-        const q = searchBar.text.trim();
-        if (q === "") { root.songResults = []; return; }
-        searchProc.command = ["mpc", "-f", "%file%\t%artist%\t%title%\t%album%\t%time%", "search", "any", q];
-        searchProc.running = true;
+        const tokens = Search.tokenize(searchBar.text);
+        if (tokens.length === 0) { root.songResults = []; return; }
+        if (!root._libraryLoaded) { root._loadLibrary(); return; }
+        const scored = [];
+        for (let i = 0; i < root._allSongs.length; i++) {
+            const s = root._allSongs[i];
+            const m = Search.match([
+                { text: s.title || s.file.split("/").pop(), weight: 1 },
+                { text: s.artist, weight: 0.85 },
+                { text: s.album, weight: 0.7 },
+                { text: s.file, weight: 0.3 }
+            ], tokens);
+            if (m) scored.push({ s: s, i: i, score: m.score });
+        }
+        scored.sort((a, b) => (b.score - a.score) || (a.i - b.i));
+        const cutoff = scored.length > 0 ? Math.max(20, scored[0].score * 0.3) : 0;
+        root.songResults = scored.filter(x => x.score >= cutoff).slice(0, 100).map(x => x.s);
     }
 
     Process { id: insertProc; onExited: playProc.running = true }
@@ -165,7 +204,11 @@ Item {
         }
     }
     function _refreshQueue() { queueProc.running = true; }
-    onVisibleChanged: if (root.visible && root.showQueue) root._refreshQueue()
+    onVisibleChanged: {
+        if (!root.visible) return;
+        root._loadLibrary();
+        if (root.showQueue) root._refreshQueue();
+    }
 
     Process { id: playPositionProc }
     function _playQueueEntry(entry) {

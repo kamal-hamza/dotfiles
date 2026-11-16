@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
 import "../../theme"
+import "Search.mjs" as Search
 
 // Library: three Tab-switchable views onto your music - Artists, Albums,
 // and Playlists - so Tab (freed up from cycling launcher modes; every mode
@@ -54,14 +55,20 @@ Item {
     property var allPlaylists: []   // MPD's saved playlists
 
     property var filtered: {
-        const q = searchBar.text.trim().toLowerCase();
+        const tokens = Search.tokenize(searchBar.text);
         let list;
         if (root.tab === "albums") list = root.allAlbumsFlat;
         else if (root.tab === "playlists") list = root.allPlaylists;
         else if (root.drilled) list = root.artistAlbums;
         else list = root.allArtists;
-        if (q === "") return list;
-        return list.filter(x => x.name.toLowerCase().includes(q) || (x.artist && x.artist.toLowerCase().includes(q)));
+        if (tokens.length === 0) return list;
+        // Same engine as Apps: accent/dash-insensitive ("jhene", "a-ha"),
+        // multi-word, typo-tolerant. Stable sort keeps library order on ties.
+        return list
+            .map((x, i) => ({ x: x, i: i, m: Search.match([{ text: x.name, weight: 1 }, { text: x.artist || "", weight: 0.75 }], tokens) }))
+            .filter(s => s.m !== null)
+            .sort((a, b) => (b.m.score - a.m.score) || (a.i - b.i))
+            .map(s => s.x);
     }
     onFilteredChanged: root.selectedIndex = 0
 

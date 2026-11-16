@@ -5,11 +5,15 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Io
 import "../../theme"
-import "Fuzzy.js" as Fuzzy
+import "Search.mjs" as Search
 
-// App Launcher: fuzzy search over DesktopEntries with a frecency boost
-// (usage count + recency, tracked in launcher.state.appUsage) and favorites
-// (launcher.state.favoriteApps) - both persisted by Launcher.qml.
+// App Launcher: Spotlight-style search over DesktopEntries (see Search.js):
+// typo-tolerant, multi-word, best-alignment fuzzy matching over name >
+// command > generic name/keywords > categories, plus two learned boosts
+// persisted by Launcher.qml - frecency (decayed launch count, so apps you
+// stopped using fade) and query associations (what you picked after typing
+// this exact prefix before, so "f" learns to mean Firefox). Favorites
+// (launcher.state.favoriteApps) get a small fixed boost.
 Item {
     id: root
 
@@ -20,56 +24,75 @@ Item {
     function focusInput() { searchBar.focusInput(); }
     function clearQuery() { searchBar.text = ""; }
 
-    property var filtered: {
+    // [{ entry, positions }] - positions are the matched characters of
+    // the name, for highlighting.
+    readonly property var _ranked: {
         const q = searchBar.text.trim();
-        const usage = root.launcher.state.appUsage || {};
+        const state = root.launcher.state;
+        const usage = state.appUsage || {};
+        const assoc = state.queryAssoc || {};
+        const now = Date.now();
+        const tokens = Search.tokenize(q);
         const seen = {};
-        const all = DesktopEntries.applications.values.filter(e => {
-            if (!e || e.noDisplay || !e.id || seen[e.id]) return false;
-            seen[e.id] = true;
-            return true;
-        });
 
         const scored = [];
+        const all = DesktopEntries.applications.values;
         for (let i = 0; i < all.length; i++) {
             const e = all[i];
-            const metadata = [e.genericName || "", (e.keywords || []).join(" "), (e.categories || []).join(" ")].join(" ");
+            if (!e || e.noDisplay || !e.id || seen[e.id]) continue;
+            seen[e.id] = true;
 
-            // Fuzzy match name first; a metadata-only match still counts
-            // but ranks below any real name match.
-            let score = Fuzzy.score(e.name || "", q);
-            if (score < 0) {
-                score = Fuzzy.score(metadata, q);
-                if (score >= 0) score *= 0.3;
+            const name = e.name || "";
+            let score = 0;
+            let positions = [];
+            if (tokens.length > 0) {
+                const cmd = e.command && e.command.length > 0 ? e.command[0].split("/").pop() : "";
+                // Reverse-DNS ids ("dev.zed.Delta") are vendor noise apart
+                // from the last segment.
+                const idTail = e.id.split(".").pop();
+                const m = Search.match([
+                    { text: name, weight: 1 },
+                    { text: cmd + " " + idTail, weight: 0.8 },
+                    { text: (e.genericName || "") + " " + (e.keywords || []).join(" "), weight: 0.55 },
+                    { text: (e.categories || []).join(" "), weight: 0.25 }
+                ], tokens);
+                if (!m) continue;
+                score = m.score + Search.assocBoost(assoc, q, e.id, now);
+                positions = m.positions;
             }
-            if (score < 0) continue;
+            score += Search.frecencyBoost(usage[e.id], now);
+            if (root.launcher.isFavoriteApp(e.id)) score += 10;
 
-            const u = usage[e.id];
-            if (u) {
-                score += Math.min(u.count, 20) * 2;
-                if (Date.now() - u.lastUsed < 1000 * 60 * 60 * 24 * 7) score += 10;
-            }
-            if (root.launcher.isFavoriteApp(e.id)) score += 15;
-
-            scored.push({ entry: e, score: score, name: e.name || "" });
+            scored.push({ entry: e, positions: positions, score: score, name: name });
         }
 
-        scored.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
-        return scored.map(s => s.entry);
+        scored.sort((a, b) => b.score - a.score || a.name.length - b.name.length || a.name.localeCompare(b.name));
+        // Drop the long tail of weak matches once something clearly fits.
+        if (tokens.length > 0 && scored.length > 0) {
+            const cutoff = Math.max(25, scored[0].score * 0.3);
+            return scored.filter(s => s.score >= cutoff);
+        }
+        return scored;
+    }
+    readonly property var filtered: root._ranked.map(r => r.entry)
+    readonly property var _positions: {
+        const out = {};
+        for (let i = 0; i < root._ranked.length; i++) out[root._ranked[i].entry.id] = root._ranked[i].positions;
+        return out;
     }
     onFilteredChanged: root.selectedIndex = 0
 
     function _launch(entry) {
         if (!entry) return;
         entry.execute();
-        root.launcher.recordAppUsage(entry.id);
+        root.launcher.recordAppUsage(entry.id, searchBar.text);
         root.launcher.close();
     }
     function _launchInTerminal(entry) {
         if (!entry) return;
         terminalProc.command = ["ghostty", "-e", "bash", "-lc", entry.execString + "; exec bash"];
         terminalProc.running = true;
-        root.launcher.recordAppUsage(entry.id);
+        root.launcher.recordAppUsage(entry.id, searchBar.text);
         root.launcher.close();
     }
     function _openDesktopFile(entry) {
@@ -169,7 +192,8 @@ Item {
 
                             Text {
                                 width: parent.width
-                                text: row.modelData.name || ""
+                                text: Search.highlight(row.modelData.name || "", root._positions[row.modelData.id], Theme.emphasis)
+                                textFormat: Text.StyledText
                                 elide: Text.ElideRight
                                 font.family: Theme.fontFamily
                                 font.pixelSize: Theme.font.md

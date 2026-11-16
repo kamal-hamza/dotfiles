@@ -31,6 +31,9 @@ install-lang python go rust   # etc.
 
 # Sync a checkout elsewhere back into the actual chezmoi source dir during dev
 ./scripts/sync-to-chezmoi.sh
+
+# Rebuild Quickshell TypeScript (*.mts -> committed *.mjs) after editing any .mts
+./scripts/build-quickshell-ts.sh          # --check fails if a committed .mjs is stale
 ```
 
 There's no linter/formatter invocation wired into this repo itself; individual app configs (e.g. `dot_config/nvim/lua/hkamal/plugins/conform.lua`) configure formatters for files *managed by* those apps, not for the dotfiles repo itself.
@@ -64,6 +67,10 @@ When adding a new language: add its parser to `plugins/treesitter.lua`, add the 
 ### Hyprland config is Lua, not hyprlang
 
 `dot_config/hypr/hyprland.lua` is the entrypoint and `require`s modules from `dot_config/hypr/conf/*.lua` (`execs`, `keymaps`, `monitors`, `envs`, `looks`, `animations`, `misc`) — this uses Hyprland's native Lua config support, not the traditional `.conf`/hyprlang format. `.luarc.json` points at `/usr/share/hypr/stubs` for LSP annotations of the Hyprland Lua API.
+
+### Quickshell TypeScript (the one build step)
+
+Non-trivial Quickshell logic is written in TypeScript: `dot_config/quickshell/**/*.mts` compiles to a sibling `*.mjs` ES module that QML imports directly (`import "Search.mjs" as Search` — Qt's QML engine supports `.mjs` modules natively). The generated `.mjs` is **committed** (with a "GENERATED ... do not edit" banner) so `chezmoi apply` never needs Node/TypeScript; the `.mts` sources and `dot_config/quickshell/tsconfig.json` are excluded from deployment in `.chezmoiignore`. Edit the `.mts`, run `scripts/build-quickshell-ts.sh` (pinned `typescript` via `bunx`), then apply. Currently this is just `modules/launcher/Search.mts`, the launcher's shared search/ranking engine.
 
 ### Theming: static, hardcoded, no switcher
 

@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import "../../theme"
+import "Search.mjs" as Search
 
 // Rofi replacement: one PanelWindow shared by all seven launcher modes
 // (Apps/Run/Calc/Clipboard/Music/Library/Power), toggled via `qs ipc call
@@ -136,7 +137,7 @@ PanelWindow {
     }
 
     // --- Persisted state: app frecency, favorites, recent commands ---
-    property var state: ({ appUsage: {}, favoriteApps: [], recentCommands: [] })
+    property var state: ({ appUsage: {}, queryAssoc: {}, favoriteApps: [], recentCommands: [] })
 
     readonly property string stateDir: Quickshell.env("HOME") + "/.local/state/quickshell"
 
@@ -147,7 +148,7 @@ PanelWindow {
         onLoaded: {
             try {
                 const parsed = JSON.parse(stateFile.text());
-                launcher.state = Object.assign({ appUsage: {}, favoriteApps: [], recentCommands: [] }, parsed);
+                launcher.state = Object.assign({ appUsage: {}, queryAssoc: {}, favoriteApps: [], recentCommands: [] }, parsed);
             } catch (e) {
                 // Empty or corrupt file - keep defaults.
             }
@@ -168,11 +169,20 @@ PanelWindow {
     }
     function _persist() { saveTimer.restart(); }
 
-    function recordAppUsage(id) {
+    // `rank` is a decayed launch count (2-week half-life, see Search.js)
+    // so apps you've stopped using fade out instead of keeping their
+    // all-time count forever. `query` (what was typed when the app was
+    // picked) teaches Search.assocBoost which app you mean by "f", "fi",
+    // "fir"... next time - the Spotlight-style "learns what you pick".
+    function recordAppUsage(id, query) {
+        const now = Date.now();
         const usage = Object.assign({}, launcher.state.appUsage);
         const prev = usage[id] || { count: 0, lastUsed: 0 };
-        usage[id] = { count: prev.count + 1, lastUsed: Date.now() };
-        launcher.state = Object.assign({}, launcher.state, { appUsage: usage });
+        usage[id] = { count: prev.count + 1, lastUsed: now, rank: Search.frecency(prev, now) + 1 };
+        const patch = { appUsage: usage };
+        if (query && query.trim() !== "")
+            patch.queryAssoc = Search.recordAssoc(launcher.state.queryAssoc, query, id, now);
+        launcher.state = Object.assign({}, launcher.state, patch);
         launcher._persist();
     }
     function isFavoriteApp(id) {

@@ -1,0 +1,24 @@
+{
+  // TypeScript for Quickshell's JS: `*.mts` compiles to a sibling `*.mjs`
+  // ES module, which QML imports directly (`import "Search.mjs" as Search`).
+  // Build: scripts/build-quickshell-ts.sh. Source-only - not deployed (see
+  // .chezmoiignore); the generated .mjs files are committed and deployed.
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "rootDir": ".",
+    "moduleResolution": "Bundler",
+    // Qt's QML JS engine (V4): ES2020-ish, no DOM, no Node.
+    "lib": ["ES2020"],
+    "types": [],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "removeComments": false,
+    "newLine": "lf",
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": ["modules/**/*.mts"]
+}

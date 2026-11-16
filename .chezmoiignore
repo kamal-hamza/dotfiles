@@ -42,3 +42,8 @@ scripts/linux
 .local/bin/music-sync
 .local/lib/music/
 {{ end }}
+
+# Quickshell TypeScript sources/config - only the generated .mjs is deployed
+# (built by scripts/build-quickshell-ts.sh, committed alongside the .mts)
+.config/quickshell/**/*.mts
+.config/quickshell/tsconfig.json
