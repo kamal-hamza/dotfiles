@@ -61,7 +61,6 @@ Thumbs.db
 .tmux.conf
 .config/tmux/
 .taskrc
-.config/ghostty/
 .local/bin/
 .local/lib/
 # Zed reads %APPDATA%\Zed on Windows - see AppData/Roaming/Zed below
