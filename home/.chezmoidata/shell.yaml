@@ -35,6 +35,7 @@ shell:
       SDL_VIDEODRIVER: wayland,x11 # Better SDL game compatibility on Wayland
       MOZ_ENABLE_WAYLAND: "1" # Native Wayland for Firefox-based apps
       ELECTRON_OZONE_PLATFORM_HINT: auto # Wayland support in Electron apps
+      SSH_AUTH_SOCK: $XDG_RUNTIME_DIR/ssh-agent.socket # systemd user ssh-agent.socket (system-arch.yaml)
     windows: {}
 
   path: # prepended in this order; directories that don't exist are skipped
