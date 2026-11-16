@@ -1,1 +1,8 @@
 .config/quickshell/modules/launcher/PlaylistsMode.qml
+# deleted scripts
+.local/bin/dev-tool
+.local/bin/install-lang
+.local/bin/docker-run
+.local/bin/docker-stop
+.local/bin/man-tldr
+.local/bin/font-switcher
