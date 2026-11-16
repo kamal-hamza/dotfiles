@@ -17,7 +17,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Paths
-CHEZMOI_DATA_DIR="${HOME}/.local/share/chezmoi/.chezmoidata"
+CHEZMOI_DATA_DIR="$(chezmoi source-path 2>/dev/null || echo "${HOME}/.local/share/chezmoi/home")/.chezmoidata"
 FONTS_CONFIG="${CHEZMOI_DATA_DIR}/fonts.yaml"
 
 # Check if fzf is installed
