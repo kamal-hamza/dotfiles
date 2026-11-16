@@ -1,0 +1,17 @@
+# Keep LF everywhere, even in a Windows checkout with core.autocrlf=true:
+# CRLF would change file contents (re-triggering every run_onchange_ script),
+# break #! lines, and leak \r into generated configs. PowerShell and Python
+# both read LF files fine.
+* text=auto eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
