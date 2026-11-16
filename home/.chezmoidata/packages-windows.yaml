@@ -1,0 +1,16 @@
+# =============================================================================
+# Windows packages (winget)
+# =============================================================================
+# Installed by .chezmoiscripts/provision/windows/run_onchange_before_10-packages.py.tmpl.
+# Each entry is a winget package id (`winget search <name>` to find one), e.g.:
+#   - Git.Git
+#   - Neovim.Neovim
+#   - ZedIndustries.Zed
+#   - Microsoft.PowerShell
+#   - ajeetdsouza.zoxide
+#   - junegunn.fzf
+#   - jdx.mise
+# =============================================================================
+packages:
+  windows:
+    winget: []
