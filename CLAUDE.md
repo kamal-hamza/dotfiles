@@ -91,7 +91,7 @@ fish config is `dot_config/fish/`: `conf.d/00-homebrew.fish.tmpl` (renders empty
 
 ### Windows readiness
 
-Unix-only targets (fish, zsh, tmux, ghostty, `.local/bin`, `~/.config/zed`) are ignored on Windows; `AppData/`, `Documents/`, `.config/powershell/` are ignored elsewhere. XDG-aware apps (nvim, git) reuse `dot_config/*` because `user/windows/run_once_after_10-xdg-config-home.py` sets `XDG_CONFIG_HOME=%USERPROFILE%\.config`. Zed ignores XDG on Windows, so `AppData/Roaming/Zed/*.tmpl` are one-line `{{ include "dot_config/zed/..." }}` copies — edit `dot_config/zed/`, never the AppData stubs. `.gitattributes` forces LF so a Windows checkout doesn't change file hashes (which would re-trigger `run_onchange_` scripts). None of the Windows pieces have been run on real Windows yet.
+Unix-only targets (fish, zsh, tmux, `.local/bin`, `~/.config/zed`) are ignored on Windows; `AppData/`, `Documents/`, `.config/powershell/` are ignored elsewhere. XDG-aware apps (nvim, git, wezterm) reuse `dot_config/*` because `user/windows/run_once_after_10-xdg-config-home.py` sets `XDG_CONFIG_HOME=%USERPROFILE%\.config`. Zed ignores XDG on Windows, so `AppData/Roaming/Zed/*.tmpl` are one-line `{{ include "dot_config/zed/..." }}` copies — edit `dot_config/zed/`, never the AppData stubs. `.gitattributes` forces LF so a Windows checkout doesn't change file hashes (which would re-trigger `run_onchange_` scripts). None of the Windows pieces have been run on real Windows yet.
 
 ### Custom scripts + alias wiring
 
@@ -115,7 +115,7 @@ Non-trivial Quickshell logic is written in TypeScript: `home/dot_config/quickshe
 
 ### Theming: static, hardcoded, no switcher
 
-There is no theme-switching system. Each app config just has its colors (the monochrome palette) hardcoded directly, as plain static files — no chezmoi templating, no `.chezmoidata` palette source, no `theme` command: `dot_config/rofi/theme.rasi`, `dot_config/mako/config`, `dot_config/waybar/style.css`, `dot_config/hypr/conf/looks.lua`, `dot_config/hypr/hyprlock.conf`, `dot_config/satty/config.toml`, `dot_config/ghostty/themes/current` (referenced by a static `theme = current` line in `dot_config/ghostty/config` — kept as a stable target name so already-open Ghostty windows don't need special handling if the palette is ever hand-edited), `dot_config/zed/settings.json` (plain `"theme"` key naming a Zed-bundled theme family), `dot_config/gtk-{3,4}.0/gtk.css`, `dot_config/tmux/themes/theme.tmux` (sourced by a pre-existing conditional `if-shell` hook in `dot_tmux.conf`, itself static and color-free), and `dot_config/git/config` (delta's diff/syntax colors plus git's native `[color "branch"/"diff"/"status"]` sections). To change the palette, hand-edit the hex values in each of these files directly — there's no single source of truth and no regeneration step. Neovim stays fully separate: it keeps its own working mechanism (`lua/hkamal/theme.lua`'s `~/.local/state/nvim/theme.txt`), set independently of everything above.
+There is no theme-switching system. Each app config just has its colors (the monochrome palette) hardcoded directly, as plain static files — no chezmoi templating, no `.chezmoidata` palette source, no `theme` command: `dot_config/rofi/theme.rasi`, `dot_config/mako/config`, `dot_config/waybar/style.css`, `dot_config/hypr/conf/looks.lua`, `dot_config/hypr/hyprlock.conf`, `dot_config/satty/config.toml`, `dot_config/wezterm/wezterm.lua` (macOS Terminal.app "Basic" look: SF Mono 11 / Meslo on Linux, `#1e1e1e` background, Terminal.app ANSI palette — not the monochrome palette), `dot_config/zed/settings.json` (plain `"theme"` key naming a Zed-bundled theme family), `dot_config/gtk-{3,4}.0/gtk.css`, `dot_config/tmux/themes/theme.tmux` (sourced by a pre-existing conditional `if-shell` hook in `dot_tmux.conf`, itself static and color-free), and `dot_config/git/config` (delta's diff/syntax colors plus git's native `[color "branch"/"diff"/"status"]` sections). To change the palette, hand-edit the hex values in each of these files directly — there's no single source of truth and no regeneration step. Neovim stays fully separate: it keeps its own working mechanism (`lua/hkamal/theme.lua`'s `~/.local/state/nvim/theme.txt`), set independently of everything above.
 
 Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpaper`, started from `dot_config/hypr/conf/execs.lua`) — there is no live-switching wallpaper daemon.
 
@@ -126,7 +126,7 @@ Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpape
 ## Known drift from AGENTS.md/README
 
 Both docs predate several changes; when they conflict with the source tree, trust the source tree:
-- Terminal is **Ghostty** (`dot_config/ghostty/`), not WezTerm — WezTerm is not present in this repo.
+- Terminal is **WezTerm** (`dot_config/wezterm/wezterm.lua`, deployed on every OS); Ghostty was removed.
 - Neovim plugin manager is **`vim.pack`** (native), not lazy.nvim (see above).
 - The theme system they describe (Base16/flavours, dark/light toggle, `theme-gen`) has been removed entirely — see "Theming" above.
 - `dot_pi/` (a Pi agent extension setup) has been removed from the working tree.

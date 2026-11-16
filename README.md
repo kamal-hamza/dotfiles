@@ -6,7 +6,7 @@ Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/), for
 
 The repo keeps two concerns apart:
 
-- **App configuration** — dotfiles in `$HOME` (fish, nvim, zed, ghostty, git,
+- **App configuration** — dotfiles in `$HOME` (fish, nvim, zed, wezterm, git,
   tmux, Hyprland, quickshell, …). Always deployed; which ones depend on the OS and
   machine profile.
 - **System provisioning** — installing packages, `/etc` files, systemd units,
@@ -100,7 +100,7 @@ fallback.
 ## Configuration notes
 
 - **Tmux**: `~/.tmux.conf`, prefix `Ctrl+s`; theme in `~/.config/tmux/themes/theme.tmux`
-- **Ghostty**: `~/.config/ghostty/config`; palette in `themes/current`
+- **WezTerm**: `~/.config/wezterm/wezterm.lua` (all OSes), styled like macOS Terminal.app's Basic profile
 - **Zed**: `home/dot_config/zed/` (Windows gets a copy under `AppData/Roaming/Zed`)
 
 ## Updating
