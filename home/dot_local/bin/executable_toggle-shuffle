@@ -1,38 +1,14 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Toggle MPD random (shuffle) mode and notify the new state.
 
-# =============================================================================
-# Toggle MPD Shuffle (Random) Mode
-# =============================================================================
-# Toggle MPD's random/shuffle mode on or off and display the new status
-#
-# Usage:
-#   toggle-shuffle
-# =============================================================================
+Usage: toggle-shuffle
+"""
+import sys
+from pathlib import Path
 
-set -e
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import mpd_status, notify, run  # noqa: E402
 
-# Check if mpc is installed
-if ! command -v mpc &> /dev/null; then
-    notify-send -u critical "Error" "mpc not found"
-    exit 1
-fi
-
-# Check if MPD is running
-if ! mpc status &> /dev/null; then
-    notify-send -u critical "MPD Error" "MPD daemon is not running"
-    exit 1
-fi
-
-# Parse the random flag from the status
-random_status=$(mpc status | grep -oP 'random: \K\w+')
-
-if [ "$random_status" = "on" ]; then
-    mpc random off
-    new_mode="Off"
-else
-    mpc random on
-    new_mode="On"
-fi
-
-# Send notification with the new shuffle status
-notify-send -u normal "Shuffle Mode" "Shuffle: $new_mode"
+turn_on = mpd_status().get("random") != "on"
+run(["mpc", "-q", "random", "on" if turn_on else "off"])
+notify("Shuffle Mode", f"Shuffle: {'On' if turn_on else 'Off'}")

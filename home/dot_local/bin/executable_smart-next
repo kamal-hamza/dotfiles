@@ -1,40 +1,15 @@
-#!/usr/bin/env bash
+#!/usr/bin/python3
+"""Next track, respecting repeat-one: in single mode restart the current song.
 
-# =============================================================================
-# Smart Next - Respects Repeat Mode
-# =============================================================================
-# Skip to next song, but respects repeat mode:
-# - In single/repeat-one mode: restarts the current song
-# - In other modes: skips to next song normally
-#
-# Usage:
-#   smart-next
-# =============================================================================
+Usage: smart-next
+"""
+import sys
+from pathlib import Path
 
-set -e
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))
+from common import mpd_status, run  # noqa: E402
 
-# Check if mpc is installed
-if ! command -v mpc &> /dev/null; then
-    echo "mpc not found"
-    exit 1
-fi
-
-# Check if MPD is running
-if ! mpc status &> /dev/null; then
-    echo "MPD daemon is not running"
-    exit 1
-fi
-
-# Get current MPD status
-status=$(mpc status)
-
-# Parse the single flag from status
-single_status=$(echo "$status" | grep -oP 'single: \K\w+')
-
-# If in single/repeat-one mode, restart the current song
-if [ "$single_status" = "on" ]; then
-    mpc seek 0%
-else
-    # Otherwise, skip to next song normally
-    mpc next
-fi
+if mpd_status().get("single") == "on":
+    run(["mpc", "-q", "seek", "0%"])
+else:
+    run(["mpc", "-q", "next"])
