@@ -1,7 +1,8 @@
-# Minimal prompt: `dir (branch) % ` - same look as the old zsh prompt.
+# macOS Terminal/zsh default prompt: `user@host dir % ` (zsh's '%n@%m %1~ %# ').
 function fish_prompt
-    set -l branch (command git symbolic-ref --short HEAD 2>/dev/null; or command git rev-parse --short HEAD 2>/dev/null)
-    printf '%s ' (path basename -- (string replace -r "^$HOME\$" '~' -- $PWD))
-    test -n "$branch"; and printf '(%s) ' $branch
-    printf '%% '
+    set -l dir (string replace -r "^$HOME\$" '~' -- $PWD)
+    test "$dir" != '~' -a "$dir" != /; and set dir (path basename -- $dir)
+    set -l char '%'
+    fish_is_root_user; and set char '#'
+    printf '%s@%s %s %s ' $USER (prompt_hostname) $dir $char
 end
