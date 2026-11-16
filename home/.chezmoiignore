@@ -30,13 +30,18 @@ Thumbs.db
 .config/fish/fish_variables
 
 # Bitwarden secrets (.chezmoidata/secrets.yaml): only rendered while the vault
-# is unlocked (BW_SESSION, see `bwu`) and something is listed; otherwise the
-# file on disk is left as it is.
-{{- if or (not (env "BW_SESSION")) (not .secrets.env) }}
+# is really unlocked - BW_SESSION set (see `bwu`) AND `bw status` agrees, so a
+# stale key never makes bw prompt for the master password - and something is
+# listed; otherwise the files on disk are left as they are.
+{{- $bwUnlocked := false }}
+{{- if env "BW_SESSION" }}
+{{-   $bwUnlocked = contains "\"status\":\"unlocked\"" (output "sh" "-c" "bw status 2>/dev/null || true") }}
+{{- end }}
+{{- if or (not $bwUnlocked) (not .secrets.env) }}
 .config/fish/conf.d/40-secrets.fish
 {{- end }}
 # SSH private keys from Bitwarden: same rule, the keys on disk stay put
-{{- if not (env "BW_SESSION") }}
+{{- if not $bwUnlocked }}
 {{-   range $file, $_ := .secrets.ssh_keys }}
 .ssh/{{ $file }}
 {{-   end }}
