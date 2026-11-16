@@ -1,0 +1,170 @@
+# =============================================================================
+# Arch Linux packages (pacman + AUR via yay)
+# Installed by .chezmoiscripts/provision/linux/run_onchange_before_10-packages.py.tmpl.
+#
+#   base:    CLI / dev tooling - installed on every Arch machine
+#   desktop: Hyprland desktop, drivers, GUI apps - only when profile == "desktop"
+#
+# Lists are NOT merged across .chezmoidata files (only maps are), so keep each
+# list in exactly one place.
+# =============================================================================
+packages:
+  arch:
+    base:
+      pacman:
+        - python # Runs the provisioning scripts (bootstrap installs it first on a fresh box)
+        - mise # Modern runtime version manager (replaces asdf)
+        - bat # Cat with syntax highlighting
+        - chezmoi # Dotfiles manager
+        - fzf # Fuzzy finder for terminal
+        - git # Version control system
+        - neovim # Modern vim-based text editor
+        - tmux # Terminal multiplexer
+        - fish # Friendly interactive shell (default login shell)
+        - zsh # Z shell
+        - zsh-autosuggestions # Fish-like autosuggestions
+        - zsh-syntax-highlighting # Syntax highlighting for zsh
+        - zoxide # Smarter cd command
+        - github-cli # Github CLI
+        - yq # YAML file handling
+        - just # Just (Alternative to Make) - Command runner
+        - zip # zip files
+        - unzip # unzip files
+        - p7zip # another zip format
+        - unrar # rar files
+        - tar # tar files
+        - gzip # more zip
+        - bzip2 # zip2
+        - xz # xz format
+        - jq # JSON processor (used by create-project to parse GitHub API responses)
+        - fastfetch # display system specs
+        - clang # c compiler
+        - llvm # c / cpp backend
+        - ripgrep # grepping tool
+        - sqlite # sqlite3 cli (used by vim-dadbod)
+        - imagemagick # image processing (used by image.nvim)
+        - openssh # ssh support
+        - ffmpeg # convert between file types
+        - git-delta # git cli pager
+        - docker # create app containers
+        - docker-compose # manage multiple docker services
+        - docker-buildx # new docker build cli
+      aur:
+        - zsh-autopair-git # Auto-close brackets in zs
+        - pi-coding-agent # TUI based coding agent
+
+    desktop:
+      pacman:
+        - sbctl # secure boot key manager
+        - obsidian # Knowledge management app
+        - ghostty # Terminal emulator
+        - zed # Modern code editor
+        - nautilus # file manager
+        - gvfs # mount external storage
+        - tumbler # file thumbnailing service
+        - xarchiver # extract or compress files
+        - hyprland # The dynamic tiling Wayland compositor
+        - xorg-xwayland # Compatibility layer for legacy X11 apps
+        - qt6-wayland # Wayland support for Qt6 applications
+        - qt5-wayland # Wayland support for Qt5 applications
+        - quickshell # Highly customizable desktop widgets
+        - rofi-wayland # app launcher
+        - libqalculate # qalc CLI, powers the quickshell launcher's calculator mode
+        - cliphist # clipboard history store, powers the quickshell launcher's clipboard mode
+        - mako # Lightweight, customizable notification daemon
+        - hyprpaper # Blazing fast, native wallpaper utility
+        - polkit-gnome # Handles administrative authentication prompts (GUI)
+        - gnome-keyring # Secret Service (org.freedesktop.secrets) provider for app logins/tokens
+        - seahorse # GUI for viewing and managing gnome-keyring secrets
+        - xdg-desktop-portal-hyprland # Backend for backend-specific features (screensharing/file open)
+        - xdg-desktop-portal-gtk # Fallback portal backend for file pickers/GTK themes
+        - grim # Screenshot utility for Wayland
+        - slurp # Select a region in a Wayland compositor (works perfectly with grim)
+        - pipewire # Core multimedia framework (replaces PulseAudio/ALSA)
+        - pipewire-pulse # PulseAudio compatibility layer for PipeWire
+        - wireplumber # Modular session/policy manager for PipeWire
+        - os-prober # dual boot OS recognition
+        - discord # chat
+        - playerctl
+        - pavucontrol
+        - bluez # bluetooth
+        - bluez-utils # bluetooth utils
+        - blueman # gui bluetooth manager
+        - networkmanager # network manager for wifi and ethernet
+        - network-manager-applet # network manager for wifi and ethernet
+        - mesa # Open-source OpenGL graphics drivers
+        - lib32-mesa # 32-bit OpenGL libraries for games and Steam
+        - vulkan-radeon # AMD Vulkan driver
+        - lib32-vulkan-radeon # 32-bit AMD Vulkan driver for games and Steam
+        - vulkan-icd-loader # Vulkan loader that dispatches to installed drivers
+        - lib32-vulkan-icd-loader # 32-bit Vulkan loader for games and Steam
+        - mesa-utils # OpenGL utilities (e.g. glxinfo, glxgears)
+        - vulkan-tools # Vulkan diagnostic tools (e.g. vulkaninfo)
+        - piper # mouse config util
+        - fontforge # font editor tool
+        - font-manager # font viewer
+        - ttf-meslo-nerd # MesloLGS Nerd Font
+        - otf-fantasque-sans-mono # Fantasque Nerd Font
+        - ttf-fantasque-nerd # Fantasque Nerd Font
+        - ttf-jetbrains-mono-nerd # Jetbrains Mono Nerd Font
+        - adobe-source-serif-fonts # Source Serif font collection
+        - adobe-source-sans-fonts # Source Sans font collection
+        - ttf-cascadia-code-nerd # Cascadia Cove Nerd Font
+        - ttf-droid # Droid Sans Mono Font
+        - zathura # pdf viewer
+        - zathura-pdf-mupdf # pdf viewer backend
+        - adw-gtk-theme # force loading of gtk3 themes
+        - qt6-multimedia # metadata for audio files
+        - vlc # metadata for audio files
+        - mpd # music player backend
+        - mpc # command line music controller
+        - mpd-mpris # bridges mpd onto MPRIS for Quickshell's now-playing widget
+        - cava # music visualizer
+        - ncmpcpp # tui for music
+        - beets # music metadata editor
+        - picard # official MusicBrainz tagger, for manually searching/browsing when music-review's auto-match misses
+        - wl-clipboard # Command-line copy/paste utilities for Wayland
+        - satty # screenshot editor
+        - cups # printing system
+        - system-config-printer # GUI printer management
+        - sushi # file preview
+        - ly # display manager
+        - steam # Valve’s game client and Proton launcher for Windows games on Linux
+        - steam-devices # steam bluetooth device detection
+        - mangohud # In-game performance overlay (FPS, GPU, CPU, frame timing)
+        - lib32-mangohud # 32-bit support for MangoHud in Steam games
+        - gamemode # Feral Interactive performance daemon for optimizing CPU/GPU during games
+        - lib32-gamemode # 32-bit GameMode support for Steam and Proton games
+        - gamescope # Valve’s Wayland compositor for better fullscreen control, scaling, and HDR support (used by bigpicture-toggle)
+        - libnotify # notify-send, for desktop notifications from scripts like bigpicture-toggle
+        - wine # Compatibility layer for running Windows applications and non-Steam games
+        - winetricks # helper script for installing Windows dependencies inside Wine prefixes
+        - gimp # image editor
+        - inkscape # vector graphics editor
+        - blender # 3d assets editor
+        - godot # opensource game engine
+        - thunderbird # email client
+        - gnome-maps # gnome maps app
+        - gnome-calculator # calculator
+        - gnome-disk-utility # disk/partition management ("Disks")
+        - baobab # disk usage analyzer
+        - gnome-weather # weather
+        - gnome-clocks # alarms/timers/world clock/stopwatch
+        - gnome-calendar # calendar
+        - gnome-system-monitor # task manager / process viewer
+        - loupe # image viewer
+        - simple-scan # scanning
+        - gnome-logs # GUI systemd journal viewer
+        - hyprsunset # monitor color temp tool
+      aur:
+        - helium-browser-bin # browser
+        - podman-desktop-bin # podman (docker desktop alternative)
+        - chatgpt-desktop-bin # ChatGPT desktop app
+        - penpot-desktop-bin # penpot ui design app
+        - hyprlock # Fast, secure, and beautiful desktop locker
+        - hypridle # Idle management daemon (handles screen dims and locks)
+        - protonplus # GUI tool to install and manage Proton-GE versions (AUR)
+        - jupyterlab-desktop-bin # jupyter lab desktop app
+        - excalidraw-desktop-bin # excalidraw desktop app
+        - t3code-bin # t3 code agent app
+        - android-studio # android studio app for android phone emulation

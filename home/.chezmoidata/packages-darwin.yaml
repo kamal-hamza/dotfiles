@@ -1,0 +1,39 @@
+# =============================================================================
+# macOS packages (Homebrew)
+# Installed by .chezmoiscripts/provision/darwin/run_onchange_before_10-packages.py.tmpl
+# via `brew bundle`. Editing this file re-runs that script on the next apply.
+# =============================================================================
+packages:
+  darwin:
+    taps:
+      - shaunsingh/SFMono-Nerd-Font-Ligaturized # SFMono Nerd Font with ligatures
+
+    brews:
+      - mise # Modern runtime version manager (replaces asdf)
+      - yq # YAML processor (used by font-switcher)
+      - bat # Cat with syntax highlighting
+      - chezmoi # Dotfiles manager
+      - fzf # Fuzzy finder for terminal
+      - git # git version control
+      - neovim # Modern vim-based text editor
+      - tmux # Terminal multiplexer
+      - ghostty # Terminal emulator
+      - fish # Friendly interactive shell (default login shell)
+      - zsh-autopair # Auto-close brackets in zsh
+      - zsh-autosuggestions # Fish-like autosuggestions
+      - zsh-syntax-highlighting # Syntax highlighting for zsh
+      - zoxide # Smarter cd command
+      - gh # Github CLI
+      - just # Just (Alternative to Make) - Command runner
+      - fontforge # font configuration
+      - sqlite # sqlite3 cli (used by vim-dadbod)
+      - imagemagick # image processing (used by image.nvim)
+
+    casks:
+      - chatgpt # ChatGPT desktop app
+      - obsidian # Knowledge management app
+      - zed # Modern code editor
+      - font-source-sans-3 # Source Sans 3 font
+      - font-source-serif-4 # Source Serif 4 font
+      - whatsapp # WhatsApp
+      - beekeeper-studio # SQL DBMS
