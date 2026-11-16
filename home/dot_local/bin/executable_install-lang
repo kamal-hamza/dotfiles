@@ -15,50 +15,12 @@ import shlex
 #   install-lang --list                    # List available languages
 # =============================================================================
 
+import json
 import sys
 import subprocess
 import os
 from pathlib import Path
 from typing import Dict, List, Set, Any
-
-# Try to setup PYTHONPATH for PyYAML from brew's python-yq if available
-if sys.platform == "darwin":
-    try:
-        result = subprocess.run(
-            ["brew", "--prefix", "python-yq"],
-            capture_output=True,
-            text=True,
-            check=False
-        )
-        if result.returncode == 0:
-            python_yq_prefix = result.stdout.strip()
-            # Try to find the site-packages directory
-            libexec_path = Path(python_yq_prefix) / "libexec" / "lib"
-            if libexec_path.exists():
-                for python_dir in libexec_path.glob("python*"):
-                    site_packages = python_dir / "site-packages"
-                    if site_packages.exists():
-                        # Add to sys.path directly
-                        sys.path.insert(0, str(site_packages))
-                        break
-    except:
-        pass
-
-# Check for PyYAML and provide helpful error if missing
-try:
-    import yaml
-except ImportError:
-    print("Error: PyYAML is not installed.", file=sys.stderr)
-    print("\nThis script requires PyYAML. To install it:", file=sys.stderr)
-    print("\n  Option 1 - Install via system package manager (recommended):", file=sys.stderr)
-    print("    macOS:  brew install python-yq", file=sys.stderr)
-    print("    Arch:   sudo pacman -S python-pyaml", file=sys.stderr)
-    print("    Then run: chezmoi apply", file=sys.stderr)
-    print("\n  Option 2 - Install Python with mise:", file=sys.stderr)
-    print("    mise use -g python@latest", file=sys.stderr)
-    print("    eval \"$(mise activate bash)\"", file=sys.stderr)
-    print("    python -m pip install pyyaml", file=sys.stderr)
-    sys.exit(1)
 
 # =============================================================================
 # Configuration
@@ -73,33 +35,17 @@ class Colors:
     CYAN = '\033[0;36m'
     NC = '\033[0m'  # No Color
 
-# Find tools.yaml
+# tools.yaml lives in the chezmoi source state (home/.chezmoidata/tools.yaml).
+# The data is read through `chezmoi data` (JSON), so no YAML library is needed.
 def find_tools_yaml() -> Path:
-    """Locate tools.yaml in expected locations."""
-    candidates = [
-        Path.home() / ".local/share/chezmoi/.chezmoidata/tools.yaml",
-        Path(os.getenv("XDG_DATA_HOME", Path.home() / ".local/share")) / "chezmoi/.chezmoidata/tools.yaml",
-    ]
-    
-    # Try chezmoi source-path
+    """Best-effort path of tools.yaml, for messages only."""
     try:
-        result = subprocess.run(
-            ["chezmoi", "source-path"],
-            capture_output=True,
-            text=True,
-            check=False
-        )
+        result = subprocess.run(["chezmoi", "source-path"], capture_output=True, text=True, check=False)
         if result.returncode == 0:
-            candidates.insert(0, Path(result.stdout.strip()) / ".chezmoidata/tools.yaml")
+            return Path(result.stdout.strip()) / ".chezmoidata" / "tools.yaml"
     except FileNotFoundError:
         pass
-    
-    for path in candidates:
-        if path.exists():
-            return path
-    
-    print_error("Could not find tools.yaml in any expected location")
-    sys.exit(1)
+    return Path.home() / ".local/share/chezmoi/home/.chezmoidata/tools.yaml"
 
 CONFIG_FILE = find_tools_yaml()
 
@@ -462,16 +408,23 @@ INSTALLERS = {
 # =============================================================================
 
 def load_config() -> Dict[str, Any]:
-    """Load and parse tools.yaml configuration."""
+    """Load tools.yaml (languages/frameworks) from chezmoi's merged template data."""
     try:
-        with open(CONFIG_FILE, "r") as file:
-            return yaml.safe_load(file)
+        result = subprocess.run(
+            ["chezmoi", "data", "--format", "json"],
+            capture_output=True, text=True, check=False
+        )
     except FileNotFoundError:
-        print_error(f"Configuration file not found: {CONFIG_FILE}")
+        print_error("chezmoi is not installed - it is needed to read tools.yaml")
         sys.exit(1)
-    except yaml.YAMLError as e:
-        print_error(f"Error parsing YAML: {e}")
+    if result.returncode != 0:
+        print_error(f"`chezmoi data` failed:\n{result.stderr.strip()}")
         sys.exit(1)
+    data = json.loads(result.stdout)
+    if "languages" not in data:
+        print_error(f"No 'languages' key in chezmoi data - is {CONFIG_FILE} present?")
+        sys.exit(1)
+    return {"languages": data.get("languages") or {}, "frameworks": data.get("frameworks") or {}}
 
 def install_target(
     target: str,
