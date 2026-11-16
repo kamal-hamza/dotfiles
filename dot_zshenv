@@ -1,2 +1,0 @@
-export PATH=/Users/hkamal/.local/bin:$HOME/.cargo/bin:$PATH
-export ZDOTDIR="$HOME/.config/zsh"

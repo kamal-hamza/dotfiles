@@ -1,0 +1,45 @@
+#!/usr/bin/python3
+# =============================================================================
+# Arch Linux system files - system/arch/<group>/** -> /**
+# =============================================================================
+# Files that live outside $HOME (e.g. /etc/ly/config.ini) are kept in
+# system/arch/{base,desktop}/ at the repo root, OUTSIDE the chezmoi source
+# root (.chezmoiroot = home), so chezmoi never deploys them into $HOME.
+# This script installs them with sudo (base always, desktop when profile ==
+# "desktop"). The first time it replaces a file that differs, the original is
+# kept as <file>.chezmoi-orig.
+#
+# Re-run trigger - content hashes of every file under system/arch:
+{{- range $f := glob (joinPath .chezmoi.workingTree "system/arch/**/*") }}
+{{- if not (stat $f).isDir }}
+#   {{ trimPrefix (printf "%s/" (joinPath $.chezmoi.workingTree "system" "arch")) $f }} {{ include $f | sha256sum }}
+{{- end }}
+{{- end }}
+# =============================================================================
+{{ template "provision/common.py" . }}
+
+PROFILE = {{ .profile | toJson }}
+SYSTEM_DIR = Path({{ joinPath .chezmoi.workingTree "system" "arch" | toJson }})
+
+
+def main() -> int:
+    groups = ["base"] + (["desktop"] if PROFILE == "desktop" else [])
+    header(f"System files (profile: {PROFILE})")
+    for group in groups:
+        root = SYSTEM_DIR / group
+        if not root.is_dir():
+            continue
+        for src in sorted(p for p in root.rglob("*") if p.is_file()):
+            dest = Path("/") / src.relative_to(root)
+            if dest.is_file() and dest.read_bytes() == src.read_bytes():
+                ok(f"{dest} (up to date)")
+                continue
+            backup = dest.with_name(dest.name + ".chezmoi-orig")
+            if dest.exists() and not backup.exists():
+                run(["sudo", "cp", "-a", dest, backup])
+            run(["sudo", "install", "-Dm644", src, dest])
+            ok(f"{dest} installed")
+    return 0
+
+
+sys.exit(main())

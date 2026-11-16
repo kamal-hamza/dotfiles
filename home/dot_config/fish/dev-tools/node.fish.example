@@ -1,0 +1,16 @@
+# =============================================================================
+# Node.js Configuration
+# =============================================================================
+# `dev-tool add node` copies this to node.fish - uncomment the lines you need.
+# (nvm is bash-only; on fish prefer mise, fnm or volta.)
+
+# Fast Node Manager (fnm)
+# command -q fnm; and fnm env --use-on-cd --shell fish | source
+
+# Volta
+# set -gx VOLTA_HOME $HOME/.volta
+# fish_add_path -g $VOLTA_HOME/bin
+
+# pnpm
+# set -gx PNPM_HOME $HOME/.local/share/pnpm
+# fish_add_path -g $PNPM_HOME

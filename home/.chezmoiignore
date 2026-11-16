@@ -1,0 +1,107 @@
+# =============================================================================
+# .chezmoiignore - what NOT to deploy on this machine
+# =============================================================================
+# Patterns match TARGET paths (`.config/foo`, not `dot_config/foo`); this file
+# is always a template. Sections, in order:
+#   1. always ignored
+#   2. scripts      - provisioning opt-in (.provision) and per-OS script dirs
+#   3. unix-only    - ignored on Windows
+#   4. windows-only - ignored everywhere else
+#   5. linux desktop (Hyprland) - only for linux + profile "desktop"
+# Data: .chezmoi.os, .profile, .provision (see home/.chezmoi.toml.tmpl).
+# Run `chezmoi ignored` to see the result on the current machine.
+# =============================================================================
+
+# ── 1. always ────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+*.bak
+**/__pycache__
+
+# Machine-specific shell env files (the *.example templates ARE deployed)
+.config/zsh/dev-tools/
+.config/fish/dev-tools/*.fish
+.config/powershell/dev-tools/*.ps1
+
+# Rewritten by fish itself (universal variables) - never manage it
+.config/fish/fish_variables
+
+# Quickshell TypeScript sources/config - only the generated .mjs is deployed
+# (built by scripts/build-quickshell-ts.sh, committed alongside the .mts)
+.config/quickshell/**/*.mts
+.config/quickshell/tsconfig.json
+
+# ── 2. scripts ───────────────────────────────────────────────────────────────
+# .chezmoiscripts/provision/<os>/ installs packages / touches the system: only
+# when this machine opted in. .chezmoiscripts/user/<os>/ always runs.
+{{- if not .provision }}
+.chezmoiscripts/provision/**
+{{- end }}
+{{- if ne .chezmoi.os "darwin" }}
+.chezmoiscripts/*/darwin/**
+{{- end }}
+{{- if ne .chezmoi.os "linux" }}
+.chezmoiscripts/*/linux/**
+{{- end }}
+{{- if ne .chezmoi.os "windows" }}
+.chezmoiscripts/*/windows/**
+{{- end }}
+{{- if eq .chezmoi.os "windows" }}
+.chezmoiscripts/*/unix/**
+{{- end }}
+
+# ── 3. unix-only (macOS + Linux) ─────────────────────────────────────────────
+{{- if eq .chezmoi.os "windows" }}
+.zshenv
+.config/zsh/
+.config/fish/
+.tmux.conf
+.config/tmux/
+.taskrc
+.config/ghostty/
+.local/bin/
+.local/lib/
+# Zed reads %APPDATA%\Zed on Windows - see AppData/Roaming/Zed below
+.config/zed/
+{{- end }}
+
+# ── 4. windows-only ──────────────────────────────────────────────────────────
+{{- if ne .chezmoi.os "windows" }}
+AppData/
+Documents/
+.config/powershell/
+{{- end }}
+
+# ── 5. linux desktop (Hyprland) ──────────────────────────────────────────────
+{{- if not (and (eq .chezmoi.os "linux") (eq .profile "desktop")) }}
+.config/hypr/
+.config/quickshell/
+.config/rofi/
+.config/mako/
+.config/satty/
+.config/fontconfig/
+.config/gtk-3.0/
+.config/gtk-4.0/
+.config/Thunar/
+.config/zathura/
+.config/mpd/
+.config/ncmpcpp/
+.config/cava/
+.config/beets/
+wallpapers/
+.local/lib/music/
+.local/bin/music-*
+.local/bin/play-playlist
+.local/bin/show-queue
+.local/bin/smart-next
+.local/bin/toggle-shuffle
+.local/bin/cycle-repeat-mode
+.local/bin/cycle-audio-input
+.local/bin/cycle-audio-output
+.local/bin/screenshot-area
+.local/bin/screenshot-fullscreen
+.local/bin/bigpicture-toggle
+{{- end }}

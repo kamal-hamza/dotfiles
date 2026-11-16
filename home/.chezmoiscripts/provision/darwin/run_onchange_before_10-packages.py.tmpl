@@ -1,0 +1,39 @@
+#!/usr/bin/python3
+# =============================================================================
+# macOS packages - Homebrew (brew bundle)
+# =============================================================================
+# Source: home/.chezmoidata/packages-darwin.yaml. The lists are rendered into
+# this script, so editing them re-runs it on the next `chezmoi apply`.
+# =============================================================================
+{{ template "provision/common.py" . }}
+
+PACKAGES = json.loads(r'''{{ .packages.darwin | toJson }}''')
+
+
+def find_brew() -> str:
+    for candidate in (shutil.which("brew"), "/opt/homebrew/bin/brew", "/usr/local/bin/brew"):
+        if candidate and Path(candidate).is_file():
+            return candidate
+    err("Homebrew not found - the bootstrap script should have installed it")
+    sys.exit(1)
+
+
+def main() -> int:
+    brew = find_brew()
+    header("Homebrew packages")
+    brewfile = "\n".join(
+        [f'tap "{t}"' for t in PACKAGES.get("taps") or []]
+        + [f'brew "{b}"' for b in PACKAGES.get("brews") or []]
+        + [f'cask "{c}"' for c in PACKAGES.get("casks") or []]
+    ) + "\n"
+    run([brew, "update"], check=False)
+    # Not fatal on failure: configs should still be applied.
+    result = run([brew, "bundle", "--file=-"], check=False, input=brewfile, text=True)
+    if result.returncode != 0:
+        warn("brew bundle reported failures - check the output above")
+    run([brew, "cleanup"], check=False)
+    ok("Homebrew packages done")
+    return 0
+
+
+sys.exit(main())

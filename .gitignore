@@ -51,25 +51,25 @@ Resume/*.xdv
 Resume/*-temp.listing
 
 # Ignore any other temp/auxiliary files in dot_config/tex/latex
-dot_config/tex/latex/*.aux
-dot_config/tex/latex/*.log
-dot_config/tex/latex/*.out
-dot_config/tex/latex/*.toc
-dot_config/tex/latex/*.synctex.gz
-dot_config/tex/latex/*.fdb_latexmk
-dot_config/tex/latex/*.fls
-dot_config/tex/latex/*.bbl
-dot_config/tex/latex/*.blg
-dot_config/tex/latex/*.lof
-dot_config/tex/latex/*.lot
-dot_config/tex/latex/*.nav
-dot_config/tex/latex/*.snm
-dot_config/tex/latex/*.vrb
-dot_config/tex/latex/*.xdv
-dot_config/tex/latex/*-temp.listing
+home/dot_config/tex/latex/*.aux
+home/dot_config/tex/latex/*.log
+home/dot_config/tex/latex/*.out
+home/dot_config/tex/latex/*.toc
+home/dot_config/tex/latex/*.synctex.gz
+home/dot_config/tex/latex/*.fdb_latexmk
+home/dot_config/tex/latex/*.fls
+home/dot_config/tex/latex/*.bbl
+home/dot_config/tex/latex/*.blg
+home/dot_config/tex/latex/*.lof
+home/dot_config/tex/latex/*.lot
+home/dot_config/tex/latex/*.nav
+home/dot_config/tex/latex/*.snm
+home/dot_config/tex/latex/*.vrb
+home/dot_config/tex/latex/*.xdv
+home/dot_config/tex/latex/*-temp.listing
 
 
 __pycache__/
 
 # vim.pack lockfile pins exact revisions per-machine; not meant to be shared
-dot_config/nvim/nvim-pack-lock.json
+home/dot_config/nvim/nvim-pack-lock.json

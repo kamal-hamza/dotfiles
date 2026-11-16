@@ -1,0 +1,35 @@
+# =============================================================================
+# Windows packages - winget
+# =============================================================================
+# Source: home/.chezmoidata/packages-windows.yaml. The list is rendered into
+# this script, so editing it re-runs it on the next `chezmoi apply`.
+# (No shebang: on Windows chezmoi runs .py files with [interpreters.py].)
+# =============================================================================
+{{ template "provision/common.py" . }}
+
+PACKAGES = json.loads(r'''{{ .packages.windows | toJson }}''')
+
+
+def main() -> int:
+    ids = dedupe(PACKAGES.get("winget"))
+    if not ids:
+        ok("No winget packages listed in packages-windows.yaml")
+        return 0
+    header(f"winget: {len(ids)} package(s)")
+    failed = []
+    for pkg in ids:
+        if succeeds(["winget", "list", "--id", pkg, "--exact", "--accept-source-agreements"]):
+            ok(f"{pkg} (already installed)")
+            continue
+        result = run(["winget", "install", "--id", pkg, "--exact", "--silent",
+                      "--accept-source-agreements", "--accept-package-agreements"], check=False)
+        if result.returncode != 0:
+            failed.append(pkg)
+    if failed:
+        warn("Failed to install: " + " ".join(failed))
+    else:
+        ok("All winget packages installed")
+    return 0
+
+
+sys.exit(main())

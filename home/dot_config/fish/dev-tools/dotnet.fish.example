@@ -1,0 +1,14 @@
+# =============================================================================
+# .NET SDK Configuration
+# =============================================================================
+# `dev-tool add dotnet` copies this to dotnet.fish - uncomment the lines you need.
+
+# set -gx DOTNET_ROOT $HOME/.dotnet
+# fish_add_path -g $DOTNET_ROOT $DOTNET_ROOT/tools
+
+# Disable telemetry / first run experience
+# set -gx DOTNET_CLI_TELEMETRY_OPTOUT 1
+# set -gx DOTNET_SKIP_FIRST_TIME_EXPERIENCE 1
+
+# NuGet packages location (optional)
+# set -gx NUGET_PACKAGES $HOME/.nuget/packages

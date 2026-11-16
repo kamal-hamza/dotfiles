@@ -2,7 +2,7 @@
 # =============================================================================
 # Build Quickshell TypeScript
 # =============================================================================
-# Type-checks and compiles dot_config/quickshell/**/*.mts to sibling *.mjs
+# Type-checks and compiles home/dot_config/quickshell/**/*.mts to sibling *.mjs
 # ES modules (what the QML actually imports). The generated .mjs files are
 # committed, so `chezmoi apply` never needs Node/TypeScript - run this after
 # editing any .mts, then `chezmoi apply`.
@@ -17,7 +17,7 @@
 set -euo pipefail
 
 TS_VERSION="7.0.2"
-SRC="$(chezmoi source-path)/dot_config/quickshell"
+SRC="$(chezmoi source-path)/dot_config/quickshell" # source-path = <repo>/home (.chezmoiroot)
 
 command -v bunx >/dev/null 2>&1 || { echo "error: bun is required (install-lang bun)" >&2; exit 1; }
 

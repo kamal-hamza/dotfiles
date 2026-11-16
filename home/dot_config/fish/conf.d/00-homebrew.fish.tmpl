@@ -1,0 +1,8 @@
+{{- if eq .chezmoi.os "darwin" -}}
+# Homebrew (macOS) - must run before 10-env so ~/.local/bin ends up in front.
+if test -x /opt/homebrew/bin/brew
+    /opt/homebrew/bin/brew shellenv fish | source
+else if test -x /usr/local/bin/brew
+    /usr/local/bin/brew shellenv fish | source
+end
+{{- end }}

@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+# =============================================================================
+# Arch Linux systemd units
+# =============================================================================
+# Source: home/.chezmoidata/system-arch.yaml (base always, desktop when
+# profile == "desktop"). Runs after packages are installed; units that don't
+# exist (package missing) are skipped with a warning. Enabling is idempotent.
+# =============================================================================
+{{ template "provision/common.py" . }}
+
+PROFILE = {{ .profile | toJson }}
+SYSTEM = json.loads(r'''{{ .system.arch | toJson }}''')
+
+
+def units(key: str) -> list:
+    groups = ["base"] + (["desktop"] if PROFILE == "desktop" else [])
+    return dedupe(u for g in groups for u in (SYSTEM.get(g) or {}).get(key) or [])
+
+
+def enable(unit: str, user: bool) -> None:
+    base = ["systemctl", "--user"] if user else ["systemctl"]
+    if not succeeds(base + ["cat", unit]):
+        warn(f"{unit}: unit not found (package not installed?) - skipped")
+        return
+    if succeeds(base + ["is-enabled", "--quiet", unit]):
+        ok(f"{unit} (already enabled)")
+        return
+    run(([] if user else ["sudo"]) + base + ["enable", "--now", unit], check=False)
+
+
+def main() -> int:
+    if not shutil.which("systemctl"):
+        warn("systemctl not found - skipping services")
+        return 0
+    header(f"systemd units (profile: {PROFILE})")
+    for unit in units("services"):
+        enable(unit, user=False)
+    for unit in units("user_services"):
+        enable(unit, user=True)
+    return 0
+
+
+sys.exit(main())
