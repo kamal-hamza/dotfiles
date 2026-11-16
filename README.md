@@ -104,6 +104,10 @@ item), then `bwu; and chezmoi apply` (`bwu` unlocks the vault for the shell).
 They land in `~/.config/fish/conf.d/40-secrets.fish` (mode 600). With the vault
 locked, `chezmoi apply` skips that file and keeps the existing one.
 
+SSH private keys (GitHub, GitLab) are stored in Bitwarden the same way, as
+secure notes holding the passphrase-protected key files, and written to
+`~/.ssh/` on apply; public keys and `~/.ssh/config` are regular repo files.
+
 ## Configuration notes
 
 - **Tmux**: `~/.tmux.conf`, prefix `Ctrl+s`; theme in `~/.config/tmux/themes/theme.tmux`
