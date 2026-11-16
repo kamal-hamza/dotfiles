@@ -10,11 +10,20 @@
 #   dev-tool edit <tool>       Edit an existing tool configuration
 #   dev-tool remove <tool>     Remove a tool configuration
 #   dev-tool show <tool>       Show a tool configuration
+#
+# Works on fish by default (~/.config/fish/dev-tools/*.fish). Set
+# DEV_TOOL_SHELL=zsh to manage the legacy ~/.config/zsh/dev-tools/*.zsh files.
 # =============================================================================
 
 set -e
 
-DEV_TOOLS_DIR="$HOME/.config/zsh/dev-tools"
+DEV_TOOL_SHELL="${DEV_TOOL_SHELL:-fish}"
+case "$DEV_TOOL_SHELL" in
+    fish|zsh) ;;
+    *) echo "DEV_TOOL_SHELL must be fish or zsh (got '$DEV_TOOL_SHELL')" >&2; exit 1 ;;
+esac
+EXT="$DEV_TOOL_SHELL"
+DEV_TOOLS_DIR="$HOME/.config/$DEV_TOOL_SHELL/dev-tools"
 
 # Colors
 RED='\033[0;31m'
@@ -57,11 +66,11 @@ list_tools() {
     fi
     
     local examples=("$DEV_TOOLS_DIR"/*.example)
-    local active=("$DEV_TOOLS_DIR"/*.zsh)
+    local active=("$DEV_TOOLS_DIR"/*.${EXT})
     
     # Remove glob pattern if no files found
     [[ "${examples[0]}" == "$DEV_TOOLS_DIR/*.example" ]] && examples=()
-    [[ "${active[0]}" == "$DEV_TOOLS_DIR/*.zsh" ]] && active=()
+    [[ "${active[0]}" == "$DEV_TOOLS_DIR/*.${EXT}" ]] && active=()
     
     if [[ ${#examples[@]} -eq 0 && ${#active[@]} -eq 0 ]]; then
         print_warning "No example templates or configurations found"
@@ -70,8 +79,8 @@ list_tools() {
     
     for example in "${examples[@]}"; do
         [[ -f "$example" ]] || continue
-        tool_name=$(basename "$example" .zsh.example)
-        config_file="$DEV_TOOLS_DIR/${tool_name}.zsh"
+        tool_name=$(basename "$example" .${EXT}.example)
+        config_file="$DEV_TOOLS_DIR/${tool_name}.${EXT}"
         
         if [[ -f "$config_file" ]]; then
             echo -e "  ${GREEN}✓${NC} $tool_name (active)"
@@ -83,8 +92,8 @@ list_tools() {
     # Show active configs without examples
     for config in "${active[@]}"; do
         [[ -f "$config" ]] || continue
-        tool_name=$(basename "$config" .zsh)
-        example_file="$DEV_TOOLS_DIR/${tool_name}.zsh.example"
+        tool_name=$(basename "$config" .${EXT})
+        example_file="$DEV_TOOLS_DIR/${tool_name}.${EXT}.example"
         
         if [[ ! -f "$example_file" ]]; then
             echo -e "  ${GREEN}✓${NC} $tool_name (active, custom)"
@@ -103,8 +112,8 @@ add_tool() {
         return 1
     fi
     
-    local example_file="$DEV_TOOLS_DIR/${tool}.zsh.example"
-    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    local example_file="$DEV_TOOLS_DIR/${tool}.${EXT}.example"
+    local config_file="$DEV_TOOLS_DIR/${tool}.${EXT}"
     
     if [[ ! -f "$example_file" ]]; then
         print_error "No example template found for '$tool'"
@@ -140,7 +149,7 @@ edit_tool() {
         return 1
     fi
     
-    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    local config_file="$DEV_TOOLS_DIR/${tool}.${EXT}"
     
     if [[ ! -f "$config_file" ]]; then
         print_error "No configuration found for '$tool'"
@@ -161,7 +170,7 @@ remove_tool() {
         return 1
     fi
     
-    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    local config_file="$DEV_TOOLS_DIR/${tool}.${EXT}"
     
     if [[ ! -f "$config_file" ]]; then
         print_error "No configuration found for '$tool'"
@@ -187,7 +196,7 @@ show_tool() {
         return 1
     fi
     
-    local config_file="$DEV_TOOLS_DIR/${tool}.zsh"
+    local config_file="$DEV_TOOLS_DIR/${tool}.${EXT}"
     
     if [[ ! -f "$config_file" ]]; then
         print_error "No configuration found for '$tool'"
