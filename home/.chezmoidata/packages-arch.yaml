@@ -30,7 +30,7 @@ packages:
         - just # Just (Alternative to Make) - Command runner
         - zip # zip files
         - unzip # unzip files
-        - p7zip # another zip format
+        - 7zip # 7z archives (replaced p7zip)
         - unrar # rar files
         - tar # tar files
         - gzip # more zip
@@ -68,7 +68,7 @@ packages:
         - qt6-wayland # Wayland support for Qt6 applications
         - qt5-wayland # Wayland support for Qt5 applications
         - quickshell # Highly customizable desktop widgets
-        - rofi-wayland # app launcher
+        - rofi # app launcher (absorbed rofi-wayland)
         - libqalculate # qalc CLI, powers the quickshell launcher's calculator mode
         - cliphist # clipboard history store, powers the quickshell launcher's clipboard mode
         - mako # Lightweight, customizable notification daemon
@@ -156,9 +156,9 @@ packages:
         - simple-scan # scanning
         - gnome-logs # GUI systemd journal viewer
         - hyprsunset # monitor color temp tool
+        - podman-desktop # podman GUI (docker desktop alternative; moved from AUR)
       aur:
         - helium-browser-bin # browser
-        - podman-desktop-bin # podman (docker desktop alternative)
         - chatgpt-desktop-bin # ChatGPT desktop app
         - penpot-desktop-bin # penpot ui design app
         - hyprlock # Fast, secure, and beautiful desktop locker
