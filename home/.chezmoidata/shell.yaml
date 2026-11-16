@@ -26,7 +26,7 @@ shell:
     common:
       EDITOR: zed
       VISUAL: zed
-      FZF_DEFAULT_OPTS: "--border=rounded --height=40% --reverse --cycle --bind='tab:down,shift-tab:up'"
+      FZF_DEFAULT_OPTS: "--color=bw --border=rounded --height=40% --reverse --cycle --bind='tab:down,shift-tab:up'"
     darwin: {}
     linux:
       FZF_DEFAULT_COMMAND: "find . -type f 2>/dev/null"
@@ -75,8 +75,6 @@ shell:
     - { name: gstp, cmd: git stash pop }
 
     # --- file listing (BSD ls on macOS, GNU ls on Linux)
-    - { name: ls, cmd: ls -G, os: [darwin] }
-    - { name: ls, cmd: ls --color=auto, os: [linux] }
     - { name: l, cmd: ls -lh, os: *unix }
     - { name: la, cmd: ls -lAh, os: *unix }
     - { name: ll, cmd: ls -lh, os: *unix }
@@ -90,7 +88,6 @@ shell:
     # --- utilities
     - { name: ports, cmd: netstat -tulanp, os: [linux] }
     - { name: mkdir, cmd: mkdir -pv, os: *unix }
-    - { name: grep, cmd: grep --color=auto, os: *unix }
     - { name: df, cmd: df -h, os: *unix }
     - { name: du, cmd: du -h, os: *unix }
     - { name: free, cmd: free -h, os: [linux] }
