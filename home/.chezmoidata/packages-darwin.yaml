@@ -6,18 +6,17 @@
 packages:
   darwin:
     taps:
-      - shaunsingh/SFMono-Nerd-Font-Ligaturized # SFMono Nerd Font with ligatures
+      - epk/epk # SF Mono Nerd Font (font-sf-mono-nerd-font)
 
     brews:
       - mise # Modern runtime version manager (replaces asdf)
-      - yq # YAML processor (used by font-switcher)
+      - yq # YAML processor
       - bat # Cat with syntax highlighting
       - chezmoi # Dotfiles manager
       - fzf # Fuzzy finder for terminal
       - git # git version control
       - neovim # Modern vim-based text editor
       - tmux # Terminal multiplexer
-      - ghostty # Terminal emulator
       - fish # Friendly interactive shell (default login shell)
       - zsh-autopair # Auto-close brackets in zsh
       - zsh-autosuggestions # Fish-like autosuggestions
@@ -33,6 +32,8 @@ packages:
       - chatgpt # ChatGPT desktop app
       - obsidian # Knowledge management app
       - zed # Modern code editor
+      - wezterm # Terminal emulator
+      - font-sf-mono-nerd-font # SF Mono + Nerd Font icons, used by wezterm
       - font-source-sans-3 # Source Sans 3 font
       - font-source-serif-4 # Source Serif 4 font
       - whatsapp # WhatsApp

@@ -26,7 +26,7 @@ shell:
     common:
       EDITOR: zed
       VISUAL: zed
-      FZF_DEFAULT_OPTS: "--border=rounded --height=40% --reverse --cycle --bind='tab:down,shift-tab:up'"
+      FZF_DEFAULT_OPTS: "--color=bw --border=rounded --height=40% --reverse --cycle --bind='tab:down,shift-tab:up'"
     darwin: {}
     linux:
       FZF_DEFAULT_COMMAND: "find . -type f 2>/dev/null"
@@ -42,8 +42,10 @@ shell:
       - $HOME/.local/bin
       - $HOME/.cargo/bin
       - $HOME/.bun/bin
-    darwin: []
-    linux: []
+    darwin:
+      - $HOME/.local/bin/darwin # macOS-only scripts (dot_local/bin/darwin/)
+    linux:
+      - $HOME/.local/bin/linux # Linux desktop scripts (dot_local/bin/linux/)
     windows: []
 
   aliases:
@@ -75,8 +77,6 @@ shell:
     - { name: gstp, cmd: git stash pop }
 
     # --- file listing (BSD ls on macOS, GNU ls on Linux)
-    - { name: ls, cmd: ls -G, os: [darwin] }
-    - { name: ls, cmd: ls --color=auto, os: [linux] }
     - { name: l, cmd: ls -lh, os: *unix }
     - { name: la, cmd: ls -lAh, os: *unix }
     - { name: ll, cmd: ls -lh, os: *unix }
@@ -90,7 +90,6 @@ shell:
     # --- utilities
     - { name: ports, cmd: netstat -tulanp, os: [linux] }
     - { name: mkdir, cmd: mkdir -pv, os: *unix }
-    - { name: grep, cmd: grep --color=auto, os: *unix }
     - { name: df, cmd: df -h, os: *unix }
     - { name: du, cmd: du -h, os: *unix }
     - { name: free, cmd: free -h, os: [linux] }
@@ -143,12 +142,7 @@ shell:
     - { name: mia, cmd: music-import --asis, os: [linux] } # organize hand-tagged files, no MusicBrainz search
     - { name: ml, cmd: music-lyrics, os: [linux] } # backfill .lrc lyrics
     - { name: ms, cmd: music-sync, os: [linux] } # refresh beets DB + repair MPD playlists
-    - { name: itool, cmd: install-lang, os: *unix }
     - { name: ccp, cmd: create-project, os: *unix }
     - { name: dcp, cmd: delete-project, os: *unix }
     - { name: tt, cmd: tmux-new, os: *unix }
     - { name: t, cmd: tmux a, os: *unix }
-    - { name: dr, cmd: docker-run, os: *unix }
-    - { name: ds, cmd: docker-stop, os: *unix }
-    - { name: m, cmd: man-tldr, os: *unix }
-    - { name: font, cmd: font-switcher, os: *unix }

@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'lib' / 'music'))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / 'lib' / 'music'))
 import musiclib as m
 
 

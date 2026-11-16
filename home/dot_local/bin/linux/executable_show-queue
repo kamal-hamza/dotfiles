@@ -1,0 +1,18 @@
+#!/usr/bin/python3
+"""Show the current MPD queue as a numbered notification.
+
+Usage: show-queue
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
+from common import mpd_status, notify, output  # noqa: E402
+
+mpd_status()  # exits with a notification if mpc/MPD are unavailable
+queue = output(["mpc", "playlist"]).splitlines()
+if not queue:
+    notify("MPD Queue", "Queue is empty")
+else:
+    body = "\n".join(f"{i}. {song}" for i, song in enumerate(queue, 1))
+    notify(f"MPD Queue ({len(queue)} songs)", body)

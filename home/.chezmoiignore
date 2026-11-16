@@ -61,11 +61,15 @@ Thumbs.db
 .tmux.conf
 .config/tmux/
 .taskrc
-.config/ghostty/
 .local/bin/
 .local/lib/
 # Zed reads %APPDATA%\Zed on Windows - see AppData/Roaming/Zed below
 .config/zed/
+{{- end }}
+
+# macOS-only scripts (on PATH via shell.yaml path.darwin)
+{{- if ne .chezmoi.os "darwin" }}
+.local/bin/darwin/
 {{- end }}
 
 # ── 4. windows-only ──────────────────────────────────────────────────────────
@@ -93,15 +97,6 @@ Documents/
 .config/beets/
 wallpapers/
 .local/lib/music/
-.local/bin/music-*
-.local/bin/play-playlist
-.local/bin/show-queue
-.local/bin/smart-next
-.local/bin/toggle-shuffle
-.local/bin/cycle-repeat-mode
-.local/bin/cycle-audio-input
-.local/bin/cycle-audio-output
-.local/bin/screenshot-area
-.local/bin/screenshot-fullscreen
-.local/bin/bigpicture-toggle
+# Linux desktop scripts (on PATH via shell.yaml path.linux)
+.local/bin/linux/
 {{- end }}

@@ -1,10 +1,10 @@
 local super = "SUPER"
-local terminal = "ghostty"
+local terminal = "wezterm"
 local fileManager = "nautilus"
 local lock = "hyprlock"
 local browser = "helium-browser"
 local privateBrowser = "helium-browser --incognito"
-local scratchpad = "ghostty -e nvim --clean -u ~/.config/nvim-scratch/init.lua ~/notes/scratch.md"
+local scratchpad = "wezterm start -- nvim --clean -u ~/.config/nvim-scratch/init.lua ~/notes/scratch.md"
 -- app binds
 hl.bind(super .. " + RETURN", hl.dsp.exec_cmd(terminal))
 hl.bind(super .. " + E", hl.dsp.exec_cmd(fileManager))

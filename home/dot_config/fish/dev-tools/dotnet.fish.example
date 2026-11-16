@@ -1,7 +1,7 @@
 # =============================================================================
 # .NET SDK Configuration
 # =============================================================================
-# `dev-tool add dotnet` copies this to dotnet.fish - uncomment the lines you need.
+# Copy this to dotnet.fish (same folder) and uncomment the lines you need.
 
 # set -gx DOTNET_ROOT $HOME/.dotnet
 # fish_add_path -g $DOTNET_ROOT $DOTNET_ROOT/tools

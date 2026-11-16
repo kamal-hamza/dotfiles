@@ -6,7 +6,7 @@ Cross-platform dotfiles managed with [chezmoi](https://www.chezmoi.io/), for
 
 The repo keeps two concerns apart:
 
-- **App configuration** — dotfiles in `$HOME` (fish, nvim, zed, ghostty, git,
+- **App configuration** — dotfiles in `$HOME` (fish, nvim, zed, wezterm, git,
   tmux, Hyprland, quickshell, …). Always deployed; which ones depend on the OS and
   machine profile.
 - **System provisioning** — installing packages, `/etc` files, systemd units,
@@ -46,7 +46,6 @@ key and re-run `chezmoi init`). One-off "configs only" on a provisioned machine:
 │   │   ├── packages-{darwin,arch,windows}.yaml
 │   │   ├── system-arch.yaml  # systemd units to enable
 │   │   ├── shell.yaml        # env vars / PATH / aliases for fish AND PowerShell
-│   │   ├── tools.yaml        # install-lang definitions
 │   │   └── 00-defaults.yaml  # safe fallbacks if `chezmoi init` hasn't run
 │   ├── .chezmoiignore        # what to skip per OS / profile / provision
 │   ├── .chezmoiscripts/
@@ -54,7 +53,7 @@ key and re-run `chezmoi init`). One-off "configs only" on a provisioned machine:
 │   │   └── user/{unix,windows}/                     # always (per OS)
 │   ├── .chezmoitemplates/    # shared template snippets (Python helpers)
 │   ├── dot_config/           # ~/.config/* app configs
-│   ├── dot_local/            # ~/.local/bin scripts etc.
+│   ├── dot_local/            # ~/.local/bin scripts (bin/linux/, bin/darwin/ = OS-only, own PATH entries)
 │   ├── AppData/ Documents/   # Windows-only targets (Zed, PowerShell profile)
 │   └── ...
 ├── system/                   # files installed OUTSIDE $HOME (e.g. /etc), never deployed by chezmoi
@@ -93,14 +92,14 @@ with sudo; the first overwrite keeps the original as `<file>.chezmoi-orig`.
 **fish** on macOS/Linux, **PowerShell 7** on Windows. Env vars, PATH and
 aliases are defined once in `home/.chezmoidata/shell.yaml` and rendered into
 both (`~/.config/fish/conf.d/10-env.fish`, `30-aliases.fish`, and the PowerShell
-profile). Machine-specific env goes in untracked files managed by `dev-tool`
-(`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
+profile). Machine-specific env goes in untracked files copied from the `*.fish.example`
+templates (`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
 fallback.
 
 ## Configuration notes
 
 - **Tmux**: `~/.tmux.conf`, prefix `Ctrl+s`; theme in `~/.config/tmux/themes/theme.tmux`
-- **Ghostty**: `~/.config/ghostty/config`; palette in `themes/current`
+- **WezTerm**: `~/.config/wezterm/wezterm.lua` (all OSes), styled like macOS Terminal.app's Basic profile
 - **Zed**: `home/dot_config/zed/` (Windows gets a copy under `AppData/Roaming/Zed`)
 
 ## Updating

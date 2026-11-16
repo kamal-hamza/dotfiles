@@ -1,0 +1,15 @@
+#!/usr/bin/python3
+"""Next track, respecting repeat-one: in single mode restart the current song.
+
+Usage: smart-next
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
+from common import mpd_status, run  # noqa: E402
+
+if mpd_status().get("single") == "on":
+    run(["mpc", "-q", "seek", "0%"])
+else:
+    run(["mpc", "-q", "next"])

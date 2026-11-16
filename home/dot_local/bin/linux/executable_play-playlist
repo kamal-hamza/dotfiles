@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+"""Pick a top-level ~/Music folder with rofi, replace the queue with it, play.
+
+Shuffle follows MPD's current random mode (toggle-shuffle); repeat, volume,
+etc. are global MPD settings and keep working.
+
+Usage: play-playlist
+Env:   MUSIC_DIR (default ~/Music)
+"""
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
+from common import mpd_status, notify, require, succeeds  # noqa: E402
+
+EXCLUDE = {"Lyrics"}
+music_dir = Path(os.environ.get("MUSIC_DIR", Path.home() / "Music"))
+
+require("rofi", gui=True)
+mpd_status()
+if not music_dir.is_dir():
+    notify("Error", f"Music directory not found: {music_dir}", "critical")
+    sys.exit(1)
+
+playlists = sorted(d.name for d in music_dir.iterdir()
+                   if d.is_dir() and not d.name.startswith(".") and d.name not in EXCLUDE)
+if not playlists:
+    notify("Playlists", f"No playlist folders found in {music_dir}")
+    sys.exit(0)
+
+pick = subprocess.run(["rofi", "-dmenu", "-p", "Play playlist:", "-i"], input="\n".join(playlists),
+                      text=True, stdout=subprocess.PIPE).stdout.strip()
+if not pick:
+    sys.exit(0)
+
+if all(succeeds(["mpc", "-q", *args]) for args in (["clear"], ["add", pick], ["play"])):
+    shuffled = mpd_status().get("random") == "on"
+    notify("Playing Playlist (Shuffled)" if shuffled else "Playing Playlist", pick)
+else:
+    notify("Error", f"Failed to play: {pick}", "critical")
+    sys.exit(1)

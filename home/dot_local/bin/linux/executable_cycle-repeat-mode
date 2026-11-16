@@ -1,0 +1,24 @@
+#!/usr/bin/python3
+"""Cycle MPD repeat mode: off -> all -> one -> off, and notify the new mode.
+
+Usage: cycle-repeat-mode
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "lib" / "scripts"))
+from common import mpd_status, notify, run  # noqa: E402
+
+status = mpd_status()
+if status.get("repeat") == "off":
+    run(["mpc", "-q", "repeat", "on"])
+    run(["mpc", "-q", "single", "off"])
+    mode = "All"
+elif status.get("single") == "off":
+    run(["mpc", "-q", "single", "on"])
+    mode = "One"
+else:
+    run(["mpc", "-q", "repeat", "off"])
+    run(["mpc", "-q", "single", "off"])
+    mode = "Off"
+notify("Repeat Mode", f"Repeat: {mode}")

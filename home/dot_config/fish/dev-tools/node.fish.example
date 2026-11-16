@@ -1,7 +1,7 @@
 # =============================================================================
 # Node.js Configuration
 # =============================================================================
-# `dev-tool add node` copies this to node.fish - uncomment the lines you need.
+# Copy this to node.fish (same folder) and uncomment the lines you need.
 # (nvm is bash-only; on fish prefer mise, fnm or volta.)
 
 # Fast Node Manager (fnm)

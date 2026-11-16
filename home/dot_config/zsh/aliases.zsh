@@ -153,9 +153,6 @@ alias mia="music-import --asis"  # Organize hand-tagged (e.g. Picard) files, no 
 alias ml="music-lyrics"      # Backfill .lrc lyrics for the library
 alias ms="music-sync"        # After Picard: refresh beets DB from tags + repair MPD playlists
 
-# Language tools installation
-alias itool="install-lang"
-
 # Project management
 alias ccp="create-project"   # Create a new project with template
 alias dcp="delete-project"   # Delete a project and its tmux session
@@ -164,12 +161,3 @@ alias dcp="delete-project"   # Delete a project and its tmux session
 alias tt="tmux-new"          # Quick tmux session switcher
 alias t="tmux a"
 
-# Docker management
-alias dr="docker-run"        # Run Docker container interactively
-alias ds="docker-stop"       # Stop running Docker containers
-
-# Documentation
-alias m="man-tldr"           # Interactive man page search with tldr
-
-# Font management
-alias font="font-switcher"  # Interactive font selector with fzf

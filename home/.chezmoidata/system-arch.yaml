@@ -12,7 +12,8 @@ system:
       services: # sudo systemctl enable --now
         - sshd.service
         - fstrim.timer
-      user_services: [] # systemctl --user enable --now
+      user_services: # systemctl --user enable --now
+        - ssh-agent.socket # OpenSSH agent; fallback when gcr-ssh-agent isn't running (fish conf.d/15-ssh-agent.fish)
     desktop:
       services:
         - NetworkManager.service
@@ -20,3 +21,4 @@ system:
         - cups.service
       user_services:
         - mpd.service
+        - gcr-ssh-agent.socket # GNOME Keyring SSH agent: key passphrases saved in the login keyring
