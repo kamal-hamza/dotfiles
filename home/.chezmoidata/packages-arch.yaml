@@ -57,7 +57,7 @@ packages:
       pacman:
         - sbctl # secure boot key manager
         - obsidian # Knowledge management app
-        - ghostty # Terminal emulator
+        - wezterm # Terminal emulator
         - zed # Modern code editor
         - nautilus # file manager
         - gvfs # mount external storage

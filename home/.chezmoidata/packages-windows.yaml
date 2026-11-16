@@ -13,4 +13,5 @@
 # =============================================================================
 packages:
   windows:
-    winget: []
+    winget:
+      - wez.wezterm # Terminal emulator (config: ~/.config/wezterm, shared with macOS/Linux)
