@@ -90,7 +90,7 @@ Item {
     }
     function _launchInTerminal(entry) {
         if (!entry) return;
-        terminalProc.command = ["ghostty", "-e", "bash", "-lc", entry.execString + "; exec bash"];
+        terminalProc.command = ["wezterm", "start", "--", "bash", "-lc", entry.execString + "; exec bash"];
         terminalProc.running = true;
         root.launcher.recordAppUsage(entry.id, searchBar.text);
         root.launcher.close();

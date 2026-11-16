@@ -58,7 +58,7 @@ Item {
         cmd = (cmd || "").trim();
         if (cmd === "") return;
         root.launcher.pushRecentCommand(cmd);
-        terminalProc.command = ["ghostty", "-e", "bash", "-lc", cmd + "; exec bash"];
+        terminalProc.command = ["wezterm", "start", "--", "bash", "-lc", cmd + "; exec bash"];
         terminalProc.startDetached();
         root.launcher.close();
     }
