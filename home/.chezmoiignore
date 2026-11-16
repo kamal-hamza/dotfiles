@@ -29,6 +29,13 @@ Thumbs.db
 # Rewritten by fish itself (universal variables) - never manage it
 .config/fish/fish_variables
 
+# Bitwarden secrets (.chezmoidata/secrets.yaml): only rendered while the vault
+# is unlocked (BW_SESSION, see `bwu`) and something is listed; otherwise the
+# file on disk is left as it is.
+{{- if or (not (env "BW_SESSION")) (not .secrets.env) }}
+.config/fish/conf.d/40-secrets.fish
+{{- end }}
+
 # Quickshell TypeScript sources/config - only the generated .mjs is deployed
 # (built by scripts/build-quickshell-ts.sh, committed alongside the .mts)
 .config/quickshell/**/*.mts
