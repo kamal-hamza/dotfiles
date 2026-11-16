@@ -18,6 +18,7 @@ packages:
       - neovim # Modern vim-based text editor
       - tmux # Terminal multiplexer
       - fish # Friendly interactive shell (default login shell)
+      - bitwarden-cli # bw: secrets for chezmoi templates (.chezmoidata/secrets.yaml)
       - zsh-autopair # Auto-close brackets in zsh
       - zsh-autosuggestions # Fish-like autosuggestions
       - zsh-syntax-highlighting # Syntax highlighting for zsh
@@ -32,6 +33,7 @@ packages:
       - chatgpt # ChatGPT desktop app
       - obsidian # Knowledge management app
       - zed # Modern code editor
+      - bitwarden # Bitwarden desktop app
       - wezterm # Terminal emulator
       - font-sf-mono-nerd-font # SF Mono + Nerd Font icons, used by wezterm
       - font-source-sans-3 # Source Sans 3 font

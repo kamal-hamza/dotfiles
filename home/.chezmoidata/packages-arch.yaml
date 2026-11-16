@@ -46,6 +46,7 @@ packages:
         - openssh # ssh support
         - ffmpeg # convert between file types
         - git-delta # git cli pager
+        - bitwarden-cli # bw: secrets for chezmoi templates (.chezmoidata/secrets.yaml)
         - docker # create app containers
         - docker-compose # manage multiple docker services
         - docker-buildx # new docker build cli
@@ -58,6 +59,7 @@ packages:
         - sbctl # secure boot key manager
         - obsidian # Knowledge management app
         - wezterm # Terminal emulator
+        - bitwarden # Bitwarden desktop app
         - zed # Modern code editor
         - nautilus # file manager
         - gvfs # mount external storage
