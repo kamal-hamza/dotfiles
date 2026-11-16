@@ -46,7 +46,6 @@ key and re-run `chezmoi init`). One-off "configs only" on a provisioned machine:
 │   │   ├── packages-{darwin,arch,windows}.yaml
 │   │   ├── system-arch.yaml  # systemd units to enable
 │   │   ├── shell.yaml        # env vars / PATH / aliases for fish AND PowerShell
-│   │   ├── tools.yaml        # install-lang definitions
 │   │   └── 00-defaults.yaml  # safe fallbacks if `chezmoi init` hasn't run
 │   ├── .chezmoiignore        # what to skip per OS / profile / provision
 │   ├── .chezmoiscripts/
@@ -93,8 +92,8 @@ with sudo; the first overwrite keeps the original as `<file>.chezmoi-orig`.
 **fish** on macOS/Linux, **PowerShell 7** on Windows. Env vars, PATH and
 aliases are defined once in `home/.chezmoidata/shell.yaml` and rendered into
 both (`~/.config/fish/conf.d/10-env.fish`, `30-aliases.fish`, and the PowerShell
-profile). Machine-specific env goes in untracked files managed by `dev-tool`
-(`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
+profile). Machine-specific env goes in untracked files copied from the `*.fish.example`
+templates (`~/.config/fish/dev-tools/*.fish`). The old zsh config is still deployed as a
 fallback.
 
 ## Configuration notes

@@ -10,7 +10,7 @@ packages:
 
     brews:
       - mise # Modern runtime version manager (replaces asdf)
-      - yq # YAML processor (used by font-switcher)
+      - yq # YAML processor
       - bat # Cat with syntax highlighting
       - chezmoi # Dotfiles manager
       - fzf # Fuzzy finder for terminal

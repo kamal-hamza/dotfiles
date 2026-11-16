@@ -19,7 +19,7 @@ set -euo pipefail
 TS_VERSION="7.0.2"
 SRC="$(chezmoi source-path)/dot_config/quickshell" # source-path = <repo>/home (.chezmoiroot)
 
-command -v bunx >/dev/null 2>&1 || { echo "error: bun is required (install-lang bun)" >&2; exit 1; }
+command -v bunx >/dev/null 2>&1 || { echo "error: bun is required (mise use -g bun)" >&2; exit 1; }
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT

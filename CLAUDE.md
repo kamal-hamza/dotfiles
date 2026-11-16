@@ -39,9 +39,6 @@ nvim --headless "+qa"
 # Lint YAML config data
 yamllint home/.chezmoidata/*.yaml
 
-# Install language toolchains defined in home/.chezmoidata/tools.yaml
-install-lang python go rust   # etc.
-
 # Sync a checkout elsewhere back into the actual chezmoi source dir during dev
 ./scripts/sync-to-chezmoi.sh
 
@@ -79,7 +76,6 @@ Order on apply: `before_` scripts (alphabetical by full target path, so `00-boot
 - `packages-darwin.yaml` (`packages.darwin.{taps,brews,casks}`), `packages-arch.yaml` (`packages.arch.{base,desktop}.{pacman,aur}` — `desktop` only installed for `profile == desktop`), `packages-windows.yaml` (`packages.windows.winget`).
 - `system-arch.yaml` — `system.arch.{base,desktop}.{services,user_services}` systemd units.
 - `shell.yaml` — `shell.env.{common,<os>}`, `shell.path.{common,<os>}`, `shell.aliases[]` (`name`, `cmd`, optional `os` list; `{args}` in `cmd` makes it a function). Rendered into fish (`dot_config/fish/conf.d/10-env.fish.tmpl`, `30-aliases.fish.tmpl`) **and** PowerShell (`Documents/PowerShell/Microsoft.PowerShell_profile.ps1.tmpl`).
-- `tools.yaml` — per-language install steps for `dot_local/bin/executable_install-lang`, which reads it via `chezmoi data --format json` (no PyYAML needed).
 
 Adding a package, service, env var or alias means editing these YAML files, not the scripts/templates.
 
@@ -95,7 +91,7 @@ Unix-only targets (fish, zsh, tmux, `.local/bin`, `~/.config/zed`) are ignored o
 
 ### Custom scripts + alias wiring
 
-`dot_local/bin/executable_*` becomes `~/.local/bin/*` on apply (Unix only) — scripts for macOS **and** Linux. OS-specific scripts live in subfolders that are their own `PATH` entries: `dot_local/bin/linux/` → `~/.local/bin/linux/` (the Hyprland desktop scripts: mpd, audio, screenshots, music, bigpicture; deployed only for linux + profile desktop) and `dot_local/bin/darwin/` → `~/.local/bin/darwin/` (macOS-only; none yet). `.chezmoiignore` drops each folder elsewhere, and `shell.yaml` `path.linux`/`path.darwin` put it on `PATH`; the Hyprland session gets fish's login `PATH` through ly, so keybinds and quickshell find them by bare name (a newly added PATH dir needs a re-login to reach Hyprland). Each script that should be user-invocable needs an entry in `shell.aliases` in `.chezmoidata/shell.yaml` (with `os:` limiting it to where the script works); `dot_config/zsh/aliases.zsh` is the legacy zsh copy. Key scripts: `create-project`/`delete-project` (`ccp`/`dcp`), `dev-tool` (machine-specific env files, see below), `install-lang`, `font-switcher`, `man-tldr` (`m`), `tmux-new` (`tt`). All scripts are **Python** (stdlib only, `#!/usr/bin/python3` so a mise-managed project Python can't break them; the music scripts and `install-lang` still use `#!/usr/bin/env python3`). Shared helpers live in `dot_local/lib/scripts/common.py` (→ `~/.local/lib/scripts/`): output (`info/ok/warn/err/die`), `notify`, `run/output/succeeds/require`, `fzf`, `confirm`, `mpd_status`, `cycle_audio`, `screenshot`; importing it also installs an excepthook that turns failed commands into one-line errors. Scripts import it with `sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))` (`.parents[2]` from `bin/linux/`), like the music scripts do with `lib/music/musiclib.py`. Keep the command names (no `.py`) — keybinds, aliases and quickshell call them by name.
+`dot_local/bin/executable_*` becomes `~/.local/bin/*` on apply (Unix only) — scripts for macOS **and** Linux. OS-specific scripts live in subfolders that are their own `PATH` entries: `dot_local/bin/linux/` → `~/.local/bin/linux/` (the Hyprland desktop scripts: mpd, audio, screenshots, music, bigpicture; deployed only for linux + profile desktop) and `dot_local/bin/darwin/` → `~/.local/bin/darwin/` (macOS-only; none yet). `.chezmoiignore` drops each folder elsewhere, and `shell.yaml` `path.linux`/`path.darwin` put it on `PATH`; the Hyprland session gets fish's login `PATH` through ly, so keybinds and quickshell find them by bare name (a newly added PATH dir needs a re-login to reach Hyprland). Each script that should be user-invocable needs an entry in `shell.aliases` in `.chezmoidata/shell.yaml` (with `os:` limiting it to where the script works); `dot_config/zsh/aliases.zsh` is the legacy zsh copy. Shared scripts: `create-project`/`delete-project` (`ccp`/`dcp`), `tmux-new` (`tt`). All scripts are **Python** (stdlib only, `#!/usr/bin/python3` so a mise-managed project Python can't break them; the music scripts still use `#!/usr/bin/env python3`). Shared helpers live in `dot_local/lib/scripts/common.py` (→ `~/.local/lib/scripts/`): output (`info/ok/warn/err/die`), `notify`, `run/output/succeeds/require`, `fzf`, `confirm`, `mpd_status`, `cycle_audio`, `screenshot`; importing it also installs an excepthook that turns failed commands into one-line errors. Scripts import it with `sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "lib" / "scripts"))` (`.parents[2]` from `bin/linux/`), like the music scripts do with `lib/music/musiclib.py`. Keep the command names (no `.py`) — keybinds, aliases and quickshell call them by name.
 
 ### Neovim: native `vim.pack`, not lazy.nvim
 
@@ -121,7 +117,7 @@ Wallpaper is set statically too, via `dot_config/hypr/hyprpaper.conf` (`hyprpape
 
 ### Dev-tools system (machine-specific, not tracked)
 
-`dot_config/fish/dev-tools/*.fish.example` are committed templates for per-language shell env (Bun, .NET, Go, Node, Python). The active, machine-specific versions (`*.fish`, ignored via `.chezmoiignore`'s `.config/fish/dev-tools/*.fish`) are sourced by `conf.d/90-dev-tools.fish` and managed with `dev-tool {list,add,edit,remove,show} <name>` (`executable_dev-tool`; `DEV_TOOL_SHELL=zsh` targets the legacy `~/.config/zsh/dev-tools/*.zsh`). PowerShell's equivalent is untracked `~/.config/powershell/dev-tools/*.ps1`.
+`dot_config/fish/dev-tools/*.fish.example` are committed templates for per-language shell env (Bun, .NET, Go, Node, Python). The active, machine-specific versions (`*.fish`, ignored via `.chezmoiignore`'s `.config/fish/dev-tools/*.fish`) are sourced by `conf.d/90-dev-tools.fish`; enable one by copying its `.example` (no helper script). PowerShell's equivalent is untracked `~/.config/powershell/dev-tools/*.ps1`.
 
 ## Known drift from AGENTS.md/README
 
@@ -130,4 +126,5 @@ Both docs predate several changes; when they conflict with the source tree, trus
 - Neovim plugin manager is **`vim.pack`** (native), not lazy.nvim (see above).
 - The theme system they describe (Base16/flavours, dark/light toggle, `theme-gen`) has been removed entirely — see "Theming" above.
 - `dot_pi/` (a Pi agent extension setup) has been removed from the working tree.
+- The `dev-tool`, `install-lang`, `docker-run`/`docker-stop`, `man-tldr` and `font-switcher` scripts (and `tools.yaml`, `fonts.yaml`) have been removed.
 - Source state moved under `home/` (`.chezmoiroot`); `packages.yaml` was split into `packages-<os>.yaml`; the top-level `run_*` shell scripts were replaced by Python scripts in `home/.chezmoiscripts/`; the login shell is fish, not zsh. AGENTS.md/README paths like `.chezmoidata/packages.yaml` or `dot_config/...` predate this.
